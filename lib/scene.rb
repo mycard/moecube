@@ -24,7 +24,6 @@ class Scene
   def refresh_rect(x, y, width, height)
     Surface.blit(@background,x,y,width,height,$screen,x,y)
     yield
-    #p x,y,width, height
     $screen.update_rect(x, y, width, height)
   end
   #--------------------------------------------------------------------------

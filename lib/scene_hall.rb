@@ -47,10 +47,16 @@ class Scene_Hall < Scene
       when Key::RETURN
         @active_window.clicked
       when Key::F5
-        if room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
+        if @roomlist and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
           $iduel.qroom room
         end
         $iduel.upinfo
+      when Key::F12
+        if @roomlist and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
+          $iduel.qroom room
+        end
+        $iduel.close
+        $scene = Scene_Login.new
       end
     when Event::KeyUp
       case event.sym
@@ -155,7 +161,7 @@ def a
           if room.full?
             $iduel.watch room
           else
-            $iduel.join room, "test"
+            $iduel.join room, "zh"
           end
         end
       when :right

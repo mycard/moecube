@@ -1,8 +1,9 @@
-class <<Action
+require_relative 'action'
+class Action
   CardFilter = /(<\[.*?\]\[(?:.*?)\][\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
   PosFilter = /((?:手卡|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组顶端|\(\d+\)){1,2})/.to_s
   PositionFilter = /(|攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
-  def parse_pos(pos)
+  def self.parse_pos(pos)
     if index = pos.index("(")
       index += 1
       pos[index, pos.index(")")-index].to_i
@@ -23,7 +24,7 @@ class <<Action
       end
     end
   end
-  def parse_card(card)
+  def self.parse_card(card)
     if index = card.rindex("[")
       index += 1
       Card.find(card[index, card.rindex("]")-index].to_sym)
@@ -31,7 +32,7 @@ class <<Action
       Card.find(nil)
     end
   end
-  def parse_position(position)
+  def self.parse_position(position)
     case position
     when "攻击表示"
       :attack
@@ -41,7 +42,7 @@ class <<Action
       :set
     end
   end
-  def escape_pos(pos)
+  def self.escape_pos(pos)
     case pos
     when 0..5
       "魔陷区(#{pos})"
@@ -59,7 +60,7 @@ class <<Action
       "卡组顶端"
     end
   end
-  def escape_position(position)
+  def self.escape_position(position)
     case position
     when :attack
       "攻击表示"
@@ -69,7 +70,7 @@ class <<Action
       "里侧表示"
     end
   end
-  def escape_card(card)
+  def self.escape_card(card)
     if [:通常魔法, :永续魔法, :装备魔法, :场地魔法, :通常陷阱, :永续陷阱, :反击陷阱].include? card.card_type
       if card.position == :set
         "一张魔/陷卡"
@@ -84,7 +85,7 @@ class <<Action
       end
     end
   end
-  def parse(str)
+  def self.parse(str)
     str =~ /^\[\d+\] (.*)▊▊▊.*?$/m
     from_player = false
     case $1
@@ -144,6 +145,14 @@ class <<Action
     end
   end
   def escape
-    
+    case self
+    when FirstToGo
+      "[#{@id}] ◎→[11年3月1日禁卡表]先攻"
+    when Reset
+      "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
+    end
+  end
+  def run
+    $iduel.action self
   end
 end

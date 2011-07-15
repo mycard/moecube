@@ -39,8 +39,11 @@ class Scene_Duel < Scene
     Action.opponent_field = @opponent
     
     $screen.update_rect(0,0,0,0)
+    post_start
   end
-  
+  def post_start
+    first_to_go
+  end
   def change_phase(phase)
     if phase == 5
       @turn_player = !@turn_player
@@ -50,6 +53,12 @@ class Scene_Duel < Scene
       @phase = @phases_window.phase = phase
       @phases_window.refresh
     end
+  end
+  def reset
+    Action::Reset.new(true).run
+  end
+  def first_to_go
+    Action::FirstToGo.new(true).run
   end
   def handle(event)
     case event
@@ -72,15 +81,24 @@ class Scene_Duel < Scene
             @phases_window.index = @phase
           end
         end
-      else
-        super
       end
+    when Event::KeyDown
+      case event.sym
+      when  Key::F1
+        suffle
+      when Key::F2
+        draw
+      when Key::F5
+        reset
+      end
+    else
+      super
     end
   end
   def handle_iduel(event)
     case event
-    when Iduel::Event::UMSG
-      event.action.do
+    when Iduel::Event::Action
+      event.action.run
       @player_field_window.refresh
     end
   end
@@ -89,5 +107,12 @@ class Scene_Duel < Scene
     while event = Iduel::Event.poll
       handle_iduel(event)
     end
+  end
+  def refresh_rect(x, y, width, height)
+    return unless $scene = self #线程的情况
+    p @background,$screen
+    Surface.blit(@background,x,y,width,height,$screen,x,y)
+    yield
+    $screen.update_rect(x, y, width, height)
   end
 end
