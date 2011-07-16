@@ -34,7 +34,6 @@ class Window_List
   end
 	def refresh
     $scene.refresh_rect(@x, @y, @width, @height) do
-      p @x, @y, @width, @height
       @item_max.times do |index|
         draw_item(index)
       end

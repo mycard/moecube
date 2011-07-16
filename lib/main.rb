@@ -15,9 +15,9 @@ require 'yaml'
 $config = YAML.load_file("config.yml") rescue YAML.load_file("data/config_default.yml")
 
 SDL.init(INIT_VIDEO | INIT_AUDIO)
-WM::set_caption("iDuel - 享受决斗", "graphics/system/icon.ico")
+WM::set_caption("iDuel - 享受决斗", "graphics/system/iDuelPanel_32512.ico")
 
-WM::icon = Surface.load("graphics/system/icon.ico")
+WM::icon = Surface.load("graphics/system/iDuelPanel_32512.ico")
 style = HWSURFACE
 style |= FULLSCREEN if $config["fullscreen"]
 $screen = Screen.open($config["width"], $config["height"], 0, style)

@@ -22,7 +22,7 @@ class Scene_Duel < Scene
     $iduel.upinfo
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
     Mixer.fade_in_music(@bgm, 8000, -1)
-    @background = Surface.load "graphics/frm/frmmain.png"
+    @background = Surface.load "graphics/field/main.png"
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     
     @player1_lp = Window_LP.new(0,0, @room.player1, true)
@@ -31,24 +31,23 @@ class Scene_Duel < Scene
     @phases_window = Window_Phases.new(124, 357)
     @turn_player = true
     
-    @player = Game_Field.new(Deck.load("test1.TXT"))
-    @opponent = Game_Field.new
+    @player_field = Game_Field.new(Deck.load("test1.TXT"))
+    @opponent_field = Game_Field.new
     
-    @player_field_window = Window_Field.new(4, 398, @player)
-    Action.player_field = @player
-    Action.opponent_field = @opponent
+    @player_field_window = Window_Field.new(4, 398, @player_field, true)
+    @opponent_field_window = Window_Field.new(4, 60, @opponent_field, false)
+    Action.player_field = @player_field
+    Action.opponent_field = @opponent_field
     
     $screen.update_rect(0,0,0,0)
-    post_start
   end
-  def post_start
-    first_to_go
-  end
+
   def change_phase(phase)
     if phase == 5
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
+      Action::Turn_End.new(field)
     else
       @phase = @phases_window.phase = phase
       @phases_window.refresh
@@ -100,6 +99,7 @@ class Scene_Duel < Scene
     when Iduel::Event::Action
       event.action.run
       @player_field_window.refresh
+      @opponent_field_window.refresh
     end
   end
   def update
@@ -109,9 +109,8 @@ class Scene_Duel < Scene
     end
   end
   def refresh_rect(x, y, width, height)
-    return unless $scene = self #线程的情况
-    p @background,$screen
-    Surface.blit(@background,x,y,width,height,$screen,x,y)
+    return unless $scene == self #线程的情况
+    Surface.blit(@background,x,y,width,height,$screen,x,y) rescue p "------奇怪的nil错误----", @background,x,y,width,height,$screen,x,y
     yield
     $screen.update_rect(x, y, width, height)
   end

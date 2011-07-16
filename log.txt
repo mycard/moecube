@@ -1,8 +1,0 @@
-#<SDL::Event::Active:0x2b134f0 @gain=false, @state=1>
-#<SDL::Event::Active:0x2b13310 @gain=false, @state=2>
-#<SDL::Event::Active:0x2b131c0 @gain=true, @state=1>
-#<SDL::Event::Active:0x2b13040 @gain=false, @state=1>
-#<SDL::Event::Active:0x2b12ed8 @gain=true, @state=6>
-#<SDL::Event::Active:0x2b12d70 @gain=true, @state=1>
-#<SDL::Event::Active:0x2b127b8 @gain=false, @state=1>
-#<SDL::Event::Active:0x2b12668 @gain=true, @state=1>

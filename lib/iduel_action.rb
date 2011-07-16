@@ -1,8 +1,10 @@
 require_relative 'action'
 class Action
-  CardFilter = /(<\[.*?\]\[(?:.*?)\][\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
+  CardFilter = /(<(?:\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
+  #FieldCardFilter = /(<>|<??>|<(?:(?:表攻|表守|里守)\|){0,1}\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>)/.to_s
   PosFilter = /((?:手卡|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组顶端|\(\d+\)){1,2})/.to_s
   PositionFilter = /(|攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
+  PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/.to_s
   def self.parse_pos(pos)
     if index = pos.index("(")
       index += 1
@@ -32,6 +34,16 @@ class Action
       Card.find(nil)
     end
   end
+  def self.parse_fieldcard(card)
+    case card
+    when "<>"
+      [nil, nil]
+    when "<??>"
+      [:set, Card.find(nil)]
+    else
+      [card["表守"] ? :defense : card["里守"] ? :set : :attack, parse_card(card)]
+    end
+  end
   def self.parse_position(position)
     case position
     when "攻击表示"
@@ -40,6 +52,22 @@ class Action
       :defense
     when "里侧表示", "背面守备表示"
       :set
+    end
+  end
+  def self.parse_phase(phase)
+    case phase
+    when "抽卡`阶段"
+      :DP
+    when "准备`阶段"
+      :SP
+    when "主`阶段1"
+      :M1
+    when "战斗`阶段"
+      :BP
+    when "主`阶段2"
+      :M2
+    when "结束`阶段"
+      :EP
     end
   end
   def self.escape_pos(pos)
@@ -85,6 +113,22 @@ class Action
       end
     end
   end
+  def self.escape_phase(phase)
+    case phase
+    when :DP
+      "抽卡`阶段"
+    when :SP
+      "准备`阶段"
+    when :M1
+      "主`阶段1"
+    when :BP
+      "战斗`阶段"
+    when :M2
+      "主`阶段2"
+    when :EP
+      "结束`阶段"
+    end
+  end
   def self.parse(str)
     str =~ /^\[\d+\] (.*)▊▊▊.*?$/m
     from_player = false
@@ -95,7 +139,9 @@ class Action
       Note.new from_player, $2, Card.find($1.to_sym)
     when /^※(.*)$/
       Chat.new from_player, $1
-    when /^(?:(.*)\r\n){0,1}(◎|●)→(.*)$/
+    when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[0\]\r\nLP:(\d+)\r\n手卡:(\d+)\r\n卡组:(\d+)\r\n墓地:(\d+)\r\n除外:(\d+)\r\n前场:\r\n     #{PosotionFilter}#{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n后场:#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}\r\n场地|#{CardFilter}\r\n◎→＼＼(.*)$/
+      Turn_End.new($1 == "◎", $19, $3.to_i, $4.to_i, $5.to_i, $6.to_i, $7.to_i, [parse_fieldcard($18), parse_fieldcard($13), parse_fieldcard($14), parse_fieldcard($15), parse_fieldcard($16), parse_fieldcard($17), parse_fieldcard($8), parse_fieldcard($9), parse_fieldcard($10), parse_fieldcard($11), parse_fieldcard($12)], $2.to_i)
+    when /^(?:(.*)\r\n){0,1}(◎|●)→(.*)$/m
       from_player = $2 == "◎"
       msg = $1
       case $3
@@ -118,23 +164,25 @@ class Action
       when /(.*)抛硬币,结果为(.+)/
         Coin.new from_player, $2=="正面", $1
       when /从#{PosFilter}~发动#{CardFilter}#{PosFilter}/
-        Activate.new from_player, pos($1), pos($3), card($2), msg
+        Activate.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg
       when /从#{PosFilter}~召唤#{CardFilter}#{PosFilter}/
-        Summon.new from_player, pos($1), pos($3), card($2), msg
+        Summon.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg
       when /从#{PosFilter}~特殊召唤#{CardFilter}#{PosFilter}呈#{PositionFilter}/
-        SpecialSummon.new from_player, pos($1), pos($3), card($2), msg, position($4)
+        SpecialSummon.new from_player, parse_pos($1), parse_pos($3), card($2), msg, parse_position($4)
       when /从手卡~取#{CardFilter}盖到#{PosFilter}/
-        Set.new from_player, pos($2), card($1)
+        Set.new from_player, parse_pos($2), parse_card($1)
       when /将#{CardFilter}从~#{PosFilter}~送往墓地/
-        SendToGraveyard.new(from_player, pos($2), card($1))
+        SendToGraveyard.new(from_player, parse_pos($2), parse_card($1))
       when /将#{PosFilter}的#{CardFilter}从游戏中除外/
-        Remove.new from_player, pos($1), card($2)
+        Remove.new from_player, parse_pos($1), parse_card($2)
       when /#{CardFilter}从#{PosFilter}~放回卡组顶端/
-        ReturnToDeck.new from_player, pos($2), card($1)
+        ReturnToDeck.new from_player, parse_pos($2), parse_card($1)
       when /#{CardFilter}从#{PosFilter}返回额外牌堆/
-        ReturnToExtra.new from_player, pos($2), card($1)
+        ReturnToExtra.new from_player, parse_pos($2), parse_card($1)
       when /从#{PosFilter}取#{CardFilter}加入手卡/
-        ReturnToHand.new from_player, pos($1), card($2)
+        ReturnToHand.new from_player, parse_pos($1), parse_card($2)
+      when /#{PhaseFilter}/
+        ChangePhase.new(from_player, parse_phase($1))
       else
         p str, 1
         system("pause")
@@ -150,9 +198,29 @@ class Action
       "[#{@id}] ◎→[11年3月1日禁卡表]先攻"
     when Reset
       "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
+    when ChangePhase
+      "[#{@id}] ◎→#{Action.escape_phase(@phase)}"
     end
   end
   def run
-    $iduel.action self
+    $iduel.action self if @from_player
   end
 end
+
+
+=begin
+LP:8000
+手卡数:5
+卡组:38
+墓地:0
+除外:0
+前场:
+     <>
+     <>
+     <>
+     <>
+     <>
+后场:<><><><><>
+场地|<无>
+◎→＼＼
+=end

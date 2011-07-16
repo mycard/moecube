@@ -22,7 +22,7 @@ class Window_Title
       $screen.update_rect(@x, @y+Button_Height*@index, @width, @single_height)
     end
     if index
-      SDL::Mixer.play_channel(-1,@cursor_se,0)
+      Mixer.play_channel(-1,@cursor_se,0)
       $scene.clear(@x, @y+Button_Height*index, @width, @single_height)
       Surface.blit(@button, @width,@single_height*index,@width,@single_height,$screen, @x, @y + Button_Height*index)
       $screen.update_rect(@x, @y+Button_Height*index, @width, @single_height)

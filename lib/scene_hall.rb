@@ -47,12 +47,12 @@ class Scene_Hall < Scene
       when Key::RETURN
         @active_window.clicked
       when Key::F5
-        if @roomlist and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
+        if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
           $iduel.qroom room
         end
         $iduel.upinfo
       when Key::F12
-        if @roomlist and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
+        if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $iduel.user or room.player2 == $iduel.user}
           $iduel.qroom room
         end
         $iduel.close
@@ -95,6 +95,7 @@ class Scene_Hall < Scene
       require_relative 'scene_watch'
       $scene = Scene_Watch.new(event.room)
     else
+      puts "---unhandled iduel event----"
       p event
     end
   end
@@ -123,80 +124,3 @@ class Scene_Hall < Scene
   end
 
 end
-  
-__END__
-def a
-  @count = 0
-    
-
-  Iduel::Event::NOL.callback do |event|
-    @playerlist.list += event.args
-  end
-  Iduel::Event::DOL.callback do |event|
-    @playerlist.list -= event.args
-  end
-  Iduel::Event::RMIF.callback do |event|
-    @roomlist.list = event.args
-  end
-  Iduel::Event::JOINROOMOK.callback do |event|
-    $graphics.scene = Scene_Duel.new(event.room)
-  end
-  Iduel::Event::QROOMOK.callback do |event|
-    $iduel.upinfo
-  end
-  Iduel::Event::WATCHROOMSTART.callback do |event|
-    $graphics.scene = Scene_Watch.new(event.room)
-  end
-  Iduel::Event::PCHAT.callback do |event|
-    @chat.add(event.user, event.content)
-  end
-  MouseClickEvent.callback do |event|
-    case
-    when event.x.between?(@roomlist.x, @roomlist.x + @roomlist.width) && event.y.between?(@roomlist.y, @roomlist.y + @roomlist.height)
-      #房间列表
-      case event.key
-      when :left
-        room = @roomlist.list[(event.y - @roomlist.y) / 48]
-        if room
-          if room.full?
-            $iduel.watch room
-          else
-            $iduel.join room, "zh"
-          end
-        end
-      when :right
-        room = @roomlist.list[(event.y - @roomlist.y) / 48]
-        if room
-          $iduel.qroom(room)
-          $iduel.upinfo
-        end
-      when :scroll_up
-      
-      when :scroll_down
-      end
-        
-    end
-      
-  end
-
-  #$iduel.join("test", "123")
-  #@x = Window.new(0,500,100,500)
-  #@x = Sprite.new( Image.from_text "0000" )
-  #@x.contents[0].fill Color::Blue
-  #@x.show
-  #$iduel.upinfo
-  #$iduel.quitwatchroom
-  #$iduel.joinroom Iduel::Room.new(1679,'','','','','',''), '123'
-end
-# def update
-#@x.contents[0].fill Color::Blue
-#@x.contents[0].clear
-#@x.contents[0].draw_text(rand(10000).to_s)
-#  if @count >= 600
-#    $iduel.upinfo
-#    @count = 0
-#  end
-#   @count += 1
-#end
-end
-

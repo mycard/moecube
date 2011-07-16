@@ -11,7 +11,7 @@ class Card
 	@count = @db.get_first_value("select COUNT(*) from YGODATA") rescue 0
 	@db.results_as_hash = true
 	PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
-
+  CardBack = Surface.load "graphics/field/card.png"
 	class << self
 		def find(id, order_by=nil)
       case id
@@ -21,7 +21,8 @@ class Card
 				row = @db.get_first_row("select * from YGODATA where name = '#{id}'")
         @all[row['id'].to_i] || old_new(row)
       when nil
-        Card.find(1)
+        Card.find(1).instance_eval{@image = CardBack} unless @all[1]
+        @all[1]
 			else
 				sql = "select * from YGODATA where " << id
 				sql << " order by #{order_by}" if order_by
@@ -57,34 +58,6 @@ class Card
 
       sql = ""
       while !records.EOF
-=begin 坑爹呢...多行插入居然比单行慢= =
-        sql << "select
-          #{records.Fields.Item("CardID").value}, 
-          '#{records.Fields.Item("CardPass").value}',
-          '#{records.Fields.Item("SCCardName").value}',
-          '#{records.Fields.Item("SCCardType").value}',
-          '#{records.Fields.Item("SCDCardType").value.empty? ? NULL : records.Fields.Item("SCDCardType").value}',
-          #{records.Fields.Item("CardATK").value || "NULL"}, 
-          #{records.Fields.Item("CardDef").value || "NULL"}, 
-          '#{records.Fields.Item("SCCardAttribute").value.empty? ? NULL : records.Fields.Item("SCCardAttribute").value}',
-          '#{records.Fields.Item("SCCardRace").value.empty? ? NULL : records.Fields.Item("SCCardRace").value}',
-          #{records.Fields.Item("CardStarNum").value || "NULL"},
-          '#{records.Fields.Item("SCCardDepict").value}',
-          #{case records.Fields.Item("ENCardBan").value; when "Normal"; 3; when "SubConfine"; 2; when "Confine"; 1; else; 0; end},
-          '#{records.Fields.Item("CardEfficeType").value}',
-          '#{records.Fields.Item("CardPhal").value}',
-          '#{records.Fields.Item("CardCamp").value.gsub("、", "\t")}',
-          '#{records.Fields.Item("CardISTKEN").value.zero? ? "NULL" : ("1\t" * records.Fields.Item("CardISTKEN").value).chomp("\t")}' "
-        records.MoveNext
-        unless records.EOF
-          if sqlite_max_compound_select % 500 == 0
-            sql << "; INSERT INTO YGODATA 
-            (id,number,name,card_type,monster_type,atk,def,attribute,type,level,lore,status,stats,archettypes,mediums,tokens) "
-          else
-            sql << "union"
-          end
-        end
-=end
         sql << "INSERT INTO YGODATA VALUES(
           #{records.Fields.Item("CardID").value}, 
           '#{records.Fields.Item("CardPass").value}',
@@ -105,6 +78,8 @@ class Card
         );"
         records.MoveNext
       end
+      
+      @db.execute('begin transaction')
       @db.execute('DROP TABLE "main"."YGODATA";') rescue nil
       @db.execute('CREATE TABLE "YGODATA" (
         "id"  INTEGER NOT NULL,
@@ -125,8 +100,6 @@ class Card
         "tokens"  TEXT,
         PRIMARY KEY ("id")
       );')
-      open("1.txt", "w"){|f|f.write sql}
-      @db.execute('begin transaction')
       @db.execute_batch(sql)
       @db.execute('commit transaction')
       
@@ -166,16 +139,14 @@ class Card
     @tokens = hash['tokens'] && hash['tokens'].split("\t").collect{|token|token.to_i}
 
     Card.cache[@id] = self
-    def image
-      @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg"
-    end
-    def image_small
-      #SDL::Surface#transform_surface(bgcolor,angle,xscale,yscale,flags)
-      @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0)
-    end
-    def unknown?
-      @id == 1
-    end
+  end
+  def image
+    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg"
+  end
+  def image_small
+    @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0)
+  end
+  def unknown?
+    @id == 1
   end
 end
-#Card.load_from_ycff3

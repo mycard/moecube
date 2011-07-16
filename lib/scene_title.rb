@@ -34,7 +34,7 @@ class Scene_Title < Scene
         end
       when Event::MouseButtonDown
         case event.button
-        when SDL::Mouse::BUTTON_LEFT
+        when Mouse::BUTTON_LEFT
           if @command_window.include?(event.x, event.y)
             @command_window.click((event.y - @command_window.y) / @command_window.class::Button_Height)
           end
@@ -45,7 +45,7 @@ class Scene_Title < Scene
         end
       when Event::MouseButtonUp
         case event.button
-        when SDL::Mouse::BUTTON_LEFT
+        when Mouse::BUTTON_LEFT
           if @command_window.include?(event.x, event.y)
             @command_window.index = (event.y - @command_window.y) / @command_window.class::Button_Height
             determine
