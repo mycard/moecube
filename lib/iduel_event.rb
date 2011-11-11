@@ -80,6 +80,7 @@ class Iduel::Event::RMIF < Iduel::Event
       end
     end
     @rooms = templist + @rooms
+    $iduel.rooms = @rooms
   end
 end
 class Iduel::Event::NOL < Iduel::Event
@@ -119,6 +120,7 @@ class Iduel::Event::SingleRoomInfo < Iduel::Event
     @room = Iduel::Room.new(id)
     @room.player1 = Iduel::User.new(player1)
     @room.player2 = Iduel::User.new(player2)
+    $iduel.rooms << @room unless $iduel.rooms.include? @room
   end
 end
 #"Q"

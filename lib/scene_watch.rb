@@ -15,7 +15,7 @@ class Scene_Watch < Scene_Duel
 		Iduel::Event::DOL.callback do |event|
 			p event
 		end
-		Iduel::Event::RMIF.callback do |event|
+		Iduel::Event::RMIF.callback do |event|66
 			p event
 		end
 		Iduel::Event::WMSG.callback do |event|

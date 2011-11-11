@@ -32,7 +32,7 @@ class Scene_Hall < Scene
     case event
     when Event::MouseMotion
       [@playerlist, @roomlist].each do |window|
-        if window .include? event.x, event.y
+        if window.include? event.x, event.y
           @active_window = window 
           @active_window.mousemoved(event.x, event.y)
           break

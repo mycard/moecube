@@ -5,15 +5,11 @@
 # 　大厅内房间列表
 #==============================================================================
 
-class Window_List
-  attr_reader :x, :y, :width, :height
+class Window_List < Window
 	attr_reader :list
   attr_reader :index
 	def initialize(x, y, width, height)
-    @x = x
-    @y = y
-    @width = width
-    @height = height
+    super(x,y,width, height)
     @o_index = 0
     @item_max = 0
     @column_max = 1
@@ -59,8 +55,6 @@ class Window_List
   def clicked
     $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
   end
-  def include?(x,y)
-    x > @x && x < @x + @width && y > @y && y < @y + @height
-  end
+
 end
 
