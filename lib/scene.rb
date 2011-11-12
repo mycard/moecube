@@ -5,6 +5,7 @@
 #==============================================================================
 
 class Scene
+  attr_reader :windows
   #--------------------------------------------------------------------------
   # ● 主处理
   #--------------------------------------------------------------------------
@@ -15,6 +16,9 @@ class Scene
       sleep 0.01
     end
     terminate
+  end
+  def initialize
+    @windows = []
   end
   #--------------------------------------------------------------------------
   # ● 开始处理
@@ -44,6 +48,11 @@ class Scene
      while event = Event.poll
        handle(event)
      end
+     $screen.fill_rect(0,0,0,0,0x000000)
+     @windows.each do |window|
+       $screen.put(window.contents, window.x, window.y) if window.contents
+     end
+     $screen.update_rect(0,0,0,0)
   end
   def handle(event)
     case event

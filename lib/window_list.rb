@@ -16,9 +16,9 @@ class Window_List < Window
 	end
   def index=(index)
     return if index == @index || @item_max.zero?
-    $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 0)} if @index
+    draw_item(@index, 0) if @index
     @index = index
-    $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 1)} if @index
+    draw_item(@index, 1) if @index
   end
   
   
@@ -29,11 +29,7 @@ class Window_List < Window
     #子类定义
   end
 	def refresh
-    $scene.refresh_rect(@x, @y, @width, @height) do
-      @item_max.times do |index|
-        draw_item(index)
-      end
-    end
+    @item_max.times {|index|draw_item(index)}
   end
   def cursor_up
     self.index = @index ? (@index - @column_max) % [@list.size, @item_max].min : 0

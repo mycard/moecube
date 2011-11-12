@@ -5,27 +5,32 @@
 #==============================================================================
 
 class Window_PlayerList < Window_List
+  BackGround = Surface.load "graphics/hall/playerlist.png"
   attr_reader :x, :y, :width, :height
-  WLH = 16
+  WLH = 24
 	def initialize(x, y)
-    super(x,y,272,16*34)
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", WLH)
+    @contents = Surface.load "graphics/hall/playerlist.png"
+    super(x,y,272,WLH*22)
+    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
     @color = [0x03, 0x11, 0x22]
     @color_over = [0x03, 0x11, 0x22, 200,200,255]
     @color_click = [200,200,255, 0x03, 0x11, 0x22]
+    #@contents.fill_rect(0,0,0,0,0xFFFFFFFF)
+    refresh
+    #@contents.f
 	end
   def draw_item(index, status=0)
     case status
     when 0
-      @font.draw_blended_utf8($screen, @list[index].name, @x, @y+index*WLH, *@color)
+      @font.draw_blended_utf8(@contents, @list[index].name, 0, index*WLH, *@color)
     when 1
-      @font.draw_shaded_utf8($screen, @list[index].name, @x, @y+index*WLH, *@color_over)
+      @font.draw_shaded_utf8(@contents, @list[index].name, 0, index*WLH, *@color_over)
     when 2
-      @font.draw_shaded_utf8($screen, @list[index].name, @x, @y+index*WLH, *@color_click)
+      @font.draw_shaded_utf8(@contents, @list[index].name, 0, index*WLH, *@color_click)
     end
   end
   def item_rect(index)
-    [@x, @y+WLH*index, @width, WLH]
+    [0, WLH*index, @width, WLH]
   end
   def list=(list)
 		@list = list
@@ -34,7 +39,7 @@ class Window_PlayerList < Window_List
 		refresh
 	end
   def clicked
-    $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
+    #$scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
     @userwindow = Window_User.new(100,100,@list[@index])
   end
   def mousemoved(x,y)
