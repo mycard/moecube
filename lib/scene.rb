@@ -6,6 +6,7 @@
 
 class Scene
   attr_reader :windows
+  attr_reader :background
   #--------------------------------------------------------------------------
   # ● 主处理
   #--------------------------------------------------------------------------
@@ -48,7 +49,7 @@ class Scene
      while event = Event.poll
        handle(event)
      end
-     $screen.fill_rect(0,0,0,0,0x000000)
+     $screen.put(@background,0,0)
      @windows.each do |window|
        $screen.put(window.contents, window.x, window.y) if window.contents
      end
@@ -69,7 +70,7 @@ class Scene
   # ● 结束处理
   #--------------------------------------------------------------------------
   def terminate
-    $screen.fill_rect(0,0,$screen.w, $screen.h, 0xFF000000)
+    #$screen.fill_rect(0,0,$screen.w, $screen.h, 0xFF000000)
   end
 end
 

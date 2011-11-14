@@ -1,42 +1,45 @@
 #==============================================================================
-# ■ Scene_Title
+# ■ Scene_Config
 #------------------------------------------------------------------------------
-# 　title
+# 　config
 #==============================================================================
 
-class Scene_Title < Scene
+class Scene_Config < Scene
+  require_relative 'window_config'
 	def start
-		@background = Sprite.new
-		@background.contents = Picture.new("title_0.jpg")
-		@command_window = Window.new(600,250,300,500)
-		@command_window.contents.color = [255,0,0]
-		@command_window.contents.font.size = 32
-		@command_window.contents.blt(0,32*0, "duel")
-		@command_window.contents.blt(0,32*1, "single mode")
-		@command_window.contents.blt(0,32*2, "deck edit")
-		@command_window.contents.blt(0,32*3, "config")
-		@command_window.contents.blt(0,32*4, "quit")
-		$screen.make_magic_hooks(Screen::MousePressed => proc { |owner, event|
-			if event.pos[0].between?(@command_window.x,  @command_window.x+ @command_window.width) && event.pos[1].between?(@command_window.y,  @command_window.y+ @command_window.height)
-				$scene = case (event.pos[1] - @command_window.y) / 32
-				when 0
-					Scene_Login.new
-				when 1
-					Scene_Single.new
-				when 2
-					Scene_DeckEdit.new
-				when 3
-					Scene_Config.new
-				when 4
-					 nil
-				end
-			end
-	  })
+    @background = Surface.load "graphics/config/background.png"
+    @config_window = Window_Config.new(0,0)
+    #全屏模式
+    #p $config
+    #
+    #
+    #
+    #
 
-
+    #$scene = Scene_Title.new
 	end
-	def update
-		
-	end
+  def handle(event)
+    case event
+    when Event::MouseMotion
+      self.windows.reverse.each do |window|
+        if window.include? event.x, event.y
+          @active_window = window 
+          @active_window.mousemoved(event.x, event.y)
+          break
+        end
+      end
+    when Event::MouseButtonDown
+      case event.button
+      when Mouse::BUTTON_LEFT
+        @active_window.mousemoved(event.x, event.y)
+        @active_window.clicked
+      when 4
+        @active_window.cursor_up
+      when 5
+        @active_window.cursor_down
+      end
+    else
+      super
+    end
+  end
 end
-

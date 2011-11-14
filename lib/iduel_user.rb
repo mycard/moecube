@@ -28,6 +28,8 @@ class Iduel::User
     @name = name
     @level = level
     @exp = exp
+    #@status = :waiting
+    #@room = nil
   end
   def avatar(size = :small)
     cache = "graphics/avatars/#{@id}_#{size}.png"
@@ -43,15 +45,18 @@ class Iduel::User
     end
   end
   def status
-    room = $iduel.rooms.find{|room|room.player1 == @user or room.player2 == @user}
+    room = room()
     result = case
     when room.nil?
-      "等待中"
+      :hall
     when room.player2
-      "房间#{room.id}决斗中"
+      :dueling
     else
-      "房间#{room.id}等待中"
+      :waiting
     end
     result
+  end
+  def room
+    $iduel.rooms.find{|room|room.player1 == self or room.player2 == self}
   end
 end

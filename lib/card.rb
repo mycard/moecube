@@ -10,7 +10,7 @@ class Card
 	@all = []
 	@count = @db.get_first_value("select COUNT(*) from YGODATA") rescue 0
 	@db.results_as_hash = true
-	PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
+	PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
   CardBack = Surface.load "graphics/field/card.png"
 	class << self
 		def find(id, order_by=nil)

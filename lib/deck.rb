@@ -10,7 +10,7 @@ class Deck
 	attr_accessor :side
 	attr_accessor :extra
 	attr_accessor :temp
-  DeckPath = "E:/game/yu-gi-oh/deck"
+  DeckPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/deck'
 	def initialize(main, side=[], extra=[], temp=[])
 		@main = main
 		@side = side

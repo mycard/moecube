@@ -5,16 +5,16 @@
 #==============================================================================
 
 class Window_PlayerList < Window_List
-  BackGround = Surface.load "graphics/hall/playerlist.png"
   attr_reader :x, :y, :width, :height
-  WLH = 24
+  WLH = 20
 	def initialize(x, y)
     @contents = Surface.load "graphics/hall/playerlist.png"
-    super(x,y,272,WLH*22)
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
+    super(x,y,272,540)
+    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
     @color_over = [0x03, 0x11, 0x22, 200,200,255]
     @color_click = [200,200,255, 0x03, 0x11, 0x22]
+    @background = Surface.load "graphics/hall/playerlist.png"
     #@contents.fill_rect(0,0,0,0,0xFFFFFFFF)
     refresh
     #@contents.f

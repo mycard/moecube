@@ -8,17 +8,25 @@
 class Window_List < Window
 	attr_reader :list
   attr_reader :index
-	def initialize(x, y, width, height)
-    super(x,y,width, height)
+	def initialize(x, y, width, height, z=200)
+    super(x,y,width, height,z)
     @o_index = 0
     @item_max = 0
     @column_max = 1
 	end
   def index=(index)
-    return if index == @index || @item_max.zero?
-    draw_item(@index, 0) if @index
-    @index = index
-    draw_item(@index, 1) if @index
+    return if index == @index
+    
+    if @index
+      clear(*item_rect(@index))
+      draw_item(@index, 0) 
+    end
+    if index.nil? or index < 0 or index >= @item_max
+      @index = nil
+    else
+      @index = index
+      draw_item(@index, 1)
+    end
   end
   
   
@@ -26,7 +34,7 @@ class Window_List < Window
     #子类定义
   end
   def item_rect(index)
-    #子类定义
+    [0, @index*self.class::WLH, @width, self.class::WLH]
   end
 	def refresh
     @item_max.times {|index|draw_item(index)}

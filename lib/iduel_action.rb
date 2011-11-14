@@ -139,7 +139,7 @@ class Action
       Note.new from_player, $2, Card.find($1.to_sym)
     when /^※(.*)$/
       Chat.new from_player, $1
-    when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[0\]\r\nLP:(\d+)\r\n手卡:(\d+)\r\n卡组:(\d+)\r\n墓地:(\d+)\r\n除外:(\d+)\r\n前场:\r\n     #{PosotionFilter}#{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n后场:#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}\r\n场地|#{CardFilter}\r\n◎→＼＼(.*)$/
+    when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[0\]\r\nLP:(\d+)\r\n手卡:(\d+)\r\n卡组:(\d+)\r\n墓地:(\d+)\r\n除外:(\d+)\r\n前场:\r\n     #{PositionFilter}#{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n后场:#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}\r\n场地|#{CardFilter}\r\n◎→＼＼(.*)$/
       Turn_End.new($1 == "◎", $19, $3.to_i, $4.to_i, $5.to_i, $6.to_i, $7.to_i, [parse_fieldcard($18), parse_fieldcard($13), parse_fieldcard($14), parse_fieldcard($15), parse_fieldcard($16), parse_fieldcard($17), parse_fieldcard($8), parse_fieldcard($9), parse_fieldcard($10), parse_fieldcard($11), parse_fieldcard($12)], $2.to_i)
     when /^(?:(.*)\r\n){0,1}(◎|●)→(.*)$/m
       from_player = $2 == "◎"

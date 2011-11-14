@@ -1,4 +1,5 @@
 class Window
+  WLH = 24
   attr_reader :x, :y, :width, :height, :z, :contents
   def initialize(x, y, width, height, z=200)
     @x = x
@@ -36,14 +37,19 @@ class Window
   def destroted?
     @destroted
   end
+  def clear(x, y, width, height)
+    Surface.blit(@background, x,y,width,height,@contents,x,y)
+  end
   def update
     #子类定义
   end
   def refresh
     #子类定义
   end
-  def clear(x, y, width, height)
-    Surface.blit()
-      @contents.put(background.put
+  def mousemoved(x,y)
+    #子类定义
+  end
+  def clicked
+    #子类定义
   end
 end

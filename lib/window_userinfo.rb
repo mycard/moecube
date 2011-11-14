@@ -7,26 +7,26 @@
 
 class Window_UserInfo < Window
 	def initialize(x, y, user)
-    @boarder = Surface.load "graphics/hall/avatar_boader.png"
-    super(x,y,240,@boarder.h)
+    @avatar_boarder = Surface.load "graphics/hall/avatar_boader.png"
+    super(x,y,240,144)
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
     @user = user
+    @background = Surface.load "graphics/hall/userinfo.png"
     refresh
   end
   
-  def refresh(x=@x, y=@y, width=@width, height=@height)
+  def refresh
+    @contents.put(@background, 0, 0)
     @thread = @user.avatar(:middle) do |avatar|
-      $scene.refresh_rect(@x, @y, @boarder.w, @boarder.h) do
-        Surface.blit(avatar, 0,0,0,0,$screen,@x+12,@y+12)
-        Surface.blit(@boarder, 0,0,0,0,$screen,@x,@y)
-      end
+      @contents.put(avatar, 12, 12)
+      @contents.put(@avatar_boarder, 0, 0)
     end
 
     
-    @font.draw_blended_utf8($screen, @user.name, @x+160, @y+12, 0x00,0x00,0x00)
-    @font.draw_blended_utf8($screen, "id: #{@user.id}" , @x+160, @y+12+16*2, 0x00,0x00,0x00)
-    @font.draw_blended_utf8($screen, "Level: #{@user.level}" , @x+160, @y+12+16*3, 0x00,0x00,0x00)
-    @font.draw_blended_utf8($screen, "总经验: #{@user.exp}", @x+160, @y+12+16*4, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, @user.name, 160, 12, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "id: #{@user.id}" , 160, 12+16*2, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "Lv: #{@user.level}" , 160, 12+16*3, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "经验: #{@user.exp}", 160, 12+16*4, 0x00,0x00,0x00)
   end
   def dispose
     @thread.exit

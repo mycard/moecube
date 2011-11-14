@@ -1,7 +1,7 @@
 #==============================================================================
-# 鈻�Scene_Hall
+# Scene_Hall
 #------------------------------------------------------------------------------
-# 銆�all
+# 大厅
 #==============================================================================
 
 class Scene_Hall < Scene
@@ -15,9 +15,9 @@ class Scene_Hall < Scene
     
 		@background = Surface.load "graphics/hall/background.png"
     Surface.blit(@background,0,0,0,0,$screen,0,0)
-		@playerlist = Window_PlayerList.new(24,200)
+		@playerlist = Window_PlayerList.new(24,204)
 		@userinfo = Window_UserInfo.new(24,24, $iduel.user)
-		@roomlist = Window_RoomList.new(320,50)
+		@roomlist = Window_RoomList.new(320,51)
     @active_window = @roomlist
 		#@chat = Window_Chat.new(320,550)
     
@@ -31,7 +31,7 @@ class Scene_Hall < Scene
   def handle(event)
     case event
     when Event::MouseMotion
-      [@playerlist, @roomlist].each do |window|
+      self.windows.reverse.each do |window|
         if window.include? event.x, event.y
           @active_window = window 
           @active_window.mousemoved(event.x, event.y)

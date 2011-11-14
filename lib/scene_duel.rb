@@ -16,6 +16,7 @@ class Scene_Duel < Scene
   require_relative 'game_field'
   
 	def initialize(room)
+    super()
 		@room = room
   end
   def start
