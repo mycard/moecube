@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require_relative 'action'
 class Action
   CardFilter = /(<(?:\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
@@ -29,7 +30,8 @@ class Action
   def self.parse_card(card)
     if index = card.rindex("[")
       index += 1
-      Card.find(card[index, card.rindex("]")-index].to_sym)
+      name = card[index, card.rindex("]")-index].to_sym
+      Card.find(name) || Card.new('id' => 0, 'number' => :"00000000", 'name' => name, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
     else
       Card.find(nil)
     end
@@ -98,21 +100,18 @@ class Action
       "里侧表示"
     end
   end
-  def self.escape_card(card)
-    if [:通常魔法, :永续魔法, :装备魔法, :场地魔法, :通常陷阱, :永续陷阱, :反击陷阱].include? card.card_type
-      if card.position == :set
-        "一张魔/陷卡"
-      else
-        "<[#{card.card_type}][#{card.name}] >"
-      end
-    else
-      if card.position == :set
-        "一张怪兽卡"
-      else
-        "<[#{card.card_type}][#{card.name}] #{card.atk} #{card.def}>"
-      end
+  def self.escape_position_short(position)
+    case position
+    when :attack
+      "表攻"
+    when :defense
+      "表守"
+    when :set
+      "里守"
     end
   end
+
+
   def self.escape_phase(phase)
     case phase
     when :DP
@@ -170,7 +169,7 @@ class Action
       when /从#{PosFilter}~特殊召唤#{CardFilter}#{PosFilter}呈#{PositionFilter}/
         SpecialSummon.new from_player, parse_pos($1), parse_pos($3), card($2), msg, parse_position($4)
       when /从手卡~取#{CardFilter}盖到#{PosFilter}/
-        Set.new from_player, parse_pos($2), parse_card($1)
+        Set.new from_player, :hand, parse_pos($2), parse_card($1)
       when /将#{CardFilter}从~#{PosFilter}~送往墓地/
         SendToGraveyard.new(from_player, parse_pos($2), parse_card($1))
       when /将#{PosFilter}的#{CardFilter}从游戏中除外/
@@ -192,35 +191,57 @@ class Action
       system("pause")
     end
   end
-  def escape
-    case self
-    when FirstToGo
+
+  def run
+    $iduel.action self if @from_player
+  end
+  class FirstToGo
+    def escape
       "[#{@id}] ◎→[11年3月1日禁卡表]先攻"
-    when Reset
-      "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
-    when ChangePhase
+    end
+  end
+  class Reset
+    def escape
+    "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
+    end
+  end
+  class ChangePhase
+    def escape
       "[#{@id}] ◎→#{Action.escape_phase(@phase)}"
     end
   end
-  def run
-    $iduel.action self if @from_player
+  class Turn_End
+    def escape
+      "[#{@id}] ◎→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
+    end
   end
 end
 
 
-=begin
-LP:8000
-手卡数:5
-卡组:38
-墓地:0
-除外:0
-前场:
-     <>
-     <>
-     <>
-     <>
-     <>
-后场:<><><><><>
-场地|<无>
-◎→＼＼
-=end
+class Game_Field
+  def escape
+    "LP:#{@lp}\r\n手卡:#{@hand.size}\r\n卡组:#{@deck.size}\r\n墓地:#{@graveyard.size}\r\n除外:#{@removed.size}\r\n前场:\r\n" +
+      @field[6..10].collect{|card|"     <#{"#{escape_position_short(card)}|#{card.position == :set ? '??' : "[#{card.card_type}][#{card.name}] #{card.atk}#{' '+card.def.to_s}"}" if card}>\r\n"}.join +
+      "后场:" + 
+      @field[1..5].collect{|card|"<#{card.position == :set ? '??' : card.escape if card}>"}.join +
+      "\r\n场地|<#{@field[0] ? @field[0].escape : '无'}>\r\n" +
+      "◎→＼＼"    
+  end
+end
+class Card
+  def escape
+    if [:通常魔法, :永续魔法, :装备魔法, :场地魔法, :通常陷阱, :永续陷阱, :反击陷阱].include? @card_type
+      if @position == :set
+        "一张魔/陷卡"
+      else
+        "<[#{@card_type}][#{@name}] >"
+      end
+    else
+      if @position == :set
+        "一张怪兽卡"
+      else
+        "<[#{@card_type}][#{@name}] #{@atk} #{@def}>"
+      end
+    end
+  end
+end

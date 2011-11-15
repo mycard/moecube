@@ -1,12 +1,14 @@
 class Window_Config < Window
   def initialize(x,y)
     super(x,y,$screen.w, $screen.h)
+    
     @checkbox = Surface.load 'graphics/system/checkbox.png'
     @button = Surface.load 'graphics/system/button.png'
     @background = Surface.load 'graphics/config/background.png'
     @contents = Surface.load 'graphics/config/background.png'
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 20)
     @index = nil
+    
     @items = {
       :fullscreen => [0,0,120,WLH],
       :avatar_cache => [220, WLH,@button.w/3, @button.h],
@@ -52,7 +54,7 @@ class Window_Config < Window
       clear(*item_rect(@index))
       draw_item(@index, 0) 
     end
-    if index.nil? or !index.is_a?(Symbol)
+    if index.nil? or index.is_a?(Emulator)
       @index = nil
     else
       @index = index

@@ -32,7 +32,7 @@ class Scene_Duel < Scene
     @phases_window = Window_Phases.new(124, 357)
     @turn_player = true
     
-    @player_field = Game_Field.new(Deck.load("test1.TXT"))
+    @player_field = Game_Field.new Deck.load("test1.TXT")
     @opponent_field = Game_Field.new
     
     @player_field_window = Window_Field.new(4, 398, @player_field, true)
@@ -48,7 +48,8 @@ class Scene_Duel < Scene
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
-      Action::Turn_End.new(field)
+      
+      Action::Turn_End.new(true, "Turn End", @player_field.lp, @player_field.hand.size, @player_field.deck.size, @player_field.graveyard.size, @player_field.removed.size, @player_field, 1).run
     else
       @phase = @phases_window.phase = phase
       @phases_window.refresh
@@ -60,15 +61,26 @@ class Scene_Duel < Scene
   def first_to_go
     Action::FirstToGo.new(true).run
   end
+  
   def handle(event)
     case event
     when Event::MouseMotion
-      @phases_window.mousemoved event.x, event.y
+      self.windows.reverse.each do |window|
+        if window.include? event.x, event.y
+          @active_window = window 
+          @active_window.mousemoved(event.x, event.y)
+          break
+        end
+      end
     when Event::MouseButtonDown
       case event.button
       when Mouse::BUTTON_LEFT
-        @phases_window.mousemoved event.x, event.y
-        @phases_window.clicked
+        @active_window.mousemoved(event.x, event.y)
+        @active_window.clicked
+      when 4
+        @active_window.cursor_up
+      when 5
+        @active_window.cursor_down
       end
     when Event::MouseButtonUp
       case event.button
@@ -80,6 +92,10 @@ class Scene_Duel < Scene
           else
             @phases_window.index = @phase
           end
+        end
+     when Mouse::BUTTON_RIGHT
+        if @player_field_window.action_window
+          @player_field_window.action_window.next
         end
       end
     when Event::KeyDown
@@ -95,6 +111,11 @@ class Scene_Duel < Scene
       super
     end
   end
+  
+  
+  
+  
+  
   def handle_iduel(event)
     case event
     when Iduel::Event::Action

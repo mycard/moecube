@@ -34,7 +34,7 @@ class Iduel
       Event.push Error.new(0)
     end
     info.chomp!(RS)
-    info.encode! "UTF-8"
+    info.encode! "UTF-8", :invalid => :replace, :undef => :replace
     puts ">> #{info}"
     Event.push Event.parse info
   end

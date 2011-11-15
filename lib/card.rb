@@ -10,7 +10,8 @@ class Card
 	@all = []
 	@count = @db.get_first_value("select COUNT(*) from YGODATA") rescue 0
 	@db.results_as_hash = true
-	PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
+	#PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
+  PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
   CardBack = Surface.load "graphics/field/card.png"
 	class << self
 		def find(id, order_by=nil)
@@ -19,30 +20,32 @@ class Card
         @all[id] || old_new(@db.get_first_row("select * from YGODATA where id = #{id}"))
       when Symbol
 				row = @db.get_first_row("select * from YGODATA where name = '#{id}'")
-        @all[row['id'].to_i] || old_new(row)
+        row && (@all[row['id'].to_i] || old_new(row))
+      when Hash
+        old_new(id)
       when nil
         Card.find(1).instance_eval{@image = CardBack} unless @all[1]
         @all[1]
-			else
-				sql = "select * from YGODATA where " << id
-				sql << " order by #{order_by}" if order_by
-				@db.execute(sql).collect {|row|@all[row['id'].to_i] || old_new(row)}
-			end
-		end
-		def all
-			if @all.size != @count
-				sql = "select * from YGODATA where id not in (#{@all.keys.join(', ')})"
-				@db.execute(sql).each{|row|old_new(row)}
-			end
-			@all
-		end
-		def cache
-			@all
-		end
-		alias old_new new
-		def new(id)
-			find(id)
-		end
+      else
+        sql = "select * from YGODATA where " << id
+        sql << " order by #{order_by}" if order_by
+        @db.execute(sql).collect {|row|@all[row['id'].to_i] || old_new(row)}
+      end
+    end
+    def all
+      if @all.size != @count
+        sql = "select * from YGODATA where id not in (#{@all.keys.join(', ')})"
+        @db.execute(sql).each{|row|old_new(row)}
+      end
+      @all
+    end
+    def cache
+      @all
+    end
+    alias old_new new
+    def new(id)
+      find(id)
+    end
     def load_from_ycff3(db = "E:/game/yu-gi-oh/YGODATA/YGODAT.mdb")
       require 'win32ole'
       conn = WIN32OLE.new('ADODB.Connection')
@@ -141,7 +144,7 @@ class Card
     Card.cache[@id] = self
   end
   def image
-    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg"
+    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.png"
   end
   def image_small
     @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0)

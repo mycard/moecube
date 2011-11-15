@@ -1,3 +1,4 @@
+#encoding: UTF-8
 Iduel::Event = Class.new #避开SDL::Event问题，所以没有用class Iduel::Event::Event
 class Iduel::Event
   @queue = []

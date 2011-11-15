@@ -33,6 +33,7 @@ class Window
   def destroy
     @destroted = true
     @contents.destroy if @contents
+    $scene.windows.delete self
   end
   def destroted?
     @destroted

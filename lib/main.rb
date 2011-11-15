@@ -1,12 +1,12 @@
 #encoding: UTF-8
-$: << "/usr/lib"
+
 alias gbk_puts puts
 def puts(*args)
-  gbk_puts(*(args.collect{|item|item.encode "UTF-8"}))
+  gbk_puts(*(args.collect{|item|item.encode "GBK", :invalid => :replace, :undef => :replace}))
 end
 
 def p(*args)
-  print(args.collect{|item|item.inspect.encode "UTF-8"}.join("\n")+"\n") rescue print(args.join("\n")+"\n")
+  print(args.collect{|item|item.inspect.encode "GBK", :invalid => :replace, :undef => :replace}.join("\n")+"\n") rescue print(args.join("\n")+"\n")
 end
 
 def filesize_inspect(size)

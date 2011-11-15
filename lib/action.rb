@@ -110,6 +110,9 @@ class Action
           from_field.delete_at from_pos
         end
       end
+      p @to_pos
+      p self
+      
       to_field = case @to_pos
       when Integer
         player_field.field
@@ -138,8 +141,8 @@ class Action
     end
   end
   class Set < Move
-    def initialize(from_player, from_pos, to_pos)
-      super(from_player, from_pos, to_pos, :set)
+    def initialize(from_player, from_pos, to_pos, card)
+      super(from_player, from_pos, to_pos, card, nil, :set)
     end
   end
   class Activate < Move;  end
@@ -157,7 +160,7 @@ class Action
   end
   class ReturnToHand < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :hand)
+      super(from_player, from_pos, :hand, card)
     end
   end
   class ReturnToDeck < Move
