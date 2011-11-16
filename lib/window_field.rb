@@ -73,7 +73,45 @@ class Window_Field < Window
     else
       @index = index     
       draw_item(@index, 1)
-      @action_window = Window_Action.new(@x+@items[index][0],@y+@items[index][1],["测试动作1", "测试动作2", "测试动作3"])
+      case @index
+      when :deck
+        @action_names = ["抽卡",
+          "卡组洗切",
+          "抽卡(双方确认)",
+          "顶牌回卡组底部",
+          "顶牌送入墓地",
+          "顶牌从游戏中除外",
+          "顶牌背面除外",
+          "确认顶牌",
+          "双方确认顶牌"
+        ]
+        @action_avalable = [true, true, false, false, false, false, false, false]
+      when :extra
+        @action_names = ["特殊召唤/发动",
+          "效果发动",
+          "从游戏中除外",
+          "送入墓地"
+        ]
+        @action_avalable = [true, true, false, false]
+      when :removed
+        @action_names = ["特殊召唤/发动",
+          "效果发动",
+          "加入手卡",
+          "返回卡组",
+          "送入墓地"
+        ]
+        @action_avalable = [true, true, false, false, false]
+      when :graveyard
+        @action_names = ["特殊召唤/发动",
+          "效果发动",
+          "加入手卡",
+          "返回卡组",
+          "从游戏中除外"
+        ]
+        @action_avalable = [true, true, false, false, false]
+      end
+
+      @action_window = Window_Action.new(@x+@items[index][0],@y+@items[index][1]-@action_names.size*Window_Action::WLH,@action_names, @action_avalable)
     end
   end
   def mousemoved(x,y)
