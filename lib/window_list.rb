@@ -37,7 +37,7 @@ class Window_List < Window
     [0, @index*self.class::WLH, @width, self.class::WLH]
   end
 	def refresh
-    @item_max.times {|index|draw_item(index)}
+    @item_max.times {|index|draw_item(index, index==@index ? 1 : 0)}
   end
   def cursor_up
     self.index = @index ? (@index - @column_max) % [@list.size, @item_max].min : 0
@@ -55,6 +55,9 @@ class Window_List < Window
     #子类定义
     #return unless include?(x,y)
     #self.index = (y - @y) / @single_height
+  end
+  def lostfocus
+    self.index = nil
   end
   def clicked
     $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index

@@ -14,12 +14,15 @@ class Scene
     start
     while $scene == self
       update
-      sleep 0.01
+      #sleep 0.01
     end
     terminate
   end
   def initialize
     @windows = []
+    #@fps = Window.new(0,0,100,24)
+    #@font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
+    #@fpscount = 0
   end
   #--------------------------------------------------------------------------
   # ● 开始处理
@@ -49,9 +52,13 @@ class Scene
      while event = Event.poll
        handle(event)
      end
+     #@fps.clear(0,0,100,24)
+     #@font.draw_blended_utf8(@fps.contents, @fpscount, 160, 12, 0x00,0x00,0x00)
+     #@fpscount += 1
      $screen.put(@background,0,0)
      @windows.each do |window|
-       $screen.put(window.contents, window.x, window.y) if window.contents
+       Surface.blit(window.contents, *window.viewport, $screen, window.x, window.y) if window.contents && window.visible
+       #$screen.put(window.contents, window.x, window.y) if window.contents && window.visible
      end
      $screen.update_rect(0,0,0,0)
   end

@@ -15,6 +15,9 @@ class Scene_Duel < Scene
   require_relative 'game_card'
   require_relative 'game_field'
   
+  attr_reader :cardinfo_window
+  attr_reader :action_window
+  
 	def initialize(room)
     super()
 		@room = room
@@ -28,7 +31,6 @@ class Scene_Duel < Scene
     
     @player1_lp = Window_LP.new(0,0, @room.player1, true)
     @player2_lp = Window_LP.new(360,0, @room.player2, false)
-    
     @phases_window = Window_Phases.new(124, 357)
     @turn_player = true
     
@@ -40,15 +42,19 @@ class Scene_Duel < Scene
     Action.player_field = @player_field
     Action.opponent_field = @opponent_field
     
+    @cardinfo_window = Window_CardInfo.new(1024-160, 0)
+    @action_window = Window_Action.new
+    
     $screen.update_rect(0,0,0,0)
   end
 
   def change_phase(phase)
+    Action::ChangePhase.new(@turn_player, [:DP, :SP, :M1, :BP, :M2, :EP][phase]).run
+    
     if phase == 5
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
-      
       Action::Turn_End.new(true, "Turn End", @player_field.lp, @player_field.hand.size, @player_field.deck.size, @player_field.graveyard.size, @player_field.removed.size, @player_field, 1).run
     else
       @phase = @phases_window.phase = phase
@@ -65,11 +71,14 @@ class Scene_Duel < Scene
   def handle(event)
     case event
     when Event::MouseMotion
+      if @active_window and !@active_window.include? event.x, event.y
+        @active_window.lostfocus
+      end
       self.windows.reverse.each do |window|
         if window.include? event.x, event.y
           @active_window = window 
           @active_window.mousemoved(event.x, event.y)
-          break
+          break true
         end
       end
     when Event::MouseButtonDown
@@ -94,8 +103,8 @@ class Scene_Duel < Scene
           end
         end
      when Mouse::BUTTON_RIGHT
-        if @player_field_window.action_window
-          @player_field_window.action_window.next
+        if @action_window
+          @action_window.next
         end
       end
     when Event::KeyDown
@@ -119,6 +128,7 @@ class Scene_Duel < Scene
   def handle_iduel(event)
     case event
     when Iduel::Event::Action
+      p event
       event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh

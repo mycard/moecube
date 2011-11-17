@@ -1,0 +1,3 @@
+#<SDL::Event::Active:0x2a17ef8 @gain=false, @state=1>
+#<SDL::Event::Active:0x2a17c40 @gain=true, @state=1>
+<< #0|zh99997,96e79218965eb72c92a549dd5a330112,f5276841bca2e536788917498435693b,20110131бщ

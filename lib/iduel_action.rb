@@ -200,6 +200,11 @@ class Action
       "[#{@id}] ◎→[11年3月1日禁卡表]先攻"
     end
   end
+  class Draw
+    def escape
+      "[#{@id}] ◎→抽牌"
+    end
+  end
   class Reset
     def escape
     "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"

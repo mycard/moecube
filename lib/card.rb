@@ -12,7 +12,7 @@ class Card
 	@db.results_as_hash = true
 	#PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
   PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
-  CardBack = Surface.load "graphics/field/card.png"
+  CardBack = Surface.load "graphics/field/card.jpg"
 	class << self
 		def find(id, order_by=nil)
       case id
@@ -24,7 +24,7 @@ class Card
       when Hash
         old_new(id)
       when nil
-        Card.find(1).instance_eval{@image = CardBack} unless @all[1]
+        Card.find(1)#.instance_eval{@image = CardBack} unless @all[1]
         @all[1]
       else
         sql = "select * from YGODATA where " << id
@@ -110,18 +110,22 @@ class Card
       @all.clear #清空缓存
     end
   end
-  attr_accessor :id
-  attr_accessor :name
-  attr_accessor :type
-  attr_accessor :race
-  attr_accessor :attrbuite
-  attr_accessor :depict
-  attr_accessor :ban
-  attr_accessor :adjust
-  attr_accessor :effecttype
-  attr_accessor :starnum
-  attr_accessor :atk
-  attr_accessor :def
+attr_accessor :id
+attr_accessor :number
+attr_accessor :name
+attr_accessor :card_type
+attr_accessor :monster_type
+attr_accessor :atk
+attr_accessor :def
+attr_accessor :attribute
+attr_accessor :type
+attr_accessor :level
+attr_accessor :lore
+attr_accessor :status
+attr_accessor :stats
+attr_accessor :archettypes
+attr_accessor :mediums
+attr_accessor :tokens
 
   def initialize(hash)
     @id = hash['id'].to_i
@@ -147,9 +151,12 @@ class Card
     @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.png"
   end
   def image_small
-    @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0)
+    @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0).copy_rect(1,1,54,81) #尼玛！
   end
   def unknown?
     @id == 1
+  end
+  def monster?
+    !@attribute.nil?
   end
 end

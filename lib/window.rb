@@ -1,19 +1,40 @@
 class Window
   WLH = 24
-  attr_reader :x, :y, :width, :height, :z, :contents
+  attr_accessor :x, :y, :width, :height, :z, :contents, :angle, :visible, :viewport
   def initialize(x, y, width, height, z=200)
     @x = x
     @y = y
     @z = z
     @width = width
     @height = height
+    @visible = true
+    @viewport = [0, 0, @width, @height]
+    big_endian = ([1].pack("N") == [1].pack("L"))
+=begin
+    if big_endian
+      rmask = 0xff000000
+      gmask = 0x00ff0000
+      bmask = 0x0000ff00
+      amask = 0x000000ff
+    else
+      rmask = 0x000000ff
+      gmask = 0x0000ff00
+      bmask = 0x00ff0000
+      amask = 0xff000000
+    end
+    #p rmask, gmask, bmask, amask
+=end
+      amask = 0xff000000
+      rmask = 0x00ff0000
+      gmask = 0x0000ff00
+      bmask = 0x000000ff
     unless @background
-      @background = Surface.new(SWSURFACE|SRCALPHA, @width, @height, 32, 0xFF0000, 0x00FF00, 0x0000FF, 0xFF000000)
-      @background.fill_rect(0,0,@width,@height,0xFF00FF00)
+      @background = Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
+      @background.fill_rect(0,0,@width,@height,0x66000000)
     end
     unless @contents
-      @contents = Surface.new(SWSURFACE|SRCALPHA, @width, @height, 32, 0xFF0000, 0x00FF00, 0x0000FF, 0xFF000000)
-      @contents.fill_rect(0,0,@width,@height,0xFF00FF00)
+      @contents = Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
+      @contents.fill_rect(0,0,@width,@height,0x66000000)
     end
     #按Z坐标插入
     unless $scene.windows.each_with_index do |window, index|
@@ -51,6 +72,9 @@ class Window
     #子类定义
   end
   def clicked
+    #子类定义
+  end
+  def lostfocus
     #子类定义
   end
 end
