@@ -110,9 +110,11 @@ class Scene_Duel < Scene
     when Event::KeyDown
       case event.sym
       when  Key::F1
-        suffle
+        Action::Shuffle.new.run
       when Key::F2
-        draw
+        first_to_go
+      when Key::F3
+        Action::Dice.new(true).run
       when Key::F5
         reset
       end

@@ -2,7 +2,7 @@
 class Action
   @@id = 0
 	attr_reader :from_player, :msg, :id
-	def initialize(from_player, msg=nil)
+	def initialize(from_player=true, msg=nil)
     @id = @@id
     @from_player = from_player
     @msg = msg
@@ -44,6 +44,12 @@ class Action
   class FirstToGo < Go;  end
   class SecondToGo < Go;  end
   class Chat < Action; end
+  class Shuffle < Action
+    def run
+      player_field.deck.shuffle!
+      super
+    end
+  end
   class Note < Action
     attr_reader :card
     def initialize(from_player, msg, card)

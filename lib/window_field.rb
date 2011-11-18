@@ -193,6 +193,13 @@ class Window_Field < Window
       when 0
         Action::Draw.new(true).run
       end
+    when 0..10
+      #场上
+    when Integer #手卡
+      case $scene.action_window.index
+      when 0
+        Action::Set.new(true, :hand, 6, @index_card)
+      end
     end
     refresh
   end

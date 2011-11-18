@@ -191,7 +191,9 @@ class Action
       system("pause")
     end
   end
-
+  def escape
+    inspect
+  end
   def run
     $iduel.action self if @from_player
   end
@@ -203,6 +205,11 @@ class Action
   class Draw
     def escape
       "[#{@id}] ◎→抽牌"
+    end
+  end
+  class Dice
+    def escape
+      "[#{@id}] ◎→掷骰子,结果为 #{@result}"
     end
   end
   class Reset
@@ -218,6 +225,11 @@ class Action
   class Turn_End
     def escape
       "[#{@id}] ◎→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
+    end
+  end
+  class Shuffle
+    def escape
+      "[#{@id}] ◎→卡组洗切"
     end
   end
 end
