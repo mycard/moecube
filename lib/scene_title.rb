@@ -6,7 +6,9 @@
 #==============================================================================
 class Scene_Title < Scene
   require_relative 'window_title'
+  require_relative 'widget_inputbox'
   def start
+    
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
     @background = Surface.load(title)
@@ -33,11 +35,17 @@ class Scene_Title < Scene
           @command_window.index = nil
         end
       when Event::MouseButtonDown
+
+        
         case event.button
         when Mouse::BUTTON_LEFT
+          Widget_InputBox.show(0,0){|text, finished|p text, finished}
+          
           if @command_window.include?(event.x, event.y)
             @command_window.click((event.y - @command_window.y) / @command_window.class::Button_Height)
           end
+        when Mouse::BUTTON_RIGHT
+          Widget_InputBox.right
         when 4 #scrool_up
           @command_window.index = @index ? (@index-1) % Buttons.size : 0
         when 5
