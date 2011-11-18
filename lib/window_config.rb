@@ -54,7 +54,7 @@ class Window_Config < Window
       clear(*item_rect(@index))
       draw_item(@index, 0) 
     end
-    if index.nil? or index.is_a?(Emulator)
+    if index.nil? or !@items.include? index
       @index = nil
     else
       @index = index

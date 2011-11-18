@@ -14,7 +14,7 @@ class Scene
     start
     while $scene == self
       update
-      #sleep 0.01
+      sleep 0.01
     end
     terminate
   end

@@ -21,6 +21,8 @@ class Scene_Title < Scene
     @bgm = Mixer::Music.load 'audio/bgm/title.ogg'
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
     Mixer.fade_in_music @bgm, -1, 800
+    
+    
   end
   def clear(x,y,width,height)
     Surface.blit(@background,x,y,width,height,$screen,x,y)
@@ -39,13 +41,11 @@ class Scene_Title < Scene
         
         case event.button
         when Mouse::BUTTON_LEFT
-          Widget_InputBox.show(0,0){|text, finished|p text, finished}
           
           if @command_window.include?(event.x, event.y)
             @command_window.click((event.y - @command_window.y) / @command_window.class::Button_Height)
           end
         when Mouse::BUTTON_RIGHT
-          Widget_InputBox.right
         when 4 #scrool_up
           @command_window.index = @index ? (@index-1) % Buttons.size : 0
         when 5

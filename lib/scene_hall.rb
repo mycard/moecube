@@ -8,18 +8,16 @@ class Scene_Hall < Scene
   require_relative 'window_playerlist'
   require_relative 'window_userinfo'
   require_relative 'window_roomlist'
-
-  #require_relative 'window_chat'
+  require_relative 'window_chat'
 	def start
 		$iduel.upinfo
-    
 		@background = Surface.load "graphics/hall/background.png"
     Surface.blit(@background,0,0,0,0,$screen,0,0)
 		@playerlist = Window_PlayerList.new(24,204)
 		@userinfo = Window_UserInfo.new(24,24, $iduel.user)
 		@roomlist = Window_RoomList.new(320,51)
     @active_window = @roomlist
-		#@chat = Window_Chat.new(320,550)
+		@chat = Window_Chat.new(320,550,680,168)
     
     $screen.update_rect(0,0,0,0)
     bgm = Mixer::Music.load("audio/bgm/hall.ogg")
@@ -31,11 +29,15 @@ class Scene_Hall < Scene
   def handle(event)
     case event
     when Event::MouseMotion
+      if @active_window and !@active_window.include? event.x, event.y
+        @active_window.lostfocus
+        @active_window = nil
+      end
       self.windows.reverse.each do |window|
         if window.include? event.x, event.y
           @active_window = window 
           @active_window.mousemoved(event.x, event.y)
-          break
+          break true
         end
       end
     when Event::KeyDown
@@ -66,8 +68,18 @@ class Scene_Hall < Scene
     when Event::MouseButtonDown
       case event.button
       when Mouse::BUTTON_LEFT
-        @active_window.mousemoved(event.x, event.y)
-        @active_window.clicked
+        if @active_window and !@active_window.include? event.x, event.y
+          @active_window.lostfocus
+          @active_window = nil
+        end
+        self.windows.reverse.each do |window|
+          if window.include? event.x, event.y
+            @active_window = window 
+            @active_window.mousemoved(event.x, event.y)
+            break
+          end
+        end
+        @active_window.clicked if @active_window
       when 4
         @active_window.cursor_up
       when 5
@@ -94,6 +106,8 @@ class Scene_Hall < Scene
     when Iduel::Event::WATCHROOMSTART
       require_relative 'scene_watch'
       $scene = Scene_Watch.new(event.room)
+    when Iduel::Event::PCHAT
+      @chat.add event.user, event.content
     else
       puts "---unhandled iduel event----"
       p event

@@ -104,7 +104,7 @@ class Iduel::Event::PCHAT < Iduel::Event
   attr_reader :user, :content
   def initialize(info)
     user, @content = info.split(",", 2)
-    @user = Iduel::User.new user
+    @user = user == "System" ? Iduel::User.new(100000, "iDuel管理中心") : Iduel::User.new(user)
   end
 end
 class Iduel::Event::JOINROOMOK < Iduel::Event

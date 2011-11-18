@@ -73,6 +73,7 @@ class Scene_Duel < Scene
     when Event::MouseMotion
       if @active_window and !@active_window.include? event.x, event.y
         @active_window.lostfocus
+        @active_window = nil
       end
       self.windows.reverse.each do |window|
         if window.include? event.x, event.y
@@ -84,8 +85,18 @@ class Scene_Duel < Scene
     when Event::MouseButtonDown
       case event.button
       when Mouse::BUTTON_LEFT
-        @active_window.mousemoved(event.x, event.y)
-        @active_window.clicked
+        if @active_window and !@active_window.include? event.x, event.y
+          @active_window.lostfocus
+          @active_window = nil
+        end
+        self.windows.reverse.each do |window|
+          if window.include? event.x, event.y
+            @active_window = window 
+            @active_window.mousemoved(event.x, event.y)
+            break true
+          end
+        end
+        @active_window.clicked if @active_window
       when 4
         @active_window.cursor_up
       when 5
@@ -102,7 +113,7 @@ class Scene_Duel < Scene
             @phases_window.index = @phase
           end
         end
-     when Mouse::BUTTON_RIGHT
+      when Mouse::BUTTON_RIGHT
         if @action_window
           @action_window.next
         end

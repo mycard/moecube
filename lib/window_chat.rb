@@ -4,28 +4,28 @@
 # 　title
 #==============================================================================
 
-class Window_Chat < Sprite
+class Window_Chat < Window
+  User_Color = [0,0,0xFF]
+  Text_Color = [0,0,0]
 	def initialize(x, y, width, height)
-		super( Image.new(width, height) ){|sprite|
-			sprite.x = x
-			sprite.y = y
-			sprite.width = width
-			sprite.height = height
-			sprite.contents[0].font.size = 16
-			sprite.contents[0].font.color = Color.new(0x031122)
-			sprite.contents[0].font.smooth = true
-			@font_bold = sprite.contents[0].font.dup
-			@font_bold.bold = true
-		}
-		yield self if block_given?
+    super(x,y,width,height)
+    @chat_input = Widget_InputBox.new(416,723,586,24){|text|$iduel.chat text; add($iduel.user, text)}
+    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
+    @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
+    @list = []
 	end
 	def add(user, content)
-		contents[0].blit(contents[0], 0, 0, 0, 24, contents[0].width, contents[0].height-16) #滚动条泥煤啊
-		contents[0].fill_rect(Color::White, 0, contents[0].height-16, contents[0].width, 16)
-		name = user.name+": "
-		name_width = @font_bold.text_size(name)[0]
-		contents[0].draw_text(name, 0, contents[0].height-16, @font_bold)
-		contents[0].draw_text(content, name_width, contents[0].height-16)
+    @list << [user, content]
+    refresh
 	end
+  def refresh
+    @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
+    @list.last(7).each_with_index do |chat, index|
+      user, content = *chat
+      @font.draw_blended_utf8(@contents, user.name, 0, index*WLH, *User_Color)
+      name_width = @font.text_size(user.name)[0]
+      @font.draw_blended_utf8(@contents, ':'+content, name_width, index*WLH, *Text_Color)
+    end
+  end
 end
 

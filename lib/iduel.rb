@@ -61,13 +61,17 @@ class Iduel
     send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
   end
   def action(action)
-    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊000000") #TODO
+    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊000000") #TODO:iduel校验字串
   end
   def host(name, password="", lv=0, color = 0)
     send(6, @key, name, password, checknum("JOINROOMMSG", @session + name + password + "0"), 0, color, lv, 0, nil, nil) #TODO:v.ak, v.al
   end
   def watch(room, password="")
     send(5, @key, room.id, password, checknum("WATCHROOMMSG", "#{@session}#{room.id}#{password}"))
+  end
+  def chat(msg)
+    send(4, @key, msg, checknum("CHATP", @session))
+    #4|241019,test,2368c6b89b3e2eedb92e1b624a2a157c
   end
   def quitwatchroom
     send("QUITWATCHROOM", @key, checknum("QUITWATCHROOM", @session))
