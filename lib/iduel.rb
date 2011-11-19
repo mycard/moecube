@@ -62,6 +62,9 @@ class Iduel
   end
   def action(action)
     send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊000000") #TODO:iduel校验字串
+
+
+
   end
   def host(name, password="", lv=0, color = 0)
     send(6, @key, name, password, checknum("JOINROOMMSG", @session + name + password + "0"), 0, color, lv, 0, nil, nil) #TODO:v.ak, v.al

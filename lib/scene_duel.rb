@@ -17,7 +17,7 @@ class Scene_Duel < Scene
   
   attr_reader :cardinfo_window
   attr_reader :action_window
-  
+  attr_reader :player_field_window
 	def initialize(room)
     super()
 		@room = room
@@ -122,12 +122,15 @@ class Scene_Duel < Scene
       case event.sym
       when  Key::F1
         Action::Shuffle.new.run
+        @player_field_window.refresh
       when Key::F2
         first_to_go
+        @player_field_window.refresh
       when Key::F3
         Action::Dice.new(true).run
       when Key::F5
         reset
+        @player_field_window.refresh
       end
     else
       super

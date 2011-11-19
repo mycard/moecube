@@ -55,6 +55,9 @@ class Window_Action < Window_List
   def mousemoved(x,y)
     self.index = (y - @y) / WLH
   end
+  def clicked
+    $scene.player_field_window.clicked
+  end
   def lostfocus
   end
 end

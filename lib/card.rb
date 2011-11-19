@@ -159,4 +159,10 @@ attr_accessor :tokens
   def monster?
     !@attribute.nil?
   end
+  def trap?
+    [:通常陷阱, :反击陷阱, :永续陷阱].include? card_type 
+  end
+  def spell?
+    [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type 
+  end
 end

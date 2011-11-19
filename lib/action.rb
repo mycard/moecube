@@ -88,6 +88,7 @@ class Action
       @position = position
     end
     def run
+      p 1
       from_field = case @from_pos
       when Integer
         player_field.field
@@ -151,9 +152,21 @@ class Action
       super(from_player, from_pos, to_pos, card, nil, :set)
     end
   end
-  class Activate < Move;  end
-  class Summon < Move;  end
-  class SpecialSummon < Move;  end
+  class Activate < Move
+    def initialize(from_player, from_pos, to_pos, card)
+      super(from_player, from_pos, to_pos, card, nil, :attack)
+    end
+  end
+  class Summon < Move
+    def initialize(from_player, from_pos, to_pos, card)
+      super(from_player, from_pos, to_pos, card, nil, :attack)
+    end
+  end
+  class SpecialSummon < Move
+    def initialize(from_player, from_pos, to_pos, card, position=:attack)
+      super(from_player, from_pos, to_pos, card, nil, position)
+    end
+  end
   class SendToGraveyard < Move
     def initialize(from_player, from_pos, card)
       super(from_player, from_pos, card, :graveyard)

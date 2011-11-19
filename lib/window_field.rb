@@ -147,10 +147,10 @@ class Window_Field < Window
         }
       when Integer #手卡
         @index_card = @field.hand[@index-11]
-        @action_names = {"放置到场上" => true,
-          "召唤" => @index_card.monster?,
-          "发动" => !@index_card.monster?,
-          "特殊召唤" => true,
+        @action_names = {"召唤" => @index_card.monster?,
+          "特殊召唤" => false,
+          "发动" => @index_card.spell?,
+          "放置到场上" => true,
           "放回卡组顶端" => true,
           "送入墓地" => true,
           "从游戏中除外" => true,
@@ -197,10 +197,34 @@ class Window_Field < Window
       #场上
     when Integer #手卡
       case $scene.action_window.index
-      when 0
-        Action::Set.new(true, :hand, 6, @index_card)
+      when 0 #召唤
+        if pos = @field.empty_field(@index_card)
+          Action::Summon.new(true, :hand, pos, @index_card).run
+        else
+          p "场位已满"
+        end
+      when 1 #特殊召唤
+        if pos = @field.empty_field(@index_card)
+          Action::SpecialSummon.new(true, :hand, pos, @index_card, :attack).run
+        else
+          p "场位已满"
+        end
+      when 2 #发动
+        if pos = @field.empty_field(@index_card)
+          Action::Activate.new(true, :hand, pos, @index_card).run
+        else
+          p "场位已满"
+        end
+      when 3 #放置
+        if pos = @field.empty_field(@index_card)
+          Action::Set.new(true, :hand, pos, @index_card).run
+        else
+          p "场位已满"
+        end
       end
     end
+    @index = nil
     refresh
+    mousemoved(Mouse.state[0], Mouse.state[1])
   end
 end

@@ -232,6 +232,26 @@ class Action
       "[#{@id}] ◎→卡组洗切"
     end
   end
+  class Set
+    def escape
+      "[#{@id}] ◎→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
+    end
+  end
+  class Summon
+    def escape
+      "[#{@id}] ◎→从手卡~召唤#{@card.escape}(#{@to_pos})"
+    end
+  end
+  class SpecialSummon
+    def escape
+      "[#{@id}] ◎→从手卡~特殊召唤#{@card.escape}(#{@to_pos})呈守备表示"
+    end
+  end
+  class Activate
+    def escape
+      "[#{@id}] ◎→从手卡~发动#{@card.escape}(#{@to_pos})"
+    end
+  end
 end
 
 

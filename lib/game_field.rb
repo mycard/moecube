@@ -38,4 +38,25 @@ class Game_Field
     @graveyard = []
     @removed = []
 	end
+  def empty_monster_field
+    [8,7,9,6,10].each do |pos|
+      return pos if @field[pos].nil?
+    end
+    return
+  end
+  def empty_spelltrap_field
+    [3,2,4,1,5].each do |pos|
+      return pos if @field[pos].nil?
+    end
+    return
+  end
+  def empty_field(card)
+    if card.monster?
+      empty_monster_field
+    elsif card.card_type == :场地魔法
+      @field[0].nil? ? 0 : nil
+    else
+      empty_spelltrap_field
+    end
+  end
 end
