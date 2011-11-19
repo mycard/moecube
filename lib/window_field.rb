@@ -43,7 +43,7 @@ class Window_Field < Window
     end
     if !@field.removed.empty?
       @items[:removed] = Removed_Pos + Card_Size 
-      @cards[:removed] = @field.extra.first
+      @cards[:removed] = @field.removed.first
     end
     if !@field.graveyard.empty?
       @items[:graveyard] = Graveyard_Pos + Card_Size
@@ -88,42 +88,45 @@ class Window_Field < Window
       draw_item(@index, 1)
       case @index
       when :deck
-        @index_card = @field.deck.first
+        @card = @field.deck.first
         @action_names = {"抽卡" => true,
           "卡组洗切" => true,
-          "抽卡(双方确认)" => true,
-          "顶牌回卡组底部" => true,
+          "抽卡并确认" => false,
+          "顶牌回卡组底" => false,
           "顶牌送入墓地" => true,
-          "顶牌从游戏中除外" => true,
-          "顶牌背面除外" => true,
-          "确认顶牌" => true,
-          "双方确认顶牌" => true
+          "顶牌除外" => true,
+          "顶牌背面除外" => false,
+          "确认顶牌" => false,
+          "双方确认顶牌" => false,
+          "对方确认顶牌" => false
         }
       when :extra
-        @index_card = @field.extra.first
-        @action_names = {"特殊召唤/发动" => true,
+        @card = @field.extra.first
+        @action_names = {"特殊召唤" => true,
           "效果发动" => true,
           "从游戏中除外" => true,
           "送入墓地" => true
         }
       when :removed
-        @index_card = @field.removed.first
-        @action_names = {"特殊召唤/发动" => true,
+        @card = @field.removed.first
+        @action_names = {"特殊召唤" => @card.monster?,
+          "发动" => !@card.monster?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
           "送入墓地" => true
         }
       when :graveyard
-        @index_card = @field.graveyard.first
-        @action_names = {"特殊召唤/发动" => true,
+        @card = @field.graveyard.first
+        @action_names = {"特殊召唤" => @card.monster?,
+          "发动" => !@card.monster?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
           "从游戏中除外" => true
         }
       when 0..5
-        @index_card = @field.field[@index]
+        @card = @field.field[@index]
         @action_names = {"效果发动" => true,
           "返回卡组" => true,
           "送入墓地" => true,
@@ -132,7 +135,7 @@ class Window_Field < Window
           "打开/盖伏" => true
         }
       when 6..10
-        @index_card = @field.field[@index]
+        @card = @field.field[@index]
         @action_names = {"攻/守形式转换" => true,
           "里侧/表侧转换" => true,
           "转为里侧守备" => true,
@@ -146,10 +149,10 @@ class Window_Field < Window
           "送入对手墓地" => true
         }
       when Integer #手卡
-        @index_card = @field.hand[@index-11]
-        @action_names = {"召唤" => @index_card.monster?,
+        @card = @field.hand[@index-11]
+        @action_names = {"召唤" => @card.monster?,
           "特殊召唤" => false,
-          "发动" => @index_card.spell?,
+          "发动" => @card.spell?,
           "放置到场上" => true,
           "放回卡组顶端" => true,
           "送入墓地" => true,
@@ -158,7 +161,7 @@ class Window_Field < Window
         }
       end
       $scene.action_window.list = @action_names
-      $scene.cardinfo_window.card = @index_card
+      $scene.cardinfo_window.card = @card
       $scene.action_window.x = @x + @items[@index][0] - ($scene.action_window.width - @items[@index][2])/2
       $scene.action_window.y = @y + @items[@index][1] - $scene.action_window.viewport[3]#height
     end
@@ -192,35 +195,106 @@ class Window_Field < Window
       case $scene.action_window.index
       when 0
         Action::Draw.new(true).run
+      when 1
+        Action::Shuffle.new.run
+      when 2
+        p "未实现"
+        #Action::Draw.new(true).run
+      when 3
+        p "未实现"
+      when 4
+        Action::SendToGraveyard.new(true, :deck, @card).run
+      when 5
+        Action::Remove.new(true, :deck, @card).run
+      when 6
+        p "未实现"
+      when 7
+        p "未实现"
+      when 8
+        p "未实现"
+      when 9
+        p "未实现"
+      end
+    when :extra
+      case $scene.action_window.index
+      when 0
+        if pos = @field.empty_field(@card)
+          Action::SpecialSummon.new(true, :extra, pos, @card, :attack).run
+        else
+          p "场位已满"
+        end
+      when 1
+        Action::Effect_Activate.new(true, :extra, @card).run
+      when 2
+        Action::Remove.new(true, :extra, @card).run
+      when 3
+        Action::SendToGraveyard.new(true, :extra, @card).run
+      end
+    when :removed
+      #        @action_names = {"特殊召唤" => @card.monster?,
+      #    "发动" => !@card.monster?,
+      #    "效果发动" => true,
+      #    "加入手卡" => true,
+      #    "返回卡组" => true,
+      #    "送入墓地" => true
+      case $scene.action_window.index
+      when 0 #特殊召唤
+        if pos = @field.empty_field(@card)
+          Action::Summon.new(true, :removed, pos, @card).run
+        else
+          p "场位已满"
+        end
+      when 1 #发动
+        if pos = @field.empty_field(@card)
+          Action::Activate.new(true, :removed, pos, @card).run
+        else
+          p "场位已满"
+        end
+      when 2 #效果发动
+        Action::Effect_Activate.new(true, :removed, @card).run
+      when 3 #加入手卡
+        Action::ReturnToHand.new(true, :removed, @card).run
+      when 4
+        Action::ReturnToDeck.new(true, :removed, @card).run
+      when 5
+        Action::SendToGraveyard.new(true, :removed, @card).run
       end
     when 0..10
       #场上
     when Integer #手卡
       case $scene.action_window.index
       when 0 #召唤
-        if pos = @field.empty_field(@index_card)
-          Action::Summon.new(true, :hand, pos, @index_card).run
+        if pos = @field.empty_field(@card)
+          Action::Summon.new(true, :hand, pos, @card).run
         else
           p "场位已满"
         end
       when 1 #特殊召唤
-        if pos = @field.empty_field(@index_card)
-          Action::SpecialSummon.new(true, :hand, pos, @index_card, :attack).run
+        if pos = @field.empty_field(@card)
+          Action::SpecialSummon.new(true, :hand, pos, @card, :attack).run
         else
           p "场位已满"
         end
       when 2 #发动
-        if pos = @field.empty_field(@index_card)
-          Action::Activate.new(true, :hand, pos, @index_card).run
+        if pos = @field.empty_field(@card)
+          Action::Activate.new(true, :hand, pos, @card).run
         else
           p "场位已满"
         end
       when 3 #放置
-        if pos = @field.empty_field(@index_card)
-          Action::Set.new(true, :hand, pos, @index_card).run
+        if pos = @field.empty_field(@card)
+          Action::Set.new(true, :hand, pos, @card).run
         else
           p "场位已满"
         end
+      when 4 #返回卡组
+        Action::ReturnToDeck.new(true, :hand, @card).run
+      when 5 #送入墓地
+        Action::SendToGraveyard.new(true, :hand, @card).run
+      when 6 #从游戏中除外
+        Action::Remove.new(true, :hand, @card).run
+      when 7 #效果发动
+        Action::Effect_Activate.new(true, :hand, @card).run
       end
     end
     @index = nil

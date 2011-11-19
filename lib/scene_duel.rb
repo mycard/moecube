@@ -71,12 +71,12 @@ class Scene_Duel < Scene
   def handle(event)
     case event
     when Event::MouseMotion
-      if @active_window and !@active_window.include? event.x, event.y
+      if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
         @active_window.lostfocus
         @active_window = nil
       end
       self.windows.reverse.each do |window|
-        if window.include? event.x, event.y
+        if window.include?(event.x, event.y) && window.visible
           @active_window = window 
           @active_window.mousemoved(event.x, event.y)
           break true
@@ -85,12 +85,12 @@ class Scene_Duel < Scene
     when Event::MouseButtonDown
       case event.button
       when Mouse::BUTTON_LEFT
-        if @active_window and !@active_window.include? event.x, event.y
+        if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
           @active_window.lostfocus
           @active_window = nil
         end
         self.windows.reverse.each do |window|
-          if window.include? event.x, event.y
+          if window.include?(event.x, event.y) && window.visible
             @active_window = window 
             @active_window.mousemoved(event.x, event.y)
             break true

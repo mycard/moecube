@@ -90,6 +90,22 @@ class Action
       "卡组顶端"
     end
   end
+  def self.escape_pos2(pos)
+    case pos
+    when :hand
+      "手卡"
+    when :deck
+      "卡组"
+    when :graveyard
+      "墓地"
+    when :extra
+      "额外牌堆"
+    when :removed
+      "除外区"
+    when 0..10
+      "场上(#{pos})"
+    end
+  end
   def self.escape_position(position)
     case position
     when :attack
@@ -163,7 +179,7 @@ class Action
       when /(.*)抛硬币,结果为(.+)/
         Coin.new from_player, $2=="正面", $1
       when /从#{PosFilter}~发动#{CardFilter}#{PosFilter}/
-        Activate.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg
+        Activate.new from_player, parse_pos($1), parse_pos($3), parse_card($2)
       when /从#{PosFilter}~召唤#{CardFilter}#{PosFilter}/
         Summon.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg
       when /从#{PosFilter}~特殊召唤#{CardFilter}#{PosFilter}呈#{PositionFilter}/
@@ -184,11 +200,11 @@ class Action
         ChangePhase.new(from_player, parse_phase($1))
       else
         p str, 1
-        system("pause")
+        #system("pause")
       end
     else
       p str, 2
-      system("pause")
+      #system("pause")
     end
   end
   def escape
@@ -214,7 +230,7 @@ class Action
   end
   class Reset
     def escape
-    "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
+      "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
     end
   end
   class ChangePhase
@@ -250,6 +266,76 @@ class Action
   class Activate
     def escape
       "[#{@id}] ◎→从手卡~发动#{@card.escape}(#{@to_pos})"
+    end
+  end
+  class SendToGraveyard
+    def escape
+      "[#{@id}] ◎→将#{@card.escape}从~#{Action.escape_pos2(@from_pos)}~送往墓地"
+    end
+  end
+  class Remove
+    def escape
+      "[#{@id}] ◎→将#{Action.escape_pos2(@from_pos)}的#{@card.escape}从游戏中除外"
+    end
+  end
+  class ReturnToHand
+    def escape
+      pos = case @from_pos
+      when :deck
+        "卡组顶端"
+      when :graveyard
+        "墓地"
+      when :removed
+        "除外区"
+      when 0..10
+        "场上(#{pos})"
+      end
+      "[#{@id}] ◎→从#{pos}取#{@card.escape}加入手卡"
+    end
+  end
+  class ReturnToDeck
+    def escape
+      pos = case @from_pos
+      when :hand
+        "手卡"
+      when :graveyard
+        "墓地"
+      when :removed
+        "除外区"
+      when 0..10
+        "场上(#{pos})"
+      end
+      "[#{@id}] ◎→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
+    end
+  end
+  class ReturnToExtra
+    def escape
+      pos = case @from_pos
+      when :graveyard
+        "墓地"
+      when :removed
+        "除外区"
+      when 0..10
+        "场上(#{pos})"
+      end
+      "[#{@id}] ◎→#{@card.escape}从#{pos}返回额外牌堆"
+    end
+  end
+  class Effect_Activate
+    def escape
+      pos = case @from_pos
+      when :hand
+        "己方手牌"
+      when :graveyard
+        "己方墓地"
+      when :deck
+        "己方卡组"
+      when :extra
+        "己方额外牌堆"
+      when 0..10
+        "(#{@from_pos})"
+      end
+      "[#{@id}] ◎→#{pos}#{@card.escape}效果发~动"
     end
   end
 end

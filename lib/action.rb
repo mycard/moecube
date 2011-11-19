@@ -88,7 +88,7 @@ class Action
       @position = position
     end
     def run
-      p 1
+      #p 1
       from_field = case @from_pos
       when Integer
         player_field.field
@@ -117,16 +117,16 @@ class Action
           from_field.delete_at from_pos
         end
       end
-      p @to_pos
-      p self
-      
+      #p @to_pos
+      #p self
+      #p @to_pos
       to_field = case @to_pos
       when Integer
         player_field.field
       when :hand
         player_field.hand
-      when :field
-        player_field.field
+      #when :field
+      #  player_field.field
       when :graveyard
         player_field.graveyard
       when :deck
@@ -136,14 +136,14 @@ class Action
       when :removed
         player_field.removed
       end
+      #p to_field
       if @to_pos.is_a? Integer
-        to_pos = @to_pos
-      elsif to_field == player_field.field
-        to_pos = from_field.index(nil) || 11
+        to_field[@to_pos] = @card
+      #elsif to_field == player_field.field
+      #  to_pos = from_field.index(nil) || 11
       else
-        to_pos = to_field.size
+        to_field.unshift @card
       end
-      to_field[to_pos] = @card
       super
     end
   end
@@ -169,12 +169,12 @@ class Action
   end
   class SendToGraveyard < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :graveyard)
+      super(from_player, from_pos, :graveyard, card)
     end
   end
   class Remove < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :removed)
+      super(from_player, from_pos, :removed, card)
     end
   end
   class ReturnToHand < Move
@@ -184,17 +184,17 @@ class Action
   end
   class ReturnToDeck < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :deck)
+      super(from_player, from_pos, :deck, card)
     end
   end
   class ReturnToExtra < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :extra)
+      super(from_player, from_pos, :extra, card)
     end
   end
   class Control < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, card, :opponent)
+      super(from_player, from_pos, :opponent, card)
     end
   end
   class Refresh_Field < Action
@@ -214,6 +214,14 @@ class Action
     def initialize(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field, turn)
       super(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field)
       @turn = turn
+    end
+  end
+  class Effect_Activate < Action
+    attr_reader :from_pos, :card
+    def initialize(from_player, from_pos, card)
+      super(from_player)
+      @from_pos = from_pos
+      @card = card
     end
   end
 end
