@@ -9,6 +9,7 @@ class Scene_Duel < Scene
   require_relative 'window_lp'
   require_relative 'window_phases'
   require_relative 'window_field'
+  require_relative 'window_fieldback'
   require_relative 'card'
   require_relative 'deck'
   require_relative 'action'
@@ -17,7 +18,11 @@ class Scene_Duel < Scene
   
   attr_reader :cardinfo_window
   attr_reader :action_window
+  attr_reader :player_field
+  attr_reader :opponent_field
   attr_reader :player_field_window
+  attr_reader :opponent_field_window
+  attr_reader :fieldback_window
 	def initialize(room)
     super()
 		@room = room
@@ -36,6 +41,8 @@ class Scene_Duel < Scene
     
     @player_field = Game_Field.new Deck.load("test1.TXT")
     @opponent_field = Game_Field.new
+    
+    @fieldback_window = Window_FieldBack.new(128,175)
     
     @player_field_window = Window_Field.new(4, 398, @player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, @opponent_field, false)
@@ -136,7 +143,6 @@ class Scene_Duel < Scene
       super
     end
   end
-  
   
   
   

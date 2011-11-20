@@ -31,6 +31,9 @@ class Window_Field < Window
     refresh
 	end
   def refresh
+    p $scene.player_field.field[0] rescue nil
+    p $scene.opponent_field.field[0] rescue nil
+    $scene.fieldback_window.card = $scene.player_field.field[0] || $scene.opponent_field.field[0] rescue nil
     @items.clear
     @cards.clear
     if !@field.deck.empty?
