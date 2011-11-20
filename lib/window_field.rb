@@ -6,9 +6,9 @@
 #==============================================================================
 
 class Window_Field < Window
-  require 'card'
-  require 'window_action'
-  require 'window_cardinfo'
+  require_relative 'card'
+  require_relative 'window_action'
+  require_relative 'window_cardinfo'
   Field_Pos = [[56,0], #场地魔法
     [140, 84], [234,84], [328,84],[422,84], [516, 84], #后场
     [140, 0], [234, 0], [328, 0],[422, 0], [516, 0]] #前场
@@ -31,8 +31,6 @@ class Window_Field < Window
     refresh
 	end
   def refresh
-    p $scene.player_field.field[0] rescue nil
-    p $scene.opponent_field.field[0] rescue nil
     $scene.fieldback_window.card = $scene.player_field.field[0] || $scene.opponent_field.field[0] rescue nil
     @items.clear
     @cards.clear

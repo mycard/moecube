@@ -1,5 +1,5 @@
 #encoding: UTF-8
-=begin
+
 alias gbk_puts puts
 def puts(*args)
   gbk_puts(*(args.collect{|item|item.encode "GBK", :invalid => :replace, :undef => :replace}))
@@ -8,7 +8,7 @@ end
 def p(*args)
   print(args.collect{|item|item.inspect.encode "GBK", :invalid => :replace, :undef => :replace}.join("\n")+"\n") rescue print(args.join("\n")+"\n")
 end
-=end
+
 def filesize_inspect(size)
   case size
   when 0...1024

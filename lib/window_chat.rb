@@ -5,7 +5,7 @@
 #==============================================================================
 
 class Window_Chat < Window
-  require 'widget_scrollbar'
+  require_relative 'widget_scrollbar'
   User_Color = [0,0,0xFF]
   Text_Color = [0,0,0]
 	def initialize(x, y, width, height)
