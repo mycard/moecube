@@ -110,7 +110,6 @@ class Window_Field < Window
       when :removed
         @card = @field.removed.first
         @action_names = {"特殊召唤" => @card.monster?,
-          "发动" => !@card.monster?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -119,7 +118,6 @@ class Window_Field < Window
       when :graveyard
         @card = @field.graveyard.first
         @action_names = {"特殊召唤" => @card.monster?,
-          "发动" => !@card.monster?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -132,21 +130,23 @@ class Window_Field < Window
           "送入墓地" => true,
           "从游戏中除外" => true,
           "加入手卡" => true,
-          "打开/盖伏" => true
+          "盖伏" => true
         }
       when 6..10
         @card = @field.field[@index]
-        @action_names = {"攻/守形式转换" => true,
-          "里侧/表侧转换" => true,
-          "转为里侧守备" => true,
-          "攻击宣言" => true,
+        @action_names = {"攻击表示" => false,
+          "守备表示" => false,
+          "里侧表示" => true,
+          "反转召唤" => true,
+          "打开" => true,
           "效果发动" => true,
-          "转移控制权" => true,
+          "攻击宣言" => false,
+          "转移控制权" => false,
           "放回卡组顶端" => true,
           "送入墓地" => true,
           "解放" => true,
           "加入手卡" => true,
-          "送入对手墓地" => true
+          #"送入对手墓地" => false
         }
       when Integer #手卡
         @card = @field.hand[@index-11]
@@ -231,36 +231,93 @@ class Window_Field < Window
         Action::SendToGraveyard.new(true, :extra, @card).run
       end
     when :removed
-      #        @action_names = {"特殊召唤" => @card.monster?,
-      #    "发动" => !@card.monster?,
-      #    "效果发动" => true,
-      #    "加入手卡" => true,
-      #    "返回卡组" => true,
-      #    "送入墓地" => true
       case $scene.action_window.index
       when 0 #特殊召唤
         if pos = @field.empty_field(@card)
-          Action::Summon.new(true, :removed, pos, @card).run
+          Action::SpecialSummon.new(true, :removed, pos, @card).run
         else
           p "场位已满"
         end
-      when 1 #发动
-        if pos = @field.empty_field(@card)
-          Action::Activate.new(true, :removed, pos, @card).run
-        else
-          p "场位已满"
-        end
-      when 2 #效果发动
+      when 1 #效果发动
         Action::Effect_Activate.new(true, :removed, @card).run
-      when 3 #加入手卡
+      when 2 #加入手卡
         Action::ReturnToHand.new(true, :removed, @card).run
-      when 4
+      when 3
         Action::ReturnToDeck.new(true, :removed, @card).run
-      when 5
+      when 4
         Action::SendToGraveyard.new(true, :removed, @card).run
       end
-    when 0..10
-      #场上
+    when :graveyard
+      case $scene.action_window.index
+      when 0 #特殊召唤
+        if pos = @field.empty_field(@card)
+          Action::SpecialSummon.new(true, :graveyard, pos, @card).run
+        else
+          p "场位已满"
+        end
+      when 1 #效果发动
+        Action::Effect_Activate.new(true, :graveyard, @card).run
+      when 2 #加入手卡
+        Action::ReturnToHand.new(true, :graveyard, @card).run
+      when 3
+        Action::ReturnToDeck.new(true, :graveyard, @card).run
+      when 4
+        Action::Remove.new(true, :graveyard, @card).run
+      end
+    when 0..5 #后场
+      case $scene.action_window.index
+      when 0 #效果发动
+        Action::Effect_Activate.new(true, @index, @card).run
+      when 1 #返回卡组
+        Action::ReturnToDeck.new(true, @index, @card).run
+      when 2 #送入墓地
+        Action::SendToGraveyard.new(true, @index, @card).run
+      when 3 #从游戏中除外
+        Action::Remove.new(true, @index, @card).run
+      when 4 #加入手卡
+        Action::ReturnToHand.new(true, @index, @card).run
+      when 5 #盖伏
+        Action::Set.new(true, @index, @index, @card).run
+      end
+    when 6..10 #前场
+      #{"攻击表示" => false,
+      #    "守备表示" => false,
+      #    "里侧表示" => true,
+      #    "反转召唤" => true,
+      #    "打开" => true,
+      #    "效果发动" => true,
+      #    "攻击宣言" => false,
+      #    "转移控制权" => false,
+      #    "放回卡组顶端" => true,
+      #    "送入墓地" => true,
+      #    "解放" => true,
+      #    "加入手卡" => true,
+      case $scene.action_window.index
+      when 0
+        p "未实现"
+      when 1
+        p "未实现"
+      when 2
+        Action::Set.new(true, @index, @index, @card).run
+      when 3
+        Action::FlipSummon.new(true, @index, @card).run
+      when 4
+        Action::Flip.new(true, @index, @card).run
+      when 5
+        Action::Effect_Activate.new(true, @index, @card).run
+      when 6
+        p "未实现"
+      when 7
+        p "未实现"
+      when 8
+        Action::ReturnToDeck.new(true, @index, @card).run
+      when 9
+        Action::SendToGraveyard.new(true, @index, @card).run
+      when 10
+        Action::Tribute.new(true, @index, @card).run
+      when 11
+        Action::ReturnToHand.new(true, @index, @card).run
+      end
     when Integer #手卡
       case $scene.action_window.index
       when 0 #召唤

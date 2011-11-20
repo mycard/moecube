@@ -88,7 +88,6 @@ class Action
       @position = position
     end
     def run
-      #p 1
       from_field = case @from_pos
       when Integer
         player_field.field
@@ -117,16 +116,11 @@ class Action
           from_field.delete_at from_pos
         end
       end
-      #p @to_pos
-      #p self
-      #p @to_pos
       to_field = case @to_pos
       when Integer
         player_field.field
       when :hand
         player_field.hand
-      #when :field
-      #  player_field.field
       when :graveyard
         player_field.graveyard
       when :deck
@@ -136,11 +130,10 @@ class Action
       when :removed
         player_field.removed
       end
-      #p to_field
       if @to_pos.is_a? Integer
         to_field[@to_pos] = @card
-      #elsif to_field == player_field.field
-      #  to_pos = from_field.index(nil) || 11
+        #elsif to_field == player_field.field
+        #  to_pos = from_field.index(nil) || 11
       else
         to_field.unshift @card
       end
@@ -197,6 +190,14 @@ class Action
       super(from_player, from_pos, :opponent, card)
     end
   end
+  class Tribute < SendToGraveyard;  end
+  class Flip < Move
+    def initialize(from_player, from_pos, card)
+      super(from_player, from_pos, from_pos, card)
+    end
+  end
+  class FlipSummon < Flip
+  end
   class Refresh_Field < Action
     attr_reader :lp, :hand_count, :deck_count, :graveyard_count, :removed_count, :field
     def initialize(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field)
@@ -209,6 +210,7 @@ class Action
       @field = field
     end
   end
+
   class Turn_End < Refresh_Field
     attr_reader :turn
     def initialize(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field, turn)

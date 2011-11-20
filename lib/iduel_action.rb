@@ -250,7 +250,16 @@ class Action
   end
   class Set
     def escape
-      "[#{@id}] ◎→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
+      case @from_pos
+      when @to_pos
+        if (0..5).include? @to_pos #魔陷
+          "[#{@id}] ◎→(#{@from_pos})#{@card.escape}变为里侧表示"
+        elsif (6..10).include? @to_pos #怪兽
+          "[#{@id}] ◎→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
+        end
+      when :hand
+        "[#{@id}] ◎→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
+      end
     end
   end
   class Summon
@@ -260,7 +269,7 @@ class Action
   end
   class SpecialSummon
     def escape
-      "[#{@id}] ◎→从手卡~特殊召唤#{@card.escape}(#{@to_pos})呈守备表示"
+      "[#{@id}] ◎→从#{Action.escape_pos2(@from_pos)}~特殊召唤#{@card.escape}(#{@to_pos})呈#{case @position; when :attack; "攻击"; when :defense; "守备";when :set; "背面守备"; end}表示"
     end
   end
   class Activate
@@ -271,6 +280,11 @@ class Action
   class SendToGraveyard
     def escape
       "[#{@id}] ◎→将#{@card.escape}从~#{Action.escape_pos2(@from_pos)}~送往墓地"
+    end
+  end
+  class Tribute
+    def escape
+      "[#{@id}] ◎→将~#{Action.escape_pos2(@from_pos)}~的#{@card.escape}解~放"
     end
   end
   class Remove
@@ -288,7 +302,7 @@ class Action
       when :removed
         "除外区"
       when 0..10
-        "场上(#{pos})"
+        "场上(#{@from_pos})"
       end
       "[#{@id}] ◎→从#{pos}取#{@card.escape}加入手卡"
     end
@@ -303,7 +317,7 @@ class Action
       when :removed
         "除外区"
       when 0..10
-        "场上(#{pos})"
+        "场上(#{@from_pos})"
       end
       "[#{@id}] ◎→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
     end
@@ -321,6 +335,16 @@ class Action
       "[#{@id}] ◎→#{@card.escape}从#{pos}返回额外牌堆"
     end
   end
+  class Flip < Move
+    def escape
+      "[#{@id}] ◎→(#{@from_pos})#{@card.escape}打开"
+    end
+  end
+  class FlipSummon < Flip
+    def escape
+      "[#{@id}] ◎→(#{@from_pos})#{@card.escape}反转"
+    end
+  end
   class Effect_Activate
     def escape
       pos = case @from_pos
@@ -332,10 +356,12 @@ class Action
         "己方卡组"
       when :extra
         "己方额外牌堆"
+      when :removed
+        "己方除外区"
       when 0..10
         "(#{@from_pos})"
       end
-      "[#{@id}] ◎→#{pos}#{@card.escape}效果发~动"
+      "[#{@id}] ◎→#{pos}#{@card.escape}效果发#{"~" unless (0..10).include? @from_pos}动"
     end
   end
 end
