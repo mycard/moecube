@@ -16,6 +16,7 @@ class Window_RoomList < Window_List
     @item_max = 0
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
+    @scroll = Widget_ScrollBar.new(@x+@width,@y,@height,0)
 	end
 
   def draw_item(index, status=0)

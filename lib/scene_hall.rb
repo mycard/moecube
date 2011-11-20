@@ -15,9 +15,9 @@ class Scene_Hall < Scene
     Surface.blit(@background,0,0,0,0,$screen,0,0)
 		@playerlist = Window_PlayerList.new(24,204)
 		@userinfo = Window_UserInfo.new(24,24, $iduel.user)
-		@roomlist = Window_RoomList.new(320,51)
+		@roomlist = Window_RoomList.new(320,50)
     @active_window = @roomlist
-		@chat = Window_Chat.new(320,550,680,168)
+		@chat = Window_Chat.new(321,551,682,168)
     
     $screen.update_rect(0,0,0,0)
     bgm = Mixer::Music.load("audio/bgm/hall.ogg")

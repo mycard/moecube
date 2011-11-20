@@ -127,6 +127,7 @@ end
 #"Q"
 #"273,1,zh99998(201448),zh99997(201629)"
 class Iduel::Event::WATCHROOMSTART < Iduel::Event
+  attr_reader :room
   def initialize(info)
     id, name = info.split(",", 1)
     @room = Iduel::Room.new(id.to_i, name, '', '', false, Iduel::Color[0])#:name, :player1, :player2, :crypted, :color

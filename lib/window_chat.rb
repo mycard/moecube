@@ -5,6 +5,7 @@
 #==============================================================================
 
 class Window_Chat < Window
+  require 'widget_scrollbar'
   User_Color = [0,0,0xFF]
   Text_Color = [0,0,0]
 	def initialize(x, y, width, height)
@@ -12,6 +13,7 @@ class Window_Chat < Window
     @chat_input = Widget_InputBox.new(416,723,586,24){|text|$iduel.chat text; add($iduel.user, text)}
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
+    @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)
     @list = []
 	end
 	def add(user, content)
