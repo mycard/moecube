@@ -25,19 +25,20 @@ class Game_Field
   attr_accessor :removed
   
 	def initialize(deck = nil)
+    @deck_original = deck || Deck.new(Array.new(60,Card.find(nil)), Array.new(15, Card.find(nil)))
+    reset
+  end
+  def reset
 		@lp = 8000
-		if deck
-			@deck = deck.main
-			@extra = deck.extra
-    else
-      @deck = Array.new(60, Card.find(nil))
-      @extra = Array.new(15, Card.find(nil))
-    end
+    @deck = @deck_original.main.collect{|card|Game_Card.new(card)}.shuffle
+    @extra = @deck_original.extra.collect{|card|Game_Card.new(card)}
     @field = Array.new(11)
     @hand = []
     @graveyard = []
     @removed = []
 	end
+  
+  
   def empty_monster_field
     [8,7,9,6,10].each do |pos|
       return pos if @field[pos].nil?

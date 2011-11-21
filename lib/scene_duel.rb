@@ -46,6 +46,8 @@ class Scene_Duel < Scene
     
     @player_field_window = Window_Field.new(4, 398, @player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, @opponent_field, false)
+    @opponent_field_window.angle=180
+    
     Action.player_field = @player_field
     Action.opponent_field = @opponent_field
     

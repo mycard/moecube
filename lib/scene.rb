@@ -57,7 +57,13 @@ class Scene
      #@fpscount += 1
      $screen.put(@background,0,0)
      @windows.each do |window|
-       Surface.blit(window.contents, *window.viewport, $screen, window.x, window.y) if window.contents && window.visible
+       if window.angle.zero?
+          Surface.blit(window.contents, *window.viewport, $screen, window.x, window.y) if window.contents && window.visible
+       else
+         contents = window.contents.transform_surface(0x66000000,180,1,1,0)
+         Surface.blit(contents, *window.viewport, $screen, window.x, window.y) if window.contents && window.visible
+         #Surface.transform_blit(window.contents,$screen,0,1,1,100,100,100,100,Surface::TRANSFORM_AA)#,0,0)
+       end
        #$screen.put(window.contents, window.x, window.y) if window.contents && window.visible
      end
      $screen.update_rect(0,0,0,0)

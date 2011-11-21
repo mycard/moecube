@@ -21,7 +21,7 @@ class Window_Chat < Window
     refresh
 	end
   def refresh
-    @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
+    @contents.fill_rect(0,0,@width, @height, 0x66FFFFFF)
     @list.last(7).each_with_index do |chat, index|
       user, content = *chat
       @font.draw_blended_utf8(@contents, user.name, 0, index*WLH, *User_Color)

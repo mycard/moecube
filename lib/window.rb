@@ -8,22 +8,8 @@ class Window
     @width = width
     @height = height
     @visible = true
+    @angle = 0
     @viewport = [0, 0, @width, @height]
-    big_endian = ([1].pack("N") == [1].pack("L"))
-=begin
-    if big_endian
-      rmask = 0xff000000
-      gmask = 0x00ff0000
-      bmask = 0x0000ff00
-      amask = 0x000000ff
-    else
-      rmask = 0x000000ff
-      gmask = 0x0000ff00
-      bmask = 0x00ff0000
-      amask = 0xff000000
-    end
-    #p rmask, gmask, bmask, amask
-=end
       amask = 0xff000000
       rmask = 0x00ff0000
       gmask = 0x0000ff00

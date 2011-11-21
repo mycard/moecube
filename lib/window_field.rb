@@ -22,6 +22,7 @@ class Window_Field < Window
   attr_reader :action_window
 	def initialize(x, y, field,player=true)
     @border = Surface.load 'graphics/field/border.png'
+    @border_horizontal = Surface.load 'graphics/field/border_horizontal.png' #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
     super(x,y,711,282)
     @field = field
     @player = player
@@ -53,7 +54,11 @@ class Window_Field < Window
     
     @field.field.each_with_index do |card, index|
       if card
-        @items[index] = [Field_Pos[index][0], Field_Pos[index][1]]+ Card_Size
+        if (6..10).include?(index) and card.position != :attack
+          @items[index] = [Field_Pos[index][0] + (Card_Size[0] - Card_Size[1])/2, Field_Pos[index][1] + (Card_Size[1] - Card_Size[0])/2, Card_Size[1], Card_Size[0]]
+        else
+          @items[index] = [Field_Pos[index][0], Field_Pos[index][1]] + Card_Size
+        end
         @cards[index] = card
       end
     end
@@ -69,8 +74,13 @@ class Window_Field < Window
     @items.each_key{|index|draw_item(index)}
   end
   def draw_item(index, status=0)
-    @contents.put(@cards[index].image_small, @items[index][0], @items[index][1])
-    @contents.put(@border, @items[index][0]-1, @items[index][1]-1) if status == 1
+    if (6..10).include?(index) and @cards[index].position != :attack
+      Surface.transform_draw(@cards[index].image_small, @contents, 90, 1, 1, 0, 0, @items[index][0]+Card_Size[1], @items[index][1],Surface::TRANSFORM_SAFE)
+      @contents.put(@border_horizontal, @items[index][0]-1, @items[index][1]-1) if status == 1 
+    else
+      @contents.put(@cards[index].image_small, @items[index][0], @items[index][1])
+      @contents.put(@border, @items[index][0]-1, @items[index][1]-1) if status == 1
+    end
   end
   def item_rect(index)
     @items[index]
@@ -281,18 +291,6 @@ class Window_Field < Window
         Action::Set.new(true, @index, @index, @card).run
       end
     when 6..10 #前场
-      #{"攻击表示" => false,
-      #    "守备表示" => false,
-      #    "里侧表示" => true,
-      #    "反转召唤" => true,
-      #    "打开" => true,
-      #    "效果发动" => true,
-      #    "攻击宣言" => false,
-      #    "转移控制权" => false,
-      #    "放回卡组顶端" => true,
-      #    "送入墓地" => true,
-      #    "解放" => true,
-      #    "加入手卡" => true,
       case $scene.action_window.index
       when 0
         p "未实现"

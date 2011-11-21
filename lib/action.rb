@@ -25,20 +25,20 @@ class Action
   def run
     #子类定义
   end
-  class Reset < Action; end
-  class Draw < Action
+  class Reset < Action
     def run
-      player_field.hand << player_field.deck.shift
+      player_field.reset
       super
     end
   end
+
   class Deck < Action;  end
   class Side < Deck;  end
-  class Go < Action
+  class Go < Reset
     def run
-      player_field.deck.shuffle!
-      player_field.hand = player_field.deck.shift(5)
       super
+      player_field.hand = player_field.deck.shift(5)
+      player_field.hand.each{|card|card.position = :attack}
     end
   end
   class FirstToGo < Go;  end
@@ -80,7 +80,7 @@ class Action
   end
   class Move < Action
     attr_reader :from_pos, :to_pos, :card, :position
-    def initialize(from_player, from_pos, to_pos, card, msg=nil, position=:attack)
+    def initialize(from_player, from_pos, to_pos, card, msg=nil, position=:set)
       super(from_player, msg)
       @from_pos = from_pos
       @to_pos = to_pos
@@ -104,18 +104,13 @@ class Action
       when :removed
         player_field.removed
       end
+      
       if @from_pos.is_a? Integer
         from_pos = @from_pos
       else
-        from_pos = from_field.index(@card) || from_field.index(Card.find(nil))
+        from_pos = @card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card.card} or from_field.index{|card|!card.known?}
       end
-      if from_pos
-        if from_field == player_field.field
-          from_field[from_pos] = nil
-        else
-          from_field.delete_at from_pos
-        end
-      end
+      
       to_field = case @to_pos
       when Integer
         player_field.field
@@ -130,12 +125,25 @@ class Action
       when :removed
         player_field.removed
       end
-      if @to_pos.is_a? Integer
-        to_field[@to_pos] = @card
-        #elsif to_field == player_field.field
-        #  to_pos = from_field.index(nil) || 11
+      if from_pos
+        card = from_field[from_pos]
+        if from_field == player_field.field
+          from_field[from_pos] = nil
+        else
+          from_field.delete_at from_pos
+        end
       else
-        to_field.unshift @card
+        card = Game_Card.new(@card)
+        p "似乎凭空产生了卡片？"
+        p self
+      end
+      card.position = @position
+      if @to_pos.is_a? Integer
+        to_field[@to_pos] = card
+      elsif to_field == player_field.hand
+        to_field << card
+      else
+        to_field.unshift card
       end
       super
     end
@@ -162,27 +170,27 @@ class Action
   end
   class SendToGraveyard < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :graveyard, card)
+      super(from_player, from_pos, :graveyard, card, nil, :attack)
     end
   end
   class Remove < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :removed, card)
+      super(from_player, from_pos, :removed, card, :attack)
     end
   end
   class ReturnToHand < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :hand, card)
+      super(from_player, from_pos, :hand, card, :attack)
     end
   end
   class ReturnToDeck < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :deck, card)
+      super(from_player, from_pos, :deck, card, :set)
     end
   end
   class ReturnToExtra < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :extra, card)
+      super(from_player, from_pos, :extra, card, :set)
     end
   end
   class Control < Move
@@ -197,6 +205,12 @@ class Action
     end
   end
   class FlipSummon < Flip
+  end
+  class Draw < Move
+    def initialize(from_player=true, msg=nil)
+      @from_player = from_player
+      super(from_player, :deck, :hand, player_field.deck.first, msg, :attack)
+    end
   end
   class Refresh_Field < Action
     attr_reader :lp, :hand_count, :deck_count, :graveyard_count, :removed_count, :field
