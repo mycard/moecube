@@ -42,7 +42,7 @@ class Scene_Duel < Scene
     @player_field = Game_Field.new Deck.load("test1.TXT")
     @opponent_field = Game_Field.new
     
-    @fieldback_window = Window_FieldBack.new(128,175)
+    @fieldback_window = Window_FieldBack.new(130,174)
     
     @player_field_window = Window_Field.new(4, 398, @player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, @opponent_field, false)
@@ -54,7 +54,6 @@ class Scene_Duel < Scene
     @cardinfo_window = Window_CardInfo.new(1024-160, 0)
     @action_window = Window_Action.new
     
-    $screen.update_rect(0,0,0,0)
   end
 
   def change_phase(phase)

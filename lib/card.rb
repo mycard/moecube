@@ -13,6 +13,8 @@ class Card
 	#PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
   PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
   CardBack = Surface.load "graphics/field/card.jpg"
+  CardBack_Small = Surface.load "graphics/field/card_small.gif"
+
 	class << self
 		def find(id, order_by=nil)
       case id
@@ -24,8 +26,7 @@ class Card
       when Hash
         old_new(id)
       when nil
-        Card.find(1)#.instance_eval{@image = CardBack} unless @all[1]
-        @all[1]
+        Card::Unknown
       else
         sql = "select * from YGODATA where " << id
         sql << " order by #{order_by}" if order_by
@@ -165,4 +166,6 @@ attr_accessor :tokens
   def spell?
     [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type 
   end
+  Unknown = Card.new('id' => 0, 'number' => :"00000000", 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
+  Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end

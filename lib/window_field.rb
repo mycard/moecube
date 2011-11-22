@@ -26,7 +26,7 @@ class Window_Field < Window
     super(x,y,711,282)
     @field = field
     @player = player
-    
+    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 12)
     @items = {}
     @cards = {}
     refresh
@@ -80,6 +80,16 @@ class Window_Field < Window
     else
       @contents.put(@cards[index].image_small, @items[index][0], @items[index][1])
       @contents.put(@border, @items[index][0]-1, @items[index][1]-1) if status == 1
+    end
+    if (6..10).include?(index) and @cards[index].position != :set
+      size = @font.text_size('/')
+      y = Field_Pos[index][1] + Card_Size[1] - size[1]
+      size = size[0]
+      x = Field_Pos[index][0] + (Card_Size[0] - size) / 2
+      @font.draw_blended_utf8(@contents, '/' , x, y, 0xFF, 0xFF, 0xFF)
+      @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , x - @font.text_size(@cards[index].atk.to_s)[0], y, 0xFF, 0xFF, 0xFF)
+      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , x + size, y, 0xFF, 0xFF, 0xFF)
+      
     end
   end
   def item_rect(index)
@@ -172,7 +182,7 @@ class Window_Field < Window
         }
       end
       $scene.action_window.list = @action_names
-      $scene.cardinfo_window.card = @card
+      $scene.cardinfo_window.card = @card if @card.known?
       $scene.action_window.x = @x + @items[@index][0] - ($scene.action_window.width - @items[@index][2])/2
       $scene.action_window.y = @y + @items[@index][1] - $scene.action_window.viewport[3]#height
     end
