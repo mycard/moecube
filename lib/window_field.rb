@@ -145,13 +145,13 @@ class Window_Field < Window
         }
       when 6..10
         @card = @field.field[@index]
-        @action_names = {"攻击表示" => false,
-          "守备表示" => false,
-          "里侧表示" => true,
-          "反转召唤" => true,
-          "打开" => true,
+        @action_names = {"攻击表示" => @card.position==:defense,
+          "守备表示" => @card.position==:attack,
+          "里侧表示" => @card.position!=:set,
+          "反转召唤" => @card.position==:set,
+          "打开" => @card.position==:set,
           "效果发动" => true,
-          "攻击宣言" => false,
+          "攻击宣言" => @card.position==:attack,
           "转移控制权" => false,
           "放回卡组顶端" => true,
           "送入墓地" => true,
@@ -288,16 +288,16 @@ class Window_Field < Window
       when 4 #加入手卡
         Action::ReturnToHand.new(true, @index, @card).run
       when 5 #盖伏
-        Action::Set.new(true, @index, @index, @card).run
+        Action::ChangePosition.new(true, @index, @card, :set).run
       end
     when 6..10 #前场
       case $scene.action_window.index
       when 0
-        p "未实现"
+        Action::ChangePosition.new(true, @index, @card, :attack).run
       when 1
-        p "未实现"
+        Action::ChangePosition.new(true, @index, @card, :defense).run
       when 2
-        Action::Set.new(true, @index, @index, @card).run
+        Action::ChangePosition.new(true, @index, @card, :set).run
       when 3
         Action::FlipSummon.new(true, @index, @card).run
       when 4

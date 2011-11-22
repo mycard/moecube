@@ -175,22 +175,22 @@ class Action
   end
   class Remove < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :removed, card, :attack)
+      super(from_player, from_pos, :removed, card, nil, :attack)
     end
   end
   class ReturnToHand < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :hand, card, :attack)
+      super(from_player, from_pos, :hand, card, nil, :attack)
     end
   end
   class ReturnToDeck < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :deck, card, :set)
+      super(from_player, from_pos, :deck, card, nil, :set)
     end
   end
   class ReturnToExtra < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :extra, card, :set)
+      super(from_player, from_pos, :extra, card, nil, :set)
     end
   end
   class Control < Move
@@ -199,12 +199,20 @@ class Action
     end
   end
   class Tribute < SendToGraveyard;  end
-  class Flip < Move
-    def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, from_pos, card)
+  class ChangePosition < Move
+    def initialize(from_player, from_pos, card, position)
+      super(from_player, from_pos, from_pos, card, nil, position)
+    end
+  end
+  class Flip < ChangePosition
+    def initialize(from_player, from_pos, card, position=:defense)
+      super(from_player, from_pos, card, position)
     end
   end
   class FlipSummon < Flip
+    def initialize(from_player, from_pos, card)
+      super(from_player, from_pos, card, :attack)
+    end
   end
   class Draw < Move
     def initialize(from_player=true, msg=nil)
@@ -238,6 +246,16 @@ class Action
       super(from_player)
       @from_pos = from_pos
       @card = card
+    end
+    def run
+      if @card.position == :set
+        if @card.monster?
+          @card.position = :defense
+        else
+          @card.position = :attack
+        end
+      end
+      super
     end
   end
 end

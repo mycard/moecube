@@ -251,12 +251,6 @@ class Action
   class Set
     def escape
       case @from_pos
-      when @to_pos
-        if (0..5).include? @to_pos #魔陷
-          "[#{@id}] ◎→(#{@from_pos})#{@card.escape}变为里侧表示"
-        elsif (6..10).include? @to_pos #怪兽
-          "[#{@id}] ◎→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
-        end
       when :hand
         "[#{@id}] ◎→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
       end
@@ -335,14 +329,27 @@ class Action
       "[#{@id}] ◎→#{@card.escape}从#{pos}返回额外牌堆"
     end
   end
-  class Flip < Move
+  class Flip
     def escape
       "[#{@id}] ◎→(#{@from_pos})#{@card.escape}打开"
     end
   end
-  class FlipSummon < Flip
+  class FlipSummon
     def escape
       "[#{@id}] ◎→(#{@from_pos})#{@card.escape}反转"
+    end
+  end
+  class ChangePosition
+    def escape
+      if @position == :set
+        if (6..10).include? @from_pos #攻击表示的怪兽，由于iduel没有变成里侧守备指令，所以采用重新放置的方式
+          "[#{@id}] ◎→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
+        else
+          "[#{@id}] ◎→(#{@from_pos})#{@card.escape}变为里侧表示"
+        end
+      else
+        "[#{@id}] ◎→(#{@from_pos})#{@card.escape}改为#{position == :attack ? '攻击' : '防守'}表示"
+      end
     end
   end
   class Effect_Activate
