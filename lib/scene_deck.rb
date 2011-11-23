@@ -14,6 +14,7 @@ class Scene_Deck < Scene
 			@deck_window.contents.draw_text(0, index*24, card.name)
 			
 		end
+    super
 	end
 	def loaddeck(file='/media/本地磁盘/zh99998/yu-gi-oh/token.txt')
 		src = IO.read(file)

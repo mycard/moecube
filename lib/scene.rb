@@ -19,14 +19,13 @@ class Scene
   end
   def initialize
     @windows = []
-    #@fps = Window.new(0,0,100,24)
-    #@font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
-    #@fpscount = 0
   end
   #--------------------------------------------------------------------------
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
+    @fps = Window.new(0,0,100,24,500)
+    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
   end
   def refresh_rect(x, y, width, height, background=@background, ox=0,oy=0)
     Surface.blit(background,x+ox,y+oy,width,height,$screen,x,y)
@@ -56,6 +55,8 @@ class Scene
     #@fpscount += 1
     $fpstimer.wait_frame do
       $screen.put(@background,0,0)
+      @fps.contents.fill_rect(0,0,@fps.contents.w,@fps.contents.h,0x00000000)
+      @font.draw_solid_utf8(@fps.contents, "%.1f" % $fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
       @windows.each do |window|
         if window.angle.zero?
           Surface.blit(window.contents, *window.viewport, $screen, window.x, window.y) if window.contents && window.visible

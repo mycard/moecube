@@ -27,16 +27,19 @@ class Iduel
   def send(head, *args)
     info = "##{head.to_s(16).upcase}|#{args.join(',')}".encode("GBK") + RS
     puts "<< #{info}"
-    (@conn.write info) rescue Event.push Error.new(0)
+    (@conn.write info) rescue Event.push Event::Error.new(0)
   end
   def recv(info)
-    if info.nil?
-      Event.push Error.new(0)
+    Event.push begin
+      info.chomp!(RS)
+      info.encode! "UTF-8", :invalid => :replace, :undef => :replace
+      puts ">> #{info}"
+      Event.parse info
+    rescue
+      @conn.close
+      @conn = nil
+      Event::Error.new(0)
     end
-    info.chomp!(RS)
-    info.encode! "UTF-8", :invalid => :replace, :undef => :replace
-    puts ">> #{info}"
-    Event.push Event.parse info
   end
   def close
     $iduel.quit

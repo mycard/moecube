@@ -14,6 +14,8 @@ class Window
       rmask = 0x00ff0000
       gmask = 0x0000ff00
       bmask = 0x000000ff
+      
+    
     unless @background
       @background = Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
       @background.fill_rect(0,0,@width,@height,0x66000000)

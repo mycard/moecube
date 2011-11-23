@@ -54,6 +54,7 @@ class Scene_Duel < Scene
     @cardinfo_window = Window_CardInfo.new(715, 0)
     @action_window = Window_Action.new
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
+    super
   end
 
   def change_phase(phase)

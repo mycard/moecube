@@ -19,13 +19,14 @@ class Scene_Hall < Scene
     @active_window = @roomlist
 		@chat = Window_Chat.new(321,551,682,168)
     
-    $screen.update_rect(0,0,0,0)
     bgm = Mixer::Music.load("audio/bgm/hall.ogg")
     Mixer.fade_in_music(bgm, 800, -1)
     @bgm.destroy if @bgm
     @bgm = bgm
     @count = 0
+    super
   end
+
   def handle(event)
     case event
     when Event::MouseMotion
@@ -94,6 +95,7 @@ class Scene_Hall < Scene
       super
     end
   end
+
   def handle_iduel(event)
     case event
     when Iduel::Event::OLIF
@@ -113,6 +115,7 @@ class Scene_Hall < Scene
       p event
     end
   end
+  
   def update
     super
     while event = Iduel::Event.poll
@@ -124,7 +127,7 @@ class Scene_Hall < Scene
     end
     @count += 1
   end
-  
+
   def determine
     case @active_window
     when @roomlist
@@ -136,5 +139,4 @@ class Scene_Hall < Scene
       end
     end
   end
-
 end

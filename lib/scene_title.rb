@@ -21,7 +21,7 @@ class Scene_Title < Scene
     @bgm = Mixer::Music.load 'audio/bgm/title.ogg'
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
     Mixer.fade_in_music @bgm, -1, 800
-    
+    super
     
   end
   def clear(x,y,width,height)
