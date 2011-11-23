@@ -145,9 +145,11 @@ class Action
     end
   end
   def self.parse(str)
-    str =~ /^\[\d+\] (.*)▊▊▊.*?$/m
+    str =~ /^\[(\d+)\] (.*)▊▊▊.*?$/m
     from_player = false
-    case $1
+    id = $1.to_i
+    $chat_window.add from_player, "[#{$1}] #{$2}"
+    result = case $2
     when /^┊(.*)┊$/m
       Chat.new from_player, $1
     when /^※\[(.*)\]\r\n(.*)\r\n注释$/m
@@ -206,11 +208,14 @@ class Action
       p str, 2
       #system("pause")
     end
+    result.id = id
+    result
   end
   def escape
     inspect
   end
   def run
+    $chat_window.add @from_player, escape if @from_player
     $iduel.action self if @from_player
   end
   class FirstToGo
@@ -369,6 +374,11 @@ class Action
         "(#{@from_pos})"
       end
       "[#{@id}] ◎→#{pos}#{@card.escape}效果发#{"~" unless (0..10).include? @from_pos}动"
+    end
+  end
+  class Chat
+    def escape
+      "[#{@id}] ┊#{@msg}┊"
     end
   end
 end

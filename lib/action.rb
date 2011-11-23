@@ -1,7 +1,8 @@
 #encoding: UTF-8
 class Action
   @@id = 0
-	attr_reader :from_player, :msg, :id
+	attr_reader :from_player, :msg
+  attr_accessor :id
 	def initialize(from_player=true, msg=nil)
     @id = @@id
     @from_player = from_player

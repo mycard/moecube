@@ -15,7 +15,7 @@ class Scene_Duel < Scene
   require_relative 'action'
   require_relative 'game_card'
   require_relative 'game_field'
-  
+  require_relative 'window_roomchat'
   attr_reader :cardinfo_window
   attr_reader :action_window
   attr_reader :player_field
@@ -53,7 +53,7 @@ class Scene_Duel < Scene
     
     @cardinfo_window = Window_CardInfo.new(1024-160, 0)
     @action_window = Window_Action.new
-    
+    @chat_window = Window_RoomChat.new(716, 567, 307, 203)
   end
 
   def change_phase(phase)
@@ -151,7 +151,6 @@ class Scene_Duel < Scene
   def handle_iduel(event)
     case event
     when Iduel::Event::Action
-      p event
       event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh
