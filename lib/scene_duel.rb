@@ -51,9 +51,9 @@ class Scene_Duel < Scene
     Action.player_field = @player_field
     Action.opponent_field = @opponent_field
     
-    @cardinfo_window = Window_CardInfo.new(1024-160, 0)
+    @cardinfo_window = Window_CardInfo.new(715, 0)
     @action_window = Window_Action.new
-    @chat_window = Window_RoomChat.new(716, 567, 307, 203)
+    @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
   end
 
   def change_phase(phase)
@@ -75,7 +75,6 @@ class Scene_Duel < Scene
   def first_to_go
     Action::FirstToGo.new(true).run
   end
-  
   def handle(event)
     case event
     when Event::MouseMotion
@@ -157,10 +156,11 @@ class Scene_Duel < Scene
     end
   end
   def update
-    super
+    @cardinfo_window.update
     while event = Iduel::Event.poll
       handle_iduel(event)
     end
+    super
   end
   def refresh_rect(x, y, width, height)
     return unless $scene == self #线程的情况

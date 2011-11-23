@@ -202,11 +202,9 @@ class Action
         ChangePhase.new(from_player, parse_phase($1))
       else
         p str, 1
-        #system("pause")
       end
     else
       p str, 2
-      #system("pause")
     end
     result.id = id
     result
@@ -387,7 +385,7 @@ end
 class Game_Field
   def escape
     "LP:#{@lp}\r\n手卡:#{@hand.size}\r\n卡组:#{@deck.size}\r\n墓地:#{@graveyard.size}\r\n除外:#{@removed.size}\r\n前场:\r\n" +
-      @field[6..10].collect{|card|"     <#{"#{escape_position_short(card)}|#{card.position == :set ? '??' : "[#{card.card_type}][#{card.name}] #{card.atk}#{' '+card.def.to_s}"}" if card}>\r\n"}.join +
+      @field[6..10].collect{|card|"     <#{"#{Action.escape_position_short(card)}|#{card.position == :set ? '??' : "[#{card.card_type}][#{card.name}] #{card.atk}#{' '+card.def.to_s}"}" if card}>\r\n"}.join +
       "后场:" + 
       @field[1..5].collect{|card|"<#{card.position == :set ? '??' : card.escape if card}>"}.join +
       "\r\n场地|<#{@field[0] ? @field[0].escape : '无'}>\r\n" +

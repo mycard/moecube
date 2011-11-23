@@ -6,7 +6,7 @@ class Window_Action < Window_List
   Color_Disabled = [0x66,0x66,0x66]
   Color_Selected = [0x00,0x00,0xFF]
   def initialize#,list,list_available=Array.new(list.size, true))
-    super(0,0,100,20*WLH,300)
+    super(0,0,96,20*WLH,300)
     @background.fill_rect(0,0,@width, @height, 0xCC555500)
     @contents.fill_rect(0,0,@width, @height, 0xCC555500)
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
