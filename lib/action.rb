@@ -109,7 +109,7 @@ class Action
       if @from_pos.is_a? Integer
         from_pos = @from_pos
       else
-        from_pos = @card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card.card} or from_field.index{|card|!card.known?}
+        from_pos = (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) or from_field.index{|card|!card.known?}
       end
       
       to_field = case @to_pos

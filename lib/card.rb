@@ -149,7 +149,7 @@ attr_accessor :tokens
     Card.cache[@id] = self
   end
   def image
-    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.png"
+    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.jpg"
   end
   def image_small
     @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0).copy_rect(1,1,54,81) #尼玛！

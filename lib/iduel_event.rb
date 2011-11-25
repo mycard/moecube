@@ -154,6 +154,7 @@ end
 class Iduel::Event::WATCHSTOP < Iduel::Event
 end
 class Iduel::Event::Error < Iduel::Event
+  attr_reader :title, :message
   def initialize(info)
     @title, @message = case info.to_i
     when 0x00
@@ -190,8 +191,8 @@ class Iduel::Event::Error < Iduel::Event
       ["错误", "请求的房间无效"]
     end
     #Exception.new(@message).raise
-    puts @title.encode! "GBK"
-    puts @message.encode! "GBK"
+    p @title
+    p @message
     #system("pause")
   end
 end

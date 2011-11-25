@@ -154,6 +154,8 @@ class Scene_Duel < Scene
       event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh
+    when Iduel::Event::Error
+      Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     end
   end
   def update

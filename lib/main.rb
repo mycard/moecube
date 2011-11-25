@@ -44,6 +44,7 @@ require_relative 'window_list'
 require_relative 'window_user'
 require_relative 'scene_title'
 require_relative 'fpstimer'
+require_relative 'widget_msgbox'
 $fpstimer = FPSTimer.new
 $scene = Scene_Title.new
 while $scene

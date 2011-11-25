@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 # 　title
 #==============================================================================
-
+=begin
 class Scene_Single < Scene
 	def start
 		@background = Sprite.new
@@ -40,3 +40,4 @@ class Scene_Single < Scene
 	end
 end
 
+=end

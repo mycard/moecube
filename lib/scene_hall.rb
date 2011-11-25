@@ -110,6 +110,8 @@ class Scene_Hall < Scene
       $scene = Scene_Watch.new(event.room)
     when Iduel::Event::PCHAT
       @chat.add event.user, event.content
+    when Iduel::Event::Error
+      Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     else
       puts "---unhandled iduel event----"
       p event

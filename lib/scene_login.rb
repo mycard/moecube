@@ -36,6 +36,8 @@ class Scene_Login < Scene
       when Iduel::Event::LOGINOK
         require_relative 'scene_hall'
         $scene = Scene_Hall.new
+      when Iduel::Event::Error
+        Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
       else
         p event
       end

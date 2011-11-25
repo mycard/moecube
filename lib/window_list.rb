@@ -37,7 +37,9 @@ class Window_List < Window
     [0, @index*self.class::WLH, @width, self.class::WLH]
   end
 	def refresh
-    @item_max.times {|index|draw_item(index, index==@index ? 1 : 0)}
+    @item_max.times do |index|
+      draw_item(index, index==@index ? 1 : 0)
+    end
   end
   def cursor_up
     self.index = @index ? (@index - @column_max) % [@list.size, @item_max].min : 0
