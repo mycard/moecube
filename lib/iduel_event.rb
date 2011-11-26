@@ -191,6 +191,7 @@ class Iduel::Event::Error < Iduel::Event
       ["错误", "请求的房间无效"]
     end
     #Exception.new(@message).raise
+    p caller
     p @title
     p @message
     #system("pause")

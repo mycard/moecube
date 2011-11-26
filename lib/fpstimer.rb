@@ -8,6 +8,7 @@ class FPSTimer
   # +accurary+ is the accurary of sleep/SDL.delay in milisecond
   def initialize(fps = 60, accurary = 10, skip_limit = 15)
     @fps = fps
+    @spf = (1.0/@fps)
     @accurary = accurary / 1000.0
     @skip_limit = skip_limit
     reset
@@ -15,7 +16,7 @@ class FPSTimer
 
   # reset timer, you should call just before starting loop
   def reset
-    @old = get_ticks
+    @old = Time.now.to_f
     @skip = 0
     @real_fps = @fps
     @frame_count = 0
@@ -26,19 +27,16 @@ class FPSTimer
 
   # execute given block and wait
   def wait_frame
-    now = get_ticks
-    nxt = @old + (1.0/@fps)
-    if nxt > now || @skip > @skip_limit
-      yield
-      @skip = 0
-      wait(nxt)
-      @old = nxt
-    else
-      @skip += 1
-      @total_skip += 1
-      @old = get_ticks
+    #sleep 0.01
+    #yield
+    nxt = @old + @spf
+    #now = 
+    yield if nxt > Time.now.to_f
+    if (sleeptime = nxt - Time.now.to_f) > 0
+      sleep(sleeptime)
     end
-
+    #end
+    @old = nxt
     calc_real_fps
   end
 

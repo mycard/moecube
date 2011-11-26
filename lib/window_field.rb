@@ -240,7 +240,7 @@ class Window_Field < Window
       case $scene.action_window.index
       when 0
         if pos = @field.empty_field(@card)
-          Action::SpecialSummon.new(true, :extra, pos, @card, :attack).run
+          Action::SpecialSummon.new(true, :extra, pos, @card, nil, :attack).run
         else
           p "场位已满"
         end
@@ -337,7 +337,7 @@ class Window_Field < Window
         end
       when 1 #特殊召唤
         if pos = @field.empty_field(@card)
-          Action::SpecialSummon.new(true, :hand, pos, @card, :attack).run
+          Action::SpecialSummon.new(true, :hand, pos, @card, nil, :attack).run
         else
           p "场位已满"
         end

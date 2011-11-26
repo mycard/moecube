@@ -9,7 +9,8 @@ class Window_CardInfo < Window
     self.card = nil
   end
   def card=(card)
-    @card = card || Card.find(nil)
+    return if card.nil? or card == @card or !card.known?
+    @card = card
     refresh
   end
   def update

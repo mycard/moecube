@@ -198,6 +198,8 @@ class Action
         ReturnToExtra.new from_player, parse_pos($2), parse_card($1)
       when /从#{PosFilter}取#{CardFilter}加入手卡/
         ReturnToHand.new from_player, parse_pos($1), parse_card($2)
+      when /#{PosFilter}#{CardFilter}效果发(?:\~){0,1}动/
+        Effect_Activate.new(from_player, parse_pos($1), parse_card($2))
       when /#{PhaseFilter}/
         ChangePhase.new(from_player, parse_phase($1))
       else

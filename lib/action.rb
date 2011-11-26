@@ -160,13 +160,13 @@ class Action
     end
   end
   class Summon < Move
-    def initialize(from_player, from_pos, to_pos, card)
-      super(from_player, from_pos, to_pos, card, nil, :attack)
+    def initialize(from_player, from_pos, to_pos, card, msg=nil)
+      super(from_player, from_pos, to_pos, card, msg, :attack)
     end
   end
   class SpecialSummon < Move
-    def initialize(from_player, from_pos, to_pos, card, position=:attack)
-      super(from_player, from_pos, to_pos, card, nil, position)
+    def initialize(from_player, from_pos, to_pos, card, msg=nil, position=:attack)
+      super(from_player, from_pos, to_pos, card, msg, position)
     end
   end
   class SendToGraveyard < Move

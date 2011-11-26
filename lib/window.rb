@@ -40,12 +40,12 @@ class Window
     x > @x && x < @x + @width && y > @y && y < @y + @height
   end
   def destroy
-    @destroted = true
+    @destroyed = true
     @contents.destroy if @contents
     $scene.windows.delete self
   end
-  def destroted?
-    @destroted
+  def destroyed?
+    @destroyed
   end
   def clear(x, y, width, height)
     Surface.blit(@background, x,y,width,height,@contents,x,y)

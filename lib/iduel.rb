@@ -35,7 +35,7 @@ class Iduel
       info.encode! "UTF-8", :invalid => :replace, :undef => :replace
       puts ">> #{info}"
       Event.parse info
-    rescue
+    rescue IOError
       @conn.close
       @conn = nil
       Event::Error.new(0)

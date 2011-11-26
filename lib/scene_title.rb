@@ -81,6 +81,7 @@ class Scene_Title < Scene
         p event
       end
     end
+    #super #黑历史，title在有那架构之前就已经写好了，暂时懒得动
   end
   def determine
     return unless @command_window.index

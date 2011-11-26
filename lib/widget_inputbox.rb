@@ -15,7 +15,7 @@ class Widget_InputBox < Window
     bind('Key-Return'){@@active.proc.call(get);delete(0, get.size);@@root.withdraw(true);true}
     pack
   }
-  Thread.new{Tk.mainloop}
+  Thread.new{Tk.mainloop}.priority = 1
   def initialize(x,y,width,height,z=300, &block)
     super(x,y,width,height,z)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)

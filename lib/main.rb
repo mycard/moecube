@@ -47,7 +47,10 @@ require_relative 'fpstimer'
 require_relative 'widget_msgbox'
 $fpstimer = FPSTimer.new
 $scene = Scene_Title.new
-while $scene
-  $scene.main
+begin
+  $scene.main while $scene
+#rescue
+#  p $!, $!.backtrace
+#  Widget_Msgbox.new("程序出错", "程序可能出现了一个bug，请去论坛反馈") { $scene = Scene_Title.new  }
+#  retry
 end
-SDL.quit #这货居然会卡一下///囧

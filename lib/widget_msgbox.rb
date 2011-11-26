@@ -1,8 +1,7 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
+#encoding: UTF-8
 class Widget_Msgbox < Window
   def initialize(title, message, buttons={:ok => "确定"}, &proc)
+    #@background = Surface.load 'graphics/system/msgbox.png'
     @contents = Surface.load 'graphics/system/msgbox.png'
     @button = Surface.load 'graphics/system/button.png'
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
@@ -23,9 +22,22 @@ class Widget_Msgbox < Window
     end
     refresh
   end
+  def title=(title)
+    @title.replace title
+    refresh
+  end
+  def message=(message)
+    @message.replace message
+    refresh
+  end
+  def buttons=(buttons)
+    @buttons.replace buttons
+    refresh
+  end
   def refresh
+    @contents = Surface.load 'graphics/system/msgbox.png'
     @font.draw_blended_utf8(@contents, @title, (@width-@font.text_size(@title)[0])/2, 2, 0xFF, 0xFF, 0xFF)
-    @font.draw_blended_utf8(@contents, @message, 0, 24, 0xFF, 0xFF, 0x66)
+    @font.draw_blended_utf8(@contents, @message, 2, 24+2, 0xFF, 0xFF, 0x66)
     @items.each_key do |index|
       draw_item(index, @index == index ? 1 : 0)
     end

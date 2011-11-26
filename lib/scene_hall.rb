@@ -1,3 +1,4 @@
+#encoding: UTF-8
 #==============================================================================
 # Scene_Hall
 #------------------------------------------------------------------------------
@@ -112,6 +113,8 @@ class Scene_Hall < Scene
       @chat.add event.user, event.content
     when Iduel::Event::Error
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
+    when Iduel::Event::QROOMOK
+      @joinroom_msgbox.message = "读取房间信息" if @joinroom_msgbox && !@joinroom_msgbox.destroyed?
     else
       puts "---unhandled iduel event----"
       p event
@@ -136,8 +139,10 @@ class Scene_Hall < Scene
       return unless @roomlist.index and room = @roomlist.list[@roomlist.index]
       if room.full?
         $iduel.watch room
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战"){}
       else
         $iduel.join room, "test"
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间"){}
       end
     end
   end
