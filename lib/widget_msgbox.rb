@@ -1,5 +1,7 @@
 #encoding: UTF-8
 class Widget_Msgbox < Window
+  Title_Color = [0xFF, 0xFF, 0xFF]
+  Message_Color = [0x04, 0x47, 0x7c]
   def initialize(title, message, buttons={:ok => "确定"}, &proc)
     #@background = Surface.load 'graphics/system/msgbox.png'
     @contents = Surface.load 'graphics/system/msgbox.png'
@@ -36,11 +38,9 @@ class Widget_Msgbox < Window
   end
   def refresh
     @contents = Surface.load 'graphics/system/msgbox.png'
-    @font.draw_blended_utf8(@contents, @title, (@width-@font.text_size(@title)[0])/2, 2, 0xFF, 0xFF, 0xFF)
-    @font.draw_blended_utf8(@contents, @message, 2, 24+2, 0xFF, 0xFF, 0x66)
-    @items.each_key do |index|
-      draw_item(index, @index == index ? 1 : 0)
-    end
+    @font.draw_blended_utf8(@contents, @title, (@width-@font.text_size(@title)[0])/2, 2, *Title_Color)
+    @font.draw_blended_utf8(@contents, @message, 2, 24+2, *Message_Color)
+    @items.each_key {|index|draw_item(index, @index == index ? 1 : 0)}
   end
   def draw_item(index, status=0)
     Surface.blit(@button,@button.w/3*status,0,@button.w/3,@button.h,@contents,@items[index][0],@items[index][1])

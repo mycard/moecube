@@ -10,6 +10,7 @@ class Window_List < Window
   attr_reader :index
 	def initialize(x, y, width, height, z=200)
     super(x,y,width, height,z)
+    @list = [] unless @list
     @o_index = 0
     @item_max = 0
     @column_max = 1
@@ -37,6 +38,8 @@ class Window_List < Window
     [0, @index*self.class::WLH, @width, self.class::WLH]
   end
 	def refresh
+    clear
+    #@contents.fill_rect(0,0,@width,@height,0x66000000)
     @item_max.times do |index|
       draw_item(index, index==@index ? 1 : 0)
     end

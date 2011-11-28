@@ -10,8 +10,9 @@ class Window_RoomList < Window_List
   WLH = 48
 	def initialize(x, y)
     @button = Surface.load 'graphics/hall/room.png'
-    @background = Surface.load 'graphics/hall/roomlist.png'
-    @contents = Surface.load 'graphics/hall/roomlist.png'
+    @button.set_alpha(RLEACCEL, 255)
+    #@background = Surface.load 'graphics/hall/roomlist.png'
+    #@contents = Surface.load 'graphics/hall/roomlist.png'
     super(x,y,@button.w / 3, 48 * 10)
     @item_max = 0
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)

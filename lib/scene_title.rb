@@ -91,8 +91,8 @@ class Scene_Title < Scene
       require_relative 'scene_login'
       Scene_Login.new
     when 1
-      require_relative 'scene_single'
-      Scene_Single.new
+      require_relative 'scene_hall_nbx'
+      Scene_Hall_NBX.new
     when 2
       require_relative 'scene_deck'
       Scene_Deck.new

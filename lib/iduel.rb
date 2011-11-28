@@ -30,15 +30,15 @@ class Iduel
     (@conn.write info) rescue Event.push Event::Error.new(0)
   end
   def recv(info)
-    Event.push begin
-      info.chomp!(RS)
-      info.encode! "UTF-8", :invalid => :replace, :undef => :replace
-      puts ">> #{info}"
-      Event.parse info
-    rescue IOError
+    if info.nil?
       @conn.close
       @conn = nil
       Event::Error.new(0)
+    else
+      info.chomp!(RS)    
+      info.encode! "UTF-8", :invalid => :replace, :undef => :replace
+      puts ">> #{info}"
+      Event.push Event.parse info
     end
   end
   def close

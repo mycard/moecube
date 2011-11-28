@@ -8,14 +8,16 @@ class Window_PlayerList < Window_List
   attr_reader :x, :y, :width, :height
   WLH = 20
 	def initialize(x, y)
-    @contents = Surface.load "graphics/hall/playerlist.png"
+    #@contents = Surface.load "graphics/hall/playerlist.png"
+    #@background = Surface.load "graphics/hall/playerlist.png"
     super(x,y,272,540)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
     @color_over = [0x03, 0x11, 0x22, 200,200,255]
     @color_click = [200,200,255, 0x03, 0x11, 0x22]
-    @background = Surface.load "graphics/hall/playerlist.png"
-    #@contents.fill_rect(0,0,0,0,0xFFFFFFFF)
+    #p @contents.alpha
+    #@contents.set_alpha(RLEACCEL, 80)
+    @contents.fill_rect(0,0,@width,@height,0xFFFFFFFF)
     refresh
     #@contents.f
 	end
@@ -29,6 +31,9 @@ class Window_PlayerList < Window_List
       @font.draw_shaded_utf8(@contents, @list[index].name, 0, index*WLH, *@color_click)
     end
   end
+  #def clear(x=0, y=0, width=@width, height=@height)
+  #  Surface.blit(x, )
+  #end
   def item_rect(index)
     [0, WLH*index, @width, WLH]
   end
