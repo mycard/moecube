@@ -24,7 +24,7 @@ class NBX < Iduel
     @conn_hall.send("#{head}|#{args.join(',')}", 0, user ? user.host : '<broadcast>', Port)
   end
   def login(username)
-    send(nil, 'USERONLINE', username)
+    send(nil, 'USERONLINE', username, 1)
     @user = User.new(username, 'localhost')
   end
   def connect(server, port=Port)
