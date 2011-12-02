@@ -28,7 +28,7 @@ class Scene_Duel < Scene
 		@room = room
   end
   def start
-    $iduel.upinfo
+    $iduel.upinfo if $iduel
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
     Mixer.fade_in_music(@bgm, 8000, -1)
     @background = Surface.load "graphics/field/main.png"
@@ -55,6 +55,8 @@ class Scene_Duel < Scene
     @action_window = Window_Action.new
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     super
+    #(Thread.list - [Thread.current]).each{|t|t.kill}
+    #p Thread.list
   end
 
   def change_phase(phase)
@@ -160,8 +162,14 @@ class Scene_Duel < Scene
   end
   def update
     @cardinfo_window.update
-    while event = Iduel::Event.poll
-      handle_iduel(event)
+    if $iduel
+      while event = Iduel::Event.poll
+        handle_iduel(event)
+      end
+    elsif $nbx
+      while event = NBX::Event.poll
+        handle_iduel(event)
+      end
     end
     super
   end

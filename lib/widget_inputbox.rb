@@ -1,4 +1,5 @@
 class Widget_InputBox < Window
+=begin
   attr_accessor :text, :proc
   require 'tk'
   @@font = TkFont.new("family" => 'WenQuanYi Micro Hei', 
@@ -15,7 +16,8 @@ class Widget_InputBox < Window
     bind('Key-Return'){@@active.proc.call(get);delete(0, get.size);@@root.withdraw(true);true}
     pack
   }
-  Thread.new{Tk.mainloop}.priority = 1
+  
+  Thread.new{Tk.mainloop}
   def initialize(x,y,width,height,z=300, &block)
     super(x,y,width,height,z)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
@@ -36,6 +38,9 @@ class Widget_InputBox < Window
     @@root.deiconify
     @@entry.focus :force
   end
-
+=end
+  def method_missing(*args)
+    
+  end
   
 end

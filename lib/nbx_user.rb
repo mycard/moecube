@@ -18,7 +18,10 @@ class NBX::User
     @name = name
     @host = host
   end
-  def avatar(size)
+  def status
+    :waiting
+  end
+  def avatar(size=:small)
     Surface.new(SWSURFACE, 1, 1, 32, 0,0,0,0)
   end
 end

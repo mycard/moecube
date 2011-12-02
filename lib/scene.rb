@@ -47,7 +47,9 @@ class Scene
   # ● 更新画面
   #--------------------------------------------------------------------------
   def update
+    #p Thread.list
     while event = Event.poll
+      p event
       handle(event)
     end
     #@fps.clear(0,0,100,24)

@@ -31,10 +31,10 @@ class FPSTimer
     #yield
     nxt = @old + @spf
     #now = 
-    yield if nxt > Time.now.to_f
-    if (sleeptime = nxt - Time.now.to_f) > 0
-      sleep(sleeptime)
-    end
+    yield# if nxt > Time.now.to_f
+    #if (sleeptime = nxt - Time.now.to_f) > 0
+      sleep(0.01)
+    #end
     #end
     @old = nxt
     calc_real_fps

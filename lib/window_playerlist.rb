@@ -43,6 +43,9 @@ class Window_PlayerList < Window_List
     @height = @item_max * WLH
 		refresh
 	end
+  def clear(x=0,y=0,width=@width,height=@height)
+    @contents.fill_rect(x,y,width,height,0x66FFFFFF)
+  end
   def clicked
     #$scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
     @userwindow = Window_User.new(100,100,@list[@index])

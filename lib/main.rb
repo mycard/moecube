@@ -37,7 +37,6 @@ $screen = Screen.open($config["width"], $config["height"], 0, style)
 TTF.init
 
 Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,512)
-
 require_relative 'scene'
 require_relative 'window'
 require_relative 'window_list'
@@ -45,6 +44,8 @@ require_relative 'window_user'
 require_relative 'scene_title'
 require_relative 'fpstimer'
 require_relative 'widget_msgbox'
+#4.times{Thread.new{loop{sleep 0.01}}}
+Thread.current.priority=20
 $fpstimer = FPSTimer.new
 $scene = Scene_Title.new
 begin

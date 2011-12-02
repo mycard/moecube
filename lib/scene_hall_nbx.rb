@@ -62,7 +62,12 @@ class Scene_Hall_NBX < Scene
           #$iduel.qroom room
       #  end
         #$iduel.close
-        $scene = Scene_Login.new
+      #  $scene = Scene_Login.new
+      when Key::F2
+        $nbx.host
+        @joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手"){}
+      when Key::F5
+        $nbx.refresh
       end
     when Event::KeyUp
       case event.sym
@@ -108,7 +113,16 @@ class Scene_Hall_NBX < Scene
       else
         @playerlist.refresh
       end
-      
+    when NBX::Event::SingleRoomInfo
+      if !@roomlist.list.include? event.room
+        @roomlist.list << event.room
+        @roomlist.list = @roomlist.list #OMG...
+      else
+        @roomlist.refresh
+      end
+    when NBX::Event::Connect
+      require_relative 'scene_duel'
+      $scene = Scene_Duel.new($nbx.room)
       #
     #when Iduel::Event::OLIF
     #  @playerlist.list = event.users

@@ -29,6 +29,7 @@ class Scene_Title < Scene
   end
   def update
     while event = Event.poll
+      p event
       case event
       when Event::MouseMotion
         if @command_window.include?(event.x, event.y)
