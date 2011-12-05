@@ -37,9 +37,18 @@ class Window_List < Window
   def item_rect(index)
     [0, @index*self.class::WLH, @width, self.class::WLH]
   end
+  def list=(list)
+    @list = list
+    @item_max = @list.size
+    @height = @item_max * WLH
+    refresh
+  end
 	def refresh
+    #p @list
     clear
+
     #@contents.fill_rect(0,0,@width,@height,0x66000000)
+    #p @item_max
     @item_max.times do |index|
       draw_item(index, index==@index ? 1 : 0)
     end

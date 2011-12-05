@@ -14,6 +14,14 @@ class Scene
     start
     while $scene == self
       update
+      $fpstimer.wait_frame do
+        $screen.put(@background,0,0) if @background
+        @windows.each do |window|
+          window.draw($screen)
+        end
+        @font.draw_blended_utf8($screen, "%.1f" % $fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
+        $screen.update_rect(0,0,0,0)
+      end
     end
     terminate
   end
@@ -47,26 +55,44 @@ class Scene
   # ● 更新画面
   #--------------------------------------------------------------------------
   def update
-    #p Thread.list
     while event = Event.poll
-      p event
       handle(event)
-    end
-    #@fps.clear(0,0,100,24)
-    #@font.draw_blended_utf8(@fps.contents, @fpscount, 160, 12, 0x00,0x00,0x00)
-    #@fpscount += 1
-    $fpstimer.wait_frame do
-      $screen.put(@background,0,0) if @background
-      @windows.each do |window|
-        window.draw($screen)
-        #$screen.put(window.contents, window.x, window.y) if window.contents && window.visible
-      end
-      @font.draw_blended_utf8($screen, "%.1f" % $fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
-      $screen.update_rect(0,0,0,0)
     end
   end
   def handle(event)
     case event
+    when Event::MouseMotion
+      if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
+        @active_window.lostfocus
+        @active_window = nil
+      end
+      self.windows.reverse.each do |window|
+        if window.include?(event.x, event.y) && window.visible
+          @active_window = window 
+          @active_window.mousemoved(event.x, event.y)
+          break true
+        end
+      end
+    when Event::MouseButtonDown
+      case event.button
+      when Mouse::BUTTON_LEFT
+        if @active_window and !@active_window.include? event.x, event.y
+          @active_window.lostfocus
+          @active_window = nil
+        end
+        self.windows.reverse.each do |window|
+          if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
+            @active_window = window 
+            @active_window.mousemoved(event.x, event.y)
+            break
+          end
+        end
+        @active_window.clicked if @active_window
+      when 4
+        @active_window.cursor_up
+      when 5
+        @active_window.cursor_down
+      end
     when Event::Quit
       $scene = nil
     end

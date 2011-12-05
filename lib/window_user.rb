@@ -46,9 +46,9 @@ class Window_User < Window_List
       Launchy.open("http://google.com")
     when 2
       if @user.status == :waiting
-        $iduel.join(@user.room)
+        $game.join(@user.room)
       elsif @user.status == :dueling
-        $iduel.watch(@user.room)
+        $game.watch(@user.room)
       end
     end
   end

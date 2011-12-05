@@ -1,18 +1,17 @@
 #encoding: UTF-8
-require_relative 'iduel'
-class NBX < Iduel
+class NBX < Game
   Version = "20090622"
   Port=2583
   RS = "\xA1\xE9".force_encoding "GBK"
-  attr_accessor :user, :room
   def initialize
+    super
     require 'socket'
     require 'digest/md5'
     require 'open-uri'
-    require_relative 'nbx_action'
-    require_relative 'nbx_event'
-    require_relative 'nbx_user'
-    require_relative 'nbx_room'
+    require_relative 'action'
+    require_relative 'event'
+    require_relative 'user'
+    require_relative 'room'
 
     @conn_hall = UDPSocket.new
     @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
@@ -22,7 +21,7 @@ class NBX < Iduel
   end
   def send(user, head, *args)
     case user
-    when NBX::User  #大厅里给特定用户的回复
+    when User  #大厅里给特定用户的回复
       @conn_hall.send("#{head}|#{args.join(',')}", 0, user.host, Port)
     when nil #大厅里的广播
       @conn_hall.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port)
@@ -35,20 +34,28 @@ class NBX < Iduel
   end
 
   def login(username)
-    @user = User.new(username, 'localhost')
-    send(nil, 'USERONLINE', username, 1)
+    Game_Event.push Game_Event::Login.new(User.new('localhost', username))
   end
   def host
-    @room = NBX::Room.new(@user)
+    @room = Room.new(@user.id, @user.name, @user)
+    Game_Event.push Game_Event::Host.new(@room)
+    
     #p @room
     #if room.player2
-    #  @conn_hall.send(nil, "SingleRoomInfo", room.player1.name,room.player2.name, room.player2.host)
+    #  @conn_hall.send(nil, "NewRoom", room.player1.name,room.player2.name, room.player2.host)
     #else
-    send(nil, "SingleRoomInfo", @room.player1.name)
+    send(nil, "NewRoom", @room.player1.name)
     #end
     @conn_room_server = TCPServer.new '0.0.0.0', Port  #为了照顾NBX强制IPv4
     
     @accept_room = Thread.new{Thread.start(@conn_room_server.accept) {|client| accept(client)} while @conn_room_server}
+  end
+  def action(action)
+    if @room.player2
+      action.from_player = false
+      send(:room, action.escape)
+      action.from_player = true
+    end
   end
   def accept(client)
     if @conn_room #如果已经连接了，进入观战
@@ -59,7 +66,7 @@ class NBX < Iduel
       send(:room, "[LinkOK]|#{Version}")
       send(:room, "▓SetName:#{@user.name}▓")
       send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
-      @room.player2 = User.new("对手", client.addr[2])
+      @room.player2 = User.new(client.addr[2], "对手")
       while info = @conn_room.gets(RS)
         recv_room(info)
       end
@@ -71,10 +78,10 @@ class NBX < Iduel
     info.chomp!(RS)    
     info.encode! "UTF-8", :invalid => :replace, :undef => :replace
     puts ">> #{info}"
-    Event.push Event.parse info
+    Game_Event.push Game_Event.parse info
   end
   def refresh
-    send(nil, 'USERONLINE', @user.name, 1)
+    send(nil, 'NewUser', @user.name, 1)
   end
   def connect(server, port=Port)
     #@conn = TCPSocket.open(server, port)
@@ -90,7 +97,7 @@ class NBX < Iduel
         break
       end
     end
-    Event.push Event.parse(info, addrinfo[2])
+    Game_Event.push Game_Event.parse(info, addrinfo[2])
   end
 end
 

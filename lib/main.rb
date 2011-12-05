@@ -44,8 +44,13 @@ require_relative 'window_user'
 require_relative 'scene_title'
 require_relative 'fpstimer'
 require_relative 'widget_msgbox'
+require_relative 'game'
+require_relative 'game_event'
+require_relative 'cacheable'
+require_relative 'user'
+require_relative 'room'
 #4.times{Thread.new{loop{sleep 0.01}}}
-Thread.current.priority=20
+
 $fpstimer = FPSTimer.new
 $scene = Scene_Title.new
 begin

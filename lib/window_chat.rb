@@ -10,7 +10,7 @@ class Window_Chat < Window
   Text_Color = [0,0,0]
 	def initialize(x, y, width, height)
     super(x,y,width,height)
-    @chat_input = Widget_InputBox.new(416,723,586,24){|text|$iduel.chat text; add($iduel.user, text)}
+    @chat_input = Widget_InputBox.new(416,723,586,24){|text|$game.chat text; add($game.user, text)}
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
     @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)

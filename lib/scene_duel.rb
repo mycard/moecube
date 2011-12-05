@@ -28,7 +28,7 @@ class Scene_Duel < Scene
 		@room = room
   end
   def start
-    $iduel.upinfo if $iduel
+    $game.refresh if $game
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
     Mixer.fade_in_music(@bgm, 8000, -1)
     @background = Surface.load "graphics/field/main.png"
@@ -150,25 +150,25 @@ class Scene_Duel < Scene
   
   
   
-  def handle_iduel(event)
+  def handle_game(event)
     case event
-    when Iduel::Event::Action
+    when Game_Event::Action
       event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh
-    when Iduel::Event::Error
+    when Game_Event::Error
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     end
   end
   def update
     @cardinfo_window.update
-    if $iduel
-      while event = Iduel::Event.poll
-        handle_iduel(event)
+    if $game
+      while event = Game_Event.poll
+        handle_game(event)
       end
-    elsif $nbx
-      while event = NBX::Event.poll
-        handle_iduel(event)
+    elsif $game
+      while event = Game_Event.poll
+        handle_game(event)
       end
     end
     super

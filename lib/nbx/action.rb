@@ -1,5 +1,5 @@
 #encoding: UTF-8
-require_relative 'action'
+require_relative '../action'
 class Action
   CardFilter = /(<(?:\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
   #FieldCardFilter = /(<>|<??>|<(?:(?:表攻|表守|里守)\|){0,1}\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>)/.to_s
@@ -216,79 +216,79 @@ class Action
   end
   def run
     $chat_window.add @from_player, escape if @from_player
-    $iduel.action self if @from_player
+    $game.action self if @from_player
   end
   class FirstToGo
     def escape
-      "[#{@id}] ◎→[11年3月1日禁卡表]先攻"
+      "[#{@id}] #{from_player ? '◎' : '●'}→[11年3月1日禁卡表]先攻"
     end
   end
   class Draw
     def escape
-      "[#{@id}] ◎→抽牌"
+      "[#{@id}] #{from_player ? '◎' : '●'}→抽牌"
     end
   end
   class Dice
     def escape
-      "[#{@id}] ◎→掷骰子,结果为 #{@result}"
+      "[#{@id}] #{from_player ? '◎' : '●'}→掷骰子,结果为 #{@result}"
     end
   end
   class Reset
     def escape
-      "[#{@id}] ◎→[11年3月1日禁卡表] Duel!!"
+      "[#{@id}] #{from_player ? '◎' : '●'}→[11年3月1日禁卡表] Duel!!"
     end
   end
   class ChangePhase
     def escape
-      "[#{@id}] ◎→#{Action.escape_phase(@phase)}"
+      "[#{@id}] #{from_player ? '◎' : '●'}→#{Action.escape_phase(@phase)}"
     end
   end
   class Turn_End
     def escape
-      "[#{@id}] ◎→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
+      "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
     end
   end
   class Shuffle
     def escape
-      "[#{@id}] ◎→卡组洗切"
+      "[#{@id}] #{from_player ? '◎' : '●'}→卡组洗切"
     end
   end
   class Set
     def escape
       case @from_pos
       when :hand
-        "[#{@id}] ◎→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
+        "[#{@id}] #{from_player ? '◎' : '●'}→从手卡~取一张#{@card.monster? ? "怪兽卡" : "魔/陷卡"}盖到场上(#{@to_pos})"
       end
     end
   end
   class Summon
     def escape
-      "[#{@id}] ◎→从手卡~召唤#{@card.escape}(#{@to_pos})"
+      "[#{@id}] #{from_player ? '◎' : '●'}→从手卡~召唤#{@card.escape}(#{@to_pos})"
     end
   end
   class SpecialSummon
     def escape
-      "[#{@id}] ◎→从#{Action.escape_pos2(@from_pos)}~特殊召唤#{@card.escape}(#{@to_pos})呈#{case @position; when :attack; "攻击"; when :defense; "守备";when :set; "背面守备"; end}表示"
+      "[#{@id}] #{from_player ? '◎' : '●'}→从#{Action.escape_pos2(@from_pos)}~特殊召唤#{@card.escape}(#{@to_pos})呈#{case @position; when :attack; "攻击"; when :defense; "守备";when :set; "背面守备"; end}表示"
     end
   end
   class Activate
     def escape
-      "[#{@id}] ◎→从手卡~发动#{@card.escape}(#{@to_pos})"
+      "[#{@id}] #{from_player ? '◎' : '●'}→从手卡~发动#{@card.escape}(#{@to_pos})"
     end
   end
   class SendToGraveyard
     def escape
-      "[#{@id}] ◎→将#{@card.escape}从~#{Action.escape_pos2(@from_pos)}~送往墓地"
+      "[#{@id}] #{from_player ? '◎' : '●'}→将#{@card.escape}从~#{Action.escape_pos2(@from_pos)}~送往墓地"
     end
   end
   class Tribute
     def escape
-      "[#{@id}] ◎→将~#{Action.escape_pos2(@from_pos)}~的#{@card.escape}解~放"
+      "[#{@id}] #{from_player ? '◎' : '●'}→将~#{Action.escape_pos2(@from_pos)}~的#{@card.escape}解~放"
     end
   end
   class Remove
     def escape
-      "[#{@id}] ◎→将#{Action.escape_pos2(@from_pos)}的#{@card.escape}从游戏中除外"
+      "[#{@id}] #{from_player ? '◎' : '●'}→将#{Action.escape_pos2(@from_pos)}的#{@card.escape}从游戏中除外"
     end
   end
   class ReturnToHand
@@ -303,7 +303,7 @@ class Action
       when 0..10
         "场上(#{@from_pos})"
       end
-      "[#{@id}] ◎→从#{pos}取#{@card.escape}加入手卡"
+      "[#{@id}] #{from_player ? '◎' : '●'}→从#{pos}取#{@card.escape}加入手卡"
     end
   end
   class ReturnToDeck
@@ -318,7 +318,7 @@ class Action
       when 0..10
         "场上(#{@from_pos})"
       end
-      "[#{@id}] ◎→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
+      "[#{@id}] #{from_player ? '◎' : '●'}→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
     end
   end
   class ReturnToExtra
@@ -331,29 +331,29 @@ class Action
       when 0..10
         "场上(#{pos})"
       end
-      "[#{@id}] ◎→#{@card.escape}从#{pos}返回额外牌堆"
+      "[#{@id}] #{from_player ? '◎' : '●'}→#{@card.escape}从#{pos}返回额外牌堆"
     end
   end
   class Flip
     def escape
-      "[#{@id}] ◎→(#{@from_pos})#{@card.escape}打开"
+      "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}打开"
     end
   end
   class FlipSummon
     def escape
-      "[#{@id}] ◎→(#{@from_pos})#{@card.escape}反转"
+      "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}反转"
     end
   end
   class ChangePosition
     def escape
       if @position == :set
         if (6..10).include? @from_pos #攻击表示的怪兽，由于iduel没有变成里侧守备指令，所以采用重新放置的方式
-          "[#{@id}] ◎→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
+          "[#{@id}] #{from_player ? '◎' : '●'}→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
         else
-          "[#{@id}] ◎→(#{@from_pos})#{@card.escape}变为里侧表示"
+          "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}变为里侧表示"
         end
       else
-        "[#{@id}] ◎→(#{@from_pos})#{@card.escape}改为#{position == :attack ? '攻击' : '防守'}表示"
+        "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}改为#{position == :attack ? '攻击' : '防守'}表示"
       end
     end
   end
@@ -373,7 +373,7 @@ class Action
       when 0..10
         "(#{@from_pos})"
       end
-      "[#{@id}] ◎→#{pos}#{@card.escape}效果发#{"~" unless (0..10).include? @from_pos}动"
+      "[#{@id}] #{from_player ? '◎' : '●'}→#{pos}#{@card.escape}效果发#{"~" unless (0..10).include? @from_pos}动"
     end
   end
   class Chat

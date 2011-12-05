@@ -7,10 +7,7 @@ class Iduel
   RS = "\xA1\xE9".force_encoding "GBK"
   Color = [[0,0,0], [255,0,0], [0,255,0], [0,0,255], [255, 165, 0]]
   attr_accessor :session
-  attr_accessor :user
-  attr_accessor :room_id
   attr_accessor :key
-  attr_accessor :rooms
   def initialize
     require 'socket'
     require 'digest/md5'
@@ -42,7 +39,7 @@ class Iduel
     end
   end
   def close
-    $iduel.quit
+    $game.quit
     @recv.exit
     @conn.close
     @conn = nil
@@ -54,7 +51,7 @@ class Iduel
     md5 = Digest::MD5.hexdigest(password)
     send(0, username, md5, checknum("LOGINMSG", username, md5), VERSION)
   end
-  def upinfo
+  def refresh
     send(1, @key, checknum("UPINFOMSG", @session))
   end
   def join(room, password="")

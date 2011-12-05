@@ -38,9 +38,6 @@ class Widget_InputBox < Window
     @@root.deiconify
     @@entry.focus :force
   end
-=end
-  def method_missing(*args)
-    
-  end
-  
+
+=end  
 end

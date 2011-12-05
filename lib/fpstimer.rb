@@ -27,15 +27,11 @@ class FPSTimer
 
   # execute given block and wait
   def wait_frame
-    #sleep 0.01
-    #yield
     nxt = @old + @spf
-    #now = 
-    yield# if nxt > Time.now.to_f
-    #if (sleeptime = nxt - Time.now.to_f) > 0
-      sleep(0.01)
-    #end
-    #end
+    if (sleeptime = nxt - Time.now.to_f) > 0
+      sleep(sleeptime)
+      yield
+    end
     @old = nxt
     calc_real_fps
   end

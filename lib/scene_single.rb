@@ -1,28 +1,30 @@
 #==============================================================================
-# ■ Scene_Title
+# ■ Scene_Login
 #------------------------------------------------------------------------------
-# 　title
+# 　login
 #==============================================================================
-=begin
+
 class Scene_Single < Scene
-  require_relative 'nbx'
-  def start
-    $server = NBX.new
-    $server.login(ENV['username'])
-    super
-  end
-  #def handle()
+  Vocab_Logging  = "Logging"
+	def start
+    require_relative 'nbx/nbx'
+		$game = NBX.new
+    login
+	end
+	def login
+    $game.login(ENV['username'])
+	end
   def update
-    while event = NBX::Event.poll
-      handle_nbx(event)
+    while event = Game_Event.poll
+      handle_game(event)
     end
     super
   end
-  def handle_nbx(event)
+  def handle_game(event)
     case event
-    when NBX::Event::USERONLINE
-      p event.user
+    when Game_Event::Login
+      require_relative 'scene_hall'
+      $scene = Scene_Hall.new
     end
   end
 end
-=end

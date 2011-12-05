@@ -1,7 +1,7 @@
 #encoding: UTF-8
 class Action
   @@id = 0
-	attr_reader :from_player, :msg
+	attr_accessor :from_player, :msg
   attr_accessor :id
 	def initialize(from_player=true, msg=nil)
     @id = @@id
@@ -24,7 +24,7 @@ class Action
     @@opponent_field = field
   end
   def run
-    #子类定义
+    $game.action self
   end
   class Reset < Action
     def run

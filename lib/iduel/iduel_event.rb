@@ -1,6 +1,6 @@
 #encoding: UTF-8
-Iduel::Event = Class.new #避开SDL::Event问题，所以没有用class Iduel::Event::Event
-class Iduel::Event
+Game_Event = Class.new #避开SDL::Event问题，所以没有用class Game_Event::Event
+class Game_Event
   @queue = []
   def self.push(event)
     @queue << event
@@ -12,47 +12,47 @@ class Iduel::Event
     info =~ /^\$([A-Z])\|(.*)$/m
     case $1
     when "A"
-      Iduel::Event::Error
+      Game_Event::Error
     when "B"
-      Iduel::Event::LOGINOK
+      Game_Event::LOGINOK
     when "C"
-      Iduel::Event::OLIF
+      Game_Event::AllUsers
     when "F"
-      Iduel::Event::JOINROOMOK
+      Game_Event::JOINROOMOK
     when "G"
-      Iduel::Event::WATCHROOMSTART
+      Game_Event::WATCHROOMSTART
     when "J"
-      Iduel::Event::Action
+      Game_Event::Action
     when "K"
-      Iduel::Event::WMSG
+      Game_Event::WMSG
     when "M"
-      Iduel::Event::QROOMOK  #TODO
+      Game_Event::QROOMOK  #TODO
     when "O"
-      Iduel::Event::PCHAT
+      Game_Event::PCHAT
     when "P"
-      Iduel::Event::RMIF
+      Game_Event::AllRooms
     when "Q"
-      Iduel::Event::SingleRoomInfo
+      Game_Event::NewRoom
     when "R"
-      Iduel::Event::QROOMOK  #卡表
+      Game_Event::QROOMOK  #卡表
     else
-      Iduel::Event::UNKNOWN
+      Game_Event::UNKNOWN
     end.new($2)
   end
 end
   
-class Iduel::Event::LOGINOK < Iduel::Event
+class Game_Event::LOGINOK < Game_Event
   attr_reader :user, :session
   def initialize(info)
     info = info.split(",")
     #>> $B|201629,zh99997,5da9e5fa,Level-1 (总经验:183),,20101118
     info[3] =~ /Level-(\d)+ \(总经验:(\d+)\)/
-    $iduel.user = @user = Iduel::User.new(info[0].to_i, info[1], $1.to_i, $2.to_i)
-    $iduel.session = @session = info[2]
-    $iduel.key = ($iduel.user.id - 0x186a0) ^ 0x22133
+    $game.user = @user = Iduel::User.new(info[0].to_i, info[1], $1.to_i, $2.to_i)
+    $game.session = @session = info[2]
+    $game.key = ($game.user.id - 0x186a0) ^ 0x22133
   end
 end
-class Iduel::Event::OLIF < Iduel::Event
+class Game_Event::AllUsers < Game_Event
   attr_reader :users
   def initialize(info)
     @users = info.split(',').collect do |user|
@@ -60,7 +60,7 @@ class Iduel::Event::OLIF < Iduel::Event
     end
   end
 end
-class Iduel::Event::RMIF < Iduel::Event
+class Game_Event::AllRooms < Game_Event
   attr_reader :rooms
   def initialize(info)
     info = info.split("|")
@@ -81,10 +81,10 @@ class Iduel::Event::RMIF < Iduel::Event
       end
     end
     @rooms = templist + @rooms
-    $iduel.rooms = @rooms
+    $game.rooms = @rooms
   end
 end
-class Iduel::Event::NOL < Iduel::Event
+class Game_Event::NOL < Game_Event
   def initialize(info)
     super
     @args = @args.collect do |user|
@@ -92,7 +92,7 @@ class Iduel::Event::NOL < Iduel::Event
     end
   end
 end
-class Iduel::Event::DOL < Iduel::Event
+class Game_Event::DOL < Game_Event
   def initialize(info)
     super
     @args = @args.collect do |user|
@@ -100,40 +100,40 @@ class Iduel::Event::DOL < Iduel::Event
     end
   end
 end
-class Iduel::Event::PCHAT < Iduel::Event
+class Game_Event::PCHAT < Game_Event
   attr_reader :user, :content
   def initialize(info)
     user, @content = info.split(",", 2)
     @user = user == "System" ? Iduel::User.new(100000, "iDuel管理中心") : Iduel::User.new(user)
   end
 end
-class Iduel::Event::JOINROOMOK < Iduel::Event
+class Game_Event::JOINROOMOK < Game_Event
   attr_reader :room
   def initialize(id)
     @room = Iduel::Room.new(id)
   end
 end
-class Iduel::Event::QROOMOK < Iduel::Event
+class Game_Event::QROOMOK < Game_Event
 end
-class Iduel::Event::SingleRoomInfo < Iduel::Event
+class Game_Event::NewRoom < Game_Event
   def initialize(info)
     id, x, player1, player2 = info.split(",", 4)
     @room = Iduel::Room.new(id)
     @room.player1 = Iduel::User.new(player1)
     @room.player2 = Iduel::User.new(player2)
-    $iduel.rooms << @room unless $iduel.rooms.include? @room
+    $game.rooms << @room unless $game.rooms.include? @room
   end
 end
 #"Q"
 #"273,1,zh99998(201448),zh99997(201629)"
-class Iduel::Event::WATCHROOMSTART < Iduel::Event
+class Game_Event::WATCHROOMSTART < Game_Event
   attr_reader :room
   def initialize(info)
     id, name = info.split(",", 1)
     @room = Iduel::Room.new(id.to_i, name, '', '', false, Iduel::Color[0])#:name, :player1, :player2, :crypted, :color
   end
 end
-class Iduel::Event::Action < Iduel::Event
+class Game_Event::Action < Game_Event
   attr_reader :action
   def initialize(info)
     info["◎"] = "●" if info =~ /^\[\d+\] (?:.*\r\n){0,1}(◎)→.*▊▊▊.*$/
@@ -141,7 +141,7 @@ class Iduel::Event::Action < Iduel::Event
     p @action
   end
 end
-class Iduel::Event::WMSG < Iduel::Event
+class Game_Event::WMSG < Game_Event
   def initialize(info)
     #black_st(212671), [109] ┊墓地，苍岩┊
     #p info
@@ -151,9 +151,9 @@ class Iduel::Event::WMSG < Iduel::Event
     @args = [$1, $2, $3, $4]
   end
 end
-class Iduel::Event::WATCHSTOP < Iduel::Event
+class Game_Event::WATCHSTOP < Game_Event
 end
-class Iduel::Event::Error < Iduel::Event
+class Game_Event::Error < Game_Event
   attr_reader :title, :message
   def initialize(info)
     @title, @message = case info.to_i
@@ -197,7 +197,7 @@ class Iduel::Event::Error < Iduel::Event
     #system("pause")
   end
 end
-class Iduel::Event::UNKNOWN < Iduel::Event
+class Game_Event::UNKNOWN < Game_Event
   def initialize(*args)
     puts '--------UnKnown Iduel Event-------'
     p $1, $2, args

@@ -57,6 +57,6 @@ class Iduel::User
     result
   end
   def room
-    $iduel.rooms.find{|room|room.player1 == self or room.player2 == self}
+    $game.rooms.find{|room|room.player1 == self or room.player2 == self}
   end
 end

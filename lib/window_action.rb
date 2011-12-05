@@ -2,9 +2,9 @@
 # and open the template in the editor.
 
 class Window_Action < Window_List
-  Color = [0x00,0x00,0x00]
+  Color = [0xFF,0xFF,0xFF]
   Color_Disabled = [0x66,0x66,0x66]
-  Color_Selected = [0x00,0x00,0xFF]
+  Color_Selected = [0xFF,0xFF,0x00]
   def initialize#,list,list_available=Array.new(list.size, true))
     super(0,0,123,20*WLH,300)
     #@skin = Surface.load 'graphics/field/action.png'
@@ -26,30 +26,31 @@ class Window_Action < Window_List
       @height = @viewport[3] = @list.size*WLH+15*2
       @item_max = @list.size
       @index = @list_available.find_index(true) || 0
-      
-      @contents.put(@up, 0, 0)
-      Surface.transform_draw(@middle,@contents,0,1,(@list.size*WLH).to_f/@middle.h,0,0,0,20,Surface::TRANSFORM_SAFE)
-      @contents.put(@down, 0, @height-15)
-      
       refresh
       @visible = true
     else
       @visible = false
     end
   end
-
+  def clear(x=0,y=0,width=@width,height=@height)
+    @contents.put(@up, 0, 0)
+    Surface.transform_draw(@middle,@contents,0,1,(@list.size*WLH+17).to_f/@middle.h,0,0,0,15,Surface::TRANSFORM_SAFE) #+17那里，我不知道为什么需要这么做，但是如果不+ 内容和底边会有一点空白
+    @contents.put(@down, 0, @height-15)
+  end
   def index=(index)
-    super(index) if index
+    if index
+      super(index)
+      refresh
+    end
     #p @index
   end
   def draw_item(index, status=0)
-    #p index, status, @index
     case status
     when 0
       color = @list_available[index] ? Color : Color_Disabled
-      @font.draw_blended_utf8(@contents, @list[index] , 0, index*WLH, *color)
+      @font.draw_blended_utf8(@contents, @list[index] , (@width-16*6)/2, index*WLH+15, *color)
     when 1
-      @font.draw_blended_utf8(@contents, @list[index] , 0, index*WLH, *Color_Selected)
+      @font.draw_blended_utf8(@contents, @list[index] , (@width-16*6)/2, index*WLH+15, *Color_Selected)
     end
   end
   def next

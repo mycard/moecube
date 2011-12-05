@@ -20,8 +20,8 @@ class Scene_Login < Scene
     @font.draw_blended_utf8($screen, Vocab_Logging, 0,0,255,0,255)
     $screen.update_rect(0,0,100,24)
 		
-		$iduel = Iduel.new
-		$iduel.login(@username, @password)
+		$game = Iduel.new
+		$game.login(@username, @password)
 	end
   def update
     while event = Event.poll
@@ -31,12 +31,12 @@ class Scene_Login < Scene
       end
     end
 
-    while event = Iduel::Event.poll
+    while event = Game_Event.poll
       case event
-      when Iduel::Event::LOGINOK
+      when Game_Event::LOGINOK
         require_relative 'scene_hall'
         $scene = Scene_Hall.new
-      when Iduel::Event::Error
+      when Game_Event::Error
         Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
       else
         p event

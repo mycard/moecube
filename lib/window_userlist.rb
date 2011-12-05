@@ -4,12 +4,12 @@
 # 　title
 #==============================================================================
 
-class Window_PlayerList < Window_List
+class Window_UserList < Window_List
   attr_reader :x, :y, :width, :height
   WLH = 20
-	def initialize(x, y)
-    #@contents = Surface.load "graphics/hall/playerlist.png"
-    #@background = Surface.load "graphics/hall/playerlist.png"
+	def initialize(x, y, list)
+    #@contents = Surface.load "graphics/hall/userlist.png"
+    #@background = Surface.load "graphics/hall/userlist.png"
     super(x,y,272,540)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
@@ -18,7 +18,7 @@ class Window_PlayerList < Window_List
     #p @contents.alpha
     #@contents.set_alpha(RLEACCEL, 80)
     @contents.fill_rect(0,0,@width,@height,0xFFFFFFFF)
-    refresh
+    self.list = list
     #@contents.f
 	end
   def draw_item(index, status=0)
@@ -37,12 +37,6 @@ class Window_PlayerList < Window_List
   def item_rect(index)
     [0, WLH*index, @width, WLH]
   end
-  def list=(list)
-		@list = list
-    @item_max = [@list.size, 34].min
-    @height = @item_max * WLH
-		refresh
-	end
   def clear(x=0,y=0,width=@width,height=@height)
     @contents.fill_rect(x,y,width,height,0x66FFFFFF)
   end
