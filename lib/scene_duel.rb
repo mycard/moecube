@@ -18,8 +18,6 @@ class Scene_Duel < Scene
   require_relative 'window_roomchat'
   attr_reader :cardinfo_window
   attr_reader :action_window
-  attr_reader :player_field
-  attr_reader :opponent_field
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
@@ -39,20 +37,17 @@ class Scene_Duel < Scene
     @phases_window = Window_Phases.new(124, 357)
     @turn_player = true
     
-    @player_field = Game_Field.new Deck.load("test1.TXT")
-    @opponent_field = Game_Field.new
+    $game.player_field = Game_Field.new Deck.load("test1.TXT")
+    $game.opponent_field = Game_Field.new
     
     @fieldback_window = Window_FieldBack.new(130,174)
     
-    @player_field_window = Window_Field.new(4, 398, @player_field, true)
-    @opponent_field_window = Window_Field.new(4, 60, @opponent_field, false)
+    @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
+    @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
     @opponent_field_window.angle=180
     
-    Action.player_field = @player_field
-    Action.opponent_field = @opponent_field
-    
     @cardinfo_window = Window_CardInfo.new(715, 0)
-    @action_window = Window_Action.new
+    @player_field_window.action_window = Window_Action.new
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     super
     #(Thread.list - [Thread.current]).each{|t|t.kill}
@@ -66,7 +61,7 @@ class Scene_Duel < Scene
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
-      Action::Turn_End.new(true, "Turn End", @player_field.lp, @player_field.hand.size, @player_field.deck.size, @player_field.graveyard.size, @player_field.removed.size, @player_field, 1).run
+      Action::Turn_End.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1).run
     else
       @phase = @phases_window.phase = phase
       @phases_window.refresh
@@ -80,38 +75,6 @@ class Scene_Duel < Scene
   end
   def handle(event)
     case event
-    when Event::MouseMotion
-      if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
-        @active_window.lostfocus
-        @active_window = nil
-      end
-      self.windows.reverse.each do |window|
-        if window.include?(event.x, event.y) && window.visible
-          @active_window = window 
-          @active_window.mousemoved(event.x, event.y)
-          break true
-        end
-      end
-    when Event::MouseButtonDown
-      case event.button
-      when Mouse::BUTTON_LEFT
-        if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
-          @active_window.lostfocus
-          @active_window = nil
-        end
-        self.windows.reverse.each do |window|
-          if window.include?(event.x, event.y) && window.visible
-            @active_window = window 
-            @active_window.mousemoved(event.x, event.y)
-            break true
-          end
-        end
-        @active_window.clicked if @active_window
-      when 4
-        @active_window.cursor_up
-      when 5
-        @active_window.cursor_down
-      end
     when Event::MouseButtonUp
       case event.button
       when Mouse::BUTTON_LEFT
@@ -124,8 +87,8 @@ class Scene_Duel < Scene
           end
         end
       when Mouse::BUTTON_RIGHT
-        if @action_window
-          @action_window.next
+        if @player_field_window.action_window
+          @player_field_window.action_window.next
         end
       end
     when Event::KeyDown
@@ -153,6 +116,7 @@ class Scene_Duel < Scene
   def handle_game(event)
     case event
     when Game_Event::Action
+      $chat_window.add event.action.from_player, event.str
       event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh

@@ -22,7 +22,7 @@ class Window_RoomChat < Window
     @contents.fill_rect(0,0,@width, @height, 0x99FFFFFF)
     @list.last(7).each_with_index do |chat, index|
       player, content = chat
-      @font.draw_blended_utf8(@contents, content, 0, index*WLH, *(player ? Player_Color : Opponent_Color))
+      @font.draw_blended_utf8(@contents, content.empty? ? " " : content, 0, index*WLH, *(player ? Player_Color : Opponent_Color))
     end
   end
 end

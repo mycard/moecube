@@ -39,15 +39,8 @@ class NBX < Game
   def host
     @room = Room.new(@user.id, @user.name, @user)
     Game_Event.push Game_Event::Host.new(@room)
-    
-    #p @room
-    #if room.player2
-    #  @conn_hall.send(nil, "NewRoom", room.player1.name,room.player2.name, room.player2.host)
-    #else
     send(nil, "NewRoom", @room.player1.name)
-    #end
     @conn_room_server = TCPServer.new '0.0.0.0', Port  #为了照顾NBX强制IPv4
-    
     @accept_room = Thread.new{Thread.start(@conn_room_server.accept) {|client| accept(client)} while @conn_room_server}
   end
   def action(action)
@@ -83,10 +76,21 @@ class NBX < Game
   def refresh
     send(nil, 'NewUser', @user.name, 1)
   end
-  def connect(server, port=Port)
-    #@conn = TCPSocket.open(server, port)
-    #@conn.set_encoding "GBK"
-    #@recv_hall = Thread.new { recv @conn.gets(RS) while @conn  }
+  def join(host, port=Port)
+    Thread.new {
+      @conn_room = TCPSocket.new(host, port)
+      @conn_room.set_encoding "GBK"
+      @room = Room.new(@user.id, @user.name, @user)
+      Game_Event.push Game_Event::Join.new(@room)
+      send(:room, "[VerInf]|#{Version}")
+      send(:room, "▓SetName:#{@user.name}▓")
+      send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
+      @room.player2 = User.new(host, "对手")
+      while info = @conn_room.gets(RS)
+        recv_room(info)
+      end
+      @conn_room.close
+    } #TODO: 跟accept合并
   end
   
   def recv(info, addrinfo)

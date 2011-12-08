@@ -12,7 +12,8 @@ class Scene_Single < Scene
     login
 	end
 	def login
-    $game.login(ENV['username'])
+    username = $config['username'] && !$config['username'].empty? ? $config['username'] : $_ENV['username']
+    $game.login username
 	end
   def update
     while event = Game_Event.poll

@@ -70,7 +70,7 @@ class Window_List < Window
     #return unless include?(x,y)
     #self.index = (y - @y) / @single_height
   end
-  def lostfocus
+  def lostfocus(active_window=nil)
     self.index = nil
   end
   def clicked

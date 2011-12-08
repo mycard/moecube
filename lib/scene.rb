@@ -62,31 +62,11 @@ class Scene
   def handle(event)
     case event
     when Event::MouseMotion
-      if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
-        @active_window.lostfocus
-        @active_window = nil
-      end
-      self.windows.reverse.each do |window|
-        if window.include?(event.x, event.y) && window.visible
-          @active_window = window 
-          @active_window.mousemoved(event.x, event.y)
-          break true
-        end
-      end
+      update_active_window(event.x, event.y)
     when Event::MouseButtonDown
+      update_active_window(event.x, event.y)
       case event.button
       when Mouse::BUTTON_LEFT
-        if @active_window and !@active_window.include? event.x, event.y
-          @active_window.lostfocus
-          @active_window = nil
-        end
-        self.windows.reverse.each do |window|
-          if @active_window and @active_window.visible && !@active_window.include?(event.x, event.y)
-            @active_window = window 
-            @active_window.mousemoved(event.x, event.y)
-            break
-          end
-        end
         @active_window.clicked if @active_window
       when 4
         @active_window.cursor_up
@@ -107,6 +87,22 @@ class Scene
   #--------------------------------------------------------------------------
   def terminate
     #$screen.fill_rect(0,0,$screen.w, $screen.h, 0xFF000000)
+  end
+  def update_active_window(x, y)
+    self.windows.reverse.each do |window|
+      if window.include?(x, y) && window.visible
+        if window != @active_window
+          @active_window.lostfocus(window) if @active_window
+          @active_window = window 
+        end
+        @active_window.mousemoved(x, y)
+        return @active_window
+      end
+    end
+    if @active_window
+      @active_window.lostfocus
+      @active_window = nil
+    end
   end
 end
 

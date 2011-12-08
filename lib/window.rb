@@ -37,7 +37,7 @@ class Window
   end
 
   def include?(x,y)
-    x > @x && x < @x + @width && y > @y && y < @y + @height
+    x >= @x && x < @x + @width && y >= @y && y < @y + @height
   end
   def destroy
     @destroyed = true
@@ -74,7 +74,7 @@ class Window
   def clicked
     #子类定义
   end
-  def lostfocus
+  def lostfocus(active_window=nil)
     #子类定义
   end
 end

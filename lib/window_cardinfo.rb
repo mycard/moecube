@@ -1,6 +1,4 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
+#encoding: UTF-8
 class Window_CardInfo < Window
   WLH = 20
   def initialize(x,y)

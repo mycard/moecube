@@ -19,7 +19,7 @@ class Window_Field < Window
   Hand_Pos = [0, 201, 62, 8] #手卡： x, y, width, 间距
   #Card_Size = [Card::CardBack.w, Card::CardBack.h]
   Card_Size = [54, 81]
-  attr_reader :action_window
+  attr_accessor :action_window
 	def initialize(x, y, field,player=true)
     @border = Surface.load 'graphics/field/border.png'
     @border_horizontal = Surface.load 'graphics/field/border_horizontal.png' #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
@@ -32,7 +32,7 @@ class Window_Field < Window
     refresh
 	end
   def refresh
-    $scene.fieldback_window.card = $scene.player_field.field[0] || $scene.opponent_field.field[0] rescue nil
+    $scene.fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0] rescue nil
     @items.clear
     @cards.clear
     if !@field.deck.empty?
@@ -103,7 +103,7 @@ class Window_Field < Window
     end
     if index.nil? or !@items.has_key?(index) or (index == :deck and @field.deck.empty?) or (index == :removed and @field.removed.empty?) or (index == :extra and @field.extra.empty?) or (index == :graveyard and @field.graveyard.empty?)
       @index = nil
-      $scene.action_window.list = nil
+      @action_window.list = nil if @action_window
     else
       @index = index
       draw_item(@index, 1)
@@ -123,14 +123,14 @@ class Window_Field < Window
         }
       when :extra
         @card = @field.extra.first
-        @action_names = {"特殊召唤" => true,
+        @action_names = {"特殊召唤" => !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "从游戏中除外" => true,
           "送入墓地" => true
         }
       when :removed
         @card = @field.removed.first
-        @action_names = {"特殊召唤" => @card.monster?,
+        @action_names = {"特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -138,7 +138,7 @@ class Window_Field < Window
         }
       when :graveyard
         @card = @field.graveyard.first
-        @action_names = {"特殊召唤" => @card.monster?,
+        @action_names = {"特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -171,20 +171,22 @@ class Window_Field < Window
         }
       when Integer #手卡
         @card = @field.hand[@index-11]
-        @action_names = {"召唤" => @card.monster?,
+        @action_names = {"召唤" => @card.monster? && !@field.empty_field(@card).nil?,
           "特殊召唤" => false,
-          "发动" => @card.spell?,
-          "放置到场上" => true,
+          "发动" => @card.spell? && !@field.empty_field(@card).nil?,
+          "放置到场上" => true && !@field.empty_field(@card).nil?,
           "放回卡组顶端" => true,
           "送入墓地" => true,
           "从游戏中除外" => true,
           "效果发动" => true
         }
       end
-      $scene.action_window.list = @action_names
+      if @action_window
+        @action_window.list = @action_names
+        @action_window.x = @x + @items[@index][0] - (@action_window.width - @items[@index][2])/2
+        @action_window.y = @y + @items[@index][1] - @action_window.height
+      end
       $scene.cardinfo_window.card = @card if @card.known?
-      $scene.action_window.x = @x + @items[@index][0] - ($scene.action_window.width - @items[@index][2])/2
-      $scene.action_window.y = @y + @items[@index][1] - $scene.action_window.viewport[3]#height
     end
   end
   def mousemoved(x,y)
@@ -195,10 +197,10 @@ class Window_Field < Window
     end
   end
   def cursor_up
-    $scene.action_window.cursor_up
+    @action_window.cursor_up
   end
   def cursor_down
-    $scene.action_window.cursor_down
+    @action_window.cursor_down
   end
   def cursor_left
     #self.index = @index ? (@index - 1) % [@list.size, @item_max].min : 0
@@ -206,14 +208,16 @@ class Window_Field < Window
   def cursor_right
     #self.index = @index ? (@index + 1) % [@list.size, @item_max].min : 0
   end
-  def lostfocus
-    self.index = nil
+  def lostfocus(active_window=nil)
+    if active_window != @action_window
+      self.index = nil
+    end
   end
   def clicked
-    return if !$scene.action_window.visible
+    return if !@player || @index.nil?
     case @index
     when :deck
-      case $scene.action_window.index
+      case @action_window.index
       when 0
         Action::Draw.new(true).run
       when 1
@@ -237,7 +241,7 @@ class Window_Field < Window
         p "未实现"
       end
     when :extra
-      case $scene.action_window.index
+      case @action_window.index
       when 0
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :extra, pos, @card, nil, :attack).run
@@ -252,7 +256,7 @@ class Window_Field < Window
         Action::SendToGraveyard.new(true, :extra, @card).run
       end
     when :removed
-      case $scene.action_window.index
+      case @action_window.index
       when 0 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :removed, pos, @card).run
@@ -269,7 +273,7 @@ class Window_Field < Window
         Action::SendToGraveyard.new(true, :removed, @card).run
       end
     when :graveyard
-      case $scene.action_window.index
+      case @action_window.index
       when 0 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :graveyard, pos, @card).run
@@ -286,7 +290,7 @@ class Window_Field < Window
         Action::Remove.new(true, :graveyard, @card).run
       end
     when 0..5 #后场
-      case $scene.action_window.index
+      case @action_window.index
       when 0 #效果发动
         Action::Effect_Activate.new(true, @index, @card).run
       when 1 #返回卡组
@@ -301,7 +305,7 @@ class Window_Field < Window
         Action::ChangePosition.new(true, @index, @card, :set).run
       end
     when 6..10 #前场
-      case $scene.action_window.index
+      case @action_window.index
       when 0
         Action::ChangePosition.new(true, @index, @card, :attack).run
       when 1
@@ -328,7 +332,7 @@ class Window_Field < Window
         Action::ReturnToHand.new(true, @index, @card).run
       end
     when Integer #手卡
-      case $scene.action_window.index
+      case @action_window.index
       when 0 #召唤
         if pos = @field.empty_field(@card)
           Action::Summon.new(true, :hand, pos, @card).run

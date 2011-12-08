@@ -20,7 +20,7 @@ class Game_Event
       case info
       when /▓SetName:(.*)▓/
         NewUser
-      when /\[VerInf\]\|(.*)/
+      when /\[VerInf\]|\[LinkOK\]\|(.*)/
         VerInf
       when /(\[☆\]开启 游戏王NetBattleX Version  .*\r\n\[.*年.*月.*日禁卡表\]\r\n)▊▊▊.*/
         PlayerJoin
@@ -40,7 +40,7 @@ class Game_Event
   class NewUser
     def self.parse(info, host=$game.room.player2.id)
       username, need_reply = info.split(',')
-      username = "对手" if username.empty?
+      username = "对手" if username.nil? or username.empty?
       user = User.new(host, username)
       need_reply = need_reply == "1"
       if need_reply and user != $game.user  #忽略来自自己的回复请求
@@ -76,7 +76,9 @@ class Game_Event
   end
   class Action
     def self.parse(info)
-      self.new ::Action.parse info
+      info =~ /(.*)▊▊▊.*/m
+      str = $1 || info
+      self.new ::Action.parse(info), str
     end
   end
   class VerInf

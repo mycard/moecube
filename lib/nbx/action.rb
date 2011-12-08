@@ -1,10 +1,10 @@
 #encoding: UTF-8
 require_relative '../action'
 class Action
-  CardFilter = /(<(?:\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>|一张怪兽卡|一张魔\/陷卡)/.to_s
+  CardFilter = /((?:<){0,1}(?:\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*(?:>){0,1}|一张怪兽卡|一张魔\/陷卡)/.to_s
   #FieldCardFilter = /(<>|<??>|<(?:(?:表攻|表守|里守)\|){0,1}\[.*?\]\[(?:.*?)\]){0,1}[\s\d]*>)/.to_s
-  PosFilter = /((?:手卡|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组顶端|\(\d+\)){1,2})/.to_s
-  PositionFilter = /(|攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
+  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组顶端|\(\d+\)){1,2})/.to_s
+  PositionFilter = /(攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
   PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/.to_s
   def self.parse_pos(pos)
     if index = pos.index("(")
@@ -148,7 +148,6 @@ class Action
     str =~ /^\[(\d+)\] (.*)▊▊▊.*?$/m
     from_player = false
     id = $1.to_i
-    $chat_window.add from_player, "[#{$1}] #{$2}"
     result = case $2
     when /^┊(.*)┊$/m
       Chat.new from_player, $1
@@ -172,6 +171,12 @@ class Action
         Reset.new from_player
       when "换SIDE……"
         Side.new from_player
+      when "卡组洗切"
+        Shuffle.new from_player
+      when "将顶牌放回卡组底部"
+        ReturnToDeckBottom.new(from_player, :deck)
+      when /抽取\((\d+)\)张卡/
+        MultiDraw.new from_player, $1.to_i
       when /\[\d+年\d+月\d+日禁卡表\](?:<(.+)> ){0,1}先攻/
         FirstToGo.new from_player, $1
       when /\[\d+年\d+月\d+日禁卡表\](?:<(.+)> ){0,1}后攻/
@@ -184,12 +189,14 @@ class Action
         Activate.new from_player, parse_pos($1), parse_pos($3), parse_card($2)
       when /从#{PosFilter}~召唤#{CardFilter}#{PosFilter}/
         Summon.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg
-      when /从#{PosFilter}~特殊召唤#{CardFilter}#{PosFilter}呈#{PositionFilter}/
-        SpecialSummon.new from_player, parse_pos($1), parse_pos($3), card($2), msg, parse_position($4)
+      when /从#{PosFilter}~特殊召唤#{CardFilter}#{PosFilter}(?:呈#{PositionFilter}){0,1}/
+        SpecialSummon.new from_player, parse_pos($1), parse_pos($3), parse_card($2), msg, $4 ? parse_position($4) : :attack
       when /从手卡~取#{CardFilter}盖到#{PosFilter}/
         Set.new from_player, :hand, parse_pos($2), parse_card($1)
       when /将#{CardFilter}从~#{PosFilter}~送往墓地/
         SendToGraveyard.new(from_player, parse_pos($2), parse_card($1))
+      when /将~#{PosFilter}~的#{CardFilter}解~放/
+        Tribute.new(from_player, parse_pos($1), parse_card($2))
       when /将#{PosFilter}的#{CardFilter}从游戏中除外/
         Remove.new from_player, parse_pos($1), parse_card($2)
       when /#{CardFilter}从#{PosFilter}~放回卡组顶端/
@@ -198,15 +205,19 @@ class Action
         ReturnToExtra.new from_player, parse_pos($2), parse_card($1)
       when /从#{PosFilter}取#{CardFilter}加入手卡/
         ReturnToHand.new from_player, parse_pos($1), parse_card($2)
-      when /#{PosFilter}#{CardFilter}效果发(?:\~){0,1}动/
+      when /(?:己方){0,1}#{PosFilter}#{CardFilter}效果发(?:\~){0,1}动/
         Effect_Activate.new(from_player, parse_pos($1), parse_card($2))
+      when /#{PosFilter}#{CardFilter}(?:变|改)为#{PositionFilter}/
+        ChangePosition.new(from_player, parse_pos($1), parse_card($2), parse_position($3))
+      when /#{PosFilter}#{CardFilter}打开/
+        Flip.new(from_player, parse_pos($1), parse_card($2))
       when /#{PhaseFilter}/
         ChangePhase.new(from_player, parse_phase($1))
       else
-        p str, 1
+        Unknown.new str
       end
     else
-      p str, 2
+      Unknown.new str
     end
     result.id = id
     result
@@ -226,6 +237,11 @@ class Action
   class Draw
     def escape
       "[#{@id}] #{from_player ? '◎' : '●'}→抽牌"
+    end
+  end
+  class MultiDraw
+    def escape
+      "[#{@id}] #{from_player ? '◎' : '●'}→抽取(#{@count})张卡"
     end
   end
   class Dice
@@ -321,6 +337,11 @@ class Action
       "[#{@id}] #{from_player ? '◎' : '●'}→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
     end
   end
+  class ReturnToDeckBottom
+    def escape
+      "[#{@id}] #{from_player ? '◎' : '●'}→将顶牌放回卡组底部"
+    end
+  end
   class ReturnToExtra
     def escape
       pos = case @from_pos
@@ -354,6 +375,16 @@ class Action
         end
       else
         "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}改为#{position == :attack ? '攻击' : '防守'}表示"
+      end
+    end
+  end
+  class Show
+    def escape
+      case from_pos
+      when 0..10
+        #场上
+      when Integer
+        "第#{@from_pos-10}张手牌为:#{@card.escape}"
       end
     end
   end

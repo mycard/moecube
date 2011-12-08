@@ -25,6 +25,7 @@ class Window_Action < Window_List
       @list_available = list.values
       @height = @viewport[3] = @list.size*WLH+15*2
       @item_max = @list.size
+      p list
       @index = @list_available.find_index(true) || 0
       refresh
       @visible = true
@@ -34,15 +35,14 @@ class Window_Action < Window_List
   end
   def clear(x=0,y=0,width=@width,height=@height)
     @contents.put(@up, 0, 0)
-    Surface.transform_draw(@middle,@contents,0,1,(@list.size*WLH+17).to_f/@middle.h,0,0,0,15,Surface::TRANSFORM_SAFE) #+17那里，我不知道为什么需要这么做，但是如果不+ 内容和底边会有一点空白
+    Surface.transform_draw(@middle,@contents,0,1,(@list.size*WLH+20).to_f/@middle.h,0,0,0,15,Surface::TRANSFORM_SAFE) #+那里，我不知道为什么需要这么做，但是如果不+ 内容和底边会有一点空白
     @contents.put(@down, 0, @height-15)
   end
   def index=(index)
-    if index
+    if index and index > 0 and index < @item_max
       super(index)
       refresh
     end
-    #p @index
   end
   def draw_item(index, status=0)
     case status
@@ -63,11 +63,14 @@ class Window_Action < Window_List
     end
   end
   def mousemoved(x,y)
-    self.index = (y - @y) / WLH
+    self.index = (y - @y-15) / WLH
   end
   def clicked
     $scene.player_field_window.clicked
   end
-  def lostfocus
+  def lostfocus(active_window=nil)
+    if active_window != $scene.player_field_window
+      $scene.player_field_window.index = nil
+    end
   end
 end

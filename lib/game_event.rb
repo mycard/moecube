@@ -113,9 +113,10 @@ class Game_Event
   end
 
   class Action < Game_Event
-    attr_reader :action
-    def initialize(action)
+    attr_reader :action, :str
+    def initialize(action, str=Action.escape)
       @action = action
+      @str = str
     end
   end
 
