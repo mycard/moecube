@@ -26,7 +26,7 @@ class Game_Event
         PlayerJoin
       when /关闭游戏王NetBattleX  .*▊▊▊.*/
         PlayerLeave
-      when /(\[\d+\] .*▊▊▊.*)/m
+      when /(\[\d+\] .*|(?:#{::Action::CardFilter}\r\n)*)▊▊▊.*/m
         Action
       else
         Error
@@ -76,9 +76,7 @@ class Game_Event
   end
   class Action
     def self.parse(info)
-      info =~ /(.*)▊▊▊.*/m
-      str = $1 || info
-      self.new ::Action.parse(info), str
+      self.new ::Action.parse(info), info
     end
   end
   class VerInf

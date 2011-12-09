@@ -136,7 +136,7 @@ class Action
         end
       else
         card = Game_Card.new(@card)
-        p "似乎凭空产生了卡片？"
+        puts "似乎凭空产生了卡片？"
         p self
       end
       card.position = @position if @position
@@ -271,6 +271,12 @@ class Action
       @card = card
     end
   end
+  class MultiShow < Action
+    def initialize(from_player, cards)
+      super(from_player, nil)
+      @cards = cards
+    end
+  end
   class Effect_Activate < Move
     def initialize(from_player, from_pos, card)
       @from_player = from_player
@@ -286,13 +292,18 @@ class Action
       super(from_player, from_pos, nil, card, nil, position)
     end
   end
+  class Ignored < Action
+    def initialize(str)
+      @str = str
+    end
+  end
   class Unknown < Action
-    def initialize(*args)
-      puts 'unkonwn action'
-      p args
+    def initialize(str)
+      @str = str
+      puts 'unkonwn action ' + str
     end
     def run
-      puts 'unkonwn action run'
+      puts 'unkonwn action run ' + @str
     end
   end
   def self.reset

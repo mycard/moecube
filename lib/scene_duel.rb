@@ -55,23 +55,23 @@ class Scene_Duel < Scene
   end
 
   def change_phase(phase)
-    Action::ChangePhase.new(@turn_player, [:DP, :SP, :M1, :BP, :M2, :EP][phase]).run
+    action Action::ChangePhase.new(@turn_player, [:DP, :SP, :M1, :BP, :M2, :EP][phase])
     
     if phase == 5
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
-      Action::Turn_End.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1).run
+      action Action::Turn_End.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1)
     else
       @phase = @phases_window.phase = phase
       @phases_window.refresh
     end
   end
   def reset
-    Action::Reset.new(true).run
+    action Action::Reset.new(true)
   end
   def first_to_go
-    Action::FirstToGo.new(true).run
+    action Action::FirstToGo.new(true)
   end
   def handle(event)
     case event
@@ -94,13 +94,13 @@ class Scene_Duel < Scene
     when Event::KeyDown
       case event.sym
       when  Key::F1
-        Action::Shuffle.new.run
+        action Action::Shuffle.new
         @player_field_window.refresh
       when Key::F2
         first_to_go
         @player_field_window.refresh
       when Key::F3
-        Action::Dice.new(true).run
+        action Action::Dice.new(true)
       when Key::F5
         reset
         @player_field_window.refresh
@@ -111,13 +111,24 @@ class Scene_Duel < Scene
   end
   
   
-  
+  def action(action)
+    str = action.escape
+    if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
+      str = $1
+    end
+    $chat_window.add action.from_player, str if action.from_player
+    action.run
+  end
   
   def handle_game(event)
     case event
     when Game_Event::Action
-      $chat_window.add event.action.from_player, event.str
-      event.action.run
+      str = event.str
+      if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
+        str = $1
+      end
+      $chat_window.add event.action.from_player, str
+      action event.action
       @player_field_window.refresh
       @opponent_field_window.refresh
     when Game_Event::Error
