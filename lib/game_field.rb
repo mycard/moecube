@@ -60,4 +60,12 @@ class Game_Field
       empty_spelltrap_field
     end
   end
+  #def shuffle_hand
+  #  @hand.shuffle!
+  #  @hand.each{|card|card.card = Card::Unknown if card.position == :set}
+  #end
+  #def shuffle_deck
+  #  @deck.shuffle!
+  #  @deck.each{|card|card.card = Card::Unknown if card.position == set}
+  #end
 end

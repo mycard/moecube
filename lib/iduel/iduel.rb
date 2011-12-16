@@ -1,5 +1,5 @@
 #encoding: UTF-8
-class Iduel
+class Iduel < Game
   VERSION = "20110131"
   Server = "iduel.ocgsoft.cn"
   Port = 38522
@@ -12,10 +12,10 @@ class Iduel
     require 'socket'
     require 'digest/md5'
     require 'open-uri'
-    require_relative 'iduel_action'
-    require_relative 'iduel_event'
-    require_relative 'iduel_user'
-    require_relative 'iduel_room'
+    require_relative 'action'
+    require_relative 'event'
+    require_relative 'user'
+    require_relative 'room'
     @conn = TCPSocket.open(Server, Port)
     @conn.set_encoding "GBK"
     Thread.abort_on_exception = true

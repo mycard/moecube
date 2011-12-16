@@ -61,7 +61,7 @@ class Scene_Duel < Scene
       @turn_player = !@turn_player
       @phase = 0
       @phases_window.player = @turn_player
-      action Action::Turn_End.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1)
+      action Action::TurnEnd.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1)
     else
       @phase = @phases_window.phase = phase
       @phases_window.refresh
@@ -112,11 +112,13 @@ class Scene_Duel < Scene
   
   
   def action(action)
-    str = action.escape
-    if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
-      str = $1
+    if action.from_player
+      str = action.escape
+      if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
+        str = $1
+      end
+      $chat_window.add action.from_player, str 
     end
-    $chat_window.add action.from_player, str if action.from_player
     action.run
   end
   

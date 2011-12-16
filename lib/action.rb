@@ -81,9 +81,9 @@ class Action
     end
     def run
       from_field = case @from_pos
-      when Integer
+      when 0..10
         player_field.field
-      when :hand
+      when Integer, :hand
         player_field.hand
       when :field
         player_field.field
@@ -98,7 +98,11 @@ class Action
       end
       
       if @from_pos.is_a? Integer
-        from_pos = @from_pos
+        if @from_pos > 10
+          from_pos = @from_pos - 11
+        else
+          from_pos = @from_pos
+        end
       else
         from_pos = (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
       end
@@ -212,6 +216,7 @@ class Action
     end
   end
   class Tribute < SendToGraveyard;  end
+  class Discard < SendToGraveyard;  end
   class ChangePosition < Move
     def initialize(from_player, from_pos, card, position)
       super(from_player, from_pos, from_pos, card, nil, position)
@@ -243,23 +248,47 @@ class Action
       player_field.hand += player_field.deck.shift(@count)
     end
   end
-  class Refresh_Field < Action
-    attr_reader :lp, :hand_count, :deck_count, :graveyard_count, :removed_count, :field
-    def initialize(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field)
+  class RefreshField < Action
+    attr_reader :field
+    def initialize(from_player, field, msg=nil)
       super(from_player, msg)
-      @lp = lp
-      @hand_count = hand_count
-      @deck_count = deck_count
-      @graveyard_count = graveyard_count
-      @removed_count = removed_count
       @field = field
+    end
+    def run
+      player_field.lp = @field[:lp]
+      if player_field.hand.size > @field[:hand]
+        player_field.hand.pop(player_field.hand.size-@field[:hand])
+      elsif player_field.hand.size < @field[:hand]
+        (@field[:hand]-player_field.hand.size).times{player_field.hand.push Game_Card.new(Card::Unknown)}
+      end
+      if player_field.deck.size > @field[:deck]
+        player_field.deck.pop(player_field.deck.size-@field[:deck])
+      elsif player_field.deck.size < @field[:deck]
+        (@field[:deck]-player_field.deck.size).times{player_field.deck.push Game_Card.new(Card::Unknown)}
+      end
+      if player_field.graveyard.size > @field[:graveyard]
+         player_field.graveyard.pop(player_field.graveyard.size-@field[:graveyard])
+      elsif player_field.graveyard.size < @field[:graveyard]
+         (@field[:graveyard]-player_field.graveyard.size).times{player_field.graveyard.push Game_Card.new(Card::Unknown)}
+      end
+      (0..10).each do |pos|
+        if @field[pos]
+          player_field.field[pos] ||= Game_Card.new(@field[pos][:card])
+          player_field.field[pos].card = @field[pos][:card]
+          p player_field.field[pos].card
+          player_field.field[pos].position = @field[pos][:position]
+        else
+          player_field.field[pos] = nil
+        end
+      end
+      p player_field
     end
   end
 
-  class Turn_End < Refresh_Field
+  class TurnEnd < RefreshField
     attr_reader :turn
-    def initialize(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field, turn)
-      super(from_player, msg, lp, hand_count, deck_count, graveyard_count, removed_count, field)
+    def initialize(from_player, field, turn, msg=nil)
+      super(from_player, field, msg)
       @turn = turn
     end
   end

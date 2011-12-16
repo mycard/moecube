@@ -1,11 +1,11 @@
 #encoding: UTF-8
 require_relative '../action'
 class Action
-  CardFilter = /((?:<)?(?:\[.*?\]\[(?:.*?)\])?[\s\d]*(?:>)?|一张怪兽卡|一张魔\/陷卡)/.to_s
-  #FieldCardFilter = /(<>|<??>|<(?:(?:表攻|表守|里守)\|)?\[.*?\]\[(?:.*?)\])?[\s\d]*>)/.to_s
-  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/.to_s
-  PositionFilter = /(攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
-  PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/.to_s
+  CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\][\s\d]*(?:>)?|一张怪兽卡|一张魔\/陷卡|\?\?)/
+  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
+  PositionFilter = /(表攻|表守|里守|攻击表示|防守表示|里侧表示|背面守备表示)/
+  PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/
+  FieldFilter = /(?:LP:(\d+)\r\n手卡(?:数)?:(\d+)\r\n卡组:(\d+)\r\n墓地:(\d+)\r\n除外:(\d+)\r\n前场:\r\n     <(?:#{PositionFilter}\|#{CardFilter})?>\r\n     <(?:#{PositionFilter}\|#{CardFilter})?>\r\n     <(?:#{PositionFilter}\|#{CardFilter})?>\r\n     <(?:#{PositionFilter}\|#{CardFilter})?>\r\n     <(?:#{PositionFilter}\|#{CardFilter})?>\r\n后场:<#{CardFilter}?><#{CardFilter}?><#{CardFilter}?><#{CardFilter}?><#{CardFilter}?>\r\n场地\|<(?:无|#{CardFilter})>\r\n(?:◎|●)→＼＼)/
   def self.parse_pos(pos)
     if index = pos.index("(")
       index += 1
@@ -46,13 +46,34 @@ class Action
       [card["表守"] ? :defense : card["里守"] ? :set : :attack, parse_card(card)]
     end
   end
+  def self.parse_field(arr)
+    #LP, 手卡, 卡组，墓地，除外，6表示形式，6卡，7表示形式，7卡，8表示形式，8卡，9表示形式，9卡，10表示形式，10卡，1,2,3,4,5,0
+    {
+      :lp => arr[0].to_i,
+      :hand => arr[1].to_i,
+      :deck => arr[2].to_i,
+      :graveyard => arr[3].to_i,
+      :removed => arr[4].to_i,
+      6 => arr[5] && {:position => parse_position(arr[5]), :card => parse_card(arr[6])},
+      7 => arr[7] && {:position => parse_position(arr[7]), :card => parse_card(arr[8])},
+      8 => arr[9] && {:position => parse_position(arr[9]), :card => parse_card(arr[10])},
+      9=> arr[11] && {:position => parse_position(arr[11]), :card => parse_card(arr[12])},
+      10 => arr[13] && {:position => parse_position(arr[13]), :card => parse_card(arr[14])},
+      1 => arr[15] && {:position => arr[15] == "??" ? :set : :attack, :card => parse_card(arr[15])},
+      2 => arr[16] && {:position => arr[16] == "??" ? :set : :attack, :card => parse_card(arr[16])},
+      3 => arr[17] && {:position => arr[17] == "??" ? :set : :attack, :card => parse_card(arr[17])},
+      4 => arr[18] && {:position => arr[18] == "??" ? :set : :attack, :card => parse_card(arr[18])},
+      5 => arr[19] && {:position => arr[19] == "??" ? :set : :attack, :card => parse_card(arr[19])},
+      0 => arr[20] && {:position => arr[20] == "??" ? :set : :attack, :card => parse_card(arr[20])}
+    }
+  end
   def self.parse_position(position)
     case position
-    when "攻击表示"
+    when "攻击表示", "表攻"
       :attack
-    when "防守表示"
+    when "防守表示", "表守"
       :defense
-    when "里侧表示", "背面守备表示"
+    when "里侧表示", "背面守备表示", "里守"
       :set
     end
   end
@@ -147,8 +168,6 @@ class Action
   def self.parse(str)
     from_player = false
     case str
-    when /^(#{CardFilter}\r\n)*$/m
-      MultiShow.new from_player, $&.lines.collect{|card|parse_card(card)}
     when /^\[(\d+)\] (.*)$/m
       id = $1.to_i
       result = case $2
@@ -158,8 +177,18 @@ class Action
         Note.new from_player, $2, Card.find($1.to_sym)
       when /^※(.*)$/
         Chat.new from_player, $1
-      when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[0\]\r\nLP:(\d+)\r\n手卡:(\d+)\r\n卡组:(\d+)\r\n墓地:(\d+)\r\n除外:(\d+)\r\n前场:\r\n     #{PositionFilter}#{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n     #{CardFilter}\r\n后场:#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}#{CardFilter}\r\n场地|#{CardFilter}\r\n◎→＼＼(.*)$/
-        Turn_End.new($1 == "◎", $19, $3.to_i, $4.to_i, $5.to_i, $6.to_i, $7.to_i, [parse_fieldcard($18), parse_fieldcard($13), parse_fieldcard($14), parse_fieldcard($15), parse_fieldcard($16), parse_fieldcard($17), parse_fieldcard($8), parse_fieldcard($9), parse_fieldcard($10), parse_fieldcard($11), parse_fieldcard($12)], $2.to_i)
+      when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[\d+\]\r\n#{FieldFilter}(.*)$/ #把这货弄外面的原因是因为这个指令里开头有一个●→，后面还有，下面判msg的正则会判错
+        field = $~.to_a
+        field.shift #去掉第一个完整匹配信息
+        from_player = field.shift == "◎"
+        turn = field.shift.to_i
+        msg = field.pop
+        TurnEnd.new(from_player, parse_field(field), turn, msg)
+      when /^(◎|●)→#{FieldFilter}$/
+        field = $~.to_a
+        field.shift
+        from_player = field.shift == "◎"
+        RefreshField.new(from_player, parse_field(field))
       when /^(?:(.*)\r\n)?(◎|●)→(.*)$/m
         from_player = $2 == "◎"
         msg = $1
@@ -174,7 +203,7 @@ class Action
           Reset.new from_player
         when "换SIDE……"
           Side.new from_player
-        when "卡组洗切"
+        when "卡组洗切", "切洗卡组"
           Shuffle.new from_player
         when "查看卡组"
           Ignored.new "查看卡组"
@@ -202,6 +231,18 @@ class Action
           SendToGraveyard.new(from_player, parse_pos($2), parse_card($1))
         when /将~#{PosFilter}~的#{CardFilter}解~放/
           Tribute.new(from_player, parse_pos($1), parse_card($2))
+        when /随机将一张卡从手卡\((\d+\))~放回卡组顶端/
+          ReturnToDeck.new(from_player, $1.to_i+10, nil)
+        when /随机舍弃~手卡~#{CardFilter}/
+          Discard.new(from_player, :hand, parse_card($1))
+        when /随机将手卡的#{CardFilter}从游戏中除外/
+          Remove.new from_player, :hand, parse_card($1)
+        when /随机显示一张手卡为：#{CardFilter}/
+          Show.new(from_player, :hand, parse_card($1))
+        when /第(\d+)张手牌为:#{CardFilter}/
+          Show.new(from_player, $1.to_i+10, parse_card($2))
+        when /\|--\+>手卡:(?:\[#{CardFilter}\])*/
+          MultiShow.new from_player, $&.scan(CardFilter).collect{|matched|parse_card(matched.first)}
         when /将#{PosFilter}的#{CardFilter}从游戏中除外/
           Remove.new from_player, parse_pos($1), parse_card($2)
         when /#{CardFilter}从#{PosFilter}~放回卡组顶端/
@@ -228,6 +269,8 @@ class Action
       end
       result.id = id
       result
+    when /^(#{CardFilter}\r\n)*$/
+      MultiShow.new from_player, $&.lines.collect{|card|parse_card(card)}
     else
       Unknown.new str
     end
@@ -268,7 +311,7 @@ class Action
       "[#{@id}] #{from_player ? '◎' : '●'}→#{Action.escape_phase(@phase)}"
     end
   end
-  class Turn_End
+  class TurnEnd
     def escape
       "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
     end
@@ -343,7 +386,7 @@ class Action
       when 0..10
         "场上(#{@from_pos})"
       end
-      "[#{@id}] #{from_player ? '◎' : '●'}→#{@from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
+      "[#{@id}] #{from_player ? '◎' : '●'}→#{@card.nil? or @from_pos == :hand ? "一张卡" : @card.escape}从#{pos}~放回卡组顶端" #TODO:set=【一张卡】
     end
   end
   class ReturnToDeckBottom
@@ -437,6 +480,10 @@ class Game_Field
       @field[1..5].collect{|card|"<#{card.position == :set ? '??' : card.escape if card}>"}.join +
       "\r\n场地|<#{@field[0] ? @field[0].escape : '无'}>\r\n" +
       "◎→＼＼"    
+  end
+  def self.parse(str)
+    
+    
   end
 end
 class Card

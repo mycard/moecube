@@ -7,7 +7,7 @@
 class Scene_Login < Scene
   Vocab_Logging  = "Logging"
 	def start
-    require_relative 'iduel'
+    require_relative 'iduel/iduel'
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 24)
     if $config["autologin"]
       @username = $config["username"]
