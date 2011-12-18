@@ -1,35 +1,20 @@
-class Iduel::User
-  @@all = []
-  attr_accessor :id, :name, :level, :exp    
-  class << self
-    alias old_new new
-    def new(id, name = "", level = nil, exp = nil)
-      if id.is_a? String and id =~ /(.*)\((\d+)\)/
-        id = $2.to_i
-        name=$1
-      else
-        id = id.to_i
-      end
-      user = @@all.find{|user| user.id == id }
-      if user
-        user.name = name if name
-        user.level = level if level
-        user.exp = exp if exp
-        user
-      else
-        user = old_new(id, name, level, exp)
-        @@all << user
-        user
-      end
-    end
+class User
+  attr_accessor :level, :exp
+  def self.parse(info)
+    info =~ /(.+)\((\d+)\)/
+    new $2.to_i, $1
   end
   def initialize(id, name = "", level = nil, exp = nil)
     @id = id
     @name = name
     @level = level
     @exp = exp
-    #@status = :waiting
-    #@room = nil
+  end
+  def set(id, name = :keep, level = :keep, exp = :keep)
+    @id = id unless id == :keep
+    @name = name unless name == :keep
+    @level = level unless level == :keep
+    @exp = exp unless exp == :keep
   end
   def avatar(size = :small)
     cache = "graphics/avatars/#{@id}_#{size}.png"
@@ -57,6 +42,6 @@ class Iduel::User
     result
   end
   def room
-    $game.rooms.find{|room|room.player1 == self or room.player2 == self}
+    $game.rooms.find{|room|room.include? self}
   end
 end

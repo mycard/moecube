@@ -10,8 +10,6 @@ class NBX < Game
     require 'open-uri'
     require_relative 'action'
     require_relative 'event'
-    require_relative 'user'
-    require_relative 'room'
 
     @conn_hall = UDPSocket.new
     @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)

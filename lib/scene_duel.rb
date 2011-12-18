@@ -21,9 +21,10 @@ class Scene_Duel < Scene
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
-	def initialize(room)
+	def initialize(room, deck=nil)
     super()
 		@room = room
+    @deck = deck
   end
   def start
     $game.refresh if $game
@@ -37,7 +38,7 @@ class Scene_Duel < Scene
     @phases_window = Window_Phases.new(124, 357)
     @turn_player = true
     
-    $game.player_field = Game_Field.new Deck.load("test1.TXT")
+    $game.player_field = Game_Field.new @deck
     $game.opponent_field = Game_Field.new
     
     @fieldback_window = Window_FieldBack.new(130,174)
@@ -135,6 +136,8 @@ class Scene_Duel < Scene
       @opponent_field_window.refresh
     when Game_Event::Error
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
+    when Game_Event::Leave
+      $scene = Scene_Hall.new
     end
   end
   def update

@@ -2,7 +2,7 @@
 
 class Game_Event
   def self.parse(info, host=nil)
-    result = (if host #来自大厅的udp消息
+    if host #来自大厅的udp消息
       info =~ /^(\w*)\|(.*)$/m
       case $1
       when "NewUser"
@@ -31,9 +31,7 @@ class Game_Event
       else
         Error
       end.parse($1)
-    end)
-    p info, result
-    result
+    end
   end
 
 
@@ -79,6 +77,8 @@ class Game_Event
       self.new ::Action.parse(info), info
     end
   end
+  
+  #以下NBX专有
   class VerInf
     def self.parse(info)
       

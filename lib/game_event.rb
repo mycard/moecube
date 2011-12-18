@@ -98,7 +98,10 @@ class Game_Event
       $game.room = @room
     end
   end
-
+  class Leave < Game_Event
+    def initialize
+    end
+  end
   class PlayerJoin < Game_Event
     attr_reader :user
     def initialize(user)
@@ -114,7 +117,7 @@ class Game_Event
 
   class Action < Game_Event
     attr_reader :action, :str
-    def initialize(action, str=Action.escape)
+    def initialize(action, str=action.escape)
       @action = action
       @str = str
     end

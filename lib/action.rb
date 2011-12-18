@@ -95,6 +95,9 @@ class Action
         player_field.extra
       when :removed
         player_field.removed
+      else
+        puts '奇怪的from_field'
+        puts
       end
       
       if @from_pos.is_a? Integer

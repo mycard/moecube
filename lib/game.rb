@@ -8,9 +8,9 @@ class Game
     @users = []
     @rooms = []
   end
-  def refresh
-  end
   def login(username, password=nil)
+  end
+  def refresh
   end
   def host
   end

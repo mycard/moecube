@@ -25,7 +25,6 @@ class Window_Action < Window_List
       @list_available = list.values
       @height = @viewport[3] = @list.size*WLH+15*2
       @item_max = @list.size
-      p list
       @index = @list_available.find_index(true) || 0
       refresh
       @visible = true

@@ -27,7 +27,7 @@ class Window_RoomList < Window_List
     @font.draw_blended_utf8(@contents, "R-#{room.id}", 24, WLH*index+8, *@color)
     @font.draw_blended_utf8(@contents, room.full? ? "【决斗中】" : room.private? ? "【私密房】" : "【等待中】", 8, WLH*index+24, *@color)
     @font.draw_blended_utf8(@contents, room.name, 128, WLH*index+8, *room.color)
-    @font.draw_blended_utf8(@contents, room.player1.name, 128, WLH*index+24, *@color)
+    @font.draw_blended_utf8(@contents, room.player1.name, 128, WLH*index+24, *@color) 
     @font.draw_blended_utf8(@contents, room.player2.name, 256, WLH*index+24, *@color) if room.full?
   end
   

@@ -78,7 +78,6 @@ class Window_Field < Window
       Surface.transform_draw(@cards[index].image_small, @contents, 90, 1, 1, 0, 0, @items[index][0]+Card_Size[1], @items[index][1],Surface::TRANSFORM_SAFE)
       @contents.put(@border_horizontal, @items[index][0]-1, @items[index][1]-1) if status == 1 
     else
-      p index, @cards[index]
       @contents.put(@cards[index].image_small, @items[index][0], @items[index][1])
       @contents.put(@border, @items[index][0]-1, @items[index][1]-1) if status == 1
     end

@@ -80,7 +80,7 @@ class Scene_Hall < Scene
       @roomlist.list = $game.rooms
     when Game_Event::Join
       require_relative 'scene_duel'
-      $scene = Scene_Duel.new(event.room)
+      $scene = Scene_Duel.new(event.room, Deck.load("test1.TXT"))
     when Game_Event::Watch
       require_relative 'scene_watch'
       $scene = Scene_Watch.new(event.room)
