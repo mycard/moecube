@@ -72,7 +72,7 @@ class Action
     def run
       $game.phase = phase
       if @from_player and phase == :EP
-        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? turn : turn.next))
+        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? @turn : @turn.next))
       end
       super
     end

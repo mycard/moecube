@@ -5,7 +5,7 @@ class Window_RoomChat < Window
   WLH=16
   require_relative 'widget_scrollbar'
   Player_Color = [0,0,0xFF]
-  Opponent_Color = [0x66,0x66,0]
+  Opponent_Color = [0,0x66,0]
 	def initialize(x, y, width, height)
     super(x,y,width,height-WLH)
     @chat_input = Widget_InputBox.new(@x,@y+@height,@width,WLH){|text|Action::Chat.new(true, text).run}
