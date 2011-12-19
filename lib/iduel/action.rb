@@ -1,4 +1,5 @@
 #encoding: UTF-8
+#这个文件iduel和nbx相同，编辑时推荐使用软/硬链接来保持一致
 require_relative '../action'
 class Action
   CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\][\s\d]*(?:>)?|一张怪兽卡|一张魔\/陷卡|\?\?)/
@@ -31,7 +32,7 @@ class Action
     if index = card.rindex("[")
       index += 1
       name = card[index, card.rindex("]")-index].to_sym
-      Card.find(name) || Card.new('id' => 0, 'number' => :"00000000", 'name' => name, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
+      Card.find(name)
     else
       Card.find(nil)
     end
@@ -313,7 +314,7 @@ class Action
   end
   class TurnEnd
     def escape
-      "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<0>=[0]\r\n"+ @field.escape
+      "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<#{@turn}>=[0]\r\n"+ @field.escape
     end
   end
   class Shuffle

@@ -9,6 +9,12 @@ class Game_Card
     @card = card || Card.find(nil)
     reset
   end
+  def atk
+    @card.atk.to_i #把"?"转为0
+  end
+  def def
+    @card.atk.to_i #把"?"转为0
+  end
   def reset
     @position = :set
     @atk = @card.atk

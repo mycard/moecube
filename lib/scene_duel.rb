@@ -33,40 +33,33 @@ class Scene_Duel < Scene
     @background = Surface.load "graphics/field/main.png"
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     
-    @player1_lp = Window_LP.new(0,0, @room.player1, true)
-    @player2_lp = Window_LP.new(360,0, @room.player2, false)
-    @phases_window = Window_Phases.new(124, 357)
-    @turn_player = true
+    init_game
     
-    $game.player_field = Game_Field.new @deck
-    $game.opponent_field = Game_Field.new
-    
-    @fieldback_window = Window_FieldBack.new(130,174)
-    
+    @player_lp_window = Window_LP.new(0,0, @room.player1, true)
+    @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
     @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
     @opponent_field_window.angle=180
     
+    @phases_window = Window_Phases.new(124, 357)
+    @fieldback_window = Window_FieldBack.new(130,174)
     @cardinfo_window = Window_CardInfo.new(715, 0)
-    @player_field_window.action_window = Window_Action.new
-    @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
-    super
-    #(Thread.list - [Thread.current]).each{|t|t.kill}
-    #p Thread.list
-  end
-
-  def change_phase(phase)
-    action Action::ChangePhase.new(@turn_player, [:DP, :SP, :M1, :BP, :M2, :EP][phase])
     
-    if phase == 5
-      @turn_player = !@turn_player
-      @phase = 0
-      @phases_window.player = @turn_player
-      action Action::TurnEnd.new(true, "Turn End", $game.player_field.lp, $game.player_field.hand.size, $game.player_field.deck.size, $game.player_field.graveyard.size, $game.player_field.removed.size, $game.player_field, 1)
-    else
-      @phase = @phases_window.phase = phase
-      @phases_window.refresh
-    end
+    @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
+    create_action_window
+    super
+  end
+  def create_action_window
+    @player_field_window.action_window = Window_Action.new
+  end
+  def init_game
+    $game.player_field = Game_Field.new @deck
+    $game.opponent_field = Game_Field.new
+    $game.turn_player = true #
+    $game.turn = 0
+  end
+  def change_phase(phase)
+    action Action::ChangePhase.new(true, phase)
   end
   def reset
     action Action::Reset.new(true)
@@ -80,12 +73,8 @@ class Scene_Duel < Scene
       case event.button
       when Mouse::BUTTON_LEFT
         if @phases_window.include? event.x, event.y
-          if @turn_player
-            @phases_window.mousemoved event.x, event.y
-            change_phase(@phases_window.index)
-          else
-            @phases_window.index = @phase
-          end
+          @phases_window.mousemoved event.x, event.y
+          change_phase(Window_Phases::Phases[@phases_window.index])
         end
       when Mouse::BUTTON_RIGHT
         if @player_field_window.action_window
@@ -113,14 +102,7 @@ class Scene_Duel < Scene
   
   
   def action(action)
-    if action.from_player
-      str = action.escape
-      if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
-        str = $1
-      end
-      $chat_window.add action.from_player, str 
-    end
-    action.run
+    Game_Event.push Game_Event::Action.new(action)
   end
   
   def handle_game(event)
@@ -131,9 +113,12 @@ class Scene_Duel < Scene
         str = $1
       end
       $chat_window.add event.action.from_player, str
-      action event.action
+      event.action.run
       @player_field_window.refresh
       @opponent_field_window.refresh
+      @phases_window.player = $game.turn_player
+      @phases_window.phase = $game.phase
+      @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
     when Game_Event::Error
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     when Game_Event::Leave

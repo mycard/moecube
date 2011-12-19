@@ -1,6 +1,6 @@
 #encoding: UTF-8
 class Iduel < Game
-  VERSION = "20110131"
+  Version = "20110131"
   Server = "iduel.ocgsoft.cn"
   Port = 38522
   
@@ -15,15 +15,19 @@ class Iduel < Game
     require_relative 'action'
     require_relative 'event'
     require_relative 'user'
-    @conn = TCPSocket.open(Server, Port)
-    @conn.set_encoding "GBK"
-    Thread.abort_on_exception = true
-    @recv = Thread.new { recv @conn.gets(RS) while @conn  }
+    begin
+      @conn = TCPSocket.open(Server, Port)
+      @conn.set_encoding "GBK"
+      Thread.abort_on_exception = true
+      @recv = Thread.new { recv @conn.gets(RS) while @conn  }
+    rescue
+      Game_Event.push Game_Event::Error.new($!.class, $!.message)
+    end
   end
   
   def login(username, password)
     md5 = Digest::MD5.hexdigest(password)
-    send(0, username, md5, checknum("LOGINMSG", username, md5), VERSION)
+    send(0, username, md5, checknum("LOGINMSG", username, md5), Version)
   end
   def refresh
     send(1, @key, checknum("UPINFOMSG", @session))
@@ -45,7 +49,7 @@ class Iduel < Game
     end
   end
   def action(action)
-    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊000000") if @room.include? @user#TODO:iduel校验字串 
+    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}鈻娾枈鈻�00000") if @room.include? @user#TODO:iduel鏍￠獙瀛椾覆 
   end
   def exit
     send(11, @key, checknum("ULO", "#{@session}"))
@@ -58,13 +62,13 @@ class Iduel < Game
   def send(head, *args)
     info = "##{head.to_s(16).upcase}|#{args.join(',')}".encode("GBK") + RS
     puts "<< #{info}"
-    (@conn.write info) rescue Game_Event.push Game_Event::Error.new(0)
+    (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class, $!.message)
   end
   def recv(info)
     if info.nil?
       @conn.close
       @conn = nil
-      Game_Event::Error.new(0)
+      Game_Event::Error.parse(0)
     else
       info.chomp!(RS)    
       info.encode! "UTF-8", :invalid => :replace, :undef => :replace

@@ -54,7 +54,7 @@ class Scene_Hall < Scene
         if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $game.user or room.player2 == $game.user}
           $game.qroom room
         end
-        $game.close
+        $game.exit
         $scene = Scene_Login.new
       end
     when Event::KeyUp

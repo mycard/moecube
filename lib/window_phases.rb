@@ -1,5 +1,6 @@
 class Window_Phases < Window_List
   WLH = 80 #其实是列宽
+  Phases = [:DP, :SP, :M1, :BP, :M2, :EP]
   def initialize(x,y)
     @phases_player = Surface.load 'graphics/system/phases_player.png'
     @phases_opponent = Surface.load 'graphics/system/phases_opponent.png'
@@ -14,6 +15,7 @@ class Window_Phases < Window_List
     refresh
   end
   def phase=(phase)
+    phase = Phases.index(phase) unless (0..5).include? phase 
     return if phase == @phase
     @index = @phase
     @phase = phase

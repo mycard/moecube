@@ -32,7 +32,6 @@ class Window_Field < Window
     refresh
 	end
   def refresh
-    $scene.fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0] rescue nil
     @items.clear
     @cards.clear
     if !@field.deck.empty?
@@ -97,7 +96,7 @@ class Window_Field < Window
   end
   def index=(index)
     return if index == @index
-    if @index
+    if @index and @items.has_key?(@index) || (@index == :deck and !@field.deck.empty?) || (@index == :removed and !@field.removed.empty?) || (@index == :extra and !@field.extra.empty?) || (@index == :graveyard and !@field.graveyard.empty?)
       clear(@items[@index][0]-1,@items[@index][1]-1,@items[@index][2]+2, @items[@index][3]+2)
       draw_item(@index, 0) 
     end
@@ -214,7 +213,7 @@ class Window_Field < Window
     end
   end
   def clicked
-    return if !@player || @index.nil?
+    return unless @action_window && @index
     action = case @index
     when :deck
       case @action_window.index

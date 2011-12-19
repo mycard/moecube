@@ -69,6 +69,13 @@ class Action
       super(from_player)
       @phase = phase
     end
+    def run
+      $game.phase = phase
+      if @from_player and phase == :EP
+        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? turn : turn.next))
+      end
+      super
+    end
   end
   class Move < Action
     attr_reader :from_pos, :to_pos, :card, :position
@@ -258,6 +265,8 @@ class Action
       @field = field
     end
     def run
+      super
+      return if @field.is_a? Game_Field #本地信息，无需处理。
       player_field.lp = @field[:lp]
       if player_field.hand.size > @field[:hand]
         player_field.hand.pop(player_field.hand.size-@field[:hand])
@@ -284,7 +293,6 @@ class Action
           player_field.field[pos] = nil
         end
       end
-      p player_field
     end
   end
 
@@ -293,6 +301,12 @@ class Action
     def initialize(from_player, field, turn, msg=nil)
       super(from_player, field, msg)
       @turn = turn
+    end
+    def run
+      $game.phase = :DP
+      $game.turn = @turn.next
+      $game.turn_player = !from_player
+      super
     end
   end
   class Show < Move

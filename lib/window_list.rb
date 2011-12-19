@@ -40,7 +40,7 @@ class Window_List < Window
   def list=(list)
     @list = list
     @item_max = @list.size
-    @height = @item_max * WLH
+    @height = @item_max * self.class::WLH
     refresh
   end
 	def refresh

@@ -22,7 +22,7 @@ class Card
         @all[id] || old_new(@db.get_first_row("select * from YGODATA where id = #{id}"))
       when Symbol
 				row = @db.get_first_row("select * from YGODATA where name = '#{id}'")
-        row && (@all[row['id'].to_i] || old_new(row))
+        (row && (@all[row['id'].to_i] || old_new(row))) || Card.new('id' => 0, 'number' => :"00000000", 'name' => name, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "")
       when Hash
         old_new(id)
       when nil
