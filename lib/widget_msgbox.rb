@@ -69,7 +69,8 @@ class Widget_Msgbox < Window
     end
   end
   def clicked
-    @proc.call(@index) if @index
+    return if @index.nil?
+    @proc.call(@index) if @proc
     self.destroy
   end
 end

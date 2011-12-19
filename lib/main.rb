@@ -38,7 +38,6 @@ require_relative 'game_event'
 require_relative 'cacheable'
 require_relative 'user'
 require_relative 'room'
-#4.times{Thread.new{loop{sleep 0.01}}}
 
 $fpstimer = FPSTimer.new
 $scene = Scene_Title.new

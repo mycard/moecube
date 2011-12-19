@@ -41,10 +41,10 @@ class Scene_Hall < Scene
         @active_window.clicked
       when Key::F2
         $game.host
-        @joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手"){}
+        @joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
       when Key::F3
-        $game.join '127.0.0.1'
-        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间"){}
+        $game.join '192.168.0.103'
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       when Key::F5
         if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $game.user or room.player2 == $game.user}
           $game.qroom room
@@ -114,10 +114,10 @@ class Scene_Hall < Scene
       return unless @roomlist.index and room = @roomlist.list[@roomlist.index]
       if room.full?
         $game.watch room
-        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战"){}
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
       else
         $game.join room, "test"
-        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间"){}
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       end
     end
   end

@@ -110,6 +110,7 @@ class Window_Field < Window
       when :deck
         @card = @field.deck.first
         @action_names = {"抽卡" => true,
+          "查看卡组" => true,
           "卡组洗切" => true,
           "抽卡并确认" => false,
           "顶牌回卡组底" => false,
@@ -122,14 +123,16 @@ class Window_Field < Window
         }
       when :extra
         @card = @field.extra.first
-        @action_names = {"特殊召唤" => !@field.empty_field(@card).nil?,
+        @action_names = {"查看" => true,
+          "特殊召唤" => !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "从游戏中除外" => true,
           "送入墓地" => true
         }
       when :removed
         @card = @field.removed.first
-        @action_names = {"特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
+        @action_names = {"查看" => true,
+          "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -137,7 +140,8 @@ class Window_Field < Window
         }
       when :graveyard
         @card = @field.graveyard.first
-        @action_names = {"特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
+        @action_names = {"查看" => true,
+          "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
           "效果发动" => true,
           "加入手卡" => true,
           "返回卡组" => true,
@@ -220,72 +224,79 @@ class Window_Field < Window
       when 0
         Action::Draw.new(true)
       when 1
-        Action::Shuffle.new
+        Widget_Msgbox.new("查看卡组", "功能未实现")
       when 2
-        p "未实现"
-        #Action::Draw.new(true)
+        Action::Shuffle.new(true)
       when 3
-        p "未实现"
+        Widget_Msgbox.new("抽卡并确认", "功能未实现")
       when 4
-        Action::SendToGraveyard.new(true, :deck, @card)
+        Widget_Msgbox.new("顶牌回卡组底", "功能未实现")
       when 5
-        Action::Remove.new(true, :deck, @card)
+        Action::SendToGraveyard.new(true, :deck, @card)
       when 6
-        p "未实现"
+        Action::Remove.new(true, :deck, @card)
       when 7
-        p "未实现"
+        Widget_Msgbox.new("顶牌背面除外", "功能未实现")
       when 8
-        p "未实现"
+        Widget_Msgbox.new("确认顶牌", "功能未实现")
       when 9
-        p "未实现"
+        Widget_Msgbox.new("双方确认顶牌", "功能未实现")
+      when 10
+        Widget_Msgbox.new("对方确认顶牌", "功能未实现")
       end
     when :extra
       case @action_window.index
       when 0
+        Widget_Msgbox.new("查看", "功能未实现")
+      when 1
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :extra, pos, @card, nil, :attack)
         else
-          p "场位已满"
+          Widget_Msgbox.new("特殊召唤", "场位已满")
         end
-      when 1
-        Action::Effect_Activate.new(true, :extra, @card)
       when 2
-        Action::Remove.new(true, :extra, @card)
+        Action::Effect_Activate.new(true, :extra, @card)
       when 3
+        Action::Remove.new(true, :extra, @card)
+      when 4
         Action::SendToGraveyard.new(true, :extra, @card)
       end
     when :removed
       case @action_window.index
-      when 0 #特殊召唤
+      when 0
+        Widget_Msgbox.new("查看", "功能未实现")
+      when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :removed, pos, @card)
         else
-          p "场位已满"
+          Widget_Msgbox.new("特殊召唤", "场位已满")
         end
-      when 1 #效果发动
+      when 2 #效果发动
         Action::Effect_Activate.new(true, :removed, @card)
-      when 2 #加入手卡
+      when 3 #加入手卡
         Action::ReturnToHand.new(true, :removed, @card)
-      when 3
-        Action::ReturnToDeck.new(true, :removed, @card)
       when 4
+        Action::ReturnToDeck.new(true, :removed, @card)
+      when 5
         Action::SendToGraveyard.new(true, :removed, @card)
       end
     when :graveyard
       case @action_window.index
-      when 0 #特殊召唤
+      when 0
+        Widget_Msgbox.new("查看", "功能未实现")
+      when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :graveyard, pos, @card)
         else
-          p "场位已满"
+          Widget_Msgbox.new("特殊召唤", "场位已满")
         end
-      when 1 #效果发动
+      when 2 #效果发动
         Action::Effect_Activate.new(true, :graveyard, @card)
-      when 2 #加入手卡
+      when 3 #加入手卡
         Action::ReturnToHand.new(true, :graveyard, @card)
-      when 3
-        Action::ReturnToDeck.new(true, :graveyard, @card)
       when 4
+        Action::ReturnToDeck.new(true, :graveyard, @card)
+      when 5
         Action::Remove.new(true, :graveyard, @card)
       end
     when 0..5 #后场
@@ -318,9 +329,9 @@ class Window_Field < Window
       when 5
         Action::Effect_Activate.new(true, @index, @card)
       when 6
-        p "未实现"
+        Widget_Msgbox.new("攻击宣言", "功能未实现")
       when 7
-        p "未实现"
+        Widget_Msgbox.new("转移控制权", "功能未实现")
       when 8
         Action::ReturnToDeck.new(true, @index, @card)
       when 9
@@ -336,25 +347,25 @@ class Window_Field < Window
         if pos = @field.empty_field(@card)
           Action::Summon.new(true, :hand, pos, @card)
         else
-          p "场位已满"
+          Widget_Msgbox.new("召唤", "场位已满")
         end
       when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :hand, pos, @card, nil, :attack)
         else
-          p "场位已满"
+          Widget_Msgbox.new("特殊召唤", "场位已满")
         end
       when 2 #发动
         if pos = @field.empty_field(@card)
           Action::Activate.new(true, :hand, pos, @card)
         else
-          p "场位已满"
+          Widget_Msgbox.new("发动", "场位已满")
         end
       when 3 #放置
         if pos = @field.empty_field(@card)
           Action::Set.new(true, :hand, pos, @card)
         else
-          p "场位已满"
+          Widget_Msgbox.new("放置", "场位已满")
         end
       when 4 #返回卡组
         Action::ReturnToDeck.new(true, :hand, @card)
@@ -366,7 +377,7 @@ class Window_Field < Window
         Action::Effect_Activate.new(true, :hand, @card)
       end
     end
-    $scene.action action
+    $scene.action action if action.is_a? Action
     @index = nil
     refresh
     mousemoved(Mouse.state[0], Mouse.state[1])
