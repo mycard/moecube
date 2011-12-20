@@ -338,11 +338,7 @@ class Action
       super(from_player, from_pos, nil, card, nil, position)
     end
   end
-  class Ignored < Action
-    def initialize(str)
-      @str = str
-    end
-  end
+  class ViewDeck < Action;  end
   class Unknown < Action
     def initialize(str)
       @str = str

@@ -106,7 +106,7 @@ class Game_Event
   class NewRoom
     def self.parse(info)
       id, x, player1, player2 = info.split(",", 4)
-      room = Room.new(id)
+      room = Room.new(id.to_i)
       room.player1 = User.parse(player1)
       room.player2 = User.parse(player2)
       self.new room

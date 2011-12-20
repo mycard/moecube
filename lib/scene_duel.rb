@@ -13,6 +13,7 @@ class Scene_Duel < Scene
   require_relative 'card'
   require_relative 'deck'
   require_relative 'action'
+  require_relative 'replay'
   require_relative 'game_card'
   require_relative 'game_field'
   require_relative 'window_roomchat'
@@ -34,6 +35,7 @@ class Scene_Duel < Scene
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     
     init_game
+    init_replay
     
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
@@ -47,10 +49,17 @@ class Scene_Duel < Scene
     
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     create_action_window
+    
     super
   end
   def create_action_window
     @player_field_window.action_window = Window_Action.new
+  end
+  def init_replay
+    @replay = Replay.new
+  end
+  def save_replay
+    @replay.save if @replay
   end
   def init_game
     $game.player_field = Game_Field.new @deck
@@ -108,6 +117,11 @@ class Scene_Duel < Scene
   def handle_game(event)
     case event
     when Game_Event::Action
+      if event.action.instance_of?(Action::Reset) and event.action.from_player
+        save_replay
+        init_replay
+      end
+      @replay.add event.str
       str = event.str
       if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
         str = $1
@@ -143,5 +157,9 @@ class Scene_Duel < Scene
     Surface.blit(@background,x,y,width,height,$screen,x,y) rescue p "------奇怪的nil错误----", @background,x,y,width,height,$screen,x,y
     yield
     $screen.update_rect(x, y, width, height)
+  end
+  def terminate
+    save_replay
+    super
   end
 end

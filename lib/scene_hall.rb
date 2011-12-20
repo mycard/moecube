@@ -40,7 +40,7 @@ class Scene_Hall < Scene
       when Key::RETURN
         @active_window.clicked
       when Key::F2
-        $game.host
+        $game.host("test")
         @joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
       when Key::F3
         $game.join '192.168.0.103'

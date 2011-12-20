@@ -1,8 +1,11 @@
 class User
   attr_accessor :level, :exp
   def self.parse(info)
-    info =~ /(.+)\((\d+)\)/
-    new $2.to_i, $1
+    if info =~ /(.+)\((\d+)\)/
+      new $2.to_i, $1
+    else
+      nil
+    end
   end
   def initialize(id, name = "", level = nil, exp = nil)
     @id = id

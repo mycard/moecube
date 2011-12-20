@@ -207,7 +207,7 @@ class Action
         when "卡组洗切", "切洗卡组"
           Shuffle.new from_player
         when "查看卡组"
-          Ignored.new "查看卡组"
+          ViewDeck.new from_player
         when "将顶牌放回卡组底部"
           ReturnToDeckBottom.new(from_player, :deck)
         when /抽取\((\d+)\)张卡/

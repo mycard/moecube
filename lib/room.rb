@@ -2,7 +2,7 @@ class Room
   Color = [[0,0,0], [255,0,0], [0,255,0], [0,0,255], [255, 165, 0]]
   extend Cacheable
   attr_accessor :id, :name, :player1, :player2, :private, :color, :forbid
-  def initialize(id, name="", player1=nil, player2=nil, private=false, color=[0,0,0], session = nil, forbid = nil)
+  def initialize(id, name="等待更新", player1=nil, player2=nil, private=false, color=[0,0,0], session = nil, forbid = nil)
     @id = id
     @name = name
     @player1 = player1

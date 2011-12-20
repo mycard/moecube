@@ -33,7 +33,7 @@ class Iduel < Game
     send(1, @key, checknum("UPINFOMSG", @session))
   end
   def host(name, password="", lv=0, color = 0)
-    send(6, @key, name, password, checknum("JOINROOMMSG", @session + name + password + "0"), 0, color, lv, 0, nil, nil) #TODO:v.ak, v.al
+    send(6, @key, name, password, checknum("JOINROOMMSG", @session + name + password + "0"), 0, color, lv, 0, 0, 0) #TODO:v.ak, v.al
   end
   def join(room, password="")
     send(6, @key, room.id, password, checknum("JOINROOMMSG", @session + room.id.to_s + password + "1"),1)
@@ -49,13 +49,15 @@ class Iduel < Game
     end
   end
   def action(action)
-    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}鈻娾枈鈻�00000") if @room.include? @user#TODO:iduel鏍￠獙瀛椾覆 
+    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard") if @room.include? @user#TODO:iduel校验字串
   end
   def exit
-    send(11, @key, checknum("ULO", "#{@session}"))
     @recv.exit
-    @conn.close
-    @conn = nil
+    if @conn
+      send(11, @key, checknum("ULO", "#{@session}")) 
+      @conn.close
+      @conn = nil
+    end
   end
   
   
