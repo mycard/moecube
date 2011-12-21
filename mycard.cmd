@@ -1,3 +1,4 @@
+@echo off
 cd /d %~dp0
 echo ------------------ >> log.log
 echo ------------------ >> err.log

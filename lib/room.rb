@@ -1,3 +1,4 @@
+#encoding: UTF-8
 class Room
   Color = [[0,0,0], [255,0,0], [0,255,0], [0,0,255], [255, 165, 0]]
   extend Cacheable
