@@ -6,10 +6,9 @@ require 'rake/gempackagetask'
 #require 'rake/testtask'
 
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
-
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.1'
+  s.version = '0.1.0'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
@@ -21,7 +20,7 @@ spec = Gem::Specification.new do |s|
   if Windows
     s.files += %w(mycard.cmd) + Dir.glob("{ruby}/**/*")
   else
-    s.files += %w(mycard.sh) + Dir.glob("{ruby}/**/*")
+    s.files += %w(mycard.sh)
   end
   s.require_path = "lib"
   #s.bindir = "bin"
@@ -30,7 +29,6 @@ end
 Rake::GemPackageTask.new(spec) do |p|
   p.gem_spec = spec
   if Windows
-    
     p.need_zip = true
     p.zip_command = '7z a -tzip'
   else
