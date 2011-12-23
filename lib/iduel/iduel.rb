@@ -21,8 +21,13 @@ class Iduel < Game
     begin
       @conn = TCPSocket.open(Server, Port)
       @conn.set_encoding "GBK", "UTF-8"
-      Thread.abort_on_exception = true
-      @recv = Thread.new { recv @conn.gets(RS) while @conn  }
+      @recv = Thread.new do
+        begin
+          recv @conn.gets(RS) while @conn
+        ensure
+          exit
+        end
+      end
     rescue
       Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
     end
@@ -52,11 +57,12 @@ class Iduel < Game
     end
   end
   def action(action)
-    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard") if @room.include? @user#TODO:iduel校验字串
+    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard")# if @room.include? @user#TODO:iduel校验字串
   end
   def exit
     @recv.exit
     if @conn
+      leave
       send(11, @key, checknum("ULO", "#{@session}")) 
       @conn.close
       @conn = nil
@@ -79,7 +85,6 @@ class Iduel < Game
     else
       info.chomp!(RS)
       info.delete!("\r")
-      #info.encode! "UTF-8", :invalid => :replace, :undef => :replace
       puts ">> #{info}"
       Game_Event.push Game_Event.parse info
     end

@@ -10,8 +10,8 @@ class Deck
 	attr_accessor :side
 	attr_accessor :extra
 	attr_accessor :temp
-  DeckPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/deck'
-  #DeckPath = 'E:/game/yu-gi-oh/deck'
+  #DeckPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/deck'
+  DeckPath = 'E:/game/yu-gi-oh/deck'
 	def initialize(main, side=[], extra=[], temp=[])
 		@main = main
 		@side = side
@@ -25,9 +25,10 @@ class Deck
     temp = []
     now = main
     open(File.expand_path(name, DeckPath)) do |file|
-      while line = file.readline.force_encoding("GBK").encode("UTF-8").chomp!
+      file.set_encoding "GBK", "UTF-8"
+      while line = file.readline.chomp!
         case line
-        when /^\[(.+?)\]\#.*\#$/
+        when /^\[(.+?)\](?:\#.*\#)?$/
           now << Card.find($1.to_sym)
         when "####"
           now = side
@@ -35,9 +36,8 @@ class Deck
           now = extra
         when "$$$$"
           now = temp
-        when ""
-          break
         end
+        break if file.eof?
       end
     end
     self.new(main, side, extra, temp)

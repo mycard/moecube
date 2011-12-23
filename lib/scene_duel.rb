@@ -69,6 +69,7 @@ class Scene_Duel < Scene
   end
   def change_phase(phase)
     action Action::ChangePhase.new(true, phase)
+    $game.refresh
   end
   def reset
     action Action::Reset.new(true)

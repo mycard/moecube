@@ -87,6 +87,7 @@ class Action
       @position = position
     end
     def run
+      p @card, self
       from_field = case @from_pos
       when 0..10
         player_field.field
@@ -107,16 +108,17 @@ class Action
         puts
       end
       
-      if @from_pos.is_a? Integer
+      from_pos = if @from_pos.is_a? Integer
         if @from_pos > 10
-          from_pos = @from_pos - 11
+          @from_pos - 11
         else
-          from_pos = @from_pos
+          @from_pos
         end
+      elsif @card == :deck
+        0
       else
-        from_pos = (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
+        (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
       end
-      
       to_field = case @to_pos
       when Integer
         player_field.field
@@ -151,7 +153,7 @@ class Action
           end
         end
       else
-        card = Game_Card.new(@card)
+        card = @card == :deck ?  player_field.deck.first : Game_Card.new(@card)
         puts "似乎凭空产生了卡片？"
         p self
       end

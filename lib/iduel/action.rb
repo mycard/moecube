@@ -169,6 +169,7 @@ class Action
   end
   def self.parse(str)
     from_player = nil
+    p str
     case str
     when /^\[(\d+)\] (.*)$/m
       #p $2, $2.match(/(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[\d+\]\n#{FieldFilter}(.*)/)

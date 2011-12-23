@@ -124,7 +124,7 @@ class Game_Event
   class Action
     attr_reader :action
     def self.parse(info)
-      info =~ /(.*)▊▊▊.*?$/
+      info =~ /(.*)▊▊▊.*?$/m
       info = $1
       info["◎"] = "●" if info["◎"]
       self.new ::Action.parse info
@@ -205,5 +205,7 @@ class Game_Event
     end
   end
   class QROOMOK < Game_Event
+    def self.parse(info)
+    end
   end
 end
