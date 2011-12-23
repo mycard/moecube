@@ -255,7 +255,7 @@ class Window_Field < Window
           Widget_Msgbox.new("特殊召唤", "场位已满")
         end
       when 2
-        Action::Effect_Activate.new(true, :extra, @card)
+        Action::EffectActivate.new(true, :extra, @card)
       when 3
         Action::Remove.new(true, :extra, @card)
       when 4
@@ -272,7 +272,7 @@ class Window_Field < Window
           Widget_Msgbox.new("特殊召唤", "场位已满")
         end
       when 2 #效果发动
-        Action::Effect_Activate.new(true, :removed, @card)
+        Action::EffectActivate.new(true, :removed, @card)
       when 3 #加入手卡
         Action::ReturnToHand.new(true, :removed, @card)
       when 4
@@ -291,7 +291,7 @@ class Window_Field < Window
           Widget_Msgbox.new("特殊召唤", "场位已满")
         end
       when 2 #效果发动
-        Action::Effect_Activate.new(true, :graveyard, @card)
+        Action::EffectActivate.new(true, :graveyard, @card)
       when 3 #加入手卡
         Action::ReturnToHand.new(true, :graveyard, @card)
       when 4
@@ -302,7 +302,7 @@ class Window_Field < Window
     when 0..5 #后场
       case @action_window.index
       when 0 #效果发动
-        Action::Effect_Activate.new(true, @index, @card)
+        Action::EffectActivate.new(true, @index, @card)
       when 1 #返回卡组
         Action::ReturnToDeck.new(true, @index, @card)
       when 2 #送入墓地
@@ -327,7 +327,7 @@ class Window_Field < Window
       when 4
         Action::Flip.new(true, @index, @card)
       when 5
-        Action::Effect_Activate.new(true, @index, @card)
+        Action::EffectActivate.new(true, @index, @card)
       when 6
         Widget_Msgbox.new("攻击宣言", "功能未实现")
       when 7
@@ -374,7 +374,7 @@ class Window_Field < Window
       when 6 #从游戏中除外
         Action::Remove.new(true, :hand, @card)
       when 7 #效果发动
-        Action::Effect_Activate.new(true, :hand, @card)
+        Action::EffectActivate.new(true, :hand, @card)
       end
     end
     $scene.action action if action.is_a? Action

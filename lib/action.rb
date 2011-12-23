@@ -132,14 +132,16 @@ class Action
         player_field.removed
       end
       if from_pos && from_field[from_pos]
-        case @card
+        card = case @card
         when Game_Card
-          card = from_field[from_pos] = @card
+          from_field[from_pos] = @card
         when nil, Card::Unknown
-          card = from_field[from_pos]
+          from_field[from_pos]
         when Card
-          card = from_field[from_pos]
-          card.card = @card
+          from_field[from_pos].card = @card
+          from_field[from_pos]
+        when :deck
+          player_field.deck.first
         end
         if @to_pos
           if from_field == player_field.field
@@ -153,7 +155,16 @@ class Action
         puts "似乎凭空产生了卡片？"
         p self
       end
-      card.position = @position if @position
+      if @position
+        if @position == :"face-up"
+          if card.position == :set and (6..10).include?(@to_pos || @from_pos) #里侧表示的怪兽
+            card.position = :defense
+          else
+            card.position = :attack
+          end
+        end
+        card.position = @position
+      end
       if @to_pos
         if @to_pos.is_a? Integer
           to_field[@to_pos] = card
@@ -207,11 +218,7 @@ class Action
     end
   end
   class ReturnToDeckBottom < Move
-    def initialize(from_player, from_pos, card=Card.find(nil))
-      if from_pos == :deck and card == Card.find(nil)
-        @from_player = from_player
-        card = player_field.deck.first
-      end
+    def initialize(from_player, from_pos, card)
       super(from_player, from_pos, :deckbottom, card, nil, :set)
     end
   end
@@ -245,7 +252,7 @@ class Action
   class Draw < Move
     def initialize(from_player=true, msg=nil)
       @from_player = from_player
-      super(from_player, :deck, :hand, player_field.deck.first, msg, :set)
+      super(from_player, :deck, :hand, :deck, msg, :set)
     end
   end
   class MultiDraw < Action
@@ -323,15 +330,11 @@ class Action
       @cards = cards
     end
   end
-  class Effect_Activate < Move
+  class EffectActivate < Move
     def initialize(from_player, from_pos, card)
       @from_player = from_player
       if (0..10).include?(from_pos)
-        if (6..10).include?(from_pos) && player_field.field[from_pos] && (player_field.field[from_pos].position == :set || player_field.field[from_pos].position == :defense)
-          position = :defense
-        else
-          position = :attack
-        end
+        position = :"face-up"
       else
         position = nil
       end

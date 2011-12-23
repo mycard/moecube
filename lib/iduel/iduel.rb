@@ -4,28 +4,31 @@ class Iduel < Game
   Server = "iduel.ocgsoft.cn"
   Port = 38522
   
-  RS = "\xA1\xE9".force_encoding "GBK"
+  RS = "\xA1\xE9".force_encoding("GBK").encode("UTF-8")
   attr_accessor :session
   attr_accessor :key
   def initialize
     super
-    require 'socket'
     require 'digest/md5'
-    require 'open-uri'
     require_relative 'action'
     require_relative 'event'
     require_relative 'user'
+    require_relative 'replay'
+  end
+  def connect
+    require 'socket'
+    require 'open-uri'
     begin
       @conn = TCPSocket.open(Server, Port)
-      @conn.set_encoding "GBK"
+      @conn.set_encoding "GBK", "UTF-8"
       Thread.abort_on_exception = true
       @recv = Thread.new { recv @conn.gets(RS) while @conn  }
     rescue
-      Game_Event.push Game_Event::Error.new($!.class, $!.message)
+      Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
     end
   end
-  
   def login(username, password)
+    connect
     md5 = Digest::MD5.hexdigest(password)
     send(0, username, md5, checknum("LOGINMSG", username, md5), Version)
   end
@@ -62,9 +65,11 @@ class Iduel < Game
   
   
   def send(head, *args)
-    info = "##{head.to_s(16).upcase}|#{args.join(',')}".encode("GBK") + RS
+    return unless @conn
+    info = "##{head.to_s(16).upcase}|#{args.join(',')}" + RS
     puts "<< #{info}"
-    (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class, $!.message)
+    info.gsub!("\n", "\r\n")
+    (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
   end
   def recv(info)
     if info.nil?
@@ -72,14 +77,15 @@ class Iduel < Game
       @conn = nil
       Game_Event::Error.parse(0)
     else
-      info.chomp!(RS)    
-      info.encode! "UTF-8", :invalid => :replace, :undef => :replace
+      info.chomp!(RS)
+      info.delete!("\r")
+      #info.encode! "UTF-8", :invalid => :replace, :undef => :replace
       puts ">> #{info}"
       Game_Event.push Game_Event.parse info
     end
   end
   def checknum(head, *args)
-    Digest::MD5.hexdigest("[#{head}]_#{args.join('_')}_SCNERO")
+    Digest::MD5.hexdigest("[#{head}]_#{args.join('_')}_SCNERO".gsub("\n", "\r\n").encode("GBK"))
   end
   def qroom(room)
     send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
