@@ -4,17 +4,21 @@ class Window_LP < Window
     super(x,y,360,72)
     @player = player
     @position = position
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 24)
+    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
     @color = [255,255,255]
     if @player
       @player.avatar do |avatar|
         clear(position ? 0 : @width-Avatar_Size, 24, Avatar_Size, Avatar_Size)
         @contents.put avatar, position ? 0 : @width-Avatar_Size, 24
       end
+      if @position
+        @font.draw_solid_utf8(@contents, @player.name, Avatar_Size, 24, *@color)
+      else
+        @font.draw_solid_utf8(@contents, @player.name, @width-Avatar_Size-96, 24, *@color)
+      end
     end
     self.lp = 8000
   end
-
   def lp=(lp)
     return if lp == @lp
     @lp = lp
@@ -27,11 +31,4 @@ class Window_LP < Window
       @font.draw_blended_utf8(@contents, @lp.to_s, @width-width-64, 0, *@color)
     end
   end
-  #def draw_item(player)
-  #    if player == @player
-  #      
-  #    end
-  #    
-  #  end
-  
 end
