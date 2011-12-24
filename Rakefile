@@ -8,7 +8,7 @@ require 'rake/gempackagetask'
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.1.0'
+  s.version = '0.2.0'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
