@@ -68,6 +68,9 @@ class Scene_Duel < Scene
   end
   def change_phase(phase)
     action Action::ChangePhase.new(true, phase)
+    if phase == :EP
+      action Action::TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next)
+    end
   end
   def reset
     action Action::Reset.new(true)

@@ -71,9 +71,6 @@ class Action
     end
     def run
       $game.phase = phase
-      if @from_player and phase == :EP
-        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next))
-      end
       super
     end
   end
