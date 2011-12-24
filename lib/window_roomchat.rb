@@ -9,7 +9,7 @@ class Window_RoomChat < Window
 	def initialize(x, y, width, height)
     super(x,y,width,height-WLH)
     @chat_input = Widget_InputBox.new(@x,@y+@height,@width,WLH){|text|
-      $game.actaction =  Action::Chat.new(true, text)
+      $game.action =  Action::Chat.new(true, text)
       action.from_player = :me
       $scene.action action
       
