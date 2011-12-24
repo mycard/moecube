@@ -25,7 +25,7 @@ class Deck
     temp = []
     now = main
     open(File.expand_path(name, DeckPath)) do |file|
-      file.set_encoding "GBK", "UTF-8"
+      file.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
       while line = file.readline.chomp!
         case line
         when /^\[(.+?)\](?:\#.*\#)?$/

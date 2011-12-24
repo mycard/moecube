@@ -15,7 +15,7 @@ class Action
     @from_player ? $game.opponent_field : $game.player_field
   end
   def run
-    $game.action self
+    #子类定义
   end
   class Reset < Action
     def run
@@ -72,7 +72,7 @@ class Action
     def run
       $game.phase = phase
       if @from_player and phase == :EP
-        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? @turn : @turn.next))
+        Game_Event.push Game_Event::Action.new(TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next))
       end
       super
     end
@@ -164,8 +164,9 @@ class Action
           else
             card.position = :attack
           end
+        else
+          card.position = :attack
         end
-        card.position = @position
       end
       if @to_pos
         if @to_pos.is_a? Integer
@@ -288,9 +289,9 @@ class Action
         (@field[:deck]-player_field.deck.size).times{player_field.deck.push Game_Card.new(Card::Unknown)}
       end
       if player_field.graveyard.size > @field[:graveyard]
-         player_field.graveyard.pop(player_field.graveyard.size-@field[:graveyard])
+        player_field.graveyard.pop(player_field.graveyard.size-@field[:graveyard])
       elsif player_field.graveyard.size < @field[:graveyard]
-         (@field[:graveyard]-player_field.graveyard.size).times{player_field.graveyard.push Game_Card.new(Card::Unknown)}
+        (@field[:graveyard]-player_field.graveyard.size).times{player_field.graveyard.push Game_Card.new(Card::Unknown)}
       end
       (0..10).each do |pos|
         if @field[pos]
@@ -344,6 +345,24 @@ class Action
     end
   end
   class ViewDeck < Action;  end
+  class LP < Action
+    attr_accessor :operator, :value
+    def initialize(from_player, operator, value)
+      super(from_player)
+      @operator = operator
+      @value = value
+    end
+    def run
+      case operator
+      when :lose
+        player_field.lp -= @value
+      when :increase
+        player_field.lp += @value
+      when :become
+        player_field.lp = @value
+      end
+    end
+  end
   class Unknown < Action
     def initialize(str)
       @str = str

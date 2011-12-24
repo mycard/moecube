@@ -4,7 +4,7 @@ class Iduel < Game
   Server = "iduel.ocgsoft.cn"
   Port = 38522
   
-  RS = "\xA1\xE9".force_encoding("GBK").encode("UTF-8")
+  RS = "￠"
   attr_accessor :session
   attr_accessor :key
   def initialize
@@ -20,10 +20,13 @@ class Iduel < Game
     require 'open-uri'
     begin
       @conn = TCPSocket.open(Server, Port)
-      @conn.set_encoding "GBK", "UTF-8"
+      @conn.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
       @recv = Thread.new do
         begin
           recv @conn.gets(RS) while @conn
+        rescue
+          Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
+          puts $!.backtrace
         ensure
           exit
         end
@@ -57,7 +60,7 @@ class Iduel < Game
     end
   end
   def action(action)
-    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard")# if @room.include? @user#TODO:iduel校验字串
+    send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard") #if @room.include? @user#TODO:iduel校验字串
   end
   def exit
     @recv.exit

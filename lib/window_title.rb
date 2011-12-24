@@ -4,6 +4,7 @@ class Window_Title < Window_List
   attr_reader :x, :y, :width, :height, :single_height, :index
   def initialize(x,y)
     @button = Surface.load "graphics/system/titlebuttons.png"
+    @button.set_alpha(RLEACCEL,255)
     @single_height = @button.h / Button_Count
     super(x,y,@button.w / 3,WLH * Button_Count - (WLH - @button.h / Button_Count))
     @cursor_se = Mixer::Wave.load 'audio/se/cursor.ogg'
@@ -24,5 +25,8 @@ class Window_Title < Window_List
   end
   def clicked
     $scene.determine
+  end
+  def clear(x=0,y=0,width=@width,height=@height)
+    @contents.fill_rect(x,y,width, height, 0x00000000)
   end
 end

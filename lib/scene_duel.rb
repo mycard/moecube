@@ -28,7 +28,6 @@ class Scene_Duel < Scene
     @deck = deck
   end
   def start
-    $game.refresh if $game
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
     Mixer.fade_in_music(@bgm, 8000, -1)
     @background = Surface.load "graphics/field/main.png"
@@ -43,7 +42,7 @@ class Scene_Duel < Scene
     @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
     @opponent_field_window.angle=180
     
-    @phases_window = Window_Phases.new(124, 357)
+    @phases_window = Window_Phases.new(122, 356)
     @fieldback_window = Window_FieldBack.new(130,174)
     @cardinfo_window = Window_CardInfo.new(715, 0)
     
@@ -69,7 +68,6 @@ class Scene_Duel < Scene
   end
   def change_phase(phase)
     action Action::ChangePhase.new(true, phase)
-    $game.refresh
   end
   def reset
     action Action::Reset.new(true)
@@ -112,6 +110,7 @@ class Scene_Duel < Scene
   
   
   def action(action)
+    $game.action action# if @from_player
     Game_Event.push Game_Event::Action.new(action)
   end
   
@@ -129,11 +128,7 @@ class Scene_Duel < Scene
       end
       $chat_window.add event.action.from_player, str
       event.action.run
-      @player_field_window.refresh
-      @opponent_field_window.refresh
-      @phases_window.player = $game.turn_player
-      @phases_window.phase = $game.phase
-      @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
+      refresh
     when Game_Event::Error
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     when Game_Event::Leave
@@ -153,11 +148,14 @@ class Scene_Duel < Scene
     end
     super
   end
-  def refresh_rect(x, y, width, height)
-    return unless $scene == self #线程的情况
-    Surface.blit(@background,x,y,width,height,$screen,x,y) rescue p "------奇怪的nil错误----", @background,x,y,width,height,$screen,x,y
-    yield
-    $screen.update_rect(x, y, width, height)
+  def refresh
+      @player_field_window.refresh
+      @opponent_field_window.refresh
+      @phases_window.player = $game.turn_player
+      @phases_window.phase = $game.phase
+      @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
+      @player_lp_window.lp = $game.player_field.lp
+      @opponent_lp_window.lp = $game.opponent_field.lp
   end
   def terminate
     save_replay

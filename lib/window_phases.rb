@@ -1,9 +1,11 @@
 class Window_Phases < Window_List
-  WLH = 80 #其实是列宽
+  WLH = 81 #其实是列宽
   Phases = [:DP, :SP, :M1, :BP, :M2, :EP]
   def initialize(x,y)
     @phases_player = Surface.load 'graphics/system/phases_player.png'
+    @phases_player.set_alpha(RLEACCEL,255)
     @phases_opponent = Surface.load 'graphics/system/phases_opponent.png'
+    @phases_opponent.set_alpha(RLEACCEL,255)
     super(x,y,5*WLH+@phases_player.w/3, @phases_player.h/6)
     @column_max = @item_max = 6
     self.player = true
@@ -30,5 +32,8 @@ class Window_Phases < Window_List
   end
   def mousemoved(x,y)
     self.index = include?(x,y) ? (x - @x) / WLH : nil
+  end
+  def clear(x=0,y=0,width=@width,height=@height)
+    @contents.fill_rect(x,y,width, height, 0x00000000)
   end
 end

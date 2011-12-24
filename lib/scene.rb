@@ -15,7 +15,11 @@ class Scene
     while $scene == self
       update
       $fpstimer.wait_frame do
-        $screen.put(@background,0,0) if @background
+        if @background
+          $screen.put(@background,0,0)
+        else
+          $screen.fill_rect(0, 0, $screen.w, $screen.h, 0x000000)
+        end
         @windows.each do |window|
           window.draw($screen)
         end

@@ -127,7 +127,7 @@ class Game_Event
       info =~ /(.*)▊▊▊.*?$/m
       info = $1
       info["◎"] = "●" if info["◎"]
-      self.new ::Action.parse info
+      self.new ::Action.parse(info), info
     end
   end
   class Leave

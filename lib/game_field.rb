@@ -25,7 +25,7 @@ class Game_Field
   attr_accessor :removed
   
 	def initialize(deck = nil)
-    @deck_original = deck || Deck.new(Array.new(60,Card.find(nil)), Array.new(15, Card.find(nil)))
+    @deck_original = deck || Deck.new(Array.new(60,Card.find(nil)), [], Array.new(15, Card.find(nil)))
     reset
   end
   def reset

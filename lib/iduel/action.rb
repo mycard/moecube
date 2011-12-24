@@ -169,7 +169,6 @@ class Action
   end
   def self.parse(str)
     from_player = nil
-    p str
     case str
     when /^\[(\d+)\] (.*)$/m
       #p $2, $2.match(/(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[\d+\]\n#{FieldFilter}(.*)/)
@@ -265,6 +264,8 @@ class Action
           Flip.new(from_player, parse_pos($1), parse_card($2))
         when /#{PhaseFilter}/
           ChangePhase.new(from_player, parse_phase($1))
+        when /LP(损失|回复|变成)<(-?\d+)>/
+          LP.new(from_player, case $1 when "损失"; :lose; when "回复"; :increase; when "变成"; :become end, $2.to_i)
         else
           Unknown.new str
         end
@@ -281,9 +282,6 @@ class Action
   end
   def escape
     inspect
-  end
-  def run
-    $game.action self if @from_player
   end
   class FirstToGo
     def escape

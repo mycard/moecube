@@ -2,7 +2,7 @@
 class NBX < Game
   Version = "20090622"
   Port=2583
-  RS = "\xA1\xE9".force_encoding "GBK"
+  RS = "￠"
   def initialize
     super
     require 'socket'
@@ -53,7 +53,7 @@ class NBX < Game
       
     else #连接
       @conn_room = client
-      @conn_room.set_encoding "GBK"
+      @conn_room.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
       send(:room, "[LinkOK]|#{Version}")
       send(:room, "▓SetName:#{@user.name}▓")
       send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
@@ -66,8 +66,7 @@ class NBX < Game
     end
   end
   def recv_room(info)
-    info.chomp!(RS)    
-    info.encode! "UTF-8", :invalid => :replace, :undef => :replace
+    info.chomp!(RS)
     puts ">> #{info}"
     Game_Event.push Game_Event.parse info
   end

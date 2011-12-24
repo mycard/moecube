@@ -14,9 +14,9 @@ class Scene_Title < Scene
     @background = Surface.load(title)
     Surface.blit(@background,0,0,0,0,$screen,0,0)
     @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, 300)
-    
-    @logo = Surface.load("graphics/system/logo.png")
-    Surface.blit(@logo,0,0,0,0,$screen,@command_window.x-(@logo.w-@command_window.width)/2,150)
+    logo = Surface.load("graphics/system/logo.png")
+    @logo_window = Window.new(@command_window.x-(logo.w-@command_window.width)/2,150,logo.w,logo.h)
+    @logo_window.contents = logo
     $screen.update_rect(0,0,0,0)
     @bgm = Mixer::Music.load 'audio/bgm/title.ogg'
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")

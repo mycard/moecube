@@ -1,5 +1,5 @@
 class Widget_InputBox < Window
-=begin
+
   attr_accessor :text, :proc
   require 'tk'
   @@font = TkFont.new("family" => 'WenQuanYi Micro Hei', 
@@ -39,5 +39,4 @@ class Widget_InputBox < Window
     @@entry.focus :force
   end
 
-=end  
 end

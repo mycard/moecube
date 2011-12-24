@@ -8,7 +8,12 @@ class Window_RoomChat < Window
   Opponent_Color = [0,0x66,0]
 	def initialize(x, y, width, height)
     super(x,y,width,height-WLH)
-    @chat_input = Widget_InputBox.new(@x,@y+@height,@width,WLH){|text|Action::Chat.new(true, text).run}
+    @chat_input = Widget_InputBox.new(@x,@y+@height,@width,WLH){|text|
+      $game.actaction =  Action::Chat.new(true, text)
+      action.from_player = :me
+      $scene.action action
+      
+      }
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
     @contents.fill_rect(0,0,@width, @height, 0x99FFFFFF)
     @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)

@@ -45,6 +45,6 @@ class Window_CardInfo < Window
     @lore_start = 0
     @lore_pos = [0, 234]
     
-    @font.draw_blended_utf8(@contents, @card.inspect, 0, 300, 0xFF, 0xFF, 0x66)
+   # @font.draw_blended_utf8(@contents, @card.inspect, 0, 300, 0xFF, 0xFF, 0x66)
   end
 end

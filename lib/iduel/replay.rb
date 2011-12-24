@@ -11,7 +11,7 @@ class Replay
   def self.load(filename)
     #TODO:效率优化
     file = open(filename)
-    file.set_encoding "GBK", "UTF-8"
+    file.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
     result = self.new(file)
     contents = file.read
     contents =~ Player_Filter

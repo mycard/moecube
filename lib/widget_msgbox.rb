@@ -2,7 +2,7 @@
 class Widget_Msgbox < Window
   Title_Color = [0xFF, 0xFF, 0xFF]
   Message_Color = [0x04, 0x47, 0x7c]
-  def initialize(title, message, buttons={:ok => "确定"}, &proc)
+  def initialize(title, message, buttons={}, &proc)
     #@background = Surface.load 'graphics/system/msgbox.png'
     @contents = Surface.load 'graphics/system/msgbox.png'
     @button = Surface.load 'graphics/system/button.png'
