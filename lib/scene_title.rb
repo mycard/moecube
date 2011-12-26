@@ -6,7 +6,6 @@
 #==============================================================================
 class Scene_Title < Scene
   require_relative 'window_title'
-  require_relative 'widget_inputbox'
   def start
     
     title = Dir.glob("graphics/titles/title_*.*")

@@ -10,14 +10,6 @@ class Scene_Config < Scene
 	def start
     @background = Surface.load "graphics/config/background.png"
     @config_window = Window_Config.new(0,0)
-    #全屏模式
-    #p $config
-    #
-    #
-    #
-    #
-
-    #$scene = Scene_Title.new
 	end
   def handle(event)
     case event

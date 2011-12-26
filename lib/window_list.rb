@@ -44,11 +44,8 @@ class Window_List < Window
     refresh
   end
 	def refresh
-    #p @list
     clear
 
-    #@contents.fill_rect(0,0,@width,@height,0x66000000)
-    #p @item_max
     @item_max.times do |index|
       draw_item(index, index==@index ? 1 : 0)
     end

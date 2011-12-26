@@ -183,7 +183,7 @@ class Game_Event
   end
   class Unknown
     def self.parse(*args)
-      puts '--------Unknown Iduel Event-------'
+      $log.info  '--------Unknown Iduel Event-------'
       p $1, $2, args
     end
   end

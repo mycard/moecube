@@ -39,15 +39,7 @@ class Window_Info < Sprite
 	#	refresh
 	#end
 	def refresh
-		#p "-------------Read start-----------"
-		#@user.avatar{|avatar| self.contents[1] = avatar; p "-------------read end-----------" }
-		#p self.contents[1] = @user.avatar(:middle)
-		
-		#p @user
-		#contents[0].clear
-		#@list.each_with_index do |player, index|
-			#contents[0].draw_text(player.name, 0, 16*index)
-		#end
+
 	end
 end
 

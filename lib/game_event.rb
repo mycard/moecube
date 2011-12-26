@@ -129,8 +129,8 @@ class Game_Event
     def initialize(title, message)
       @title = title
       @message = message
-      puts @title
-      puts @message
+      $log.info  @title
+      $log.info  @message
     end
   end
   class Unknown < Error

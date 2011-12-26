@@ -94,4 +94,14 @@ class Window_Config < Window
       $scene = Scene_Title.new
     end
   end
+  def filesize_inspect(size)
+    case size
+    when 0...1024
+      size.to_s + "B"
+    when 1024...1024*1024
+      (size/1024).to_s + "KB"
+    else
+      (size/1024/1024).to_s + "MB"
+    end
+  end
 end

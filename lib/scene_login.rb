@@ -36,7 +36,7 @@ class Scene_Login < Scene
     when Game_Event::Error
       Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new}
     else
-      p event
+      $log.debug event
     end
   end
 end

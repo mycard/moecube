@@ -67,7 +67,7 @@ class NBX < Game
   end
   def recv_room(info)
     info.chomp!(RS)
-    puts ">> #{info}"
+    $log.info  ">> #{info}"
     Game_Event.push Game_Event.parse info
   end
   def refresh
@@ -91,7 +91,7 @@ class NBX < Game
   end
   
   def recv(info, addrinfo)
-    puts ">> #{info} -- #{addrinfo[2]}"
+    $log.info  ">> #{info} -- #{addrinfo[2]}"
     Socket.ip_address_list.each do |localhost_addrinfo|
       if localhost_addrinfo.ip_address == addrinfo[3]
         addrinfo[2] = 'localhost'

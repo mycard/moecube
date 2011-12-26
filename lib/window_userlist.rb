@@ -15,7 +15,6 @@ class Window_UserList < Window_List
     @color = [0x03, 0x11, 0x22]
     @color_over = [0x03, 0x11, 0x22, 200,200,255]
     @color_click = [200,200,255, 0x03, 0x11, 0x22]
-    #p @contents.alpha
     #@contents.set_alpha(RLEACCEL, 80)
     @contents.fill_rect(0,0,@width,@height,0xFFFFFFFF)
     self.list = list

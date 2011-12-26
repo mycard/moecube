@@ -84,7 +84,6 @@ class Action
       @position = position
     end
     def run
-      p @card, self
       from_field = case @from_pos
       when 0..10
         player_field.field
@@ -101,8 +100,7 @@ class Action
       when :removed
         player_field.removed
       else
-        puts '奇怪的from_field'
-        puts
+        $log.warn __FILE__,  '奇怪的from_field'
       end
       
       from_pos = if @from_pos.is_a? Integer
@@ -151,7 +149,7 @@ class Action
         end
       else
         card = @card == :deck ?  player_field.deck.first : Game_Card.new(@card)
-        puts "似乎凭空产生了卡片？"
+        $log.info  "似乎凭空产生了卡片？"
         p self
       end
       if @position
@@ -294,7 +292,6 @@ class Action
         if @field[pos]
           player_field.field[pos] ||= Game_Card.new(@field[pos][:card])
           player_field.field[pos].card = @field[pos][:card]
-          p player_field.field[pos].card
           player_field.field[pos].position = @field[pos][:position]
         else
           player_field.field[pos] = nil
@@ -363,10 +360,10 @@ class Action
   class Unknown < Action
     def initialize(str)
       @str = str
-      puts 'unkonwn action ' + str
+      $log.info  'unkonwn action ' + str
     end
     def run
-      puts 'unkonwn action run ' + @str
+      $log.info  'unkonwn action run ' + @str
     end
   end
   def self.reset

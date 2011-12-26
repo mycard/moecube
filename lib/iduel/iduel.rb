@@ -26,7 +26,7 @@ class Iduel < Game
           recv @conn.gets(RS) while @conn
         rescue
           Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
-          puts $!.backtrace
+          $log.info  $!.backtrace
         ensure
           exit
         end
@@ -76,7 +76,7 @@ class Iduel < Game
   def send(head, *args)
     return unless @conn
     info = "##{head.to_s(16).upcase}|#{args.join(',')}" + RS
-    puts "<< #{info}"
+    $log.info  "<< #{info}"
     info.gsub!("\n", "\r\n")
     (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
   end
@@ -88,7 +88,7 @@ class Iduel < Game
     else
       info.chomp!(RS)
       info.delete!("\r")
-      puts ">> #{info}"
+      $log.info  ">> #{info}"
       Game_Event.push Game_Event.parse info
     end
   end

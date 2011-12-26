@@ -3,10 +3,11 @@
 #------------------------------------------------------------------------------
 # 　游戏中全部画面的超级类。
 #==============================================================================
-
+require 'fpstimer'
 class Scene
   attr_reader :windows
   attr_reader :background
+  @@fpstimer = FPSTimer.new
   #--------------------------------------------------------------------------
   # ● 主处理
   #--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ class Scene
     start
     while $scene == self
       update
-      $fpstimer.wait_frame do
+      @@fpstimer.wait_frame do
         if @background
           $screen.put(@background,0,0)
         else
@@ -23,7 +24,7 @@ class Scene
         @windows.each do |window|
           window.draw($screen)
         end
-        @font.draw_blended_utf8($screen, "%.1f" % $fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
+        @font.draw_blended_utf8($screen, "%.1f" % @@fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
         $screen.update_rect(0,0,0,0)
       end
     end

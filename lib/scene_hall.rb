@@ -91,8 +91,8 @@ class Scene_Hall < Scene
       #when Game_Event::QROOMOK
       #  @joinroom_msgbox.message = "读取房间信息" if @joinroom_msgbox && !@joinroom_msgbox.destroyed?
     else
-      puts "---unhandled game event----"
-      p event
+      $log.info  "---unhandled game event----"
+      $log.debug event
     end
   end
   

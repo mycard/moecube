@@ -55,7 +55,6 @@ class Widget_ScrollBar < Window
     end
   end
   def mousemoved(x,y)
-    #p x,y
     case y-@y
     when 0...20 #上按钮
       self.index = :up
@@ -69,7 +68,6 @@ class Widget_ScrollBar < Window
     p @index
     #case index
     #when :up
-      #p "up"
     #end
   end
 end

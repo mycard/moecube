@@ -171,7 +171,6 @@ class Action
     from_player = nil
     case str
     when /^\[(\d+)\] (.*)$/m
-      #p $2, $2.match(/(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[\d+\]\n#{FieldFilter}(.*)/)
       id = $1.to_i
       result = case $2
       when /^┊(.*)┊$/m
