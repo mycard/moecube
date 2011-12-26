@@ -24,15 +24,16 @@ class Iduel < Game
       @recv = Thread.new do
         begin
           recv @conn.gets(RS) while @conn
-        rescue
-          Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
-          $log.info  $!.backtrace
+        rescue => exception
+          Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+          $log.warn ([exception.inspect] + exception.backtrace).join("\n")
         ensure
-          exit
+          self.exit
         end
       end
-    rescue
-      Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
+    rescue => exception
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.warn ([exception.inspect] + exception.backtrace).join("\n")
     end
   end
   def login(username, password)

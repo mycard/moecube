@@ -4,10 +4,10 @@
 #------------------------------------------------------------------------------
 # 銆�itle
 #==============================================================================
+require_relative 'scene'
+require_relative 'window_title'
 class Scene_Title < Scene
-  require_relative 'window_title'
   def start
-    
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
     @background = Surface.load(title)

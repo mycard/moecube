@@ -1,3 +1,0 @@
-#<TypeError: can't convert false into Integer>
-/home/zh99998/NetBeansProjects/mycard/lib/main.rb:13:in `|'
-/home/zh99998/NetBeansProjects/mycard/lib/main.rb:13:in `<main>'

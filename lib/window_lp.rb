@@ -6,10 +6,15 @@ class Window_LP < Window
     @position = position
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
     @color = [255,255,255]
+    self.lp = 8000
+  end
+  def player=(player)
+    return if @player == player
+    @player = player
     if @player
       @player.avatar do |avatar|
-        clear(position ? 0 : @width-Avatar_Size, 24, Avatar_Size, Avatar_Size)
-        @contents.put avatar, position ? 0 : @width-Avatar_Size, 24
+        clear(@position ? 0 : @width-Avatar_Size, 24, Avatar_Size, Avatar_Size)
+        @contents.put avatar, @position ? 0 : @width-Avatar_Size, 24
       end
       if @position
         @font.draw_solid_utf8(@contents, @player.name, Avatar_Size, 24, *@color)
@@ -17,7 +22,6 @@ class Window_LP < Window
         @font.draw_solid_utf8(@contents, @player.name, @width-Avatar_Size-96, 24, *@color)
       end
     end
-    self.lp = 8000
   end
   def lp=(lp)
     return if lp == @lp

@@ -36,4 +36,4 @@ Rake::GemPackageTask.new(spec) do |p|
   end
 end
 
-CLOBBER.include %w(log.log err.log) + Dir.glob("{replay}/**/*") + Dir.glob("**/Thumbs.db") + Dir.glob("graphics/avatars/*_*.png")
+CLOBBER.include %w(log.log) + Dir.glob("{replay}/**/*") + Dir.glob("**/Thumbs.db") + Dir.glob("graphics/avatars/*_*.png")

@@ -142,6 +142,7 @@ class Scene_Duel < Scene
       if event.room == $game.room
         @player_lp_window.player = $game.room.player1
         @opponent_lp_window.player = $game.room.player2
+        notify_send("mycard", "对手加入房间")
       end
     end
   end
@@ -170,5 +171,9 @@ class Scene_Duel < Scene
   def terminate
     save_replay
     super
+  end
+  def notify_send(title, msg)
+    puts "notify-send -i graphics/system/icon.ico #{title} #{msg}"
+    system("notify-send -i graphics/system/icon.ico #{title} #{msg}")
   end
 end

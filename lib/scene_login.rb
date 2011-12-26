@@ -8,7 +8,6 @@
 class Scene_Login < Scene
   Vocab_Logging  = "Logging"
 	def start
-    require_relative 'iduel/iduel'
     #@font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 24)
     if $config["autologin"]
       @username = $config["username"]
@@ -18,6 +17,9 @@ class Scene_Login < Scene
 	end
 	def login
     #@font.draw_blended_utf8($screen, Vocab_Logging, 0,0,255,0,255)
+    require_relative 'game'
+    require_relative 'iduel/iduel'
+    require_relative 'widget_msgbox'
     Widget_Msgbox.new("iduel", "正在登陆")
 		$game = Iduel.new
 		$game.login(@username, @password)

@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 # 　游戏中全部画面的超级类。
 #==============================================================================
-require 'fpstimer'
+require_relative 'fpstimer'
 class Scene
   attr_reader :windows
   attr_reader :background

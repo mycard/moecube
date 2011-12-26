@@ -1,3 +1,4 @@
+require_relative 'cacheable'
 class User
   attr_accessor :id, :name
   extend Cacheable
