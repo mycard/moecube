@@ -20,7 +20,7 @@ class Game_Event
     when "K"
       WatchAction
     when "M"
-      QROOMOK  #TODO
+      Leave
     when "O"
       Chat
     when "P"

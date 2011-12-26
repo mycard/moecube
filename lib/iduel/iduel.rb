@@ -54,9 +54,9 @@ class Iduel < Game
   end
   def leave
     if @room.include? @user
-      #
+      send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
     else
-      send("QUITWATCHROOM", @key, checknum("QUITWATCHROOM", @session))
+      send(9, @key, checknum("QUITWATCHROOM", @session))
     end
   end
   def action(action)

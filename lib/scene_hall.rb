@@ -22,7 +22,7 @@ class Scene_Hall < Scene
 		@chat = Window_Chat.new(321,551,682,168)
     
     bgm = Mixer::Music.load("audio/bgm/hall.ogg")
-    Mixer.fade_in_music(bgm, 800, -1)
+    Mixer.fade_in_music(bgm, -1, 800)
     @bgm.destroy if @bgm
     @bgm = bgm
     @count = 0

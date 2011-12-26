@@ -1,12 +1,9 @@
 #encoding: UTF-8
 
-#仅用于调试，发布时删
-alias gbk_puts puts
-def puts(*args)
-  gbk_puts(*(args.collect{|item|item.to_s.encode "GBK", :invalid => :replace, :undef => :replace}))
-end
-def p(*args)
-  print(args.collect{|item|item.inspect.encode "GBK", :invalid => :replace, :undef => :replace}.join("\n")+"\n") rescue print(args.join("\n")+"\n")
+#仅用于调试
+Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
+if Windows
+  STDOUT.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
 end
 
 def filesize_inspect(size)

@@ -15,7 +15,7 @@ class Scene_Watch < Scene_Duel
   end
   def start
     super
-    $game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
+    #$game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
   end
   def handle_game(event)
     case event

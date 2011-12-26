@@ -29,7 +29,7 @@ class Scene_Duel < Scene
   end
   def start
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
-    Mixer.fade_in_music(@bgm, 8000, -1)
+    Mixer.fade_in_music(@bgm, -1, 800)
     @background = Surface.load "graphics/field/main.png"
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     
@@ -68,7 +68,7 @@ class Scene_Duel < Scene
   end
   def change_phase(phase)
     action Action::ChangePhase.new(true, phase)
-    if phase == :EP
+    if phase == :EP and
       action Action::TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next)
     end
   end
@@ -105,6 +105,8 @@ class Scene_Duel < Scene
       when Key::F5
         reset
         @player_field_window.refresh
+      when Key::F10
+        $game.leave
       end
     else
       super
@@ -136,6 +138,11 @@ class Scene_Duel < Scene
       Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     when Game_Event::Leave
       $scene = Scene_Hall.new
+    when Game_Event::NewRoom
+      if event.room == $game.room
+        @player_lp_window.player = $game.room.player1
+        @opponent_lp_window.player = $game.room.player2
+      end
     end
   end
   def update
