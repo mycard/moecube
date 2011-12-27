@@ -4,7 +4,7 @@
 begin
   #读取配置文件
   require 'yaml'
-  $config = YAML.load_file("config.yml") rescue YAML.load_file("data/config_default.yml")
+  $config = YAML.load_file("config.yml")
   
   #初始化SDL
   require 'sdl'

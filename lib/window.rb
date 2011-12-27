@@ -52,8 +52,11 @@ class Window
     end
   end
   def clear(x=0, y=0, width=@width, height=@height)
-    #Surface.blit(@background, x,y,width,height,@contents,x,y)
-    contents.fill_rect(x,y,width,height,0x66000000)
+    if $scene.background
+      Surface.blit($scene.background,@x+x,@y+y,width,height,@contents,x,y)
+    else
+      @contents.fill_rect(x,y,width,height,0xFF000000)
+    end
   end
   def update
     #子类定义
