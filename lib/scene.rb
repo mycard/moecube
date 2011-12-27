@@ -11,6 +11,12 @@ class Scene
   #--------------------------------------------------------------------------
   # ● 主处理
   #--------------------------------------------------------------------------
+  def initialize
+    @background = nil
+    @windows = []
+    @active_window = nil
+    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
+  end
   def main
     start
     while $scene == self
@@ -29,10 +35,6 @@ class Scene
       end
     end
     terminate
-  end
-  def initialize
-    @windows = []
-    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
   end
   #--------------------------------------------------------------------------
   # ● 开始处理

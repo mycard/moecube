@@ -2,7 +2,7 @@
 class Action
 	attr_accessor :from_player, :msg
   attr_accessor :id
-	def initialize(from_player=true, msg=nil)
+  def initialize(from_player=true, msg=nil)
     @id = @@id
     @from_player = from_player
     @msg = msg

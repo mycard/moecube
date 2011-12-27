@@ -115,14 +115,12 @@ class Game_Event
   #"Q"
   #"273,1,zh99998(201448),zh99997(201629)"
   class Watch
-    attr_reader :room
     def self.parse(info)
       id, name = info.split(",", 2)
       self.new Room.new(id.to_i, name)
     end
   end
   class Action
-    attr_reader :action
     def self.parse(info)
       info =~ /(.*)▊▊▊.*?$/m
       info = $1
@@ -133,8 +131,6 @@ class Game_Event
   class Leave
   end
   class Chat
-    attr_reader :user, :content
-    alias old_initialize initialize
     def self.parse(info)
       user, content = info.split(",", 2)
       user = user == "System" ? User.new(100000, "iDuel管理中心") : User.parse(user)
@@ -142,7 +138,6 @@ class Game_Event
     end
   end
   class Error
-    attr_reader :title, :message
     def self.parse(info)
       title, message = case info.to_i
       when 0x00

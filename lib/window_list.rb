@@ -9,8 +9,9 @@ class Window_List < Window
 	attr_reader :list
   attr_reader :index
 	def initialize(x, y, width, height, z=200)
+    @list ||= []
+    @index ||= nil
     super(x,y,width, height,z)
-    @list = [] unless @list
     @o_index = 0
     @item_max = 0
     @column_max = 1
@@ -43,12 +44,9 @@ class Window_List < Window
     @height = @item_max * self.class::WLH
     refresh
   end
-	def refresh
+  def refresh
     clear
-
-    @item_max.times do |index|
-      draw_item(index, index==@index ? 1 : 0)
-    end
+    @item_max.times {|index|draw_item(index, index==@index ? 1 : 0)}
   end
   def cursor_up
     self.index = @index ? (@index - @column_max) % [@list.size, @item_max].min : 0

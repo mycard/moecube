@@ -10,7 +10,7 @@ class Scene_Hall < Scene
   require_relative 'window_userinfo'
   require_relative 'window_roomlist'
   require_relative 'window_chat'
-	def start
+  def start
 		$game.refresh
 		@background = Surface.load "graphics/hall/background.png"
     Surface.blit(@background,0,0,0,0,$screen,0,0)

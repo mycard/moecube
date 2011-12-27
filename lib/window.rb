@@ -10,20 +10,13 @@ class Window
     @visible = true
     @angle = 0
     @viewport = [0, 0, @width, @height]
+    @destroyed = false
     amask = 0xff000000
     rmask = 0x00ff0000
     gmask = 0x0000ff00
     bmask = 0x000000ff
-      
-    
-    unless @background
-      @background = Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
-      #@background.fill_rect(0,0,@width,@height,0x66000000)
-    end
-    unless @contents
-      @contents = Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
-      #@contents.fill_rect(0,0,@width,@height,0x66000000)
-    end
+    #@background ||= Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
+    @contents ||= Surface.new(SWSURFACE, @width, @height, 32, rmask, gmask, bmask, amask)
     #按Z坐标插入
     unless $scene.windows.each_with_index do |window, index|
         if window.z > @z

@@ -10,9 +10,7 @@ class Widget_ScrollBar < Window
     @back = Surface.load('graphics/hall/scroll_background.png')
     @bar = Surface.load('graphics/hall/scroll.png')
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
-    @background.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
     Surface.transform_draw(@back,@contents,0,1,@contents.h.to_f/@back.h,0,0,0,0,0)
-    Surface.transform_draw(@back,@background,0,1,@contents.h.to_f/@back.h,0,0,0,0,0)
     refresh
   end
   def index=(index)
