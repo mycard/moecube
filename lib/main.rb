@@ -22,7 +22,7 @@ begin
   
   #初始化日志
   require 'logger'
-  if true #调试用，由于将$DEBUG设成true时tk库会输出一大坨奇怪的东西，所以这里不能使用$DEBUG
+  if false #调试用，由于将$DEBUG设成true时tk库会输出一大坨奇怪的东西，所以这里不能使用$DEBUG
     STDOUT.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
     $log = Logger.new(STDOUT)
   else
