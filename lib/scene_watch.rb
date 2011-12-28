@@ -9,13 +9,24 @@ class Scene_Watch < Scene_Duel
   def create_action_window
   end
   def action(action)
-    if action.from_player == :me
-      super
-    end
   end
   def start
     super
-    #$game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
+    $game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
+  end
+  def handle(event)
+    case event
+    when Event::KeyDown
+      case event.sym
+      when Key::F10
+        $game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})离开了观战")
+        $game.leave
+      else
+        super
+      end
+    else
+      super
+    end
   end
   def handle_game(event)
     case event

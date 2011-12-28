@@ -8,7 +8,8 @@ class Replay
     action = action.escape if action.is_a? Action
     @file.write action + "\n"
   end
-  def save(filename="#{Time.now.strftime("%Y%m%d%H%M%S")}_#{$game.room.player1.name}(#{$game.room.player1.id})_#{$game.room.player2.name}(#{$game.room.player2.id}).txt")
+  def save(filename="#{$game.room.player1.name}(#{$game.room.player1.id})_#{$game.room.player2.name}(#{$game.room.player2.id})_#{Time.now.strftime("%m%d%H%M")}.txt")
+    p filename
     close
     File.rename(@file.path, File.expand_path(filename, ReplayPath))
   end

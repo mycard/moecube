@@ -21,20 +21,21 @@ class Scene
     start
     while $scene == self
       update
-      @@fpstimer.wait_frame do
-        if @background
-          $screen.put(@background,0,0)
-        else
-          $screen.fill_rect(0, 0, $screen.w, $screen.h, 0x000000)
-        end
-        @windows.each do |window|
-          window.draw($screen)
-        end
-        @font.draw_blended_utf8($screen, "%.1f" % @@fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
-        $screen.update_rect(0,0,0,0)
-      end
+      @@fpstimer.wait_frame{draw}
     end
     terminate
+  end
+  def draw
+    if @background
+      $screen.put(@background,0,0)
+    else
+      $screen.fill_rect(0, 0, $screen.w, $screen.h, 0x000000)
+    end
+    @windows.each do |window|
+      window.draw($screen)
+    end
+    @font.draw_blended_utf8($screen, "%.1f" % @@fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
+    $screen.update_rect(0,0,0,0)
   end
   #--------------------------------------------------------------------------
   # ● 开始处理

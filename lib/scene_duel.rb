@@ -142,7 +142,12 @@ class Scene_Duel < Scene
       if event.room == $game.room
         @player_lp_window.player = $game.room.player1
         @opponent_lp_window.player = $game.room.player2
-        notify_send("mycard", "对手加入房间")
+        player = $game.room.player1 == $game.user ? $game.room.player2 : $game.room.player1
+        if player
+          notify_send("对手加入房间", "#{player.name}(#{player.id})")
+        else
+          notify_send("对手离开房间", "对手离开房间")
+        end
       end
     end
   end
@@ -173,7 +178,9 @@ class Scene_Duel < Scene
     super
   end
   def notify_send(title, msg)
-    puts "notify-send -i graphics/system/icon.ico #{title} #{msg}"
-    system("notify-send -i graphics/system/icon.ico #{title} #{msg}")
+    command = "notify-send -i graphics/system/icon.ico #{title} #{msg}"
+    command = "start ruby/bin/#{command}".encode "GBK" if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+    system(command)
+    $log.info command
   end
 end
