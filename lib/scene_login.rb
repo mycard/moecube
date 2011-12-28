@@ -6,7 +6,7 @@
 #==============================================================================
 require_relative 'window_gameselect'
 require_relative 'window_login'
-require 'game'
+require_relative 'game'
 class Scene_Login < Scene
   Vocab_Logging  = "Logging"
 	def start
