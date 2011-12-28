@@ -8,7 +8,7 @@ require 'rake/gempackagetask'
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.3.0'
+  s.version = '0.3.1'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
@@ -18,9 +18,9 @@ spec = Gem::Specification.new do |s|
   # s.executables = ['your_executable_here']
   s.files = %w(LICENSE.txt README.txt config.yml replay) + Dir.glob("{lib,audio,data,fonts,graphics}/**/*")
   if Windows
-    s.files += %w(mycard.cmd) + Dir.glob("{ruby}/**/*")
+    s.files += %w(mycard.exe) + Dir.glob("{ruby}/**/*")
   else
-    s.files += %w(mycard.sh)
+    s.files += %w(install.sh)
   end
   s.require_path = "lib"
   #s.bindir = "bin"
