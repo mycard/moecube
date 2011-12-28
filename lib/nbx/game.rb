@@ -1,4 +1,5 @@
 #encoding: UTF-8
+load File.expand_path('window_login.rb', File.dirname(__FILE__))
 class NBX < Game
   Version = "20090622"
   Port=2583
@@ -8,8 +9,8 @@ class NBX < Game
     require 'socket'
     require 'digest/md5'
     require 'open-uri'
-    require_relative 'action'
-    require_relative 'event'
+    load File.expand_path('action.rb', File.dirname(__FILE__))
+    load File.expand_path('event.rb', File.dirname(__FILE__))
 
     @conn_hall = UDPSocket.new
     @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)

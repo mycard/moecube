@@ -1,5 +1,6 @@
 #encoding: UTF-8
 require_relative 'widget_inputbox'
+require_relative 'widget_msgbox'
 class Window_Login < Window
   def initialize(x,y,username=nil, password=nil)
     @username = username
@@ -7,16 +8,14 @@ class Window_Login < Window
     @button = Surface.load("graphics/login/button.png")
     super(x,y,597,338)
     @username_inputbox = Widget_InputBox.new(@x+192, @y+80, 165, WLH)
-    @username_inputbox.value = @username
+    @username_inputbox.value = @username if @username
     @password_inputbox = Widget_InputBox.new(@x+192, @y+125, 165, WLH)
     @password_inputbox.type = :password
-    @password_inputbox.value = @password
+    @password_inputbox.value = @password if @password
     @color = [255,255,255]
     @color_stroke = [0,0,0]
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @font_button = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 18)
-    draw_stroked_text("用户名", 105,80+2,1)
-    draw_stroked_text("密码", 105,125+2,1)
     #@font.draw_blended_utf8(@contents, text, 105,80, *@game_color)
     @items = {
       #:username => [192,80,165,WLH],
@@ -28,7 +27,7 @@ class Window_Login < Window
       :login => "登陆",
       :register => "注册"
     }
-    self.index = nil
+    #self.index = nil
     refresh
   end
   def draw_stroked_text(text,x,y,size=1,font=@font)
@@ -41,33 +40,18 @@ class Window_Login < Window
   def refresh
     clear
     @items.each_pair{|index, rect|draw_item(index, rect)}
+    draw_stroked_text("用户名", 105,80+2,1)
+    draw_stroked_text("密码", 105,125+2,1)
   end
   def draw_item(index, rect, status=0)
     Surface.blit(@button,0,0,rect[2],rect[3],@contents,rect[0],rect[1])
     draw_stroked_text(@items_text[index], rect[0]+20, rect[1]+9,1,@font_button)
   end
   def mousemoved(x,y)
-    @items.each_pair{|index, rect|
-      #p index, x >= rect[0] and x < rect[0]+rect[2] and y >= rect[1] and y < rect[1]+rect[3]
-      #p x,y,rect[0], rect[0]+rect[2], rect[1], rect[1]+rect[3]
-      p @x+x >= rect[0] and @x+x < rect[0]+rect[2] and @y+y >= rect[1] and @y+y < rect[1]+rect[3]
-      return self.index = index if true #@x+x >= rect[0] and @x+x < rect[0]+rect[2] and @y+y >= rect[1] and @y+y < rect[1]+rect[3]
-      
-      }
+    @items.each_pair{|index, rect|return self.index = index if (x-@x >= rect[0] and x-@x < rect[0]+rect[2] and y-@y >= rect[1] and y-@y < rect[1]+rect[3])}
   end
   def index=(index)
-    #return if @index == index
-    p index
+    return if @index == index
     @index = index
-  end
-  def clicked
-    case @index
-    when :login
-      $game = Iduel.new
-      $game.login(@username_inputbox.value, @password_inputbox.value)
-    when :register
-      require 'launchy'
-      Launchy.open("http://google.com")
-    end
   end
 end

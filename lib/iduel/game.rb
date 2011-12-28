@@ -1,19 +1,20 @@
 #encoding: UTF-8
+load File.expand_path('window_login.rb', File.dirname(__FILE__))
 class Iduel < Game
   Version = "20110131"
   Server = "iduel.ocgsoft.cn"
+  Register_Url = 'http://www.duelcn.com/member.php?mod=join_id'
   Port = 38522
-  
   RS = "￠"
   attr_accessor :session
   attr_accessor :key
   def initialize
     super
     require 'digest/md5'
-    require_relative 'action'
-    require_relative 'event'
-    require_relative 'user'
-    require_relative 'replay'
+    load File.expand_path('action.rb', File.dirname(__FILE__))
+    load File.expand_path('event.rb', File.dirname(__FILE__))
+    load File.expand_path('user.rb', File.dirname(__FILE__))
+    load File.expand_path('replay.rb', File.dirname(__FILE__))
   end
   def connect
     require 'socket'
@@ -36,6 +37,7 @@ class Iduel < Game
       $log.error [exception.inspect, *exception.backtrace].join("\n")
     end
   end
+
   def login(username, password)
     connect
     md5 = Digest::MD5.hexdigest(password)
