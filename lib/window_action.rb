@@ -38,7 +38,7 @@ class Window_Action < Window_List
     @contents.put(@down, 0, @height-15)
   end
   def index=(index)
-    if index and index > 0 and index < @item_max
+    if index and index >= 0 and index < @item_max
       super(index)
       refresh
     end

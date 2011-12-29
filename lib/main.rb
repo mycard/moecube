@@ -6,6 +6,15 @@ begin
   require 'yaml'
   $config = YAML.load_file("config.yml")
   
+  #读取命令行参数
+  log = "log.log"
+  ARGV.each do |arg|
+    case arg
+    when /--log=(.*)/
+      log.replace $1
+    end
+  end
+
   #初始化SDL
   require 'sdl'
   include SDL
@@ -22,12 +31,11 @@ begin
   
   #初始化日志
   require 'logger'
-  if false #调试用，由于将$DEBUG设成true时tk库会输出一大坨奇怪的东西，所以这里不能使用$DEBUG
-    STDOUT.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-    $log = Logger.new(STDOUT)
-  else
-    $log = Logger.new("log.log")
+  if log == "STDOUT" #调试用
+    log = STDOUT
+    log.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
   end
+  $log = Logger.new(log)
   $log.info("main"){"初始化成功"}
 rescue Exception => exception
   open('error-程序出错请到论坛反馈.txt', 'w'){|f|f.write [exception.inspect, *exception.backtrace].join("\n")}

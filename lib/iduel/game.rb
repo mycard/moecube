@@ -19,23 +19,26 @@ class Iduel < Game
   def connect
     require 'socket'
     require 'open-uri'
-    
-    @conn = TCPSocket.new(Server, Port) #TODO: 阻塞优化，注意login。下面注释掉的两句实现connect无阻塞，但是login依然会阻塞所以只优化这里没有意义
-    #@conn = Socket.new(:INET, :STREAM)
-    @conn.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
-    @recv = Thread.new do
-      begin
-        #@conn.connect Socket.pack_sockaddr_in(Port, Server)
-        recv @conn.gets(RS) while @conn
-      rescue => exception
-        Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
-        $log.error [exception.inspect, *exception.backtrace].join("\n")
-      ensure
-        self.exit
+    begin
+      @conn = TCPSocket.new(Server, Port) #TODO: 阻塞优化，注意login。下面注释掉的两句实现connect无阻塞，但是login依然会阻塞所以只优化这里没有意义
+      #@conn = Socket.new(:INET, :STREAM)
+      @conn.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
+      @recv = Thread.new do
+        begin
+          #@conn.connect Socket.pack_sockaddr_in(Port, Server)
+          recv @conn.gets(RS) while @conn
+        rescue => exception
+          Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+          $log.error [exception.inspect, *exception.backtrace].join("\n")
+        ensure
+          self.exit
+        end
       end
+    rescue => exception
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.error [exception.inspect, *exception.backtrace].join("\n")
     end
   end
-
   def login(username, password)
     connect
     md5 = Digest::MD5.hexdigest(password)

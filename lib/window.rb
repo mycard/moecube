@@ -73,4 +73,10 @@ class Window
   def lostfocus(active_window=nil)
     #子类定义
   end
+  def cursor_up
+    #子类定义
+  end
+  def cursor_down
+    #子类定义
+  end
 end

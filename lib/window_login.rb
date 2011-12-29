@@ -20,12 +20,14 @@ class Window_Login < Window
     @items = {
       #:username => [192,80,165,WLH],
       #:password => [192,125,165,WLH],
-      :login => [192,200,80,36],
-      :register => [285,200,80,36]
+      :login => [192,200,@button.w/3,@button.h],
+      :register => [285,200,@button.w/3,@button.h],
+      :replay => [378,200,@button.w/3,@button.h]
     }
     @items_text = {
       :login => "登陆",
-      :register => "注册"
+      :register => "注册",
+      :replay => "战报"
     }
     #self.index = nil
     refresh
@@ -44,14 +46,29 @@ class Window_Login < Window
     draw_stroked_text("密码", 105,125+2,1)
   end
   def draw_item(index, rect, status=0)
-    Surface.blit(@button,0,0,rect[2],rect[3],@contents,rect[0],rect[1])
-    draw_stroked_text(@items_text[index], rect[0]+20, rect[1]+9,1,@font_button)
+    Surface.blit(@button,rect[2]*status,0,rect[2],rect[3],@contents,rect[0],rect[1])
+    draw_stroked_text(@items_text[index], rect[0]+24, rect[1]+9,1,@font_button)
   end
   def mousemoved(x,y)
-    @items.each_pair{|index, rect|return self.index = index if (x-@x >= rect[0] and x-@x < rect[0]+rect[2] and y-@y >= rect[1] and y-@y < rect[1]+rect[3])}
+    self.index = @items.each_pair{|index, rect|break index if (x-@x >= rect[0] and x-@x < rect[0]+rect[2] and y-@y >= rect[1] and y-@y < rect[1]+rect[3])}
+  end
+  def lostfocus(active_window=nil)
+    self.index = nil
+  end
+  def item_rect(index)
+    @items[index]
   end
   def index=(index)
+    index = nil if !@items.has_key?(index)
     return if @index == index
+    if @index
+      clear(*item_rect(@index))
+      draw_item(@index, item_rect(@index), 0)
+    end
     @index = index
+    if @index
+      clear(*item_rect(@index))
+      draw_item(@index, item_rect(@index), 1)
+    end
   end
 end

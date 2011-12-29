@@ -86,20 +86,12 @@ class Scene_Hall < Scene
       $scene = Scene_Watch.new(event.room)
     when Game_Event::Chat
       @chat.add event.user, event.content
-    when Game_Event::Error
-      Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
-      #when Game_Event::QROOMOK
-      #  @joinroom_msgbox.message = "读取房间信息" if @joinroom_msgbox && !@joinroom_msgbox.destroyed?
     else
-      $log.info  "---unhandled game event----"
-      $log.debug event
+      super
     end
   end
   
   def update
-    while event = Game_Event.poll
-      handle_game(event)
-    end
     if @count >= 600
       $game.refresh
       @count = 0

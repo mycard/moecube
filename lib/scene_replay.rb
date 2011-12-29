@@ -1,5 +1,5 @@
 #encoding: UTF-8
-require 'Scene_Watch'
+require 'scene_watch'
 class Scene_Replay < Scene_Watch
   def initialize(replay)
     @replay = replay
@@ -11,13 +11,13 @@ class Scene_Replay < Scene_Watch
   def save_replay
   end
   def update
-    if @count >= 60
+    if @count >= 10#60
       event = @replay.get
       if event
         Game_Event.push event
         @count = 0
       else
-        Widget_Msgbox.new("回放", "战报回放完毕") { $scene = Scene_Title.new }
+        Widget_Msgbox.new("回放", "战报回放完毕", :ok => "确定") { $scene = Scene_Login.new }
       end
     end
     @count += 1

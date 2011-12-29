@@ -11,12 +11,16 @@ class NBX < Game
     require 'open-uri'
     load File.expand_path('action.rb', File.dirname(__FILE__))
     load File.expand_path('event.rb', File.dirname(__FILE__))
-
-    @conn_hall = UDPSocket.new
-    @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
-    @conn_hall.bind('0.0.0.0', Port)
-    @recv_hall = Thread.new { recv *@conn_hall.recvfrom(1024) while @conn_hall }
-    Thread.abort_on_exception = true
+    begin
+      @conn_hall = UDPSocket.new
+      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+      @conn_hall.bind('0.0.0.0', Port) 
+      @recv_hall = Thread.new { recv *@conn_hall.recvfrom(1024) while @conn_hall }
+      Thread.abort_on_exception = true
+    rescue => exception
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.error [exception.inspect, *exception.backtrace].join("\n")
+    end
   end
   def send(user, head, *args)
     case user
@@ -25,7 +29,7 @@ class NBX < Game
     when nil #大厅里的广播
       @conn_hall.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port)
     when :room #房间里，发给对手和观战者
-      @conn_room.write(head.encode("GBK") + RS)
+      @conn_room.write(head.gsub("\n", "\r\n") + RS)
     when :watchers #房间里，发给观战者
       
     end
@@ -35,8 +39,8 @@ class NBX < Game
   def login(username)
     Game_Event.push Game_Event::Login.new(User.new('localhost', username))
   end
-  def host
-    @room = Room.new(@user.id, @user.name, @user)
+  def host(name=@user.name)
+    @room = Room.new(@user.id, name, @user)
     Game_Event.push Game_Event::Host.new(@room)
     send(nil, "NewRoom", @room.player1.name)
     @conn_room_server = TCPServer.new '0.0.0.0', Port  #为了照顾NBX强制IPv4
@@ -53,21 +57,26 @@ class NBX < Game
     if @conn_room #如果已经连接了，进入观战
       
     else #连接
-      @conn_room = client
-      @conn_room.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
-      send(:room, "[LinkOK]|#{Version}")
-      send(:room, "▓SetName:#{@user.name}▓")
-      send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
-      @room.player2 = User.new(client.addr[2], "对手")
-      while info = @conn_room.gets(RS)
-        recv_room(info)
+      begin
+        @conn_room = client
+        @conn_room.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
+        send(:room, "[LinkOK]|#{Version}")
+        send(:room, "▓SetName:#{@user.name}▓")
+        send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
+        @room.player2 = User.new(client.addr[2], "对手")
+        while info = @conn_room.gets(RS)
+          recv_room(info)
+        end
+        @conn_room.close
+        @conn_room = nil
+      rescue Exception
+        p $!
       end
-      @conn_room.close
-      #send(:room, "▓SetName:zh▓") #原版协议里还要重复声明一次名字，不过似乎没什么用处，就给省略了
     end
   end
   def recv_room(info)
     info.chomp!(RS)
+    info.gsub!("\r\n", "\n")
     $log.info  ">> #{info}"
     Game_Event.push Game_Event.parse info
   end

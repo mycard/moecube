@@ -17,9 +17,8 @@ class Window_User < Window_List
   end
   def refresh
     @thread.kill if @thread
-    @contents.put(@background, 0,0)
+    super
     @thread = @user.avatar(:middle) do |avatar|
-      clear(12,12,144,144)
       @contents.put(avatar, 24, 24)
       @contents.put(@avatar_boarder, 12, 12)
     end
@@ -27,9 +26,11 @@ class Window_User < Window_List
     @font.draw_blended_utf8(@contents, @user.name, 172, 24, 0x00,0x00,0x00)
     @font.draw_blended_utf8(@contents, "id: #{@user.id}" , 172, 32+WLH, 0x00,0x00,0x00)
     @font.draw_blended_utf8(@contents, "#{'房间' + @user.room.id.to_s + ' ' if @user.room}#{case @user.status;when :hall;'大厅';when :dueling;'决斗中';when :waiting;'等待中';end}", 172, 32+WLH*2, 0x00,0x00,0x00)
-    super
+    
   end
-  
+  def clear(x=0,y=0,width=@width,height=@height)
+    Surface.blit(@background, x,y,width,height,@contents,x,y)
+  end
 
   def draw_item(index, status=0)
     @font.draw_blended_utf8(@contents, @list[index] , 172, 96+index*WLH, 0x00,0x00,0x00)
@@ -42,8 +43,7 @@ class Window_User < Window_List
     when 0
       #发送消息
     when 1
-      require 'launchy'
-      Launchy.open("http://google.com")
+      @user.space
     when 2
       if @user.status == :waiting
         $game.join(@user.room)

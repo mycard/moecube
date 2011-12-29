@@ -5,8 +5,8 @@ class Replay
   Opponent_Filter =/^(.+?)\((\d+)\)\(\d+:\d+:\d+\):   (?:\r)?\n \[\d+\] ●→/
   attr_accessor :room, :player1, :player2, :actions
   def add(action)
-#    user = action.from_player ? $game.player1 : $game.player2
-#    @file.write("#{user.name}(#{user.id}):\r\n#{action.escape}\r\n")
+    #    user = action.from_player ? $game.player1 : $game.player2
+    #    @file.write("#{user.name}(#{user.id}):\r\n#{action.escape}\r\n")
   end
   def self.load(filename)
     #TODO:效率优化
@@ -14,10 +14,16 @@ class Replay
     file.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
     result = self.new(file)
     contents = file.read
-    contents =~ Player_Filter
-    result.player1 = User.new($2.to_i, $1)
-    contents =~ Opponent_Filter
-    result.player2 = User.new($2.to_i, $1)
+    if contents =~ Player_Filter
+      result.player1 = User.new($2.to_i, $1)
+    else
+      result.player1 = User.new(0, "我")
+    end
+    if contents =~ Opponent_Filter
+      result.player2 = User.new($2.to_i, $1)
+    else
+      result.player2 = User.new(1, "对手")
+    end
     result.actions = contents.split(Delimiter).collect do |action_str|
       action_str.chomp!
       action = Action.parse action_str

@@ -48,7 +48,8 @@ class Scene_Title < Scene
   end
   def terminate
     @command_window.destroy
-    @background.destroy 
+    @background.destroy
+    super
   end
 end
 

@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 # 　title
 #==============================================================================
-
+require_relative 'window_user'
 class Window_UserList < Window_List
   attr_reader :x, :y, :width, :height
   WLH = 20
@@ -36,9 +36,9 @@ class Window_UserList < Window_List
   def item_rect(index)
     [0, WLH*index, @width, WLH]
   end
-  def clear(x=0,y=0,width=@width,height=@height)
-    @contents.fill_rect(x,y,width,height,0x66FFFFFF)
-  end
+ #def clear(x=0,y=0,width=@width,height=@height)
+  #  @contents.fill_rect(x,y,width,height,0x66FFFFFF)
+  #end
   def clicked
     #$scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
     @userwindow = Window_User.new(100,100,@list[@index])

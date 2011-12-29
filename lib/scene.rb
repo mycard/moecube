@@ -4,6 +4,7 @@
 # 　游戏中全部画面的超级类。
 #==============================================================================
 require_relative 'fpstimer'
+require_relative 'game'
 class Scene
   attr_reader :windows
   attr_reader :background
@@ -41,7 +42,7 @@ class Scene
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
-
+    
   end
   def refresh_rect(x, y, width, height, background=@background, ox=0,oy=0)
     Surface.blit(background,x+ox,y+oy,width,height,$screen,x,y)
@@ -66,6 +67,10 @@ class Scene
     while event = Event.poll
       handle(event)
     end
+    #要不要放到一个Scene_Game里来处理这个？
+    while event = Game_Event.poll
+      handle_game(event)
+    end
   end
   def handle(event)
     case event
@@ -81,8 +86,25 @@ class Scene
       when 5
         @active_window.cursor_down
       end
+    when Event::KeyDown
+      case event.sym
+      when Key::F12
+        $scene = Scene_Title.new
+      else
+        $log.debug('unhandled event'){event.inspect}
+      end
     when Event::Quit
       $scene = nil
+    else
+      $log.debug('unhandled event'){event.inspect}
+    end
+  end
+  def handle_game(event)
+    case event
+    when Game_Event::Error
+      Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new}
+    else
+      $log.debug event
     end
   end
   #--------------------------------------------------------------------------
@@ -94,7 +116,6 @@ class Scene
   # ● 结束处理
   #--------------------------------------------------------------------------
   def terminate
-    #$screen.fill_rect(0,0,$screen.w, $screen.h, 0xFF000000)
   end
   def update_active_window(x, y)
     self.windows.reverse.each do |window|

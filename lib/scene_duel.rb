@@ -58,7 +58,7 @@ class Scene_Duel < Scene
     @replay = Replay.new
   end
   def save_replay
-    @replay.save if @replay
+    #@replay.save if @replay #功能尚不可用
   end
   def init_game
     $game.player_field = Game_Field.new @deck
@@ -153,15 +153,6 @@ class Scene_Duel < Scene
   end
   def update
     @cardinfo_window.update
-    if $game
-      while event = Game_Event.poll
-        handle_game(event)
-      end
-    elsif $game
-      while event = Game_Event.poll
-        handle_game(event)
-      end
-    end
     super
   end
   def refresh

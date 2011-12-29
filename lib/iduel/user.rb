@@ -23,11 +23,11 @@ class User
     cache = "graphics/avatars/#{@id}_#{size}.png"
     result = Surface.load(cache) rescue Surface.load("graphics/avatars/loading_#{size}.gif")
     if block_given?
+      yield result
       Thread.new do
         open("http://www.duelcn.com/uc_server/avatar.php?uid=#{id-100000}&size=#{size}", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
         yield Surface.load cache
       end
-      yield result
     else
       result
     end
@@ -46,5 +46,9 @@ class User
   end
   def room
     $game.rooms.find{|room|room.include? self}
+  end
+  def space
+    require 'launchy'
+    Launchy.open("http://www.duelcn.com/home.php?mod=space&uid=#{@id-100000}")
   end
 end

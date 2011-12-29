@@ -224,25 +224,25 @@ class Window_Field < Window
       when 0
         Action::Draw.new(true)
       when 1
-        Widget_Msgbox.new("查看卡组", "功能未实现")
+        Widget_Msgbox.new("查看卡组", "功能未实现", :ok => "确定")
       when 2
         Action::Shuffle.new(true)
       when 3
-        Widget_Msgbox.new("抽卡并确认", "功能未实现")
+        Widget_Msgbox.new("抽卡并确认", "功能未实现", :ok => "确定")
       when 4
-        Widget_Msgbox.new("顶牌回卡组底", "功能未实现")
+        Widget_Msgbox.new("顶牌回卡组底", "功能未实现", :ok => "确定")
       when 5
         Action::SendToGraveyard.new(true, :deck, @card)
       when 6
         Action::Remove.new(true, :deck, @card)
       when 7
-        Widget_Msgbox.new("顶牌背面除外", "功能未实现")
+        Widget_Msgbox.new("顶牌背面除外", "功能未实现", :ok => "确定")
       when 8
         Widget_Msgbox.new("确认顶牌", "功能未实现")
       when 9
-        Widget_Msgbox.new("双方确认顶牌", "功能未实现")
+        Widget_Msgbox.new("双方确认顶牌", "功能未实现", :ok => "确定")
       when 10
-        Widget_Msgbox.new("对方确认顶牌", "功能未实现")
+        Widget_Msgbox.new("对方确认顶牌", "功能未实现", :ok => "确定")
       end
     when :extra
       case @action_window.index
@@ -252,7 +252,7 @@ class Window_Field < Window
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :extra, pos, @card, nil, :attack)
         else
-          Widget_Msgbox.new("特殊召唤", "场位已满")
+          Widget_Msgbox.new("特殊召唤", "场位已满", :ok => "确定")
         end
       when 2
         Action::EffectActivate.new(true, :extra, @card)
@@ -264,12 +264,12 @@ class Window_Field < Window
     when :removed
       case @action_window.index
       when 0
-        Widget_Msgbox.new("查看", "功能未实现")
+        Widget_Msgbox.new("查看", "功能未实现", :ok => "确定")
       when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :removed, pos, @card)
         else
-          Widget_Msgbox.new("特殊召唤", "场位已满")
+          Widget_Msgbox.new("特殊召唤", "场位已满", :ok => "确定")
         end
       when 2 #效果发动
         Action::EffectActivate.new(true, :removed, @card)
@@ -283,12 +283,12 @@ class Window_Field < Window
     when :graveyard
       case @action_window.index
       when 0
-        Widget_Msgbox.new("查看", "功能未实现")
+        Widget_Msgbox.new("查看", "功能未实现", :ok => "确定")
       when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :graveyard, pos, @card)
         else
-          Widget_Msgbox.new("特殊召唤", "场位已满")
+          Widget_Msgbox.new("特殊召唤", "场位已满", :ok => "确定")
         end
       when 2 #效果发动
         Action::EffectActivate.new(true, :graveyard, @card)
@@ -329,9 +329,9 @@ class Window_Field < Window
       when 5
         Action::EffectActivate.new(true, @index, @card)
       when 6
-        Widget_Msgbox.new("攻击宣言", "功能未实现")
+        Widget_Msgbox.new("攻击宣言", "功能未实现", :ok => "确定")
       when 7
-        Widget_Msgbox.new("转移控制权", "功能未实现")
+        Widget_Msgbox.new("转移控制权", "功能未实现", :ok => "确定")
       when 8
         Action::ReturnToDeck.new(true, @index, @card)
       when 9
@@ -347,25 +347,25 @@ class Window_Field < Window
         if pos = @field.empty_field(@card)
           Action::Summon.new(true, :hand, pos, @card)
         else
-          Widget_Msgbox.new("召唤", "场位已满")
+          Widget_Msgbox.new("召唤", "场位已满", :ok => "确定")
         end
       when 1 #特殊召唤
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :hand, pos, @card, nil, :attack)
         else
-          Widget_Msgbox.new("特殊召唤", "场位已满")
+          Widget_Msgbox.new("特殊召唤", "场位已满", :ok => "确定")
         end
       when 2 #发动
         if pos = @field.empty_field(@card)
           Action::Activate.new(true, :hand, pos, @card)
         else
-          Widget_Msgbox.new("发动", "场位已满")
+          Widget_Msgbox.new("发动", "场位已满", :ok => "确定")
         end
       when 3 #放置
         if pos = @field.empty_field(@card)
           Action::Set.new(true, :hand, pos, @card)
         else
-          Widget_Msgbox.new("放置", "场位已满")
+          Widget_Msgbox.new("放置", "场位已满", :ok => "确定")
         end
       when 4 #返回卡组
         Action::ReturnToDeck.new(true, :hand, @card)

@@ -2,6 +2,7 @@
 /ruby/
 /pkg/
 /log.log
+/err.log
 /replay/*
 /graphics/avatars/*_*.png
 Thumbs.db

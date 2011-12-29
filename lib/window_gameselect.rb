@@ -27,12 +27,7 @@ class Window_GameSelect < Window_List
     refresh
   end
   def draw_item(index, status=0)
-    case status
-    when 0
-      Surface.blit(@button, 0, 0, @button.w, @button.h, @contents, 0, WLH*index)
-    when 1
-      2.times{Surface.blit(@button, 0, 0, @button.w, @button.h, @contents, 0, WLH*index)} #我自重
-    end
+    Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 0, WLH*index)
     draw_stroked_text(@list[index]["name"], 24, WLH*index+14, 2)
   end
   def item_rect(index)

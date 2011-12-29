@@ -149,8 +149,7 @@ class Action
         end
       else
         card = @card == :deck ?  player_field.deck.first : Game_Card.new(@card)
-        $log.info  "似乎凭空产生了卡片？"
-        p self
+        $log.warn("似乎凭空产生了卡片？"){self.inspect}
       end
       if @position
         if @position == :"face-up"
@@ -160,7 +159,7 @@ class Action
             card.position = :attack
           end
         else
-          card.position = :attack
+          card.position = @position
         end
       end
       if @to_pos

@@ -313,7 +313,7 @@ class Action
   end
   class TurnEnd
     def escape
-      "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<#{@turn}>=[0]\n"+ @field.escape
+      "[#{@id}] #{from_player ? '◎' : '●'}→=[0:0:0]==回合结束==<#{@turn}>=[0]\n"+ @field.escape + "#{from_player ? '◎' : '●'}→＼＼"    
     end
   end
   class Shuffle
@@ -478,8 +478,7 @@ class Game_Field
       @field[6..10].collect{|card|"     <#{"#{Action.escape_position_short(card)}|#{card.position == :set ? '??' : "[#{card.card_type}][#{card.name}] #{card.atk}#{' '+card.def.to_s}"}" if card}>\n"}.join +
       "后场:" + 
       @field[1..5].collect{|card|"<#{card.position == :set ? '??' : card.escape if card}>"}.join +
-      "\n场地|<#{@field[0] ? @field[0].escape : '无'}>\n" +
-      "◎→＼＼"    
+      "\n场地|<#{@field[0] ? @field[0].escape : '无'}>\n"
   end
   def self.parse(str)
     
