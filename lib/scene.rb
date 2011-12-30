@@ -82,9 +82,9 @@ class Scene
       when Mouse::BUTTON_LEFT
         @active_window.clicked if @active_window
       when 4
-        @active_window.cursor_up
+        @active_window.cursor_up if @active_window
       when 5
-        @active_window.cursor_down
+        @active_window.cursor_down if @active_window
       end
     when Event::KeyDown
       case event.sym
@@ -102,7 +102,7 @@ class Scene
   def handle_game(event)
     case event
     when Game_Event::Error
-      Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new}
+      Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new if event.fatal}
     else
       $log.debug event
     end

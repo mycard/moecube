@@ -125,12 +125,12 @@ class Game_Event
 
 
   class Error < Game_Event
-    attr_reader :title, :message
-    def initialize(title, message)
+    attr_reader :title, :message, :fatal
+    def initialize(title, message, fatal=true)
       @title = title
       @message = message
-      $log.info  @title
-      $log.info  @message
+      @fatal = fatal
+      $log.error(@title){@message}
     end
   end
   class Unknown < Error

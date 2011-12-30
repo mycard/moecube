@@ -200,10 +200,10 @@ class Window_Field < Window
     end
   end
   def cursor_up
-    @action_window.cursor_up
+    @action_window.cursor_up if @action_window
   end
   def cursor_down
-    @action_window.cursor_down
+    @action_window.cursor_down if @action_window
   end
   def cursor_left
     #self.index = @index ? (@index - 1) % [@list.size, @item_max].min : 0

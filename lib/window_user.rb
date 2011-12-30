@@ -19,6 +19,7 @@ class Window_User < Window_List
     @thread.kill if @thread
     super
     @thread = @user.avatar(:middle) do |avatar|
+      clear(12,12,@avatar_boarder.w, @avatar_boarder.h)
       @contents.put(avatar, 24, 24)
       @contents.put(@avatar_boarder, 12, 12)
     end

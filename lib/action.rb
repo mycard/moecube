@@ -153,7 +153,7 @@ class Action
       end
       if @position
         if @position == :"face-up"
-          if card.position == :set and (6..10).include?(@to_pos || @from_pos) #里侧表示的怪兽
+          if card.position != :attack and (6..10).include?(@to_pos || @from_pos) #里侧表示的怪兽
             card.position = :defense
           else
             card.position = :attack

@@ -13,7 +13,6 @@ class Window_Chat < Window
     super(x,y,width,height)
     @chat_input = Widget_InputBox.new(416,723,586,24){|text|$game.chat text; add($game.user, text)}
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
-    #@contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
     @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)
     @list = []
 	end
@@ -22,7 +21,7 @@ class Window_Chat < Window
     refresh
 	end
   def refresh
-    #@contents.fill_rect(0,0,@width, @height, 0x66FFFFFF)
+    clear
     @list.last(7).each_with_index do |chat, index|
       user, content = *chat
       @font.draw_blended_utf8(@contents, user.name, 0, index*WLH, *User_Color)

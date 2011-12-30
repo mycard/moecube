@@ -11,16 +11,17 @@ class Scene_Replay < Scene_Watch
   def save_replay
   end
   def update
-    if @count >= 10#60
+    if @count and @count >= 10#60
       event = @replay.get
       if event
         Game_Event.push event
         @count = 0
       else
         Widget_Msgbox.new("回放", "战报回放完毕", :ok => "确定") { $scene = Scene_Login.new }
+        @count = nil #播放完毕标记
       end
     end
-    @count += 1
+    @count += 1 if @count
     super
   end
 end

@@ -2,12 +2,26 @@
 class Widget_Msgbox < Window
   Title_Color = [0xFF, 0xFF, 0xFF]
   Message_Color = [0x04, 0x47, 0x7c]
+  class <<self
+    alias old_new new
+    def new(title, message, buttons={}, &proc)
+      if instance = $scene.windows.find{|window|window.class == self and !window.destroyed?}
+        instance.set(title, message, buttons, &proc)
+        instance
+      else
+        old_new(title, message, buttons, &proc)
+      end
+    end
+  end
   def initialize(title, message, buttons={}, &proc)
     #@background = Surface.load 'graphics/system/msgbox.png'
     @contents = Surface.load 'graphics/system/msgbox.png'
     @button = Surface.load 'graphics/system/button.png'
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     super((1024-@contents.w)/2, 230, @contents.w, @contents.h)
+    set(title, message, buttons, &proc)
+  end
+  def set(title, message, buttons={}, &proc)
     @title = title
     @message = message
     @buttons = buttons

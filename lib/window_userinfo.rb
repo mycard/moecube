@@ -18,15 +18,16 @@ class Window_UserInfo < Window
   def refresh
     @contents.put(@background, 0, 0)
     @thread = @user.avatar(:middle) do |avatar|
+      clear(0,0,@avatar_boarder.w, @avatar_boarder.h)
       @contents.put(avatar, 12, 12)
       @contents.put(@avatar_boarder, 0, 0)
     end
 
     
     @font.draw_blended_utf8(@contents, @user.name, 160, 12, 0x00,0x00,0x00)
-    #@font.draw_blended_utf8(@contents, "id: #{@user.id}" , 160, 12+16*2, 0x00,0x00,0x00)
-    #@font.draw_blended_utf8(@contents, "Lv: #{@user.level}" , 160, 12+16*3, 0x00,0x00,0x00)
-    #@font.draw_blended_utf8(@contents, "经验: #{@user.exp}", 160, 12+16*4, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "id: #{@user.id}" , 160, 12+16*2, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "Lv: #{@user.level}" , 160, 12+16*3, 0x00,0x00,0x00) if @user.respond_to? :level #TODO:规范化，level是iduel专属的，但是又不太想让iduel来重定义这个window
+    @font.draw_blended_utf8(@contents, "经验: #{@user.exp}", 160, 12+16*4, 0x00,0x00,0x00) if @user.respond_to? :exp
   end
   def dispose
     @thread.exit

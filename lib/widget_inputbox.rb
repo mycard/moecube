@@ -37,12 +37,11 @@ class Widget_InputBox < Window
     clear
     @font.draw_blended_utf8(@contents, @type == :password ? '*' * @value.size : @value, 0, 0, 0x00, 0x00, 0x00) unless @value.empty?
   end
-  def mousemoved(x,y)
-  end
   def clicked
     @@entry.value = @value
     @@entry.show @type == :password ? '*' : nil
     @@entry.focus :force
+    @@entry.width @width
     @@root.geometry "#{@width}x#{@height}+#{@x+TkWinfo.pointerx(@@root)-Mouse.state[0]}+#{@y+TkWinfo.pointery(@@root)-Mouse.state[1]}" #根据鼠标位置来确定游戏窗口的相对位置，点击的瞬间鼠标移动了的话会有误差
     @@root.deiconify
     @@active = self #TODO:存在线程安全问题

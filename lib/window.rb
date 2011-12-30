@@ -52,7 +52,7 @@ class Window
     end
   end
   def clear(x=0, y=0, width=@width, height=@height)
-    if $scene.background
+    if $scene and $scene.background
       Surface.blit($scene.background,@x+x,@y+y,width,height,@contents,x,y)
     else
       @contents.fill_rect(x,y,width,height,0xFF000000)
