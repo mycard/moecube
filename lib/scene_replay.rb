@@ -1,5 +1,5 @@
 #encoding: UTF-8
-require 'scene_watch'
+require_relative 'scene_watch'
 class Scene_Replay < Scene_Watch
   def initialize(replay)
     @replay = replay
