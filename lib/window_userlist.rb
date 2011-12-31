@@ -45,8 +45,6 @@ class Window_UserList < Window_List
   end
   def mousemoved(x,y)
     return unless include?(x,y)
-    if (y-@y) / 24 < @item_max
-      self.index = (y - @y) / WLH
-    end
+    self.index = (y - @y) / WLH
   end
 end

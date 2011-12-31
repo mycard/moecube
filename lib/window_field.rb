@@ -238,7 +238,7 @@ class Window_Field < Window
       when 7
         Widget_Msgbox.new("顶牌背面除外", "功能未实现", :ok => "确定")
       when 8
-        Widget_Msgbox.new("确认顶牌", "功能未实现")
+        Widget_Msgbox.new("确认顶牌", "功能未实现", :ok => "确定")
       when 9
         Widget_Msgbox.new("双方确认顶牌", "功能未实现", :ok => "确定")
       when 10
@@ -247,7 +247,7 @@ class Window_Field < Window
     when :extra
       case @action_window.index
       when 0
-        Widget_Msgbox.new("查看", "功能未实现")
+        Widget_Msgbox.new("查看", "功能未实现", :ok => "确定")
       when 1
         if pos = @field.empty_field(@card)
           Action::SpecialSummon.new(true, :extra, pos, @card, nil, :attack)

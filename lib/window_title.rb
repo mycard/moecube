@@ -25,7 +25,7 @@ class Window_Title < Window_List
     Surface.blit(@button, @width*status, @single_height*index, @width, @single_height, @contents, 0, WLH*index)
   end
   def clicked
-    $scene.determine
+    $scene.determine if $scene.is_a? Scene_Title
   end
   def clear(x=0,y=0,width=@width,height=@height)
     @contents.fill_rect(x,y,width, height, 0x00000000)

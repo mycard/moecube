@@ -19,6 +19,7 @@ class Window_RoomList < Window_List
     @color = [0x03, 0x11, 0x22]
     @scroll = Widget_ScrollBar.new(@x+@width,@y,@height,0)
     self.list = list
+    @old_x = @old_y = -1
 	end
 
   def draw_item(index, status=0)
@@ -35,8 +36,7 @@ class Window_RoomList < Window_List
     [@x, WLH*index, @width, WLH]
   end
   def mousemoved(x,y)
-    return unless include?(x,y)
+    return unless self.include?(x,y)
     self.index = (y - @y) / WLH
   end
 end
-

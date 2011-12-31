@@ -1,5 +1,5 @@
 #encoding: UTF-8
-#这个文件iduel和nbx相同，编辑时推荐使用软/硬链接来保持一致
+#这个文件iDuel和nbx相同，编辑时推荐使用软/硬链接来保持一致
 class Action
   CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\][\s\d]*(?:>)?|一张怪兽卡|一张魔\/陷卡|\?\?)/
   PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
@@ -420,7 +420,7 @@ class Action
   class ChangePosition
     def escape
       if @position == :set
-        if (6..10).include? @from_pos #攻击表示的怪兽，由于iduel没有变成里侧守备指令，所以采用重新放置的方式
+        if (6..10).include? @from_pos #攻击表示的怪兽，由于iDuel没有变成里侧守备指令，所以采用重新放置的方式
           "[#{@id}] #{from_player ? '◎' : '●'}→从怪兽区(#{@from_pos})~取一张怪兽卡盖到场上(#{@to_pos})"
         else
           "[#{@id}] #{from_player ? '◎' : '●'}→(#{@from_pos})#{@card.escape}变为里侧表示"

@@ -11,7 +11,7 @@ class Scene_Replay < Scene_Watch
   def save_replay
   end
   def update
-    if @count and @count >= 10#60
+    if @count and @count >= 60
       event = @replay.get
       if event
         Game_Event.push event

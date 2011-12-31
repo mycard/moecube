@@ -43,7 +43,7 @@ class Scene_Hall < Scene
         $game.host("test")
         @joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
       when Key::F3
-        $game.join '192.168.0.103'
+        $game.join 'localhost'
         @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       when Key::F5
         if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $game.user or room.player2 == $game.user}

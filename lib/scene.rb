@@ -77,9 +77,9 @@ class Scene
     when Event::MouseMotion
       update_active_window(event.x, event.y)
     when Event::MouseButtonDown
-      update_active_window(event.x, event.y)
       case event.button
       when Mouse::BUTTON_LEFT
+        update_active_window(event.x, event.y)
         @active_window.clicked if @active_window
       when 4
         @active_window.cursor_up if @active_window

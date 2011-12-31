@@ -178,7 +178,7 @@ class Game_Event
   end
   class Unknown
     def self.parse(*args)
-      $log.info  '--------Unknown Iduel Event-------'
+      $log.info  '--------Unknown iDuel Event-------'
       p $1, $2, args
     end
   end
@@ -186,7 +186,7 @@ class Game_Event
   
   
   
-  #以下iduel专有
+  #以下iDuel专有
   class WatchAction < Action
     attr_reader :user
     def initialize(action, str, user)

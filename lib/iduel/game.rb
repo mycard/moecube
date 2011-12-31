@@ -35,9 +35,13 @@ class Iduel < Game
         end
       end
     rescue => exception
-      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
       $log.error [exception.inspect, *exception.backtrace].join("\n")
     end
+  end
+  def rename
+    ##8|241019,测试改昵称,5b58559aaf8869282fe3cb9585ffa909￠
+    #$N|iDuel系统,您的改名请求已经提交，重新登录后即可看到效果。￠
   end
   def login(username, password)
     connect

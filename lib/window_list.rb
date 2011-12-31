@@ -17,6 +17,7 @@ class Window_List < Window
     @column_max = 1
 	end
   def index=(index)
+    index = nil if index < 0 or index >= @item_max if index
     return if index == @index
     
     if @index
@@ -41,7 +42,6 @@ class Window_List < Window
   def list=(list)
     @list = list
     @item_max = @list.size
-    @height = @item_max * self.class::WLH
     refresh
   end
   def refresh
@@ -52,7 +52,9 @@ class Window_List < Window
     self.index = @index ? (@index - @column_max) % [@list.size, @item_max].min : 0
   end
   def cursor_down
-    self.index = @index ? (@index + @column_max) % [@list.size, @item_max].min : 0
+     #if @index
+    self.index = @index ? ((@index + @column_max) % [@list.size, @item_max].min) : 0
+    #p @index, @index + @column_max, [@list.size, @item_max].min, (@index + @column_max) % [@list.size, @item_max].min, @index ? ((@index + @column_max) % [@list.size, @item_max].min) : 0
   end
   def cursor_left
     self.index = @index ? (@index - 1) % [@list.size, @item_max].min : 0
@@ -69,7 +71,7 @@ class Window_List < Window
     self.index = nil
   end
   def clicked
-    $scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
+    #子类定义
   end
 
 end

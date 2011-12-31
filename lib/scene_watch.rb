@@ -12,14 +12,18 @@ class Scene_Watch < Scene_Duel
   end
   def start
     super
-    $game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
+    action = Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
+    action.id = :观战
+    $game.action action
   end
   def handle(event)
     case event
     when Event::KeyDown
       case event.sym
       when Key::F10
-        $game.action Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})离开了观战")
+        action = Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})离开了观战")
+        action.id = :观战
+        $game.action action
         $game.leave
       else
         super

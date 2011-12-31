@@ -134,8 +134,6 @@ class Scene_Duel < Scene
       $chat_window.add event.action.from_player, str
       event.action.run
       refresh
-    when Game_Event::Error
-      Widget_Msgbox.new(event.title, event.message){$scene = Scene_Title.new}
     when Game_Event::Leave
       $scene = Scene_Hall.new
     when Game_Event::NewRoom

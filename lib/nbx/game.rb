@@ -6,21 +6,9 @@ class NBX < Game
   RS = "￠"
   def initialize
     super
-    require 'socket'
     require 'digest/md5'
-    require 'open-uri'
     load File.expand_path('action.rb', File.dirname(__FILE__))
     load File.expand_path('event.rb', File.dirname(__FILE__))
-    begin
-      @conn_hall = UDPSocket.new
-      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
-      @conn_hall.bind('0.0.0.0', Port) 
-      @recv_hall = Thread.new { recv *@conn_hall.recvfrom(1024) while @conn_hall }
-      Thread.abort_on_exception = true
-    rescue => exception
-      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
-      $log.error [exception.inspect, *exception.backtrace].join("\n")
-    end
   end
   def send(user, head, *args)
     case user
@@ -37,7 +25,23 @@ class NBX < Game
   end
 
   def login(username)
-    Game_Event.push Game_Event::Login.new(User.new('localhost', username))
+    connect
+    Game_Event.push Game_Event::Login.new(User.new('localhost', username)) if @conn_hall
+  end
+  def connect
+    require 'socket'
+    require 'open-uri'
+    begin
+      @conn_hall = UDPSocket.new
+      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+      @conn_hall.bind('0.0.0.0', Port) 
+      @recv_hall = Thread.new { recv *@conn_hall.recvfrom(1024) while @conn_hall }
+      Thread.abort_on_exception = true
+    rescue => exception
+      @conn_hall = nil
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.error [exception.inspect, *exception.backtrace].join("\n")
+    end
   end
   def host(name=@user.name)
     @room = Room.new(@user.id, name, @user)
@@ -57,21 +61,7 @@ class NBX < Game
     if @conn_room #如果已经连接了，进入观战
       
     else #连接
-      begin
-        @conn_room = client
-        @conn_room.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
-        send(:room, "[LinkOK]|#{Version}")
-        send(:room, "▓SetName:#{@user.name}▓")
-        send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
-        @room.player2 = User.new(client.addr[2], "对手")
-        while info = @conn_room.gets(RS)
-          recv_room(info)
-        end
-        @conn_room.close
-        @conn_room = nil
-      rescue Exception
-        p $!
-      end
+      connect_loop(client)
     end
   end
   def recv_room(info)
@@ -84,9 +74,19 @@ class NBX < Game
     send(nil, 'NewUser', @user.name, 1)
   end
   def join(host, port=Port)
-    Thread.new {
-      @conn_room = TCPSocket.new(host, port)
-      @conn_room.set_encoding "GBK"
+    Thread.new do
+      begin
+        connect_loop TCPSocket.new(host, port)
+      rescue
+        Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
+        $log.error [exception.inspect, *exception.backtrace].join("\n")
+      end
+    end
+  end
+  def connect_loop(conn)
+    @conn_room = conn
+    begin
+      @conn_room.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
       @room = Room.new(@user.id, @user.name, @user)
       Game_Event.push Game_Event::Join.new(@room)
       send(:room, "[VerInf]|#{Version}")
@@ -96,10 +96,14 @@ class NBX < Game
       while info = @conn_room.gets(RS)
         recv_room(info)
       end
+    rescue Exception => exception
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.error [exception.inspect, *exception.backtrace].join("\n")
+    ensure
       @conn_room.close
-    } #TODO: 跟accept合并
+      @conn_room = nil
+    end
   end
-  
   def recv(info, addrinfo)
     $log.info  ">> #{info} -- #{addrinfo[2]}"
     Socket.ip_address_list.each do |localhost_addrinfo|

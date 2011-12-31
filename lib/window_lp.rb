@@ -2,10 +2,10 @@ class Window_LP < Window
   Avatar_Size = 48
   def initialize(x,y,player,position=true) #true:左 false:右
     super(x,y,360,72)
-    @player = player
     @position = position
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
     @color = [255,255,255]
+    self.player = player
     self.lp = 8000
   end
   def player=(player)
@@ -32,7 +32,7 @@ class Window_LP < Window
     else
       width = [0, [(200*lp/8000), 200].min].max
       @contents.fill_rect(@width-width-64,0,width , 24, 0xFFFF0000)
-      @font.draw_blended_utf8(@contents, @lp.to_s, @width-128, 0, *@color)
+      @font.draw_blended_utf8(@contents, @lp.to_s, 128, 0, *@color)
     end
   end
 end

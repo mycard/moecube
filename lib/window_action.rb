@@ -1,6 +1,4 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
+#决斗场景中下达动作指令的窗口
 class Window_Action < Window_List
   Color = [0xFF,0xFF,0xFF]
   Color_Disabled = [0x66,0x66,0x66]
