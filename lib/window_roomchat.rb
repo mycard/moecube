@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require_relative 'scene_watch'
 class Window_RoomChat < Window
   WLH=16
