@@ -1,8 +1,8 @@
 #encoding: UTF-8
 class Replay
-  Delimiter = /^.+?\(\d+\)\(\d+:\d+:\d+\):   (?:\r)?\n /
-  Player_Filter = /^(.+?)\((\d+)\)\(\d+:\d+:\d+\):   (?:\r)?\n \[\d+\] ◎→/
-  Opponent_Filter =/^(.+?)\((\d+)\)\(\d+:\d+:\d+\):   (?:\r)?\n \[\d+\] ●→/
+  Delimiter = /^.+?\(\d+\)(?:\(\d+:\d+:\d+\))?(?::   |：)\n ?/
+  Player_Filter = /^(.+?)\((\d+)\)(?:\(\d+:\d+:\d+\))?(?::   |：)\n ?\[\d+\] ◎→/
+  Opponent_Filter =/^(.+?)\((\d+)\)(?:\(\d+:\d+:\d+\))?(?::   |：)\n ?\[\d+\] ●→/
   attr_accessor :room, :player1, :player2, :actions
   def add(action)
     #    user = action.from_player ? $game.player1 : $game.player2
@@ -25,10 +25,11 @@ class Replay
       result.player2 = User.new(1, "对手")
     end
     result.actions = contents.split(Delimiter).collect do |action_str|
-      action_str.chomp!
+      action_str.strip!
+      next if action_str.empty?
       action = Action.parse action_str
       Game_Event::Action.new(action, action_str)
-    end
+    end.compact
     $game.room = result.room = Room.new(0, "Replay", result.player1, result.player2)
     result
   end
