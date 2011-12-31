@@ -6,9 +6,9 @@ class Window_Action < Window_List
   def initialize#,list,list_available=Array.new(list.size, true))
     super(0,0,123,20*WLH,300)
     #@skin = Surface.load 'graphics/field/action.png'
-    @up = Surface.load 'graphics/field/action_up.png'
-    @down = Surface.load 'graphics/field/action_down.png'
-    @middle = Surface.load 'graphics/field/action.png'
+    @up = Surface.load('graphics/field/action_up.png')
+    @down = Surface.load('graphics/field/action_down.png')
+    @middle = Surface.load('graphics/field/action.png')
     @up.set_alpha(RLEACCEL,255)
     @middle.set_alpha(RLEACCEL,255)
     @down.set_alpha(RLEACCEL,255)

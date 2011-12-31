@@ -2,13 +2,13 @@
 class Window_User < Window_List
   WLH = 20
 	def initialize(x, y, user)
-    @background = Surface.load "graphics/hall/user.png"
+    @background = Surface.load("graphics/hall/user.png").display_format
     super(x,y,@background.w,@background.h, 300)
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
     @user = user
-    @contents = Surface.load "graphics/hall/user.png" #TODO:调用已经加载了的背景
+    @contents = Surface.load("graphics/hall/user.png").display_format #TODO:调用已经加载了的背景
     
-    @avatar_boarder = Surface.load "graphics/hall/avatar_boader.png"
+    @avatar_boarder = Surface.load("graphics/hall/avatar_boader.png")
     @list = ["发送消息", "查看资料"]
     @list << "加入游戏" if user.status == :waiting
     @list << "观战" if user.status == :dueling

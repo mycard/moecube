@@ -10,7 +10,7 @@ class Scene_Title < Scene
   def start
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
-    @background = Surface.load(title)
+    @background = Surface.load(title).display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
     @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, 300)
     #logo = Surface.load("graphics/system/logo.png")

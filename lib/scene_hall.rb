@@ -12,7 +12,7 @@ class Scene_Hall < Scene
   require_relative 'window_chat'
   def start
 		$game.refresh
-		@background = Surface.load "graphics/hall/background.png"
+		@background = Surface.load("graphics/hall/background.png").display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
 		@userlist = Window_UserList.new(24,204,$game.users)
     @roomlist = Window_RoomList.new(320,50,$game.rooms)

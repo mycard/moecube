@@ -3,10 +3,10 @@ class Window_Config < Window
   def initialize(x,y)
     super(x,y,$screen.w, $screen.h)
     
-    @checkbox = Surface.load 'graphics/system/checkbox.png'
-    @button = Surface.load 'graphics/system/button.png'
-    @background = Surface.load 'graphics/config/background.png'
-    @contents = Surface.load 'graphics/config/background.png'
+    @checkbox = Surface.load('graphics/system/checkbox.png')
+    @button = Surface.load('graphics/system/button.png')
+    @background = Surface.load('graphics/config/background.png').display_format
+    @contents = Surface.load('graphics/config/background.png').display_format
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 20)
     @index = nil
     

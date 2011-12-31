@@ -9,7 +9,7 @@ class Window_FieldBack < Window
     return if @card == card
     @card = card
     if card and File.file? file = "graphics/fields/#{card.name}.gif"
-      @contents = Surface.load file
+      @contents = Surface.load(file).display_format
       self.visible=true
     else
       self.visible=false

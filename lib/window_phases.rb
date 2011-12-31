@@ -2,9 +2,9 @@ class Window_Phases < Window_List
   WLH = 81 #其实是列宽
   Phases = [:DP, :SP, :M1, :BP, :M2, :EP]
   def initialize(x,y)
-    @phases_player = Surface.load 'graphics/system/phases_player.png'
+    @phases_player = Surface.load('graphics/system/phases_player.png')
     @phases_player.set_alpha(RLEACCEL,255)
-    @phases_opponent = Surface.load 'graphics/system/phases_opponent.png'
+    @phases_opponent = Surface.load('graphics/system/phases_opponent.png')
     @phases_opponent.set_alpha(RLEACCEL,255)
     super(x,y,5*WLH+@phases_player.w/3, @phases_player.h/6)
     @column_max = @item_max = 6

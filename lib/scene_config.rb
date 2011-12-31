@@ -8,7 +8,7 @@
 class Scene_Config < Scene
   require_relative 'window_config'
 	def start
-    @background = Surface.load "graphics/config/background.png"
+    @background = Surface.load("graphics/config/background.png").display_format
     @config_window = Window_Config.new(0,0)
 	end
   def handle(event)

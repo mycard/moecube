@@ -10,7 +10,7 @@ require_relative 'scene_replay'
 class Scene_Login < Scene
   Vocab_Logging  = "Logging"
 	def start
-    @background = Surface.load("graphics/login/background.png")
+    @background = Surface.load("graphics/login/background.png").display_format
     @gameselect_window = Window_GameSelect.new(117,269,$config["game"])
 	end
   #def handle(event)

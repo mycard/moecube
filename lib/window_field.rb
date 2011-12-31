@@ -21,8 +21,8 @@ class Window_Field < Window
   Card_Size = [54, 81]
   attr_accessor :action_window
 	def initialize(x, y, field,player=true)
-    @border = Surface.load 'graphics/field/border.png'
-    @border_horizontal = Surface.load 'graphics/field/border_horizontal.png' #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
+    @border = Surface.load('graphics/field/border.png')
+    @border_horizontal = Surface.load('graphics/field/border_horizontal.png') #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
     super(x,y,711,282)
     @field = field
     @player = player

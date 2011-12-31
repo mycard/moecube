@@ -30,7 +30,7 @@ class Scene_Duel < Scene
   def start
     @bgm = Mixer::Music.load "audio/bgm/title.ogg"
     Mixer.fade_in_music(@bgm, -1, 800)
-    @background = Surface.load "graphics/field/main.png"
+    @background = Surface.load("graphics/field/main.png").display_format
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     
     init_game

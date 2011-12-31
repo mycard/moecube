@@ -9,7 +9,7 @@ class Window_RoomList < Window_List
 	attr_reader :list
   WLH = 48
 	def initialize(x, y, list)
-    @button = Surface.load 'graphics/hall/room.png'
+    @button = Surface.load('graphics/hall/room.png')
     @button.set_alpha(RLEACCEL, 255)
     #@background = Surface.load 'graphics/hall/roomlist.png'
     #@contents = Surface.load 'graphics/hall/roomlist.png'

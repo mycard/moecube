@@ -1,0 +1,9 @@
+#<SyntaxError: E:/zh99998/Documents/NetBeansProjects/mycard/lib/window.rb:82: syntax error, unexpected keyword_end, expecting $end>
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/window_list.rb:7:in `require_relative'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/window_list.rb:7:in `<top (required)>'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/window_title.rb:1:in `require_relative'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/window_title.rb:1:in `<top (required)>'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/scene_title.rb:8:in `require_relative'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/scene_title.rb:8:in `<top (required)>'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/main.rb:29:in `require_relative'
+E:/zh99998/Documents/NetBeansProjects/mycard/lib/main.rb:29:in `<main>'
