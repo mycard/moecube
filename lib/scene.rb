@@ -103,6 +103,7 @@ class Scene
   def handle_game(event)
     case event
     when Game_Event::Error
+      $game.exit if $game
       Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new if event.fatal}
     else
       $log.debug event

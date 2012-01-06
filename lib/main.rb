@@ -48,6 +48,7 @@ begin
 rescue Exception => exception
   exception.backtrace.each{|backtrace|break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/} #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
   $log.fatal($1){[exception.inspect, *exception.backtrace].join("\n")}
+  $game.exit if $game
   require_relative 'scene_error'
   $scene = Scene_Error.new
   retry

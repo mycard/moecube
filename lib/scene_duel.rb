@@ -40,7 +40,7 @@ class Scene_Duel < Scene
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
     @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
-    @opponent_field_window.angle=180
+    #@opponent_field_window.angle=180
     
     @phases_window = Window_Phases.new(122, 356)
     @fieldback_window = Window_FieldBack.new(130,174)

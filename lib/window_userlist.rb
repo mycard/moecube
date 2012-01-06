@@ -41,7 +41,8 @@ class Window_UserList < Window_List
   #end
   def clicked
     #$scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
-    @userwindow = Window_User.new(100,100,@list[@index])
+    return unless @index
+    @userwindow = Window_User.new(100,100,@list[@index]) 
   end
   def mousemoved(x,y)
     return unless include?(x,y)

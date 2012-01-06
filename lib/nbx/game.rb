@@ -9,40 +9,15 @@ class NBX < Game
     require 'digest/md5'
     load File.expand_path('action.rb', File.dirname(__FILE__))
     load File.expand_path('event.rb', File.dirname(__FILE__))
+    load File.expand_path('user.rb', File.dirname(__FILE__))
   end
-  def send(user, head, *args)
-    case user
-    when User  #大厅里给特定用户的回复
-      @conn_hall.send("#{head}|#{args.join(',')}", 0, user.host, Port)
-    when nil #大厅里的广播
-      @conn_hall.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port)
-    when :room #房间里，发给对手和观战者
-      @conn_room.write(head.gsub("\n", "\r\n") + RS)
-    when :watchers #房间里，发给观战者
-      
-    end
-    
-  end
+
 
   def login(username)
     connect
     Game_Event.push Game_Event::Login.new(User.new('localhost', username)) if @conn_hall
   end
-  def connect
-    require 'socket'
-    require 'open-uri'
-    begin
-      @conn_hall = UDPSocket.new
-      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
-      @conn_hall.bind('0.0.0.0', Port) 
-      @recv_hall = Thread.new { recv *@conn_hall.recvfrom(1024) while @conn_hall }
-      Thread.abort_on_exception = true
-    rescue => exception
-      @conn_hall = nil
-      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
-      $log.error [exception.inspect, *exception.backtrace].join("\n")
-    end
-  end
+
   def host(name=@user.name)
     @room = Room.new(@user.id, name, @user)
     Game_Event.push Game_Event::Host.new(@room)
@@ -55,6 +30,71 @@ class NBX < Game
       action.from_player = false
       send(:room, action.escape)
       action.from_player = true
+    end
+  end
+
+  def refresh
+    send(nil, 'NewUser', @user.name, 1)
+  end
+  def join(host, port=Port)
+    Thread.new do
+      begin
+        connect_loop TCPSocket.new(host, port)
+      rescue
+        Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
+        $log.error [exception.inspect, *exception.backtrace].join("\n")
+      end
+    end
+  end
+
+  def exit
+    send(:room, "关闭游戏王NetBattleX  2.7.2▊▊▊730462") rescue nil
+    @recv_hall.kill rescue nil
+    @conn_hall.close rescue nil
+    @conn_hall = nil
+    @conn_room.close rescue nil
+    @conn_room = nil
+    @conn_room_server.close rescue nil
+    @conn_room_server = nil
+  end
+  def exit_room
+    
+  end
+  private
+  def send(user, head, *args)
+    case user
+    when User  #大厅里给特定用户的回复
+      @conn_hall.send("#{head}|#{args.join(',')}", 0, user.host, Port) if @conn_hall
+    when nil #大厅里的广播
+      @conn_hall.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port) if @conn_hall
+    when :room #房间里，发给对手和观战者
+      @conn_room.write(head.gsub("\n", "\r\n") + RS) if @conn_room
+    when :watchers #房间里，发给观战者
+      
+    end
+    
+  end
+  def connect
+    require 'socket'
+    require 'open-uri'
+    begin
+      @conn_hall = UDPSocket.new
+      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+      @conn_hall.bind('0.0.0.0', Port) 
+      Thread.abort_on_exception = true
+      @recv_hall = Thread.new do
+        begin
+          recv *@conn_hall.recvfrom(1024) while @conn_hall
+        rescue Exception => exception
+          self.exit
+          Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+          $log.error('nbx-connect-1') {[exception.inspect, *exception.backtrace].join("\n")}
+        end
+      end
+    rescue Exception => exception
+      self.exit
+      Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
+      $log.error('nbx-connect-2') {[exception.inspect, *exception.backtrace].join("\n")}
     end
   end
   def accept(client)
@@ -70,19 +110,6 @@ class NBX < Game
     $log.info  ">> #{info}"
     Game_Event.push Game_Event.parse info
   end
-  def refresh
-    send(nil, 'NewUser', @user.name, 1)
-  end
-  def join(host, port=Port)
-    Thread.new do
-      begin
-        connect_loop TCPSocket.new(host, port)
-      rescue
-        Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
-        $log.error [exception.inspect, *exception.backtrace].join("\n")
-      end
-    end
-  end
   def connect_loop(conn)
     @conn_room = conn
     begin
@@ -92,13 +119,13 @@ class NBX < Game
       send(:room, "[VerInf]|#{Version}")
       send(:room, "▓SetName:#{@user.name}▓")
       send(:room, "[☆]开启 游戏王NetBattleX Version  2.7.0\r\n[10年3月1日禁卡表]\r\n▊▊▊E8CB04")
-      @room.player2 = User.new(host, "对手")
+      @room.player2 = User.new(conn.addr[2], "对手")
       while info = @conn_room.gets(RS)
         recv_room(info)
       end
     rescue Exception => exception
       Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
-      $log.error [exception.inspect, *exception.backtrace].join("\n")
+      $log.error('nbx-connect-loop') { [exception.inspect, *exception.backtrace].join("\n")}
     ensure
       @conn_room.close
       @conn_room = nil

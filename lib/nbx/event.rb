@@ -71,6 +71,9 @@ class Game_Event
     end
   end
   class PlayerLeave
+    def self.parse(info)
+      self.new
+    end
   end
   class Action
     def self.parse(info)
