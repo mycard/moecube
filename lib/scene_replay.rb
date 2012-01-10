@@ -5,12 +5,14 @@ class Scene_Replay < Scene_Watch
     @replay = replay
     @count = 0
     super(@replay.room)
+    $log.debug('scene_reply'){'inited'}
   end
   def init_replay
   end
   def save_replay
   end
   def update
+    #p Time.now
     if @count and @count >= 60
       event = @replay.get
       if event

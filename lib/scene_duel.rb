@@ -107,6 +107,8 @@ class Scene_Duel < Scene
         @player_field_window.refresh
       when Key::F10
         $game.leave
+      else
+        super
       end
     else
       super

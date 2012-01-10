@@ -5,7 +5,7 @@ class Widget_InputBox < Window
   
   require 'tk'
   @@font = TkFont.new(
-    "family" => 'WenQuanYi Micro Hei', 
+    "family" => 'WenQuanYi Micro Hei', #TODO: 直接调用一个.ttf文件，而不是把字体装到系统中
     "size" => 15 #这字号尼玛？！
   )
   @@root=TkRoot.new{
@@ -16,8 +16,8 @@ class Widget_InputBox < Window
   @@entry = TkEntry.new(@@root){
     font @@font
     validate :focusout
-    validatecommand{@@active.value=get;@@root.withdraw(true);@@active.refresh;true}
-    bind('Key-Return'){self.value="" if @@active.proc.call(get) if @@active.proc;true} #两个if的解释：当存在proc时，call那个proc，如果执行结果为真就清空value
+    validatecommand{@@active.value=get.encode("UTF-8");@@root.withdraw(true);@@active.refresh;true}
+    bind('Key-Return'){self.value="" if @@active.proc.call(get.encode("UTF-8")) if @@active.proc;true} #两个if的解释：当存在proc时，call那个proc，如果执行结果为真就清空value
     pack
   }
   Thread.new{Tk.mainloop}
