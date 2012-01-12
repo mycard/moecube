@@ -6,29 +6,29 @@ class Window_GameSelect < Window_List
     @color = [255,255,255]
     @game_color = [47,156,192]
     @game_stroke_color = [0xFF,0xFF,0xFF]
-    @list = []
+    @items = []
     Dir.glob('lib/**/game.yml') do |file|
       game = YAML.load_file(file)
       if game.is_a?(Hash) && game["name"]
         game['file'] ||= 'game.rb'
         game['file'] = File.expand_path(game['file'], File.dirname(file))
-        @list << game 
+        @items << game 
       else
         $log.warn "#{game.inspect}读取失败(#{file})"
       end
     end
-    super(x,y,160,@list.size*WLH)
+    super(x,y,160,@items.size*WLH)
     clear
     @button = Surface.load("graphics/login/game_background.png")
     #@button.set_alpha(RLEACCEL,255)
-    self.list = @list
-    self.index = @list.find_index{|game|game["name"] == game_name} || 0
+    self.items = @items
+    self.index = @items.find_index{|game|game["name"] == game_name} || 0
     clicked
     refresh
   end
   def draw_item(index, status=0)
     Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 0, WLH*index)
-    draw_stroked_text(@list[index]["name"], 24, WLH*index+14, 2)
+    draw_stroked_text(@items[index]["name"], 24, WLH*index+14, 2)
   end
   def item_rect(index)
     [0, WLH*index, @button.w, @button.h]
@@ -54,7 +54,7 @@ class Window_GameSelect < Window_List
     draw_item(@index, 1)
   end
   def clicked
-    load @list[@index]["file"] #TODO: load的这种架构微蛋疼，一时想不到更好的方案
+    load @items[@index]["file"] #TODO: load的这种架构微蛋疼，一时想不到更好的方案
     @login_window.destroy if @login_window
     @login_window = Window_Login.new(316,316,$config["username"],$config["password"])
   end

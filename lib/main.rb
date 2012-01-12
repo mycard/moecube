@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #encoding: UTF-8
-
+GC.disable
 begin
   #读取配置文件
   require 'yaml'
@@ -53,5 +53,6 @@ rescue Exception => exception
   $scene = Scene_Error.new
   retry
 ensure
+  #(Thread.list-[Thread.main]).each{|t|t.exit} #消灭其他
   $log.close
 end

@@ -13,7 +13,7 @@ class Window_Chat < Window
     super(x,y,width,height)
     @chat_input = Widget_InputBox.new(416,723,586,24){|text|$game.chat text; add($game.user, text)}
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
-    @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)
+    @scroll = Widget_ScrollBar.new(self,@x+@width-20,@y,@height)
     @list = []
 	end
 	def add(user, content)

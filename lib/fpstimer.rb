@@ -44,7 +44,7 @@ class FPSTimer
 
   private
   def wait(nxt)
-    print "-"# 加了这货tk输入框不卡，原因不明=.=
+    #print "-"# 加了这货tk输入框不卡，原因不明=.=
     sleeptime = nxt-get_ticks
     sleep(sleeptime) if sleeptime > 0
   end

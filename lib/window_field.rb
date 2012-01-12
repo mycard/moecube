@@ -102,7 +102,7 @@ class Window_Field < Window
     end
     if index.nil? or !@items.has_key?(index) or (index == :deck and @field.deck.empty?) or (index == :removed and @field.removed.empty?) or (index == :extra and @field.extra.empty?) or (index == :graveyard and @field.graveyard.empty?)
       @index = nil
-      @action_window.list = nil if @action_window
+      @action_window.items = nil if @action_window
     else
       @index = index
       draw_item(@index, 1)
@@ -185,7 +185,7 @@ class Window_Field < Window
         }
       end
       if @action_window
-        @action_window.list = @action_names
+        @action_window.items = @action_names
         @action_window.x = @x + @items[@index][0] - (@action_window.width - @items[@index][2])/2
         @action_window.y = @y + @items[@index][1] - @action_window.height
       end
@@ -206,10 +206,10 @@ class Window_Field < Window
     @action_window.cursor_down if @action_window
   end
   def cursor_left
-    #self.index = @index ? (@index - 1) % [@list.size, @item_max].min : 0
+    #self.index = @index ? (@index - 1) % [@items.size, @item_max].min : 0
   end
   def cursor_right
-    #self.index = @index ? (@index + 1) % [@list.size, @item_max].min : 0
+    #self.index = @index ? (@index + 1) % [@items.size, @item_max].min : 0
   end
   def lostfocus(active_window=nil)
     if active_window != @action_window

@@ -46,12 +46,12 @@ class Scene_Hall < Scene
         $game.join 'localhost'
         @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       when Key::F5
-        if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $game.user or room.player2 == $game.user}
+        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
           $game.qroom room
         end
         $game.refresh
       when Key::F12
-        if @roomlist.list and room = @roomlist.list.find{|room|room.player1 == $game.user or room.player2 == $game.user}
+        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
           $game.qroom room
         end
         $game.exit
@@ -75,9 +75,9 @@ class Scene_Hall < Scene
   def handle_game(event)
     case event
     when Game_Event::AllUsers
-      @userlist.list = $game.users
+      @userlist.items = $game.users
     when Game_Event::AllRooms
-      @roomlist.list = $game.rooms
+      @roomlist.items = $game.rooms
     when Game_Event::Join
       require_relative 'scene_duel'
       $scene = Scene_Duel.new(event.room, Deck.load("test1.TXT"))
@@ -103,7 +103,7 @@ class Scene_Hall < Scene
   def determine
     case @active_window
     when @roomlist
-      return unless @roomlist.index and room = @roomlist.list[@roomlist.index]
+      return unless @roomlist.index and room = @roomlist.items[@roomlist.index]
       if room.full?
         $game.watch room
         @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")

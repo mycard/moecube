@@ -18,7 +18,7 @@ class Window_RoomChat < Window
     end
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
     @contents.fill_rect(0,0,@width, @height, 0x99FFFFFF)
-    @scroll = Widget_ScrollBar.new(@x+@width-20,@y,@height,0)
+    @scroll = Widget_ScrollBar.new(self,@x+@width-20,@y,@height)
     @list = []
     $chat_window = self
 	end

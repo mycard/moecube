@@ -9,8 +9,7 @@ class Window_Title < Window_List
     @single_height = @button.h / Button_Count
     super(x,y,@button.w / 3,WLH * Button_Count - (WLH - @button.h / Button_Count))
     @cursor_se = Mixer::Wave.load 'audio/se/cursor.ogg'
-    @item_max = 6
-    refresh
+    self.items = [:决斗开始, :单人模式, :卡组编成, :选项设置, :退出游戏]
   end
   def index=(index)
     if index and @index != index

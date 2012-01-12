@@ -1,15 +1,15 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
 class Widget_ScrollBar < Window
-  def initialize(x,y,height,max)
+  attr_reader :scroll, :scroll_max
+  def initialize(parent_window,x,y,height)
     super(x,y,20,height,400)
-    @max = max
+    @parent_window = parent_window
     @up_button = Surface.load('graphics/hall/scroll_up.png')
     @down_button = Surface.load('graphics/hall/scroll_down.png')
     @back = Surface.load('graphics/hall/scroll_background.png')
     @bar = Surface.load('graphics/hall/scroll.png')
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
+    @scroll ||= 0
+    @scroll_max ||= 0
     Surface.transform_draw(@back,@contents,0,1,@contents.h.to_f/@back.h,0,0,0,0,0)
     refresh
   end
@@ -42,12 +42,14 @@ class Widget_ScrollBar < Window
     when :up
       Surface.blit(@up_button,status*20,0,20,20,@contents,0,0)
     when :scroll
-      Surface.blit(@bar,status*20,0,20,24,@contents,0,20)
+      return if @scroll_max.zero?
+      Surface.blit(@bar,status*20,0,20,24,@contents,0,20+(@height-40-24)*@scroll/(@scroll_max))
     when :down
       Surface.blit(@down_button,status*20,0,20,20,@contents,0,@height-20)
     end
   end
   def refresh
+    clear
     [:up, :scroll, :down].each do |index|
       draw_item(index, @index==index ? 1 : 0)
     end
@@ -63,9 +65,24 @@ class Widget_ScrollBar < Window
     end
   end
   def clicked
-    p @index
-    #case index
-    #when :up
-    #end
+    case @index
+    when :up
+      @parent_window.scroll -= 1
+    when :down
+      @parent_window.scroll += 1
+    end
+  end
+  def scroll=(scroll)
+    return unless scroll and scroll.between?(0,@scroll_max)
+    @scroll = scroll
+    refresh
+  end
+  def scroll_max=(scroll_max)
+    return unless scroll_max and scroll_max != @scroll_max and scroll_max >=0
+    @scroll_max = scroll_max
+    if @scroll >= @scroll_max
+      @scroll = @scroll_max
+    end
+    refresh
   end
 end

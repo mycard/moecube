@@ -83,9 +83,9 @@ class Scene
         update_active_window(event.x, event.y)
         @active_window.clicked if @active_window
       when 4
-        @active_window.cursor_up if @active_window
+        @active_window.scroll_up if @active_window
       when 5
-        @active_window.cursor_down if @active_window
+        @active_window.scroll_down if @active_window
       end
     when Event::KeyDown
       case event.sym

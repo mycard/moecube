@@ -9,10 +9,10 @@ class Window_User < Window_List
     @contents = Surface.load("graphics/hall/user.png").display_format #TODO:调用已经加载了的背景
     
     @avatar_boarder = Surface.load("graphics/hall/avatar_boader.png")
-    @list = ["发送消息", "查看资料"]
-    @list << "加入游戏" if user.status == :waiting
-    @list << "观战" if user.status == :dueling
-    @item_max = @list.size
+    @items = ["发送消息", "查看资料"]
+    @items << "加入游戏" if user.status == :waiting
+    @items << "观战" if user.status == :dueling
+    @item_max = @items.size
     refresh
   end
   def refresh
@@ -34,7 +34,7 @@ class Window_User < Window_List
   end
 
   def draw_item(index, status=0)
-    @font.draw_blended_utf8(@contents, @list[index] , 172, 96+index*WLH, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, @items[index] , 172, 96+index*WLH, 0x00,0x00,0x00)
   end
   def item_rect(index)
     [172, 96+index*WLH, 128, WLH]

@@ -80,17 +80,14 @@ class Scene_Duel < Scene
   end
   def handle(event)
     case event
-    when Event::MouseButtonUp
+    when Event::MouseButtonDown
       case event.button
-      when Mouse::BUTTON_LEFT
-        if @phases_window.include? event.x, event.y
-          @phases_window.mousemoved event.x, event.y
-          change_phase(Window_Phases::Phases[@phases_window.index])
-        end
       when Mouse::BUTTON_RIGHT
         if @player_field_window.action_window
           @player_field_window.action_window.next
         end
+      else
+        super
       end
     when Event::KeyDown
       case event.sym
