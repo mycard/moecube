@@ -68,17 +68,24 @@ class Window_Field < Window
       @items[index+11] = [hand_x+index*Hand_Pos[2], Hand_Pos[1]]+ Card_Size
       @cards[index+11] = card
     end
-    
-    @contents.fill_rect(0,0,@width, @height, 0x66000000)
+    if !@player #对手的情况，把卡片位置翻转
+      @items.each_pair do |key, value|
+        value[0] = @width - value[0] - Card_Size[0]
+        value[1] = @height - value[1] - Card_Size[1]
+        @items[key] = value
+      end
+    end
+    clear
     @items.each_key{|index|draw_item(index)}
+    refresh_action_window
   end
   def draw_item(index, status=0)
     if (6..10).include?(index) and @cards[index].position != :attack
-      Surface.transform_draw(@cards[index].image_small, @contents, 90, 1, 1, 0, 0, @items[index][0]+Card_Size[1], @items[index][1],Surface::TRANSFORM_SAFE)
-      @contents.put(@border_horizontal, @items[index][0]-1, @items[index][1]-1) if status == 1 
+      @contents.put(@cards[index].image_horizontal, item_rect(index)[0], item_rect(index)[1])
+      @contents.put(@border_horizontal, item_rect(index)[0]-1, item_rect(index)[1]-1) if status == 1 
     else
-      @contents.put(@cards[index].image_small, @items[index][0], @items[index][1])
-      @contents.put(@border, @items[index][0]-1, @items[index][1]-1) if status == 1
+      @contents.put(@cards[index].image_small, item_rect(index)[0], item_rect(index)[1])
+      @contents.put(@border, item_rect(index)[0]-1, item_rect(index)[1]-1) if status == 1
     end
     if (6..10).include?(index) and @cards[index].position != :set
       size = @font.text_size('/')
@@ -88,109 +95,115 @@ class Window_Field < Window
       @font.draw_blended_utf8(@contents, '/' , x, y, 0xFF, 0xFF, 0xFF)
       @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , x - @font.text_size(@cards[index].atk.to_s)[0], y, 0xFF, 0xFF, 0xFF)
       @font.draw_blended_utf8(@contents, @cards[index].def.to_s , x + size, y, 0xFF, 0xFF, 0xFF)
-      
     end
   end
   def item_rect(index)
     @items[index]
   end
   def index=(index)
+    index = nil if !@items.has_key?(index) or (index == :deck and @field.deck.empty?) or (index == :removed and @field.removed.empty?) or (index == :extra and @field.extra.empty?) or (index == :graveyard and @field.graveyard.empty?)
     return if index == @index
     if @index and @items.has_key?(@index) || (@index == :deck and !@field.deck.empty?) || (@index == :removed and !@field.removed.empty?) || (@index == :extra and !@field.extra.empty?) || (@index == :graveyard and !@field.graveyard.empty?)
       clear(@items[@index][0]-1,@items[@index][1]-1,@items[@index][2]+2, @items[@index][3]+2)
       draw_item(@index, 0) 
     end
-    if index.nil? or !@items.has_key?(index) or (index == :deck and @field.deck.empty?) or (index == :removed and @field.removed.empty?) or (index == :extra and @field.extra.empty?) or (index == :graveyard and @field.graveyard.empty?)
-      @index = nil
-      @action_window.items = nil if @action_window
-    else
-      @index = index
+    @index = index
+    if @index
       draw_item(@index, 1)
-      case @index
-      when :deck
-        @card = @field.deck.first
-        @action_names = {"抽卡" => true,
-          "查看卡组" => true,
-          "卡组洗切" => true,
-          "抽卡并确认" => false,
-          "顶牌回卡组底" => false,
-          "顶牌送入墓地" => true,
-          "顶牌除外" => true,
-          "顶牌背面除外" => false,
-          "确认顶牌" => false,
-          "双方确认顶牌" => false,
-          "对方确认顶牌" => false
-        }
-      when :extra
-        @card = @field.extra.first
-        @action_names = {"查看" => true,
-          "特殊召唤" => !@field.empty_field(@card).nil?,
-          "效果发动" => true,
-          "从游戏中除外" => true,
-          "送入墓地" => true
-        }
-      when :removed
-        @card = @field.removed.first
-        @action_names = {"查看" => true,
-          "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
-          "效果发动" => true,
-          "加入手卡" => true,
-          "返回卡组" => true,
-          "送入墓地" => true
-        }
-      when :graveyard
-        @card = @field.graveyard.first
-        @action_names = {"查看" => true,
-          "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
-          "效果发动" => true,
-          "加入手卡" => true,
-          "返回卡组" => true,
-          "从游戏中除外" => true
-        }
-      when 0..5
-        @card = @field.field[@index]
-        @action_names = {"效果发动" => true,
-          "返回卡组" => true,
-          "送入墓地" => true,
-          "从游戏中除外" => true,
-          "加入手卡" => true,
-          "盖伏" => true
-        }
-      when 6..10
-        @card = @field.field[@index]
-        @action_names = {"攻击表示" => @card.position==:defense,
-          "守备表示" => @card.position==:attack,
-          "里侧表示" => @card.position!=:set,
-          "反转召唤" => @card.position==:set,
-          "打开" => @card.position==:set,
-          "效果发动" => true,
-          "攻击宣言" => @card.position==:attack,
-          "转移控制权" => false,
-          "放回卡组顶端" => true,
-          "送入墓地" => true,
-          "解放" => true,
-          "加入手卡" => true,
-          #"送入对手墓地" => false
-        }
-      when Integer #手卡
-        @card = @field.hand[@index-11]
-        @action_names = {"召唤" => @card.monster? && !@field.empty_field(@card).nil?,
-          "特殊召唤" => false,
-          "发动" => @card.spell? && !@field.empty_field(@card).nil?,
-          "放置到场上" => true && !@field.empty_field(@card).nil?,
-          "放回卡组顶端" => true,
-          "送入墓地" => true,
-          "从游戏中除外" => true,
-          "效果发动" => true
-        }
-      end
-      if @action_window
-        @action_window.items = @action_names
-        @action_window.x = @x + @items[@index][0] - (@action_window.width - @items[@index][2])/2
-        @action_window.y = @y + @items[@index][1] - @action_window.height
-      end
-      $scene.cardinfo_window.card = @card if @card.known?
+      refresh_cardinfo_window
     end
+    refresh_action_window
+  end
+  def refresh_cardinfo_window
+    $scene.cardinfo_window.card = @card = case @index
+    when :deck
+      @field.deck.first
+    when :extra
+      @field.extra.first
+    when :graveyard
+      @field.graveyard.first
+    when 0..10
+      @field.field[@index]
+    when Integer #手卡
+      @field.hand[@index-11]
+    end
+  end
+  def refresh_action_window
+    return unless @action_window
+    return @action_window.visible = false unless @index and @items[@index]
+    @action_window.items = case @index
+    when :deck
+      {"抽卡" => true,
+        "查看卡组" => true,
+        "卡组洗切" => true,
+        "抽卡并确认" => false,
+        "顶牌回卡组底" => false,
+        "顶牌送入墓地" => true,
+        "顶牌除外" => true,
+        "顶牌背面除外" => false,
+        "确认顶牌" => false,
+        "双方确认顶牌" => false,
+        "对方确认顶牌" => false
+      }
+    when :extra
+      {"查看" => true,
+        "特殊召唤" => !@field.empty_field(@card).nil?,
+        "效果发动" => true,
+        "从游戏中除外" => true,
+        "送入墓地" => true
+      }
+    when :removed
+      {"查看" => true,
+        "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
+        "效果发动" => true,
+        "加入手卡" => true,
+        "返回卡组" => true,
+        "送入墓地" => true
+      }
+    when :graveyard
+      {"查看" => true,
+        "特殊召唤" => @card.monster? && !@field.empty_field(@card).nil?,
+        "效果发动" => true,
+        "加入手卡" => true,
+        "返回卡组" => true,
+        "从游戏中除外" => true
+      }
+    when 0..5
+      {"效果发动" => true,
+        "返回卡组" => true,
+        "送入墓地" => true,
+        "从游戏中除外" => true,
+        "加入手卡" => true,
+        "盖伏" => true
+      }
+    when 6..10
+      {"攻击表示" => @card.position==:defense,
+        "守备表示" => @card.position==:attack,
+        "里侧表示" => @card.position!=:set,
+        "反转召唤" => @card.position==:set,
+        "打开" => @card.position==:set,
+        "效果发动" => true,
+        "攻击宣言" => @card.position==:attack,
+        "转移控制权" => false,
+        "放回卡组顶端" => true,
+        "送入墓地" => true,
+        "解放" => true,
+        "加入手卡" => true,
+        #"送入对手墓地" => false
+      }
+    when Integer #手卡
+      {"召唤" => @card.monster? && !@field.empty_field(@card).nil?,
+        "特殊召唤" => false,
+        "发动" => @card.spell? && !@field.empty_field(@card).nil?,
+        "放置到场上" => true && !@field.empty_field(@card).nil?,
+        "放回卡组顶端" => true,
+        "送入墓地" => true,
+        "从游戏中除外" => true,
+        "效果发动" => true
+      }
+    end
+    @action_window.x = @x + @items[@index][0] - (@action_window.width - @items[@index][2])/2
+    @action_window.y = @y + @items[@index][1] - @action_window.height
   end
   def mousemoved(x,y)
     self.index = @items.each do |index, item_rect|

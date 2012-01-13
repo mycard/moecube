@@ -192,6 +192,10 @@ class Game_Event
     def initialize(action, str, user)
       @user = user
       super(action, str)
+      if $game.room.nil? #通常是由于断线重连引起的
+        Game_Event.push Watch.new(Room.new(0, @user, User.new(0,"")))
+        #$game.refresh
+      end
       @action.from_player = @user == $game.room.player1
     end
     def self.parse(info)

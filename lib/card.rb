@@ -12,8 +12,8 @@ class Card
 	@db.results_as_hash = true
 	#PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
   PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
-  CardBack = Surface.load "graphics/field/card.jpg"
-  CardBack_Small = Surface.load "graphics/field/card_small.gif"
+  CardBack = Surface.load("graphics/field/card.jpg").display_format
+  CardBack_Small = Surface.load("graphics/field/card_small.gif").display_format
 
 	class << self
 		def find(id, order_by=nil)
@@ -152,7 +152,10 @@ attr_accessor :tokens
     @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.jpg"
   end
   def image_small
-    @image_small ||= image.transform_surface(0,0,54.0/image.w, 81.0/image.h,0).copy_rect(1,1,54,81) #尼玛！
+    @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,0)
+  end
+  def image_horizontal
+    @image_horizontal ||= image_small.transform_surface(0xFF000000,90,1,1,0)
   end
   def unknown?
     @id == 1

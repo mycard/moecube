@@ -45,18 +45,18 @@ class Window_List < Window
     @items.each_index {|index|draw_item(index, index==@index ? 1 : 0)}
   end
   def cursor_up(wrap=false)
-    self.index = @index ? (@index - @column_max) % [@items.size, @items.size].min : 0
+    return unless wrap or @index.nil? or @index > 0
+    self.index = @index ? (@index - 1) % @items.size : 0
   end
   def cursor_down(wrap=false)
-     #if @index
-    self.index = @index ? ((@index + @column_max) % [@items.size, @items.size].min) : 0
-    #p @index, @index + @column_max, [@items.size, @items.size].min, (@index + @column_max) % [@items.size, @items.size].min, @index ? ((@index + @column_max) % [@items.size, @items.size].min) : 0
+    return unless wrap or @index.nil? or @index < @items.size-1
+    self.index = @index ? (@index +  1) % @items.size : 0
   end
-  def cursor_left
-    self.index = @index ? (@index - 1) % [@items.size, @items.size].min : 0
+  def cursor_left(wrap=false)
+    cursor_up(wrap)
   end
-  def cursor_right
-    self.index = @index ? (@index + 1) % [@items.size, @items.size].min : 0
+  def cursor_right(wrap=false)
+    cursor_down(wrap)
   end
   def mousemoved(x,y)
     #子类定义

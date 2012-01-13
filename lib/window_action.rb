@@ -12,8 +12,6 @@ class Window_Action < Window_List
     @up.set_alpha(RLEACCEL,255)
     @middle.set_alpha(RLEACCEL,255)
     @down.set_alpha(RLEACCEL,255)
-
-    @contents.fill_rect(0,0,@width, @height, 0x22555500)
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
     @visible = false
   end
@@ -22,7 +20,6 @@ class Window_Action < Window_List
       @items = items.keys
       @items_available = items.values
       @height = @viewport[3] = @items.size*WLH+15*2
-      @item_max = @items.size
       @index = @items_available.find_index(true) || 0
       refresh
       @visible = true
@@ -36,7 +33,7 @@ class Window_Action < Window_List
     @contents.put(@down, 0, @height-15)
   end
   def index=(index)
-    if index and index >= 0 and index < @item_max
+    if index and index >= 0 and index < @items.size
       super(index)
       refresh
     end

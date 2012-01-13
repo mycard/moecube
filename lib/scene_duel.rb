@@ -18,7 +18,6 @@ class Scene_Duel < Scene
   require_relative 'game_field'
   require_relative 'window_roomchat'
   attr_reader :cardinfo_window
-  attr_reader :action_window
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
@@ -36,15 +35,14 @@ class Scene_Duel < Scene
     init_game
     init_replay
     
+    @phases_window = Window_Phases.new(122, 356)
+    @fieldback_window = Window_FieldBack.new(130,174)
+    @cardinfo_window = Window_CardInfo.new(715, 0)
+    
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
     @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
-    #@opponent_field_window.angle=180
-    
-    @phases_window = Window_Phases.new(122, 356)
-    @fieldback_window = Window_FieldBack.new(130,174)
-    @cardinfo_window = Window_CardInfo.new(715, 0)
     
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     create_action_window

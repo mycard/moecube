@@ -67,10 +67,16 @@ class Widget_ScrollBar < Window
   def clicked
     case @index
     when :up
-      @parent_window.scroll -= 1
+      scroll_up
     when :down
-      @parent_window.scroll += 1
+      scroll_down
     end
+  end
+  def scroll_up
+    @parent_window.scroll_up
+  end
+  def scroll_down
+    @parent_window.scroll_down
   end
   def scroll=(scroll)
     return unless scroll and scroll.between?(0,@scroll_max)

@@ -91,6 +91,9 @@ class NBX < Game
           $log.error('nbx-connect-1') {[exception.inspect, *exception.backtrace].join("\n")}
         end
       end
+    rescue Errno::EADDRINUSE
+      self.exit
+      Game_Event.push Game_Event::Error.new("局域网", "局域网模式不支持双开")
     rescue Exception => exception
       self.exit
       Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
