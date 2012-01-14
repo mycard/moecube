@@ -84,6 +84,8 @@ class Action
       @position = position
     end
     def run
+      puts '-----------------------------------'
+      p self
       from_field = case @from_pos
       when 0..10
         player_field.field
@@ -99,10 +101,7 @@ class Action
         player_field.extra
       when :removed
         player_field.removed
-      else
-        $log.warn __FILE__,  '奇怪的from_field'
       end
-      
       from_pos = if @from_pos.is_a? Integer
         if @from_pos > 10
           @from_pos - 11
@@ -110,10 +109,12 @@ class Action
           @from_pos
         end
       elsif @card == :deck
-        0
+        player_field.deck.size - 1
       else
         (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
       end
+     # p from_pos, from_field
+     # p from_field[from_pos] if from_pos
       to_field = case @to_pos
       when Integer
         player_field.field
@@ -138,7 +139,7 @@ class Action
           from_field[from_pos].card = @card
           from_field[from_pos]
         when :deck
-          player_field.deck.first
+          player_field.deck.last
         end
         if @to_pos
           if from_field == player_field.field
@@ -165,7 +166,7 @@ class Action
       if @to_pos
         if @to_pos.is_a? Integer
           to_field[@to_pos] = card
-        elsif @to_pos == :hand or @to_pos == :deckbottom
+        elsif @to_pos == :hand or @to_pos == :deck
           to_field << card
         else
           to_field.unshift card
@@ -252,6 +253,9 @@ class Action
       super(from_player, :deck, :hand, :deck, msg, :set)
     end
   end
+  class Counter < Action
+    
+  end
   class MultiDraw < Action
     def initialize(from_player, count, msg=nil)
       super(from_player, msg)
@@ -259,7 +263,85 @@ class Action
     end
     def run
       super
-      player_field.hand += player_field.deck.shift(@count)
+      player_field.hand += player_field.deck.pop(@count)
+    end
+  end
+  
+  class AllMonstersSendToGraveyard < SendToGraveyard
+    def initialize(from_player, cards)
+      @from_player = from_player
+      @cards = cards
+    end
+    def run
+      @cards = if @cards
+        @cards.collect do |card|
+          if card.is_a? Game_Card
+            card
+          else
+            index = player_field.field[6..10].index{|fieldcard|fieldcard and fieldcard.card == card} || player_field.field[6..10].index{|fieldcard|fieldcard and !fieldcard.known?}
+            if index
+              index += 6
+              card = player_field.field[index]
+              player_field.field[index] = nil
+              card
+            else
+              Game_Card.new(@card)
+              $log.warn '似乎凭空产生了卡片'
+            end
+          end
+        end
+      else
+        player_field.field[6..10].compact
+      end
+      
+      player_field.field[6..10] = nil
+      player_field.graveyard += @cards
+    end
+  end
+  class AllMonstersRemove < Remove
+    def initialize(from_player, cards)
+      @from_player = from_player
+      @cards = cards
+    end
+    def run
+      @cards ||= player_field.field[6..10].compact
+      player_field.field[6..10] = nil
+      player_field.removed += @cards
+    end
+  end
+  class AllMonstersReturnToDeck < ReturnToDeck
+    def initialize(from_player, cards)
+      @from_player = from_player
+      @cards = cards
+    end
+    def run
+      @cards ||= player_field.field[6..10].compact
+      player_field.field[6..10] = nil
+      player_field.deck += @cards
+    end
+  end
+  class AllMonstersReturnToHand < ReturnToHand
+    def initialize(from_player, cards)
+      @from_player = from_player
+      @cards = cards
+    end
+    def run
+      @cards ||= player_field.field[6..10].compact
+      player_field.field[6..10] = nil
+      player_field.hand += @cards
+    end
+  end
+  class AllMonstersCounter < Counter
+    def initialize(from_player)
+      @from_player = from_player
+    end
+    def run
+      player_field.field[6..10].each_with_index do |card, index|
+        if card
+          player_field.removed << card
+          player_field.field[index+6] = nil
+        end
+      end
     end
   end
   class RefreshField < Action
@@ -327,14 +409,15 @@ class Action
     end
   end
   class EffectActivate < Move
-    def initialize(from_player, from_pos, card)
-      @from_player = from_player
+    def initialize(from_player, from_pos, card, target_pos = nil, target_player=nil)
       if (0..10).include?(from_pos)
         position = :"face-up"
       else
         position = nil
       end
-      super(from_player, from_pos, nil, card, nil, position)
+      super(from_player, from_pos, to_pos, card, nil, position)
+      @target_pos = target_pos
+      @target_player = target_player
     end
   end
   class ViewDeck < Action;  end

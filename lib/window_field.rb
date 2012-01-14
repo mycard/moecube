@@ -36,7 +36,7 @@ class Window_Field < Window
     @cards.clear
     if !@field.deck.empty?
       @items[:deck] = Deck_Pos + Card_Size 
-      @cards[:deck] = @field.deck.first
+      @cards[:deck] = @field.deck.last
     end
     if !@field.extra.empty?
       @items[:extra] = Extra_Pos + Card_Size 
@@ -70,31 +70,36 @@ class Window_Field < Window
     end
     if !@player #对手的情况，把卡片位置翻转
       @items.each_pair do |key, value|
-        value[0] = @width - value[0] - Card_Size[0]
-        value[1] = @height - value[1] - Card_Size[1]
+        if (6..10).include?(key) and @cards[key].position != :attack
+          value[0] = @width - value[0] - Card_Size[1]
+          value[1] = @height - value[1] - Card_Size[0]
+        else
+          value[0] = @width - value[0] - Card_Size[0]
+          value[1] = @height - value[1] - Card_Size[1]
+        end
         @items[key] = value
       end
     end
     clear
-    @items.each_key{|index|draw_item(index)}
+    @items.each_key{|index|draw_item(index, @index == index ? 1 : 0)}
     refresh_action_window
   end
   def draw_item(index, status=0)
+    x,y = item_rect(index)
     if (6..10).include?(index) and @cards[index].position != :attack
-      @contents.put(@cards[index].image_horizontal, item_rect(index)[0], item_rect(index)[1])
-      @contents.put(@border_horizontal, item_rect(index)[0]-1, item_rect(index)[1]-1) if status == 1 
+      @contents.put(@cards[index].image_horizontal, x, y)
+      @contents.put(@border_horizontal, x-1, y-1) if status == 1 
     else
-      @contents.put(@cards[index].image_small, item_rect(index)[0], item_rect(index)[1])
-      @contents.put(@border, item_rect(index)[0]-1, item_rect(index)[1]-1) if status == 1
+      @contents.put(@cards[index].image_small, x, y)
+      @contents.put(@border, x-1, y-1) if status == 1
     end
     if (6..10).include?(index) and @cards[index].position != :set
-      size = @font.text_size('/')
-      y = Field_Pos[index][1] + Card_Size[1] - size[1]
-      size = size[0]
-      x = Field_Pos[index][0] + (Card_Size[0] - size) / 2
+      spacing, height = @font.text_size('/')
+      x += (Card_Size[0] - spacing) / 2
+      y += Card_Size[1] - height
       @font.draw_blended_utf8(@contents, '/' , x, y, 0xFF, 0xFF, 0xFF)
       @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , x - @font.text_size(@cards[index].atk.to_s)[0], y, 0xFF, 0xFF, 0xFF)
-      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , x + size, y, 0xFF, 0xFF, 0xFF)
+      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , x + spacing, y, 0xFF, 0xFF, 0xFF)
     end
   end
   def item_rect(index)

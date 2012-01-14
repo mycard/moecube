@@ -1,7 +1,7 @@
 #encoding: UTF-8
 #这个文件iduel和nbx相同，编辑时推荐使用软/硬链接来保持一致
 class Action
-  CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\][\s\d]*(?:>)?|一张怪兽卡|一张魔\/陷卡|\?\?)/
+  CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\].*?(?:>)?|一张怪兽卡|一张魔\/陷卡|\?\?)/
   PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
   PositionFilter = /(表攻|表守|里守|攻击表示|防守表示|里侧表示|背面守备表示)/
   PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/
@@ -260,6 +260,9 @@ class Action
           ChangePosition.new(from_player, parse_pos($1), parse_card($2), parse_position($3))
         when /#{PosFilter}#{CardFilter}打开/
           Flip.new(from_player, parse_pos($1), parse_card($2))
+        when /己方场上所有怪兽卡\|(~#{CardFilter})*~全部送往墓地/
+          cards = $&.scan(CardFilter).collect{|matched|parse_card matched.first}
+          AllMonstersSendToGraveyard.new(from_player, cards)
         when /#{PhaseFilter}/
           ChangePhase.new(from_player, parse_phase($1))
         when /LP(损失|回复|变成)<(-?\d+)>/

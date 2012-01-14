@@ -152,10 +152,10 @@ attr_accessor :tokens
     @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.jpg"
   end
   def image_small
-    @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,0)
+    @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,Surface::TRANSFORM_SAFE)
   end
   def image_horizontal
-    @image_horizontal ||= image_small.transform_surface(0xFF000000,90,1,1,0)
+    @image_horizontal ||= image_small.transform_surface(0xFF000000,90,1,1,Surface::TRANSFORM_SAFE)
   end
   def unknown?
     @id == 1
@@ -168,6 +168,9 @@ attr_accessor :tokens
   end
   def spell?
     [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type 
+  end
+  def inspect
+    "[#{card_type}][#{name}]"
   end
   Unknown = Card.new('id' => 0, 'number' => :"00000000", 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}

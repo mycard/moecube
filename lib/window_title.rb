@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require_relative 'window_list'
 class Window_Title < Window_List
   Button_Count = 5

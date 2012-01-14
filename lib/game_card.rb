@@ -47,4 +47,7 @@ class Game_Card
     end
     @card.send(method, *args)
   end
+  def inspect
+    "<#{object_id}#{known? ? @card.inspect : '??'}>"
+  end
 end
