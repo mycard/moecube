@@ -39,13 +39,16 @@ class Scene_Duel < Scene
     @fieldback_window = Window_FieldBack.new(130,174)
     @cardinfo_window = Window_CardInfo.new(715, 0)
     
-    @player_lp_window = Window_LP.new(0,0, @room.player1, true)
-    @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
     @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
     @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
+    @player_lp_window = Window_LP.new(0,0, @room.player1, true)
+    @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
+
     
     @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     create_action_window
+    Card.find(:方程式同调士)
+    Card.find(:异星的最终战士)
     
     super
   end
@@ -67,7 +70,7 @@ class Scene_Duel < Scene
   def change_phase(phase)
     action Action::ChangePhase.new(true, phase)
     if phase == :EP and
-      action Action::TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next)
+        action Action::TurnEnd.new(true, $game.player_field, $game.turn_player ? $game.turn : $game.turn.next)
     end
   end
   def reset
@@ -151,13 +154,13 @@ class Scene_Duel < Scene
     super
   end
   def refresh
-      @player_field_window.refresh
-      @opponent_field_window.refresh
-      @phases_window.player = $game.turn_player
-      @phases_window.phase = $game.phase
-      @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
-      @player_lp_window.lp = $game.player_field.lp
-      @opponent_lp_window.lp = $game.opponent_field.lp
+    @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
+    @player_field_window.refresh
+    @opponent_field_window.refresh
+    @phases_window.player = $game.turn_player
+    @phases_window.phase = $game.phase
+    @player_lp_window.lp = $game.player_field.lp
+    @opponent_lp_window.lp = $game.opponent_field.lp
   end
   def terminate
     save_replay

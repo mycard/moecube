@@ -1,7 +1,7 @@
 #encoding: UTF-8
 class Game_Card
-  attr_accessor :card, :position #attack|defense|set,
-  attr_accessor :atk, :def
+  attr_accessor :card, :position, :counters
+  attr_writer :atk, :def
   @@count = 0
   def initialize(card=nil)
     @@count += 1
@@ -13,16 +13,19 @@ class Game_Card
     @card.atk.to_i #把"?"转为0
   end
   def def
-    @card.atk.to_i #把"?"转为0
+    @card.def.to_i #把"?"转为0
   end
   def reset(reset_position = true)
     @position = :set if reset_position
     @atk = @card.atk
     @def = @card.def
+    @counters = 0
   end
   def card=(card)
+    return if @card == card
     @card = card  
-    reset(false)
+    @atk = @card.atk
+    @def = @card.def
   end
   def known?
     @card != Card::Unknown

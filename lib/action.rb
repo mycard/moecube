@@ -29,8 +29,7 @@ class Action
   class Go < Reset
     def run
       super
-      player_field.hand = player_field.deck.shift(5)
-      #player_field.hand.each{|card|card.position = :set}
+      player_field.hand = player_field.deck.pop(5)
     end
   end
   class FirstToGo < Go;  end
@@ -84,8 +83,7 @@ class Action
       @position = position
     end
     def run
-      puts '-----------------------------------'
-      p self
+      $log.debug('--------------move action run--------------'){self.inspect}
       from_field = case @from_pos
       when 0..10
         player_field.field
@@ -113,8 +111,6 @@ class Action
       else
         (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
       end
-     # p from_pos, from_field
-     # p from_field[from_pos] if from_pos
       to_field = case @to_pos
       when Integer
         player_field.field
@@ -129,14 +125,24 @@ class Action
       when :removed
         player_field.removed
       end
-      if from_pos && from_field[from_pos]
+      if from_pos
         card = case @card
         when Game_Card
           from_field[from_pos] = @card
         when nil, Card::Unknown
+          if !from_field[from_pos]
+            from_field[from_pos] = Game_Card.new(Card::Unknown)
+            $log.warn('卡片移动'){'似乎凭空产生了卡片' + self.inspect}
+            from_field[from_pos].position = :attack
+          end
           from_field[from_pos]
         when Card
-          from_field[from_pos].card = @card
+          if !from_field[from_pos]
+            from_field[from_pos] = Game_Card.new(@card)
+            from_field[from_pos].position = :attack
+          else
+            from_field[from_pos].card = @card
+          end
           from_field[from_pos]
         when :deck
           player_field.deck.last
@@ -150,7 +156,7 @@ class Action
         end
       else
         card = @card == :deck ?  player_field.deck.first : Game_Card.new(@card)
-        $log.warn("似乎凭空产生了卡片？"){self.inspect}
+        $log.warn('卡片移动'){'似乎凭空产生了卡片' + self.inspect}
       end
       if @position
         if @position == :"face-up"
@@ -227,7 +233,42 @@ class Action
   end
   class Control < Move
     def initialize(from_player, from_pos, card)
-      super(from_player, from_pos, :opponent, card)
+      super(from_player, from_pos, nil, card)
+    end
+    def run
+      to_pos = opponent_field.field[6..10].index(nil)+6
+      unless to_pos
+        $log.warn('转移控制权'){'没有空余场位'}
+        return
+      end
+      
+      card = if @card.is_a? Game_Card
+        @card
+      elsif player_field.field[from_pos]
+        card = player_field.field[from_pos]
+        card.card = @card
+        card
+      else
+        Game_Card.new(@card)
+      end
+      
+      player_field.field[from_pos] = nil
+      opponent_field.field[to_pos] = card
+    end
+  end
+  class SendToOpponentGraveyard < SendToGraveyard
+    def run
+      card = if @card.is_a? Game_Card
+        @card
+      elsif player_field.field[from_pos]
+        card = player_field.field[from_pos]
+        card.card = @card
+        card
+      else
+        Game_Card.new(@card)
+      end
+      player_field.field[from_pos] = nil
+      opponent_field.graveyard.unshift card
     end
   end
   class Tribute < SendToGraveyard;  end
@@ -266,84 +307,127 @@ class Action
       player_field.hand += player_field.deck.pop(@count)
     end
   end
-  
-  class AllMonstersSendToGraveyard < SendToGraveyard
-    def initialize(from_player, cards)
-      @from_player = from_player
+  class MultiMove < Action
+    def initialize(from_player, from_pos, to_pos, cards=nil)
+      super(from_player)
+      @from_pos = from_pos
+      @to_pos = to_pos
       @cards = cards
     end
     def run
+      from_field = case @from_pos
+      when :hand
+        player_field.hand
+      when :graveyard
+        player_field.graveyard
+      when :spellsandtraps
+        player_field.field[0..5]
+      when :monsters
+        player_field.field[6..10]
+      end
       @cards = if @cards
         @cards.collect do |card|
-          if card.is_a? Game_Card
-            card
+          index = from_field.index{|fieldcard|fieldcard and fieldcard.card == card} || from_field.index{|fieldcard|fieldcard and !fieldcard.known?}
+          if index
+            fieldcard = from_field[index]
+            from_field[index] = nil
+            fieldcard.card = card
+            fieldcard
           else
-            index = player_field.field[6..10].index{|fieldcard|fieldcard and fieldcard.card == card} || player_field.field[6..10].index{|fieldcard|fieldcard and !fieldcard.known?}
-            if index
-              index += 6
-              card = player_field.field[index]
-              player_field.field[index] = nil
-              card
-            else
-              Game_Card.new(@card)
-              $log.warn '似乎凭空产生了卡片'
-            end
+            $log.warn '似乎凭空产生了卡片'
+            Game_Card.new(@card)
           end
         end
       else
-        player_field.field[6..10].compact
+        from_field.compact
+      end
+      to_field, position = case @to_pos
+      when :hand
+        [player_field.hand, :set]
+      when :graveyard
+        [player_field.graveyard, :attack]
+      when :deck
+        [player_field.deck, :set]
+      when :removed
+        [player_field.removed, :attack]
       end
       
-      player_field.field[6..10] = nil
-      player_field.graveyard += @cards
-    end
-  end
-  class AllMonstersRemove < Remove
-    def initialize(from_player, cards)
-      @from_player = from_player
-      @cards = cards
-    end
-    def run
-      @cards ||= player_field.field[6..10].compact
-      player_field.field[6..10] = nil
-      player_field.removed += @cards
-    end
-  end
-  class AllMonstersReturnToDeck < ReturnToDeck
-    def initialize(from_player, cards)
-      @from_player = from_player
-      @cards = cards
-    end
-    def run
-      @cards ||= player_field.field[6..10].compact
-      player_field.field[6..10] = nil
-      player_field.deck += @cards
-    end
-  end
-  class AllMonstersReturnToHand < ReturnToHand
-    def initialize(from_player, cards)
-      @from_player = from_player
-      @cards = cards
-    end
-    def run
-      @cards ||= player_field.field[6..10].compact
-      player_field.field[6..10] = nil
-      player_field.hand += @cards
-    end
-  end
-  class AllMonstersCounter < Counter
-    def initialize(from_player)
-      @from_player = from_player
-    end
-    def run
-      player_field.field[6..10].each_with_index do |card, index|
-        if card
-          player_field.removed << card
-          player_field.field[index+6] = nil
-        end
+      #执行部分
+      case @from_pos
+      when :hand
+        player_field.hand.clear
+      when :graveyard
+        player_field.graveyard.clear
+      when :spellsandtraps
+        player_field.field[0..5] = Array.new(6, nil)
+      when :monsters
+        player_field.field[6..10] = Array.new(5, nil)
       end
+      if to_field == player_field.hand or to_field == player_field.deck
+        @cards.each{|card|card.position = position; to_field.push card}
+      else
+        @cards.each{|card|card.position = position; to_field.unshift card}
+      end
+      super
     end
   end
+=begin #似乎不需要细分
+  class MonstersSendToGraveyard < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :monsters, :graveyard, cards)
+    end
+  end
+  class MonstersRemove < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :monsters, :remove, cards)
+    end
+  end
+  class MonstersReturnToDeck < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :monsters, :deck, cards)
+    end
+  end
+  class MonstersReturnToHand < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :monsters, :hand, cards)
+    end
+  end
+  class SpellsAndTrapsSendToGraveyard < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :spellsandtraps, :graveyard, cards)
+    end
+  end
+  class SpellsAndTrapsRemove < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :spellsandtraps, :remove, cards)
+    end
+  end
+  class SpellsAndTrapsReturnToDeck < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :spellsandtraps, :deck, cards)
+    end
+  end
+  class SpellsAndTrapsReturnToHand < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :spellsandtraps, :hand, cards)
+    end
+  end
+  class HandSendToGraveyard < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :hand, :graveyard, cards)
+    end
+  end
+  class HandRemove < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :hand, :remove, cards)
+    end
+  end
+  class HandReturnToDeck < MultiMove
+    def initialize(from_player, cards)
+      super(from_player, :hand, :deck, cards)
+    end
+  end
+=end
   class RefreshField < Action
     attr_reader :field
     def initialize(from_player, field, msg=nil)
@@ -357,22 +441,26 @@ class Action
       if player_field.hand.size > @field[:hand]
         player_field.hand.pop(player_field.hand.size-@field[:hand])
       elsif player_field.hand.size < @field[:hand]
-        (@field[:hand]-player_field.hand.size).times{player_field.hand.push Game_Card.new(Card::Unknown)}
+        (@field[:hand]-player_field.hand.size).times{$log.warn('刷新场地-手卡'){'似乎凭空产生了卡片'};player_field.hand.push Game_Card.new(Card::Unknown)}
       end
       if player_field.deck.size > @field[:deck]
         player_field.deck.pop(player_field.deck.size-@field[:deck])
       elsif player_field.deck.size < @field[:deck]
-        (@field[:deck]-player_field.deck.size).times{player_field.deck.push Game_Card.new(Card::Unknown)}
+        (@field[:deck]-player_field.deck.size).times{$log.warn('刷新场地-卡组'){'似乎凭空产生了卡片'};player_field.deck.push Game_Card.new(Card::Unknown)}
       end
       if player_field.graveyard.size > @field[:graveyard]
         player_field.graveyard.pop(player_field.graveyard.size-@field[:graveyard])
       elsif player_field.graveyard.size < @field[:graveyard]
-        (@field[:graveyard]-player_field.graveyard.size).times{player_field.graveyard.push Game_Card.new(Card::Unknown)}
+        (@field[:graveyard]-player_field.graveyard.size).times{$log.warn('刷新场地-墓地'){'似乎凭空产生了卡片'};player_field.graveyard.push Game_Card.new(Card::Unknown)}
       end
       (0..10).each do |pos|
         if @field[pos]
-          player_field.field[pos] ||= Game_Card.new(@field[pos][:card])
-          player_field.field[pos].card = @field[pos][:card]
+          if player_field.field[pos]
+            player_field.field[pos].card = @field[pos][:card]
+          else
+            $log.warn("刷新场地-#{pos}"){'似乎凭空产生了卡片'}
+            player_field.field[pos] = Game_Card.new(@field[pos][:card])
+          end
           player_field.field[pos].position = @field[pos][:position]
         else
           player_field.field[pos] = nil
@@ -409,17 +497,51 @@ class Action
     end
   end
   class EffectActivate < Move
-    def initialize(from_player, from_pos, card, target_pos = nil, target_player=nil)
+    def initialize(from_player, from_pos, card)
       if (0..10).include?(from_pos)
         position = :"face-up"
       else
         position = nil
       end
       super(from_player, from_pos, to_pos, card, nil, position)
-      @target_pos = target_pos
-      @target_player = target_player
     end
   end
+  class ActivateAsk < Action
+    def initialize(from_player)
+      super(from_player)
+    end
+  end
+  class ActivateAnswer < Action
+    def initialize(from_player, activate)
+      super(from_player)
+      @activate = activate
+    end
+  end
+  class Target < Action
+    def initialize(from_player, from_pos, card, target_player ,target_pos, target_card)
+      super(from_player)
+      @from_pos = from_pos
+      @card = card
+      @target_pos = target_player
+      @target_pos = target_pos
+      @target_card = target_card
+    end
+    def run
+      card = if @card.is_a? Game_Card
+        @card
+      else
+        if player_field.field[@from_pos]
+          player_field.field[@from_pos].card = @card
+          player_field.field[@from_pos]
+        else
+          $log.warn('攻击宣言'){'似乎凭空产生了卡片' + self.inspect}
+          player_field[@from_pos] = Card.new(@card)
+        end
+      end
+      $log.info('攻击宣言'){self.inspect}
+    end
+  end
+  
   class ViewDeck < Action;  end
   class LP < Action
     attr_accessor :operator, :value
@@ -439,13 +561,94 @@ class Action
       end
     end
   end
+  class Attack < Action
+    def initialize(from_player, from_pos, to_pos=nil, card)
+      super(from_player)
+      @from_pos = from_pos
+      @to_pos = to_pos
+      @card = card
+    end
+    def run
+      card = if @card.is_a? Game_Card
+        @card
+      elsif @from_pos
+        if player_field.field[@from_pos]
+          player_field.field[@from_pos].card = @card
+        else
+          $log.warn('攻击宣言'){'似乎凭空产生了卡片' + self.inspect}
+          player_field.field[@from_pos] = Game_Card.new(@card)
+          player_field.field[@from_pos].position = :attack
+        end
+        player_field.field[@from_pos]
+      else
+        $log.info('直接攻击'){'功能未实现'}
+        @card
+      end
+    end
+  end
+  class Counter < Action
+    def initialize(from_player, from_pos, card, operator, value)
+      super(from_player)
+      @from_pos = from_pos
+      @card = card
+      @operator = operator
+      @value = value
+    end
+    def run
+      card = if @card.is_a? Game_Card
+        @card
+      else
+        if player_field.field[@from_pos]
+          player_field.field[@from_pos].card = @card
+        else
+          $log.warn('指示物操作'){'似乎凭空产生了卡片' + self.inspect}
+          player_field.field[@from_pos] = Game_Card.new(@card)
+          player_field.field[@from_pos].position = :attack
+        end
+        player_field.field[@from_pos]
+      end
+      case @operator
+      when :become
+        card.counters = @value
+      else
+        $log.warn('指示物操作'){'become以外的未实现' + self.inspect}
+      end
+    end
+  end
+  class Add < Action
+    def initialize(from_player, card)
+      super(from_player)
+      @card = card
+    end
+    def run
+      if @card.extra?
+        player_field.extra << Game_Card.new(@card)
+      else
+        player_field.hand << Game_Card.new(@card)
+      end
+    end
+  end
+  class Destroy < Action
+    def initialize(from_player, from_pos, card)
+      super(from_player)
+      @from_pos = from_pos
+      @card = card
+    end
+    def run
+      if @from_pos <= 10
+        player_field.field[@from_pos] = nil
+      else
+        player_field.hand.delete_at(@from_pos - 11)
+      end
+    end
+  end
   class Unknown < Action
     def initialize(str)
       @str = str
-      $log.info  'unkonwn action ' + str
+      $log.warn('unkonwn action') { str }
     end
     def run
-      $log.info  'unkonwn action run ' + @str
+      $log.warn('unkonwn action run'){ @str }
     end
   end
   def self.reset

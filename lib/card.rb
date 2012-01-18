@@ -111,22 +111,22 @@ class Card
       @all.clear #清空缓存
     end
   end
-attr_accessor :id
-attr_accessor :number
-attr_accessor :name
-attr_accessor :card_type
-attr_accessor :monster_type
-attr_accessor :atk
-attr_accessor :def
-attr_accessor :attribute
-attr_accessor :type
-attr_accessor :level
-attr_accessor :lore
-attr_accessor :status
-attr_accessor :stats
-attr_accessor :archettypes
-attr_accessor :mediums
-attr_accessor :tokens
+  attr_accessor :id
+  attr_accessor :number
+  attr_accessor :name
+  attr_accessor :card_type
+  attr_accessor :monster_type
+  attr_accessor :atk
+  attr_accessor :def
+  attr_accessor :attribute
+  attr_accessor :type
+  attr_accessor :level
+  attr_accessor :lore
+  attr_accessor :status
+  attr_accessor :stats
+  attr_accessor :archettypes
+  attr_accessor :mediums
+  attr_accessor :tokens
 
   def initialize(hash)
     @id = hash['id'].to_i
@@ -145,17 +145,27 @@ attr_accessor :tokens
     @archettypes = hash['archettypes'].split("\t").collect{|archettype|stat.to_sym}
     @mediums = hash['mediums'].split("\t").collect{|medium|medium.to_sym}
     @tokens = hash['tokens'] && hash['tokens'].split("\t").collect{|token|token.to_i}
-
+    @token = hash['token']
+    
     Card.cache[@id] = self
+    
+  end
+  def create_image
+    @image ||= Surface.load("graphics/field/card.jpg").display_format
   end
   def image
-    @image ||= Surface.load "#{PicPath}/#{@id-1}.jpg" rescue Surface.load "graphics/field/card.jpg"
+    @image ||= Surface.load("#{PicPath}/#{@id-1}.jpg").display_format rescue create_image
   end
   def image_small
     @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,Surface::TRANSFORM_SAFE)
   end
   def image_horizontal
-    @image_horizontal ||= image_small.transform_surface(0xFF000000,90,1,1,Surface::TRANSFORM_SAFE)
+    if @image_horizontal.nil?
+      image_horizontal = image_small.transform_surface(0xFF000000,90,1,1,Surface::TRANSFORM_SAFE)
+      @image_horizontal = image_horizontal.copy_rect(1, 1, 81, 54) #SDL的bug，会多出1像素的黑边
+      image_horizontal.destroy
+    end
+    @image_horizontal
   end
   def unknown?
     @id == 1
@@ -168,6 +178,12 @@ attr_accessor :tokens
   end
   def spell?
     [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type 
+  end
+  def extra?
+    [:融合怪兽, :同调怪兽, :超量怪兽].include? card_type 
+  end
+  def token?
+    @token
   end
   def inspect
     "[#{card_type}][#{name}]"

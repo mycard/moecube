@@ -89,18 +89,27 @@ class Window_Field < Window
     if (6..10).include?(index) and @cards[index].position != :attack
       @contents.put(@cards[index].image_horizontal, x, y)
       @contents.put(@border_horizontal, x-1, y-1) if status == 1 
+      x += (Card_Size[1]-Card_Size[0])/2
+      y -= (Card_Size[1]-Card_Size[0])/2
     else
       @contents.put(@cards[index].image_small, x, y)
       @contents.put(@border, x-1, y-1) if status == 1
     end
     if (6..10).include?(index) and @cards[index].position != :set
       spacing, height = @font.text_size('/')
-      x += (Card_Size[0] - spacing) / 2
-      y += Card_Size[1] - height
-      @font.draw_blended_utf8(@contents, '/' , x, y, 0xFF, 0xFF, 0xFF)
-      @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , x - @font.text_size(@cards[index].atk.to_s)[0], y, 0xFF, 0xFF, 0xFF)
-      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , x + spacing, y, 0xFF, 0xFF, 0xFF)
+      atkdef_x = x + (Card_Size[0] - spacing) / 2
+      atkdef_y = y + Card_Size[1] - height
+      @font.draw_blended_utf8(@contents, '/' , atkdef_x, atkdef_y, 0xFF, 0xFF, 0xFF)
+      @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , atkdef_x - @font.text_size(@cards[index].atk.to_s)[0], atkdef_y, 0xFF, 0xFF, 0xFF)
+      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , atkdef_x + spacing, atkdef_y, 0xFF, 0xFF, 0xFF)
     end
+    if @cards[index].counters != 0
+      height ||= @font.text_size('/')[1] #不太规范，凑合能用
+      counters_x = x
+      counters_y = y + Card_Size[1] - height*2
+      @font.draw_blended_utf8(@contents, @cards[index].counters.to_s , counters_x, counters_y, 0xFF, 0xFF, 0xFF)
+    end
+    
   end
   def item_rect(index)
     @items[index]
