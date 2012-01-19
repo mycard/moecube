@@ -3,6 +3,9 @@
 /pkg/
 /log.log
 /err.log
-/replay/*
+/replay/
+/mycard/
+/mycard.exe
+/7z.exe
 /graphics/avatars/*_*.png
 Thumbs.db

@@ -8,7 +8,7 @@ require 'rake/gempackagetask'
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.3.7'
+  s.version = '0.3.8'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
@@ -30,7 +30,7 @@ Rake::GemPackageTask.new(spec) do |p|
   p.gem_spec = spec
   if Windows
     p.need_zip = true
-    p.zip_command = '7z a -tzip'
+    p.zip_command = '../7z.exe a -tzip'
   else
     p.need_tar = true
   end
