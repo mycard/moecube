@@ -20,6 +20,7 @@ class Window_Field < Window
   #Card_Size = [Card::CardBack.w, Card::CardBack.h]
   Card_Size = [54, 81]
   attr_accessor :action_window
+  WLH = 16
 	def initialize(x, y, field,player=true)
     @border = Surface.load('graphics/field/border.png')
     @border_horizontal = Surface.load('graphics/field/border_horizontal.png') #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
@@ -96,20 +97,33 @@ class Window_Field < Window
       @contents.put(@border, x-1, y-1) if status == 1
     end
     if (6..10).include?(index) and @cards[index].position != :set
-      spacing, height = @font.text_size('/')
+      spacing = @font.text_size('/')[0]
       atkdef_x = x + (Card_Size[0] - spacing) / 2
-      atkdef_y = y + Card_Size[1] - height
-      @font.draw_blended_utf8(@contents, '/' , atkdef_x, atkdef_y, 0xFF, 0xFF, 0xFF)
-      @font.draw_blended_utf8(@contents, @cards[index].atk.to_s , atkdef_x - @font.text_size(@cards[index].atk.to_s)[0], atkdef_y, 0xFF, 0xFF, 0xFF)
-      @font.draw_blended_utf8(@contents, @cards[index].def.to_s , atkdef_x + spacing, atkdef_y, 0xFF, 0xFF, 0xFF)
+      atkdef_y = y + Card_Size[1] - WLH
+      draw_shaded_text('/' , atkdef_x, atkdef_y)
+      draw_shaded_text(@cards[index].atk.to_s , atkdef_x - @font.text_size(@cards[index].atk.to_s)[0], atkdef_y)
+      draw_shaded_text(@cards[index].def.to_s , atkdef_x + spacing, atkdef_y)
+      #@font.draw_blended_utf8(@contents, '/' , atkdef_x, atkdef_y, 0xFF, 0xFF, 0xFF)
+      #@font.draw_blended_utf8(@contents, @cards[index].atk.to_s , atkdef_x - @font.text_size(@cards[index].atk.to_s)[0], atkdef_y, 0xFF, 0xFF, 0xFF)
+      #@font.draw_blended_utf8(@contents, @cards[index].def.to_s , atkdef_x + spacing, atkdef_y, 0xFF, 0xFF, 0xFF)
+    end
+    if @cards[index].note && !@cards[index].note.empty?
+      note_x = x
+      note_y = y + Card_Size[1] - WLH*3
+      draw_shaded_text(@cards[index].note, note_x, note_y)
     end
     if @cards[index].counters != 0
       height ||= @font.text_size('/')[1] #不太规范，凑合能用
       counters_x = x
       counters_y = y + Card_Size[1] - height*2
-      @font.draw_blended_utf8(@contents, @cards[index].counters.to_s , counters_x, counters_y, 0xFF, 0xFF, 0xFF)
+      @@counter ||= Surface.load("graphics/field/counter.png")
+      @contents.put @@counter, counters_x, counters_y
+      draw_shaded_text(" × #{@cards[index].counters}", counters_x+16, counters_y)
     end
-    
+  end
+  def draw_shaded_text(text,x,y,size=1,font=@font)
+    @font.draw_blended_utf8(@contents, text, x+size, y+size, 0x00, 0x00, 0x00)
+    @font.draw_blended_utf8(@contents, text, x, y, 0xFF, 0xFF, 0xFF)
   end
   def item_rect(index)
     @items[index]

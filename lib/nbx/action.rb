@@ -435,7 +435,7 @@ class Action
       case from_pos
       when 0..10
         #场上
-      when Integer
+      when 11..70
         "第#{@from_pos-10}张手牌为:#{@card.escape}"
       end
     end

@@ -17,7 +17,7 @@ class Replay
     file.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
     result = self.new(file)
     contents = file.read.strip
-    if contents[0,7] == "<table>"
+    if contents['<td width="75%" valign="top">']
       result.player1 = User.new($2.to_i, $1) if contents =~ HTML_Player_Filter
       result.player2 = User.new($2.to_i, $1) if contents =~ HTML_Opponent_Filter
       from_players =  contents.scan(Regexp.union(HTML_Player_Filter, HTML_Opponent_Filter)).collect{|matched|matched[0] ? true : false} #匹配player成功matched前两位有值，opponent成功后两位有值，["尸体", "100015", nil, nil], il, nil], [nil, nil, "游戏的徒弟", "288436"]

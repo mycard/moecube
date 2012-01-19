@@ -1,6 +1,6 @@
 #encoding: UTF-8
 class Game_Card
-  attr_accessor :card, :position, :counters
+  attr_accessor :card, :position, :counters, :note
   attr_writer :atk, :def
   @@count = 0
   def initialize(card=nil)

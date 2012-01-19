@@ -47,6 +47,7 @@ class Card
     def new(id)
       find(id)
     end
+
     def load_from_ycff3(db = "E:/game/yu-gi-oh/YGODATA/YGODAT.mdb")
       require 'win32ole'
       conn = WIN32OLE.new('ADODB.Connection')
@@ -148,7 +149,6 @@ class Card
     @token = hash['token']
     
     Card.cache[@id] = self
-    
   end
   def create_image
     @image ||= Surface.load("graphics/field/card.jpg").display_format
@@ -185,9 +185,9 @@ class Card
   def token?
     @token
   end
-  def inspect
-    "[#{card_type}][#{name}]"
-  end
+  #def inspect
+  #  "[#{card_type}][#{name}]"
+  #end
   Unknown = Card.new('id' => 0, 'number' => :"00000000", 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end

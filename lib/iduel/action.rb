@@ -1,8 +1,8 @@
 #encoding: UTF-8
 #这个文件iduel和nbx相同，编辑时推荐使用软/硬链接来保持一致
 class Action
-  CardFilter = /((?:<)?(?:\[.*?\])?\[(?:.*?)\].*?(?:>)?|一张怪兽卡|一张魔\/陷卡|一张卡|\?\?)/
-  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
+  CardFilter = /(<?\[?Token[ \\\d]*\]?>?|<?(?:\[.*?\])?\[(?:.*?)\][ \d]*>?|一张怪兽卡|一张魔\/陷卡|一张卡|\?\?)/
+  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|墓地\|,,,,,\|\*\:\d+张\:\*|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
   PositionFilter = /(表攻|表守|里守|攻击表示|防守表示|里侧表示|背面守备表示)/
   PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/
   CountersFilter = /(?:\()?(\d+)?(?:\))?/
@@ -25,15 +25,19 @@ class Action
         :extra
       when "除外区"
         :removed
-      when "卡组顶端", "卡组"
+      when "卡组顶端"
+        :decktop
+      when "卡组"
         :deck
       end
     end
   end
   def self.parse_card(card)
-    if index = card.rindex("[")
+    if card['Token']
+      @token ||= Card.new('name'=>:Token, 'id'=>-1, 'token'=>true, 'number'=>:"00000000", 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "这张卡作为衍生物使用。")
+    elsif index = card.rindex('[')
       index += 1
-      name = card[index, card.rindex("]")-index].to_sym
+      name = card[index, card.rindex(']')-index].to_sym
       Card.find(name)
     else
       Card.find(nil)
@@ -209,8 +213,6 @@ class Action
           Side.new from_player
         when "卡组洗切", "切洗卡组"
           Shuffle.new from_player
-        when "查看卡组"
-          ViewDeck.new from_player
         when "要连锁吗？"
           ActivateAsk.new from_player
         when "我要连锁！"
@@ -218,9 +220,11 @@ class Action
         when "请继续吧~"
           ActivateAnswer.new from_player, false
         when "将顶牌放回卡组底部"
-          ReturnToDeckBottom.new(from_player, :deck)
+          ReturnToDeckBottom.new(from_player, :decktop)
         when /抽取\((\d+)\)张卡/
           MultiDraw.new from_player, $1.to_i
+        when /己方卡组第(\d+)张加入手卡/
+          ReturnToHand.new(from_player, $1.to_i+71, nil)
         when /\[\d+年\d+月\d+日禁卡表\](?:<(.+)> )?先攻/
           FirstToGo.new from_player, $1
         when /\[\d+年\d+月\d+日禁卡表\](?:<(.+)> )?后攻/
@@ -229,6 +233,12 @@ class Action
           Dice.new from_player, $2.to_i, $1
         when /(.*)抛硬币,结果为(.+)/
           Coin.new from_player, $2=="正面", $1
+        when "查看卡组"
+          ViewDeck.new from_player
+        when /查看卡组上方(\d+)张卡/
+          ViewDeck.new from_player, $1.to_i
+        when /刚才抽到的卡是:#{CardFilter}/
+          Show.new(from_player, :handtop, parse_card($1))
         when /从#{PosFilter}~发动#{CardFilter}#{PosFilter}/
           Activate.new from_player, parse_pos($1), parse_pos($3), parse_card($2)
         when /从#{PosFilter}~召唤#{CardFilter}#{PosFilter}/
@@ -244,15 +254,23 @@ class Action
         when /随机将一张卡从手卡\((\d+\))~放回卡组顶端/
           ReturnToDeck.new(from_player, $1.to_i+10, nil)
         when /随机舍弃~手卡~#{CardFilter}/
-          Discard.new(from_player, :hand, parse_card($1))
+          Discard.new(from_player, :handrandom, parse_card($1))
         when /随机将手卡的#{CardFilter}从游戏中除外/
-          Remove.new from_player, :hand, parse_card($1)
+          Remove.new from_player, :handrandom, parse_card($1)
         when /随机显示一张手卡为：#{CardFilter}/
-          Show.new(from_player, :hand, parse_card($1))
+          Show.new(from_player, :handrandom, parse_card($1))
         when /第(\d+)张手牌为:#{CardFilter}/
           Show.new(from_player, $1.to_i+10, parse_card($2))
         when /\|--\+>手卡:(?:\[#{CardFilter}\])*/
-          MultiShow.new from_player, $&.scan(CardFilter).collect{|matched|parse_card(matched.first)}
+          MultiShow.new from_player, :hand, $&.scan(CardFilter).collect{|matched|parse_card(matched.first)}
+        when /^(?:(\d+)#{CardFilter}\n?)+$/
+          from_pos = 71
+          cards = $&.lines.collect do |line|
+            line =~ /(\d+)#{CardFilter}/
+            from_pos ||= $1.to_i + 71
+            parse_card($2)
+          end
+          MultiShow.new from_player, from_pos, cards
         when /将#{PosFilter}的#{CardFilter}从游戏中除外/
           Remove.new from_player, parse_pos($1), parse_card($2)
         when /#{CardFilter}从#{PosFilter}~放回卡组顶端/
@@ -263,7 +281,7 @@ class Action
           ReturnToExtra.new from_player, parse_pos($2), parse_card($1)
         when /从#{PosFilter}取#{CardFilter}加入手卡/
           ReturnToHand.new from_player, parse_pos($1), parse_card($2)
-        when /(?:己方)?#{PosFilter}.*?#{CardFilter}效果发(?:\~)?动/
+        when /(?:己方)?#{PosFilter}.*?#{CardFilter}(?:选择(.*)为对象>)?效果发(?:\~)?动/
           EffectActivate.new(from_player, parse_pos($1), parse_card($2))
         when /#{PosFilter}#{CardFilter}(?:变|改)为#{PositionFilter}/
           ChangePosition.new(from_player, parse_pos($1), parse_card($2), parse_position($3))
@@ -304,8 +322,8 @@ class Action
           MultiMove.new(from_player, from_pos, to_pos, cards)
         when /己方#{PosFilter}#{CardFilter}送入对手墓地/
           SendToOpponentGraveyard.new(from_player, parse_pos($1), parse_card($2))
-        when /#{PosFilter}#{CardFilter}选择(我方)?-#{PosFilter}- #{CardFilter}为效果对象/
-          Target.new(from_player, parse_pos($1), parse_card($2), $3 ? true : false, parse_pos($4), parse_card($5))
+        when /#{PosFilter}#{CardFilter}选择(我方)?-#{PosFilter}- (?:#{PositionFilter}\|)?#{CardFilter}为效果对象/
+          Target.new(from_player, parse_pos($1), parse_card($2), $3 ? true : false, parse_pos($4), parse_card($6))
         when /#{PhaseFilter}/
           ChangePhase.new(from_player, parse_phase($1))
         when /LP(损失|回复|变成)<(-?\d+)>/
@@ -316,6 +334,12 @@ class Action
           Attack.new(from_player, nil, nil, parse_card($1))
         when /(?:清空)?#{PosFilter}#{CardFilter}的指示物(?:加一|减一)?,现为#{CountersFilter}/
           Counter.new(from_player, parse_pos($1), parse_card($2), :become, parse_counters($3))
+        when /己方#{PosFilter}#{CardFilter}修改备注为：(.*)/
+          Note.new(from_player, parse_pos($1), parse_card($2), $3)
+        when /~特殊召唤#{CardFilter}#{PosFilter}呈#{PositionFilter}/
+          Token.new(from_player, parse_pos($2), parse_card($1), parse_position($3))
+        when /~特殊召唤(\d+)个#{CardFilter}呈#{PositionFilter}/
+          MultiToken.new(from_player, $1.to_i, parse_card($2), parse_position($3))
         when /添加一张手牌#{CardFilter}/
           Add.new(from_player, parse_card($1))
         when /将#{PosFilter}#{CardFilter}撕掉!/
@@ -328,8 +352,10 @@ class Action
       end
       result.id = id
       result
-    when /^(#{CardFilter}\n)*$/
-      MultiShow.new from_player, $&.lines.collect{|card|parse_card(card)}
+    when /系统消息：.+?\(\d+\)已经退出房间/
+      Reset.new from_player
+    when /^(#{CardFilter}\n?)*$/
+      MultiShow.new from_player, nil, $&.lines.collect{|card|parse_card(card)}
     else
       Unknown.new str
     end
