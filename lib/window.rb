@@ -1,6 +1,6 @@
 class Window
   WLH = 24
-  attr_accessor :x, :y, :width, :height, :z, :contents, :angle, :visible, :viewport
+  attr_accessor :x, :y, :width, :height, :z, :contents, :visible, :viewport
   alias visible? visible
   def initialize(x, y, width, height, z=200)
     @x = x
@@ -9,7 +9,7 @@ class Window
     @width = width
     @height = height
     @visible = true
-    @angle = 0
+    #@angle = 0
     @viewport = [0, 0, @width, @height]
     @destroyed = false
     amask = 0xff000000
@@ -42,15 +42,8 @@ class Window
     @destroyed
   end
   def draw(screen)
-    if self.contents && self.visible && !self.destroyed?
-      if self.angle.zero?
-        Surface.blit(self.contents, self.viewport[0], self.viewport[1], self.viewport[2] ,self.viewport[3], screen, self.x, self.y) #直接用*self.viewport，netbeans老给我报错....
-      else
-        contents = self.contents.transform_surface(0x66000000,180,1,1,0)
-        Surface.blit(contents, self.viewport[0], self.viewport[1], self.viewport[2] ,self.viewport[3], screen, self.x, self.y)
-        #Surface.transform_blit(window.contents,$screen,0,1,1,100,100,100,100,Surface::TRANSFORM_AA)#,0,0)
-      end
-    end
+    return unless self.contents && self.visible? && !self.destroyed?
+    Surface.blit(self.contents, *self.viewport, screen, self.x, self.y)
   end
   def clear(x=0, y=0, width=@width, height=@height)
     if $scene and $scene.background

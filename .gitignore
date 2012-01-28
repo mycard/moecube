@@ -1,8 +1,9 @@
 /nbproject/
 /ruby/
 /pkg/
+/config.yml
 /log.log
-/err.log
+/profile.log
 /replay/
 /mycard/
 /mycard.exe

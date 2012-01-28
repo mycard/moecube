@@ -8,10 +8,10 @@ class Window_Login < Window
     @button = Surface.load("graphics/login/button.png")
     super(x,y,597,338)
     @username_inputbox = Widget_InputBox.new(@x+192, @y+80, 165, WLH)
-    @username_inputbox.value = @username if @username
+    @username ? @username_inputbox.value = @username : @username_inputbox.refresh
     @password_inputbox = Widget_InputBox.new(@x+192, @y+125, 165, WLH)
     @password_inputbox.type = :password
-    @password_inputbox.value = @password if @password
+    @password ? @password_inputbox.value = @password : @password_inputbox.refresh
     @color = [255,255,255]
     @color_stroke = [0,0,0]
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)

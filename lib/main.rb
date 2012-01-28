@@ -1,17 +1,23 @@
 #!/usr/bin/env ruby
 #encoding: UTF-8
-GC.disable
+
 begin
   #读取配置文件
   require 'yaml'
-  $config = YAML.load_file("config.yml")
+  $config = YAML.load_file("config.yml") rescue {}
+  $config['width'] ||= 1024
+  $config['height'] ||= 768
+  File.open("config.yml","w"){|config| YAML.dump($config, config)}
   
   #读取命令行参数
   log = "log.log"
+  profile = nil
   ARGV.each do |arg|
     case arg
     when /--log=(.*)/
       log.replace $1
+    when /--profile=(.*)/
+      profile = $1
     end
   end
 
@@ -25,18 +31,35 @@ begin
   Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,512)
   TTF.init
   
-  #初始化标题场景
-  require_relative 'scene_title'
-  $scene = Scene_Title.new
+  #设置标准输出编码（windows)
+  STDOUT.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
   
   #初始化日志
   require 'logger'
   if log == "STDOUT" #调试用
     log = STDOUT
-    log.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
   end
   $log = Logger.new(log)
   $log.info("main"){"初始化成功"}
+  
+  #性能分析
+  if profile
+    if profile == "STDOUT"
+      profile = STDOUT
+    else
+      profile = open(profile, 'w')
+    end
+    require 'profiler'
+    RubyVM::InstructionSequence.compile_option = {
+      :trace_instruction => true,
+      :specialized_instruction => false
+    }
+    Profiler__::start_profile
+  end
+  
+  #初始化标题场景
+  require_relative 'scene_title'
+  $scene = Scene_Title.new
 rescue Exception => exception
   open('error-程序出错请到论坛反馈.txt', 'w'){|f|f.write [exception.inspect, *exception.backtrace].join("\n")}
   exit(1)
@@ -53,6 +76,9 @@ rescue Exception => exception
   $scene = Scene_Error.new
   retry
 ensure
-  #(Thread.list-[Thread.main]).each{|t|t.exit} #消灭其他
+  if profile
+    Profiler__::print_profile(profile)
+    profile.close
+  end
   $log.close
 end

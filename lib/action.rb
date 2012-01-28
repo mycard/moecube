@@ -692,6 +692,18 @@ class Action
       end
     end
   end
+  class CardInfo < Action
+    def initialize(card, card_type, atk, _def, attribute, type, level, lore)
+      card.card_type = card_type
+      card.monster_type = monster_type
+      card.atk = atk
+      card.def = _def
+      card.attribute = attribute
+      card.type = type
+      card.level = level
+      card.lore = lore
+    end
+  end
   class Unknown < Action
     def initialize(str)
       @str = str

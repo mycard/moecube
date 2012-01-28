@@ -1,20 +1,20 @@
 #encoding: UTF-8
-#==============================================================================
-# ■ Scene_Login
-#------------------------------------------------------------------------------
-# 　login
-#==============================================================================
+#==Card Model
 class Card
 	require 'sqlite3'
 	@db = SQLite3::Database.new( "data/data.sqlite" )
-	@all = []
+	@all = {}
+  @diy = {}
 	@count = @db.get_first_value("select COUNT(*) from YGODATA") rescue 0
 	@db.results_as_hash = true
-	#PicPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/YGODATA/YGOPIC'
-  PicPath = 'E:/game/yu-gi-oh/YGODATA/YGOPIC'
+  PicPath = if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+    require 'win32/registry'
+    Win32::Registry::HKEY_CURRENT_USER.open('Software\OCGSOFT\Cards'){|reg|reg['Path']} rescue ''
+  else
+    '' #其他操作系统卡图存放位置标准尚未制定。
+  end
   CardBack = Surface.load("graphics/field/card.jpg").display_format
   CardBack_Small = Surface.load("graphics/field/card_small.gif").display_format
-
 	class << self
 		def find(id, order_by=nil)
       case id
@@ -22,7 +22,11 @@ class Card
         @all[id] || old_new(@db.get_first_row("select * from YGODATA where id = #{id}"))
       when Symbol
 				row = @db.get_first_row("select * from YGODATA where name = '#{id}'")
-        (row && (@all[row['id'].to_i] || old_new(row))) || Card.new('id' => 0, 'number' => :"00000000", 'name' => id, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "")
+        if row
+          @all[row['id'].to_i] || old_new(row)
+        else
+          @diy[id] ||= Card.new('id' => 0, 'number' => :"00000000", 'name' => id, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "")
+        end
       when Hash
         old_new(id)
       when nil
@@ -185,9 +189,9 @@ class Card
   def token?
     @token
   end
-  #def inspect
-  #  "[#{card_type}][#{name}]"
-  #end
+  def inspect
+    "[#{card_type}][#{name}]"
+  end
   Unknown = Card.new('id' => 0, 'number' => :"00000000", 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end

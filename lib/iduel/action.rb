@@ -1,12 +1,11 @@
 #encoding: UTF-8
-#这个文件iduel和nbx相同，编辑时推荐使用软/硬链接来保持一致
 class Action
-  CardFilter = /(<?\[?Token[ \\\d]*\]?>?|<?(?:\[.*?\])?\[(?:.*?)\][ \d]*>?|一张怪兽卡|一张魔\/陷卡|一张卡|\?\?)/
-  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|墓地\|,,,,,\|\*\:\d+张\:\*|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/
-  PositionFilter = /(表攻|表守|里守|攻击表示|防守表示|里侧表示|背面守备表示)/
-  PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/
-  CountersFilter = /(?:\()?(\d+)?(?:\))?/
-  FieldFilter = /(?:LP:(\d+)\n手卡(?:数)?:(\d+)\n卡组:(\d+)\n墓地:(\d+)\n除外:(\d+)\n前场:\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n后场:<(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?>\n场地\|<(?:无|#{CountersFilter}#{CardFilter})>\n(?:◎|●)→＼＼)/
+  CardFilter = /(<?\[?Token[ \\\d]*\]?>?|<?(?:\[.*?\])?\[(?:.*?)\][ \d？]*>?|一张怪兽卡|一张魔\/陷卡|一张卡|\?\?)/.to_s
+  PosFilter = /((?:手卡|手牌|场上|魔陷区|怪兽区|墓地|墓地\|,,,,,\|\*\:\d+张\:\*|额外牌堆|除外区|卡组|卡组顶端|\(\d+\)){1,2})/.to_s
+  PositionFilter = /(表攻|表守|里守|攻击表示|防守表示|里侧表示|背面守备表示)/.to_s
+  PhaseFilter = /(抽卡`阶段|准备`阶段|主`阶段1|战斗`阶段|主`阶段2|结束`阶段)/.to_s
+  CountersFilter = /(?:\()?(\d+)?(?:\))?/.to_s
+  FieldFilter = /(?:LP:(\d+)\n手卡(?:数)?:(\d+)\n卡组:(\d+)\n墓地:(\d+)\n除外:(\d+)\n前场:\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n     <(?:#{CountersFilter}#{PositionFilter}\|#{CardFilter})?>\n后场:<(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?><(?:#{CountersFilter}#{CardFilter})?>\n场地\|<(?:无|#{CountersFilter}#{CardFilter})>\n(?:◎|●)→＼＼)/.to_s
   def self.parse_pos(pos)
     if index = pos.index("(")
       index += 1
@@ -174,6 +173,7 @@ class Action
     counters.to_i
   end
   def self.parse(str)
+    #TODO:效率优化
     from_player = nil
     case str
     when /^\[(\d+)\] (.*)$/m
@@ -181,8 +181,14 @@ class Action
       result = case $2
       when /^┊(.*)┊$/m
         Chat.new from_player, $1
-      when /^※\[(.*)\]\n(.*)\n注释$/m
-        Note.new from_player, $2, Card.find($1.to_sym)
+      when /^※\[(.*)\]\n(.*)\n注释.*$/m
+        card = Card.find($1)
+        case $2 
+        when /(.+怪兽),种族：(.+),属性：(.+),星级：(\d+),攻击：(\d+|？),防御：(\d+|？),效果：(.+)/
+          CardInfo.new(card, $1.to_sym, $5 == "？" ? nil : $5.to_i, $6 == "？" ? nil : $6.to_i, $3.to_sym, $2.to_sym, $4.to_sym, $7)
+        when /(魔法|陷阱)种类：(.+),效果：(.+)/
+          CardInfo.new(($2+$1).to_sym, nil, nil, nil, nil, nil, $3)
+        end
       when /^※(.*)$/
         Chat.new from_player, $1
       when /^(◎|●)→=\[0:0:0\]==回合结束==<(\d+)>=\[\d+\]\n#{FieldFilter}(.*)$/ #把这货弄外面的原因是因为这个指令里开头有一个●→，后面还有，下面判msg的正则会判错
@@ -262,7 +268,7 @@ class Action
         when /第(\d+)张手牌为:#{CardFilter}/
           Show.new(from_player, $1.to_i+10, parse_card($2))
         when /\|--\+>手卡:(?:\[#{CardFilter}\])*/
-          MultiShow.new from_player, :hand, $&.scan(CardFilter).collect{|matched|parse_card(matched.first)}
+          MultiShow.new from_player, :hand, $&.scan(/#{CardFilter}/).collect{|matched|parse_card(matched.first)}
         when /^(?:(\d+)#{CardFilter}\n?)+$/
           from_pos = 71
           cards = $&.lines.collect do |line|
@@ -318,7 +324,7 @@ class Action
           when "加入手卡"
             :hand
           end
-          cards = $&.scan(CardFilter).collect{|matched|parse_card matched.first}
+          cards = $&.scan(/#{CardFilter}/).collect{|matched|parse_card matched.first}
           MultiMove.new(from_player, from_pos, to_pos, cards)
         when /己方#{PosFilter}#{CardFilter}送入对手墓地/
           SendToOpponentGraveyard.new(from_player, parse_pos($1), parse_card($2))
