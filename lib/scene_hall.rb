@@ -19,7 +19,7 @@ class Scene_Hall < Scene
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
 		
     @active_window = @roomlist
-		@chat = Window_Chat.new(321,551,682,168)
+		@chat = Window_Chat.new(321,551,682,168){|text|$game.chat text; Game_Event.push Game_Event::Chat.new($game.user, text)}
     
     bgm = Mixer::Music.load("audio/bgm/hall.ogg")
     Mixer.fade_in_music(bgm, -1, 800)

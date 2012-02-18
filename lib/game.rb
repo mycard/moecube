@@ -28,6 +28,9 @@ class Game
   end
   def exit
   end
+  def watching?
+    @room and @room.include? @user
+  end
 end
 
 

@@ -50,7 +50,7 @@ class Iduel < Game
     send(2, "#{checknum("RMSG", @session)}@#{@key}", "#{action.escape}▊▊▊mycard") #消息校验字串，为了防止由于mycard开源造成外挂泛滥扰乱正常iduel秩序，这里不模仿iduel计算校验字串，直接发送mycard供iduel识别
   end
   def exit
-    @recv.exit
+    @recv.exit if @recv
     if @conn
       leave
       send(11, @key, checknum("ULO", "#{@session}")) 
@@ -65,7 +65,7 @@ class Iduel < Game
     if info.nil?
       @conn.close
       @conn = nil
-      Game_Event::Error.parse(0)
+      Game_Event.push Game_Event::Error.parse(0)
     else
       info.chomp!(RS)
       info.delete!("\r")
@@ -77,8 +77,15 @@ class Iduel < Game
   #def qroom(room)
   #  send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
   #end
-  def chat(msg)
-    send(4, @key, msg, checknum("CHATP", @session))
+  def chat(msg, channel=:hall)
+    msg.gsub!(",", "@@@@")
+    case channel
+    when :hall
+      send(4, @key, msg, checknum("CHATP", @session))
+    when User #私聊
+      send(3, @key, "#{channel.name}(#{channel.id})", msg, checknum("CHATX", @session + "X" + "#{channel.name}(#{channel.id})"))
+    end
+    
     #4|241019,test,2368c6b89b3e2eedb92e1b624a2a157c
   end
   private

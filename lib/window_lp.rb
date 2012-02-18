@@ -13,8 +13,8 @@ class Window_LP < Window
     @player = player
     if @player
       @player.avatar do |avatar|
-        clear(@position ? 0 : @width-Avatar_Size, 24, Avatar_Size, Avatar_Size)
-        @contents.put avatar, @position ? 0 : @width-Avatar_Size, 24
+        clear(@position ? 0 : @width-Avatar_Size, 0, Avatar_Size, Avatar_Size)
+        @contents.put avatar, @position ? 0 : @width-Avatar_Size, 0
       end
       if @position
         @font.draw_solid_utf8(@contents, @player.name, Avatar_Size, 24, *@color)

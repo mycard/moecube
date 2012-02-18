@@ -21,6 +21,8 @@ class Game_Event
       WatchAction
     when "M"
       Leave
+    when 'N'
+      PrivateChat
     when "O"
       Chat
     when "P"
@@ -134,7 +136,7 @@ class Game_Event
     def self.parse(info)
       user, content = info.split(",", 2)
       user = user == "System" ? User.new(100000, "iDuel管理中心") : User.parse(user)
-      self.new(user, content, :hall)
+      self.new(user, content.gsub('@@@@', ','), :hall)
     end
   end
   class Error
@@ -205,6 +207,13 @@ class Game_Event
   end
   class QROOMOK < Game_Event
     def self.parse(info)
+    end
+  end
+  class PrivateChat < Chat
+    def self.parse(info)
+      user, content = info.split(",", 2)
+      user = User.parse(user)
+      self.new(user, content.gsub('@@@@', ','), user)
     end
   end
 end

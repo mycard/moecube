@@ -16,7 +16,7 @@ class Scene_Duel < Scene
   require_relative 'replay'
   require_relative 'game_card'
   require_relative 'game_field'
-  require_relative 'window_roomchat'
+  require_relative 'window_chat'
   attr_reader :cardinfo_window
   attr_reader :player_field_window
   attr_reader :opponent_field_window
@@ -44,16 +44,20 @@ class Scene_Duel < Scene
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
 
-    
-    @chat_window = Window_RoomChat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height)
     create_action_window
-    Card.find(:方程式同调士)
-    Card.find(:异星的最终战士)
-    
+    create_chat_window
     super
   end
   def create_action_window
     @player_field_window.action_window = Window_Action.new
+  end
+  def create_chat_window
+    @background.fill_rect(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height,0xFFFFFFFF)
+    @chat_window = Window_Chat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height){|text|chat(text)}
+    @chat_window.refresh
+  end
+  def chat(text)
+    action Action::Chat.new(true, text)
   end
   def init_replay
     @replay = Replay.new
@@ -131,7 +135,7 @@ class Scene_Duel < Scene
       if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
         str = $1
       end
-      $chat_window.add event.action.from_player, str
+      @chat_window.add event.action.from_player, str
       event.action.run
       refresh
     when Game_Event::Leave

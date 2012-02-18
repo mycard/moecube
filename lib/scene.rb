@@ -106,7 +106,7 @@ class Scene
       $game.exit if $game
       Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Title.new if event.fatal}
     else
-      $log.debug event
+      $log.debug('未处理的游戏事件'){event.inspect}
     end
   end
   #--------------------------------------------------------------------------

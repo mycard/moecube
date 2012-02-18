@@ -8,29 +8,18 @@ require_relative 'scene_duel'
 class Scene_Watch < Scene_Duel
   def create_action_window
   end
+  def chat(text)
+    $game.chat text, $game.room
+    Game_Event.push Game_Event::Action.new(Action::Chat.new(true, text), "#{$game.user}:#{text}")
+  end
   def action(action)
   end
   def start
     super
-    action = Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})进入了观战")
-    action.id = :观战
-    $game.action action
+    #$game.chat "#{$game.user.name}(#{$game.user.id})进入了观战", @room
   end
-  def handle(event)
-    case event
-    when Event::KeyDown
-      case event.sym
-      when Key::F10
-        action = Action::Chat.new(true, "#{$game.user.name}(#{$game.user.id})离开了观战")
-        action.id = :观战
-        $game.action action
-        $game.leave
-      else
-        super
-      end
-    else
-      super
-    end
+  def terminate
+    #$game.chat "#{$game.user.name}(#{$game.user.id})离开了观战", @room
   end
   def handle_game(event)
     case event

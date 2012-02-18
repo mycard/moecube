@@ -2,12 +2,21 @@
 #encoding: UTF-8
 
 begin
+  #定义全局方法
+  def load_config(file="config.yml")
+    require 'yaml'
+    $config = YAML.load_file("config.yml") rescue {}
+    $config['screen'] ||= {}
+    $config['screen']['width'] ||= 1024
+    $config['screen']['height'] ||= 768
+  end
+  def save_config(file="config.yml")
+    File.open(file,"w"){|file| YAML.dump($config, file)}
+  end
+  
   #读取配置文件
-  require 'yaml'
-  $config = YAML.load_file("config.yml") rescue {}
-  $config['width'] ||= 1024
-  $config['height'] ||= 768
-  File.open("config.yml","w"){|config| YAML.dump($config, config)}
+  load_config
+  save_config
   
   #读取命令行参数
   log = "log.log"
@@ -27,7 +36,7 @@ begin
   SDL.init(INIT_VIDEO | INIT_AUDIO)
   WM::set_caption("MyCard", "graphics/system/icon.gif")
   WM::icon = Surface.load("graphics/system/icon.gif")
-  $screen = Screen.open($config["width"], $config["height"], 0, HWSURFACE | ($config["fullscreen"] ? FULLSCREEN : 0))
+  $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
   Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,512)
   TTF.init
   
