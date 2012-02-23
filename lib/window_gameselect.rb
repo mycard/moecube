@@ -12,7 +12,7 @@ class Window_GameSelect < Window_List
       if game.is_a?(Hash) && game["name"]
         game['file'] ||= 'game.rb'
         game['file'] = File.expand_path(game['file'], File.dirname(file))
-        $config[game['name']] = {}
+        $config[game['name']] ||= {}
         @items << game 
       else
         $log.error "#{game.inspect}读取失败(#{file})"
@@ -56,8 +56,9 @@ class Window_GameSelect < Window_List
   end
   def clicked
     load @items[@index]["file"] #TODO: load的这种架构微蛋疼，一时想不到更好的方案
+    p $config
+    $config['game'] = @items[@index]['name']
     @login_window.destroy if @login_window
-    p @items, @index, $config
-    @login_window = Window_Login.new(316,316,$config[[@items][@index]['name']]["username"],$config[[@items][@index]['name']]["password"])
+    @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
   end
 end

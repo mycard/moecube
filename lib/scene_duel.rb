@@ -151,6 +151,8 @@ class Scene_Duel < Scene
           notify_send("对手离开房间", "对手离开房间")
         end
       end
+    else
+      super
     end
   end
   def update

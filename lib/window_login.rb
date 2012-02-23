@@ -1,6 +1,7 @@
 #encoding: UTF-8
 require_relative 'widget_inputbox'
 require_relative 'widget_msgbox'
+require_relative 'widget_checkbox'
 class Window_Login < Window
   def initialize(x,y,username=nil, password=nil)
     @username = username
@@ -30,6 +31,7 @@ class Window_Login < Window
       :replay => "战报"
     }
     #self.index = nil
+    @remember_password = Widget_Checkbox.new(self, 357+@x,80+@y,self.width-357,24,password,"记住密码")
     refresh
   end
   def draw_stroked_text(text,x,y,size=1,font=@font)

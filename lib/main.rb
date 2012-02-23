@@ -9,6 +9,7 @@ begin
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024
     $config['screen']['height'] ||= 768
+    p $config
   end
   def save_config(file="config.yml")
     File.open(file,"w"){|file| YAML.dump($config, file)}

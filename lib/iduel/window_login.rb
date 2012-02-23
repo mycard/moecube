@@ -6,6 +6,9 @@ class Window_Login
       Widget_Msgbox.new("iDuel", "正在登陆")
       $scene.draw #强制重绘一次，下面会阻塞
       $game = Iduel.new
+      $config[$config['game']]['username'] = @username_inputbox.value
+      $config[$config['game']]['password'] = @remember_password.checked? ? @password_inputbox.value : nil
+      save_config
       $game.login(@username_inputbox.value, @password_inputbox.value)
     when :register
       require 'launchy'
