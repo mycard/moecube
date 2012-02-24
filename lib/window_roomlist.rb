@@ -9,10 +9,10 @@ class Window_RoomList < Window_Scrollable
 	attr_reader :items
   WLH = 48
 	def initialize(x, y, items)
-    @button = Surface.load('graphics/hall/room.png')
+    @button = Surface.load('graphics/lobby/room.png')
     @button.set_alpha(RLEACCEL, 255)
-    #@background = Surface.load 'graphics/hall/roomitems.png'
-    #@contents = Surface.load 'graphics/hall/roomitems.png'
+    #@background = Surface.load 'graphics/lobby/roomitems.png'
+    #@contents = Surface.load 'graphics/lobby/roomitems.png'
     super(x,y,@button.w / 3, 48 * 10)
     @item_max = 0
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)

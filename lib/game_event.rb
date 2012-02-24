@@ -74,7 +74,7 @@ class Game_Event
 
   class Chat < Game_Event
     attr_reader :user, :content, :channel
-    def initialize(user, content, channel=:hall)
+    def initialize(user, content, channel=:lobby)
       @user = user
       @content = content
       @channel = channel

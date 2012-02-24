@@ -136,7 +136,7 @@ class Game_Event
     def self.parse(info)
       user, content = info.split(",", 2)
       user = user == "System" ? User.new(100000, "iDuel管理中心") : User.parse(user)
-      self.new(user, content.gsub('@@@@', ','), :hall)
+      self.new(user, content.gsub('@@@@', ','), :lobby)
     end
   end
   class Error

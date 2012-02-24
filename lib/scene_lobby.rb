@@ -1,18 +1,18 @@
 #encoding: UTF-8
 #==============================================================================
-# Scene_Hall
+# Scene_Lobby
 #------------------------------------------------------------------------------
 # 大厅
 #==============================================================================
 
-class Scene_Hall < Scene
+class Scene_Lobby < Scene
   require_relative 'window_userlist'
   require_relative 'window_userinfo'
   require_relative 'window_roomlist'
   require_relative 'window_chat'
   def start
 		$game.refresh
-		@background = Surface.load("graphics/hall/background.png").display_format
+		@background = Surface.load("graphics/lobby/background.png").display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
 		@userlist = Window_UserList.new(24,204,$game.users)
     @roomlist = Window_RoomList.new(320,50,$game.rooms)
@@ -21,7 +21,7 @@ class Scene_Hall < Scene
     @active_window = @roomlist
 		@chat = Window_Chat.new(321,551,682,168){|text|$game.chat text; Game_Event.push Game_Event::Chat.new($game.user, text)}
     
-    bgm = Mixer::Music.load("audio/bgm/hall.ogg")
+    bgm = Mixer::Music.load("audio/bgm/lobby.ogg")
     Mixer.fade_in_music(bgm, -1, 800)
     @bgm.destroy if @bgm
     @bgm = bgm

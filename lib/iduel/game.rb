@@ -77,10 +77,10 @@ class Iduel < Game
   #def qroom(room)
   #  send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
   #end
-  def chat(msg, channel=:hall)
+  def chat(msg, channel=:lobby)
     msg.gsub!(",", "@@@@")
     case channel
-    when :hall
+    when :lobby
       send(4, @key, msg, checknum("CHATP", @session))
     when User #私聊
       send(3, @key, "#{channel.name}(#{channel.id})", msg, checknum("CHATX", @session + "X" + "#{channel.name}(#{channel.id})"))

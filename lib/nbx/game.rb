@@ -15,7 +15,7 @@ class NBX < Game
 
   def login(username)
     connect
-    Game_Event.push Game_Event::Login.new(User.new('localhost', username)) if @conn_hall
+    Game_Event.push Game_Event::Login.new(User.new('localhost', username)) if @conn_lobby
   end
 
   def host(name=@user.name)
@@ -49,9 +49,9 @@ class NBX < Game
 
   def exit
     send(:room, "关闭游戏王NetBattleX  2.7.2▊▊▊730462") rescue nil
-    @recv_hall.kill rescue nil
-    @conn_hall.close rescue nil
-    @conn_hall = nil
+    @recv_lobby.kill rescue nil
+    @conn_lobby.close rescue nil
+    @conn_lobby = nil
     @conn_room.close rescue nil
     @conn_room = nil
     @conn_room_server.close rescue nil
@@ -64,9 +64,9 @@ class NBX < Game
   def send(user, head, *args)
     case user
     when User  #大厅里给特定用户的回复
-      @conn_hall.send("#{head}|#{args.join(',')}", 0, user.host, Port) if @conn_hall
+      @conn_lobby.send("#{head}|#{args.join(',')}", 0, user.host, Port) if @conn_lobby
     when nil #大厅里的广播
-      @conn_hall.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port) if @conn_hall
+      @conn_lobby.send("#{head}|#{args.join(',')}", 0, '<broadcast>', Port) if @conn_lobby
     when :room #房间里，发给对手和观战者
       @conn_room.write(head.gsub("\n", "\r\n") + RS) if @conn_room
     when :watchers #房间里，发给观战者
@@ -78,13 +78,13 @@ class NBX < Game
     require 'socket'
     require 'open-uri'
     begin
-      @conn_hall = UDPSocket.new
-      @conn_hall.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
-      @conn_hall.bind('0.0.0.0', Port) 
+      @conn_lobby = UDPSocket.new
+      @conn_lobby.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+      @conn_lobby.bind('0.0.0.0', Port) 
       Thread.abort_on_exception = true
-      @recv_hall = Thread.new do
+      @recv_lobby = Thread.new do
         begin
-          recv *@conn_hall.recvfrom(1024) while @conn_hall
+          recv *@conn_lobby.recvfrom(1024) while @conn_lobby
         rescue Exception => exception
           self.exit
           Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)

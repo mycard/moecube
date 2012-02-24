@@ -139,7 +139,7 @@ class Scene_Duel < Scene
       event.action.run
       refresh
     when Game_Event::Leave
-      $scene = Scene_Hall.new
+      $scene = Scene_Lobby.new
     when Game_Event::NewRoom
       if event.room == $game.room
         @player_lp_window.player = $game.room.player1

@@ -8,7 +8,6 @@ require_relative 'window_gameselect'
 require_relative 'window_login'
 require_relative 'scene_replay'
 class Scene_Login < Scene
-  Vocab_Logging  = "Logging"
 	def start
     @background = Surface.load("graphics/login/background.png").display_format
     @gameselect_window = Window_GameSelect.new(117,269,$config["game"])
@@ -22,8 +21,8 @@ class Scene_Login < Scene
   def handle_game(event)
     case event
     when Game_Event::Login
-      require_relative 'scene_hall'
-      $scene = Scene_Hall.new
+      require_relative 'scene_lobby'
+      $scene = Scene_Lobby.new
     else
       super
     end

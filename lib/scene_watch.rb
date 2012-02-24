@@ -24,7 +24,7 @@ class Scene_Watch < Scene_Duel
   def handle_game(event)
     case event
     when Game_Event::Leave
-      Widget_Msgbox.new("离开房间", "观战结束", :ok => "确定") { $scene = Scene_Hall.new }
+      Widget_Msgbox.new("离开房间", "观战结束", :ok => "确定") { $scene = Scene_Lobby.new }
     else
       super
     end

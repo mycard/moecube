@@ -17,7 +17,7 @@ class User
     room = room()
     case
     when room.nil?
-      :hall
+      :lobby
     when room.player2
       :dueling
     else

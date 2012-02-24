@@ -3,10 +3,10 @@ class Widget_ScrollBar < Window
   def initialize(parent_window,x,y,height)
     super(x,y,20,height,400)
     @parent_window = parent_window
-    @up_button = Surface.load('graphics/hall/scroll_up.png')
-    @down_button = Surface.load('graphics/hall/scroll_down.png')
-    @back = Surface.load('graphics/hall/scroll_background.png')
-    @bar = Surface.load('graphics/hall/scroll.png')
+    @up_button = Surface.load('graphics/lobby/scroll_up.png')
+    @down_button = Surface.load('graphics/lobby/scroll_down.png')
+    @back = Surface.load('graphics/lobby/scroll_background.png')
+    @bar = Surface.load('graphics/lobby/scroll.png')
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
     @scroll ||= 0
     @scroll_max ||= 0

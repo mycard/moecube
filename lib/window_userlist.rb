@@ -9,8 +9,8 @@ class Window_UserList < Window_Scrollable
   attr_reader :x, :y, :width, :height
   WLH = 20
 	def initialize(x, y, items)
-    #@contents = Surface.load "graphics/hall/useritems.png"
-    #@background = Surface.load "graphics/hall/useritems.png"
+    #@contents = Surface.load "graphics/lobby/useritems.png"
+    #@background = Surface.load "graphics/lobby/useritems.png"
     super(x,y,272,540)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
