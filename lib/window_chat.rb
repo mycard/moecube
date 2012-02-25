@@ -66,19 +66,6 @@ class Window_Chat < Window_List
   def item_rect(index)
     [index*100+3, 0, 100, 31]
   end
-
-    lore.inject([0, 0, 0]) do |array, char|
-      text_size = src_bitmap.text_size char
-      args = array[0], array[1], text_size.width, text_size.height, char
-      src_bitmap.draw_text *args
-      if array[0] < 124
-        [array[0] + text_size.width, array[1], array[2]]
-      else
-        [0, array[1] + WLH, array[2] + 1]
-      end
-    end
-  
-  
   def refresh
     super
     return unless @@list[@channel]
