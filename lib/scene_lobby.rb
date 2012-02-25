@@ -10,6 +10,8 @@ class Scene_Lobby < Scene
   require_relative 'window_userinfo'
   require_relative 'window_roomlist'
   require_relative 'window_chat'
+  require_relative 'chatmessage'
+  attr_reader :chat_window
   def start
 		$game.refresh
 		@background = Surface.load("graphics/lobby/background.png").display_format
@@ -19,8 +21,7 @@ class Scene_Lobby < Scene
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
 		
     @active_window = @roomlist
-		@chat = Window_Chat.new(321,551,682,168){|text|$game.chat text; Game_Event.push Game_Event::Chat.new($game.user, text)}
-    
+		@chat_window = Window_Chat.new(313,543,698,212)
     bgm = Mixer::Music.load("audio/bgm/lobby.ogg")
     Mixer.fade_in_music(bgm, -1, 800)
     @bgm.destroy if @bgm
@@ -85,7 +86,7 @@ class Scene_Lobby < Scene
       require_relative 'scene_watch'
       $scene = Scene_Watch.new(event.room)
     when Game_Event::Chat
-      @chat.add event.user, event.content
+      @chat_window.add event.chatmessage
     else
       super
     end

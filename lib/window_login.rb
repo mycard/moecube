@@ -34,13 +34,6 @@ class Window_Login < Window
     @remember_password = Widget_Checkbox.new(self, 357+@x,80+@y,self.width-357,24,password,"记住密码")
     refresh
   end
-  def draw_stroked_text(text,x,y,size=1,font=@font)
-    [[x-size,y-size], [x-size,y], [x-size,y+size],
-      [x,y-size], [x,y+size],
-      [x+size,y-size], [x+size,y], [x+size,y+size],
-    ].each{|pos|font.draw_blended_utf8(@contents, text, pos[0], pos[1], *@color)}
-    font.draw_blended_utf8(@contents, text, x, y, *@color_stroke)
-  end
   def refresh
     clear
     @items.each_pair{|index, rect|draw_item(index, rect)}

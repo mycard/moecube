@@ -54,7 +54,7 @@ class Scene_Duel < Scene
   def create_chat_window
     @background.fill_rect(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height,0xFFFFFFFF)
     @chat_window = Window_Chat.new(@cardinfo_window.x, @cardinfo_window.height, 1024-@cardinfo_window.x, 768-@cardinfo_window.height){|text|chat(text)}
-    @chat_window.refresh
+    @chat_window.channel = @room
   end
   def chat(text)
     action Action::Chat.new(true, text)
@@ -125,6 +125,8 @@ class Scene_Duel < Scene
   
   def handle_game(event)
     case event
+    when Game_Event::Chat
+      @chat_window.add event.chatmessage
     when Game_Event::Action
       if event.action.instance_of?(Action::Reset) and event.action.from_player
         save_replay
@@ -135,7 +137,12 @@ class Scene_Duel < Scene
       if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
         str = $1
       end
-      @chat_window.add event.action.from_player, str
+      user = if $game.room.player2 == $game.user
+        event.action.from_player ? $game.room.player2 : $game.room.player1
+      else
+        event.action.from_player ? $game.room.player1 : $game.room.player2
+      end
+      @chat_window.add ChatMessage.new(user, str, $game.room)
       event.action.run
       refresh
     when Game_Event::Leave

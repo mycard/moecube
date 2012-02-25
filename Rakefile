@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
@@ -45,4 +46,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options << '--line-numbers'
 end
 
-CLOBBER.include %w(log.log profile.log config.yml doc) + Dir.glob("{replay}/**/*") + Dir.glob("**/Thumbs.db") + Dir.glob("graphics/avatars/*_*.png")
+CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc) + Dir.glob("{replay}/**/*") + Dir.glob("**/Thumbs.db") + Dir.glob("graphics/avatars/*_*.png")

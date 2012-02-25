@@ -58,13 +58,11 @@ class Iduel < Game
       @conn = nil
     end
   end
-  
-  
-
   def recv(info)
     if info.nil?
       @conn.close
       @conn = nil
+      $log.error 'socket已中断'
       Game_Event.push Game_Event::Error.parse(0)
     else
       info.chomp!(RS)
@@ -77,13 +75,13 @@ class Iduel < Game
   #def qroom(room)
   #  send(10, @key, room.id, checknum("QROOM", @session + room.id.to_s))
   #end
-  def chat(msg, channel=:lobby)
-    msg.gsub!(",", "@@@@")
-    case channel
+  def chat(chatmessage)
+    msg = chatmessage.message.gsub(",", "@@@@")
+    case chatmessage.channel
     when :lobby
       send(4, @key, msg, checknum("CHATP", @session))
     when User #私聊
-      send(3, @key, "#{channel.name}(#{channel.id})", msg, checknum("CHATX", @session + "X" + "#{channel.name}(#{channel.id})"))
+      send(3, @key, "#{chatmessage.channel.name}(#{chatmessage.channel.id})", msg, checknum("CHATX", @session + "X" + "#{chatmessage.channel.name}(#{chatmessage.channel.id})"))
     end
     
     #4|241019,test,2368c6b89b3e2eedb92e1b624a2a157c

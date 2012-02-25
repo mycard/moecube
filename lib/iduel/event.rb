@@ -65,11 +65,13 @@ class Game_Event
           templist = []
         else
           room = room.split(",")
-          templist << if empty
+          room = if empty
             Room.new(room[0].to_i, room[1], User.parse(room[2]), nil, room[3]=="1", Room::Color[room[4].to_i], nil, room[6])
           else
             Room.new(room[0].to_i, room[3], User.parse(room[1]), User.parse(room[2]), false, Room::Color[room[5].to_i], room[3])
           end
+          room.name = room.name[1,room.name.size-1] #iduel服务器发来的消息中，房名前有一空格
+          templist << room
         end
       end
       rooms = templist + rooms
@@ -111,6 +113,7 @@ class Game_Event
       room = Room.new(id.to_i)
       room.player1 = User.parse(player1)
       room.player2 = User.parse(player2)
+      room.name = room.name[1,room.name.size-1] #iduel服务器发来的消息中，房名前有一空格
       self.new room
     end
   end
@@ -119,6 +122,7 @@ class Game_Event
   class Watch
     def self.parse(info)
       id, name = info.split(",", 2)
+      name = name[1,name.size-1] #iduel服务器发来的消息中，房名前有一空格
       self.new Room.new(id.to_i, name)
     end
   end
@@ -136,7 +140,8 @@ class Game_Event
     def self.parse(info)
       user, content = info.split(",", 2)
       user = user == "System" ? User.new(100000, "iDuel管理中心") : User.parse(user)
-      self.new(user, content.gsub('@@@@', ','), :lobby)
+      content.gsub!('@@@@', ',')
+      self.new(ChatMessage.new(user, content, :lobby))
     end
   end
   class Error
@@ -213,7 +218,8 @@ class Game_Event
     def self.parse(info)
       user, content = info.split(",", 2)
       user = User.parse(user)
-      self.new(user, content.gsub('@@@@', ','), user)
+      content.gsub!('@@@@', ',')
+      self.new(ChatMessage.new(user, content, user))
     end
   end
 end

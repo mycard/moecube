@@ -123,14 +123,14 @@ class Scene
     self.windows.reverse.each do |window|
       if window.include?(x, y) && window.visible
         if window != @active_window
-          @active_window.lostfocus(window) if @active_window
+          @active_window.lostfocus(window) if @active_window and !@active_window.destroyed?
           @active_window = window 
         end
         @active_window.mousemoved(x, y)
         return @active_window
       end
     end
-    if @active_window
+    if @active_window and !@active_window.destroyed?
       @active_window.lostfocus
       @active_window = nil
     end

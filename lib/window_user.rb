@@ -42,7 +42,7 @@ class Window_User < Window_List
   def clicked
     case index
     when 0
-      #发送消息
+      $scene.chat_window.channel = @user
     when 1
       @user.space
     when 2
@@ -52,6 +52,7 @@ class Window_User < Window_List
         $game.watch(@user.room)
       end
     end
+    destroy
   end
   def mousemoved(x,y)
     if x.between?(@x+172, @x+@width) and y.between?(@y+96, @y+96+@item_max*WLH)

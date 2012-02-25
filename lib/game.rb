@@ -26,6 +26,8 @@ class Game
   end
   def action(action)
   end
+  def chat(chatmessage)
+  end
   def exit
   end
   def watching?

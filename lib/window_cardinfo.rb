@@ -2,7 +2,7 @@
 class Window_CardInfo < Window
   WLH = 20
   def initialize(x,y)
-    super(x,y,1024-x,530,300)
+    super(x,y,1024-x,524,300)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     self.card = nil
   end

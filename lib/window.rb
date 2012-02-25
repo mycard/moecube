@@ -29,7 +29,13 @@ class Window
     end
     
   end
-
+  def draw_stroked_text(text,x,y,size=1,font=@font,color=@color,color_stroke=@color_stroke)
+    [[x-size,y-size], [x-size,y], [x-size,y+size],
+      [x,y-size], [x,y+size],
+      [x+size,y-size], [x+size,y], [x+size,y+size],
+    ].each{|pos|font.draw_blended_utf8(@contents, text, pos[0], pos[1], *color)}
+    font.draw_blended_utf8(@contents, text, x, y, *color_stroke)
+  end
   def include?(x,y)
     x >= @x && x < @x + @width && y >= @y && y < @y + @height
   end
@@ -46,7 +52,9 @@ class Window
     Surface.blit(self.contents, *self.viewport, screen, self.x, self.y)
   end
   def clear(x=0, y=0, width=@width, height=@height)
-    if $scene and $scene.background
+    if @background
+      Surface.blit(@background,x,y,width,height,@contents,x,y)
+    elsif $scene and $scene.background
       Surface.blit($scene.background,@x+x,@y+y,width,height,@contents,x,y)
     else
       @contents.fill_rect(x,y,width,height,0xFF000000)

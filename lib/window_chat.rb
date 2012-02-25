@@ -4,7 +4,7 @@
 # 　title
 #==============================================================================
 
-class Window_Chat < Window
+class Window_Chat < Window_List
   WLH=16
   require_relative 'widget_scrollbar'
   require_relative 'widget_inputbox'
@@ -12,30 +12,84 @@ class Window_Chat < Window
   Text_Color = [0,0,0]
   Player_Color = [0,0,0xFF]
   Opponent_Color = [0xFF,0,0]
-	def initialize(x, y, width, height, &block)
-    super(x,y,width,height-24)
-    @chat_input = Widget_InputBox.new(@x, @y+@height, @width, 24, &block)
+	def initialize(x, y, width, height)
+    super(x,y,width,height)
+    if @width > 600 #判断大厅还是房间，这个判据比较囧，待优化
+      @chat_background = Surface.load("graphics/system/chat.png").display_format
+    else
+      @chat_background = Surface.load("graphics/system/chat_room.png").display_format
+    end
+    
+    @background = @contents.copy_rect(0,0,@contents.w,@contents.h) #new而已。。
+    @background.fill_rect(0,0,@background.w, @background.h, 0xFFb2cefe)
+    @background.put(@chat_background,0,31-4)
+    @tab = Surface.load "graphics/system/tab.png"
+    @chat_input = Widget_InputBox.new(@x+8, @y+@height-24-10, @width-14, 24) do |message|
+      chatmessage = ChatMessage.new($game.user, message, @channel)
+      $game.chat chatmessage
+      Game_Event.push Game_Event::Chat.new(chatmessage)
+    end
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
-    @scroll = Widget_ScrollBar.new(self,@x+@width-20,@y,@height)
-    @list = []
+    @scroll = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
+    @@list ||= {}
+    self.channel = :lobby
+    #self.items = [:lobby]#, User.new(1,"zh99997"), Room.new(1,"测试房间")]
 	end
-	def add(user, content)
-    @list << [user, content]
+	def add(chatmessage)
+    @@list[chatmessage.channel] ||= []
+    self.items << chatmessage.channel unless self.items.include? chatmessage.channel
+    @@list[chatmessage.channel] << chatmessage
     refresh
 	end
+  def mousemoved(x,y)
+    if y-@y < 31 and (x-@x) < @items.size * 100
+      self.index = (x-@x) / 100
+    else
+      self.index = nil
+    end
+  end
+  def clicked
+    self.channel = @items[@index] if @index
+  end
+  def channel=(channel)
+    self.items << channel unless self.items.include? channel
+    @channel = channel
+    refresh
+  end
+  
+  def draw_item(index, status=0)
+    Surface.blit(@tab,0,@channel == @items[index] ? 0 : 31,100,31,@contents,index*100+3,0)
+    channel_name = ChatMessage.channel_name @items[index]
+    x = index*100+(100 - @font.text_size(channel_name)[0])/2
+    draw_stroked_text(channel_name,x,8,1,@font, [255,255,255], ChatMessage.channel_color(@items[index]))
+  end
+  def item_rect(index)
+    [index*100+3, 0, 100, 31]
+  end
+
+    lore.inject([0, 0, 0]) do |array, char|
+      text_size = src_bitmap.text_size char
+      args = array[0], array[1], text_size.width, text_size.height, char
+      src_bitmap.draw_text *args
+      if array[0] < 124
+        [array[0] + text_size.width, array[1], array[2]]
+      else
+        [0, array[1] + WLH, array[2] + 1]
+      end
+    end
+  
+  
   def refresh
-    clear
-    @list.last(@height/WLH).each_with_index do |chat, index|
-      user, content = chat
-      if user.is_a? User
-        @font.draw_blended_utf8(@contents, user.name+':', 0, index*WLH, *User_Color)
-        name_width = @font.text_size(user.name+':')[0]
-        color = Text_Color
+    super
+    return unless @@list[@channel]
+    @@list[@channel].last((@height-68)/WLH).each_with_index do |chatmessage, index|
+      if chatmessage.name_visible?
+        @font.draw_blended_utf8(@contents, chatmessage.user.name+':', 8, index*WLH+31+3, *User_Color)
+        name_width = @font.text_size(chatmessage.user.name+':')[0]
       else
         name_width = 0
-        color = user ? Player_Color : Opponent_Color
       end
-      @font.draw_blended_utf8(@contents, content, name_width, index*WLH, *color) unless content.empty?
+      @font.draw_blended_utf8(@contents, chatmessage.message, 8+name_width, index*WLH+31+3, *chatmessage.message_color) unless chatmessage.message.empty?
     end
   end
 end

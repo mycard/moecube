@@ -49,8 +49,7 @@ begin
     log = STDOUT
   end
   $log = Logger.new(log)
-  $log.info("main"){"初始化成功"}
-  
+    
   #性能分析
   if profile
     if profile == "STDOUT"
@@ -69,6 +68,8 @@ begin
   #初始化标题场景
   require_relative 'scene_title'
   $scene = Scene_Title.new
+  
+  $log.info("main"){"初始化成功"}
 rescue Exception => exception
   open('error-程序出错请到论坛反馈.txt', 'w'){|f|f.write [exception.inspect, *exception.backtrace].join("\n")}
   exit(1)
