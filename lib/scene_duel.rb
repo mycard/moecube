@@ -27,7 +27,7 @@ class Scene_Duel < Scene
     @deck = deck
   end
   def start
-    @bgm = Mixer::Music.load "audio/bgm/title.ogg"
+    @bgm = Mixer::Music.load "audio/bgm/duel.ogg"
     Mixer.fade_in_music(@bgm, -1, 800)
     @background = Surface.load("graphics/field/main.png").display_format
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)

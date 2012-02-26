@@ -34,6 +34,8 @@ class ChatMessage
   end
   def self.channel_name(channel)
     case channel
+    when :lobby
+      "#大厅"
     when Symbol
       "##{channel}"
     when Room

@@ -93,7 +93,7 @@ class Scene_Lobby < Scene
   end
   
   def update
-    if @count >= 600
+    if @count >= 300
       $game.refresh
       @count = 0
     end

@@ -107,6 +107,8 @@ class Action
         player_field.hand.size - 1
       when :decktop
         player_field.deck.size - 1
+      when nil
+        nil
       else
         (@card.is_a?(Game_Card) ? from_field.index(@card) : from_field.index{|card|card.card == @card}) || from_field.index{|card|!card.known?}
       end

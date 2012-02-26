@@ -34,7 +34,7 @@ begin
   require 'sdl'
   include SDL
   SDL.init(INIT_VIDEO | INIT_AUDIO)
-  WM::set_caption("MyCard", "graphics/system/icon.gif")
+  WM::set_caption("MyCard", "MyCard")
   WM::icon = Surface.load("graphics/system/icon.gif")
   $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
   Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,512)
