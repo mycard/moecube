@@ -9,6 +9,7 @@ require_relative 'window_login'
 require_relative 'scene_replay'
 class Scene_Login < Scene
 	def start
+    WM::set_caption("MyCard", "MyCard")
     @background = Surface.load("graphics/login/background.png").display_format
     @gameselect_window = Window_GameSelect.new(117,269,$config["game"])
 	end
@@ -27,4 +28,7 @@ class Scene_Login < Scene
       super
     end
   end
+  #def terminate
+  #  @gameselect_window.destroy
+  #end
 end

@@ -13,6 +13,7 @@ class Scene_Lobby < Scene
   require_relative 'chatmessage'
   attr_reader :chat_window
   def start
+    WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
 		$game.refresh
 		@background = Surface.load("graphics/lobby/background.png").display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
@@ -93,7 +94,7 @@ class Scene_Lobby < Scene
   end
   
   def update
-    if @count >= 300
+    if @count >= 600
       $game.refresh
       @count = 0
     end

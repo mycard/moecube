@@ -60,4 +60,8 @@ class Window_GameSelect < Window_List
     @login_window.destroy if @login_window
     @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
   end
+  #def destroy
+  #  @login_window.destroy if @login_window
+  #  super
+  #end
 end

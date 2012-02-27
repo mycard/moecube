@@ -1,6 +1,6 @@
 #encoding: UTF-8
 class Replay
-  User_Filter = /(.+?)\((\d+)\)(?:\(\d+:\d+:\d+\))?(?::|：) */
+  User_Filter = /(.+?)(?:\((\d+)\))?(?:\(\d+:\d+:\d+\))?(?::|：) */
   Delimiter = /^#{User_Filter}\n ?/
   Player_Filter = /#{Delimiter}\[\d+\] ◎→/
   Opponent_Filter =/#{Delimiter}\[\d+\] ●→/
@@ -27,8 +27,8 @@ class Replay
       require 'cgi'
       contents = CGI.unescape_html(contents)
     else
-      result.player1 = User.new($2.to_i, $1) if contents =~ Player_Filter
-      result.player2 = User.new($2.to_i, $1) if contents =~ Opponent_Filter
+      result.player1 = User.new($2 ? $2.to_i : :player, $1) if contents =~ Player_Filter
+      result.player2 = User.new($2 ? $2.to_i : :opponent, $1) if contents =~ Opponent_Filter
       from_players = contents.scan(Delimiter).collect do |matched|
         id = matched[1].to_i
         name = matched[0]
@@ -52,6 +52,10 @@ class Replay
     result.player2 ||= User.new(1, "对手")
     lines = contents.split(Delimiter)
     lines.shift #split后，在第一个操作之前会多出一个空白元素
+    if from_players.empty?
+      Game_Event.push Game_Event::Error.new("播放战报", "战报无法识别")
+      return []
+    end
     lines = lines.each_slice(lines.size/from_players.size).collect{|a|a.last.strip}
     from_players = from_players.to_enum
     result.actions = lines.collect do |action_str|

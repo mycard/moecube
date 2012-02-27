@@ -16,16 +16,16 @@ class Widget_InputBox < Window
   @@entry = TkEntry.new(@@root){
     font @@font
     validate :focusout
-    validatecommand{@@active.value=get.encode("UTF-8");@@root.withdraw(true);@@active.refresh;true}
+    validatecommand {Widget_InputBox.determine}
     bind('Key-Return'){self.value="" if @@active.proc.call(get.encode("UTF-8")) if @@active.proc;true} #两个if的解释：当存在proc时，call那个proc，如果执行结果为真就清空value
     pack
   }
   Thread.new{Tk.mainloop}
   
-  def initialize(x,y,width,height,z=300, &block)
+  def initialize(x,y,width,height,z=300, &proc)
     super(x,y,width,height,z)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
-    @proc = block
+    @proc = proc
     @value = ""
     @type = :text
   end
@@ -36,7 +36,7 @@ class Widget_InputBox < Window
   end
   def refresh
     clear
-    @font.draw_blended_utf8(@contents, @type == :password ? '*' * @value.size : @value, 0, 0, 0x00, 0x00, 0x00) unless @value.empty?
+    @font.draw_blended_utf8(@contents, @type == :password ? '*' * @value.size : @value, 2, 0, 0x00, 0x00, 0x00) unless @value.empty?
   end
   def clicked
     @@entry.value = @value
@@ -50,5 +50,8 @@ class Widget_InputBox < Window
   def clear(x=0, y=0, width=@width, height=@height)
     @contents.fill_rect(x,y,width,height,0x66FFFFFF)
     @contents.fill_rect(x+2,y+2,width-4,height-4,0xFFFFFFFF)
+  end
+  def self.determine
+    @@active.value=@@entry.get.encode("UTF-8");@@root.withdraw(true);@@active.refresh;true
   end
 end

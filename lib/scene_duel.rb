@@ -27,6 +27,7 @@ class Scene_Duel < Scene
     @deck = deck
   end
   def start
+    WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id}) - #{@room.name}(#{@room.id})", "MyCard")
     @bgm = Mixer::Music.load "audio/bgm/duel.ogg"
     Mixer.fade_in_music(@bgm, -1, 800)
     @background = Surface.load("graphics/field/main.png").display_format

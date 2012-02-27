@@ -8,6 +8,7 @@ require_relative 'scene'
 require_relative 'window_title'
 class Scene_Title < Scene
   def start
+    WM::set_caption("MyCard", "MyCard")
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
     @background = Surface.load(title).display_format

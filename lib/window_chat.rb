@@ -3,11 +3,11 @@
 #------------------------------------------------------------------------------
 # 　title
 #==============================================================================
-
+require_relative 'widget_scrollbar'
+require_relative 'widget_inputbox'
+require_relative 'chatmessage'
 class Window_Chat < Window_List
   WLH=16
-  require_relative 'widget_scrollbar'
-  require_relative 'widget_inputbox'
   User_Color = [0,0,0xFF]
   Text_Color = [0,0,0]
   Player_Color = [0,0,0xFF]
