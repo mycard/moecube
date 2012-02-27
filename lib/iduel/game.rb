@@ -1,5 +1,6 @@
 #encoding: UTF-8
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
+require 'open-uri'
 class Iduel < Game
   Version = "20110131"
   Server = "iduel.ocgsoft.cn"
@@ -89,7 +90,6 @@ class Iduel < Game
   private
   def connect
     require 'socket'
-    require 'open-uri'
     begin
       @conn = TCPSocket.new(Server, Port) #TODO: 阻塞优化，注意login。下面注释掉的两句实现connect无阻塞，但是login依然会阻塞所以只优化这里没有意义
       #@conn = Socket.new(:INET, :STREAM)
@@ -119,5 +119,22 @@ class Iduel < Game
     $log.info  "<< #{info}"
     info.gsub!("\n", "\r\n")
     (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
+  end
+  #公告
+  $config['iDuel']['announcements'] ||= {"正在读取公告..." => nil}
+  Thread.new do
+    begin
+      open('http://www.duelcn.com/topic-Announce.html') do |file|
+        file.set_encoding "GBK"
+        announcements = {}
+        file.read.scan(/<li><em>.*?<\/em><a href="(.*?)" title="(.*?)" target="_blank">.*?<\/a><\/li>/).each do |url, title|
+          announcements[title.encode("UTF-8")] = "http://www.duelcn.com/#{url}"
+        end
+        $config['iDuel']['announcements'].replace announcements
+        save_config
+      end
+    rescue Exception => exception
+      $log.error('公告') {[exception.inspect, *exception.backtrace].join("\n")}
+    end
   end
 end

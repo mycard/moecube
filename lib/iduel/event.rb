@@ -9,26 +9,22 @@ class Game_Event
       Login
     when "C"
       AllUsers
-    when "F"
+    when "F", "Q" #F=加入观战
       Join
     when "G"
       Watch
-    when "H"
+    when "H", "M"
       Leave
     when "J"
       Action
     when "K"
       WatchAction
-    when "M"
-      Leave
     when 'N'
       PrivateChat
     when "O"
       Chat
     when "P"
       AllRooms
-    when "Q"
-      NewRoom
     when "R"
       QROOMOK  #卡表
     else

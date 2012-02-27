@@ -8,9 +8,9 @@ class Window_Login < Window
     @password = password
     @button = Surface.load("graphics/login/button.png")
     super(x,y,597,338)
-    @username_inputbox = Widget_InputBox.new(@x+192, @y+80, 165, WLH){@password_inputbox.clicked;false}
+    @username_inputbox = Widget_InputBox.new(@x+192, @y+80, 165, WLH){|text|@username_inputbox.value = text;@password_inputbox.clicked;false}
     @username ? @username_inputbox.value = @username : @username_inputbox.refresh
-    @password_inputbox = Widget_InputBox.new(@x+192, @y+125, 165, WLH){Widget_InputBox.determine;self.index=:login;clicked;false}
+    @password_inputbox = Widget_InputBox.new(@x+192, @y+125, 165, WLH){|text|Widget_InputBox.determine;self.index=:login;clicked;false}
     @password_inputbox.type = :password
     @password ? @password_inputbox.value = @password : @password_inputbox.refresh
     @color = [255,255,255]

@@ -1,7 +1,7 @@
 #encoding: UTF-8
 class Window_GameSelect < Window_List
   WLH = 56
-  def initialize(x,y,game_name=nil)
+  def initialize(x,y)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 24)
     @color = [255,255,255]
     @game_color = [47,156,192]
@@ -23,7 +23,7 @@ class Window_GameSelect < Window_List
     @button = Surface.load("graphics/login/game_background.png")
     #@button.set_alpha(RLEACCEL,255)
     self.items = @items
-    self.index = @items.find_index{|game|game["name"] == game_name} || 0
+    self.index = @items.find_index{|game|game["name"] == $config['game']} || 0
     clicked
     refresh
   end

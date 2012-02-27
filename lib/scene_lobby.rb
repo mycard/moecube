@@ -11,6 +11,7 @@ class Scene_Lobby < Scene
   require_relative 'window_roomlist'
   require_relative 'window_chat'
   require_relative 'chatmessage'
+  require_relative 'scene_duel'
   attr_reader :chat_window
   def start
     WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
@@ -81,7 +82,6 @@ class Scene_Lobby < Scene
     when Game_Event::AllRooms
       @roomlist.items = $game.rooms
     when Game_Event::Join
-      require_relative 'scene_duel'
       $scene = Scene_Duel.new(event.room, Deck.load("test1.TXT"))
     when Game_Event::Watch
       require_relative 'scene_watch'
@@ -113,6 +113,11 @@ class Scene_Lobby < Scene
         $game.join room, "test"
         @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       end
+    end
+  end
+  def terminate
+    unless $scene.is_a? Scene_Lobby or $scene.is_a? Scene_Duel
+      $game.exit
     end
   end
 end

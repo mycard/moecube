@@ -35,7 +35,7 @@ class Window_CardInfo < Window
     
     @contents.put @card.image,0,0
     @font.draw_blended_utf8(@contents, "[#{@card.name}]", 160, 0, 0xFF, 0xFF, 0x55)
-    @font.draw_blended_utf8(@contents, "卡类: #{@card.card_type}", 160, WLH, 0xFF, 0xFF, 0x55)
+    @font.draw_blended_utf8(@contents, "#{@card.card_type}", 160, WLH, 0xFF, 0xFF, 0x55)
     if @card.monster?
       @font.draw_blended_utf8(@contents, "种族: #{@card.type}", 160, WLH*2, 0xFF, 0xFF, 0xFF)
       @font.draw_blended_utf8(@contents, "星级: #{@card.level}", 160, WLH*3, 0xFF, 0xFF, 0xFF)

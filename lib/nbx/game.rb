@@ -1,5 +1,4 @@
 #encoding: UTF-8
-load File.expand_path('window_login.rb', File.dirname(__FILE__))
 class NBX < Game
   Version = "20090622"
   Port=2583
@@ -146,4 +145,7 @@ class NBX < Game
   end
 end
 
-
+$game = NBX.new
+$config[$config['game']]['username'] ||= ENV['USERNAME']
+save_config
+$game.login $config[$config['game']]['username']

@@ -1,6 +1,7 @@
 #encoding: UTF-8
 class Window_Login
   def clicked
+    return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
     case @index
     when :login
       Widget_Msgbox.new("iDuel", "正在登陆")
@@ -10,13 +11,13 @@ class Window_Login
       $config[$config['game']]['password'] = @remember_password.checked? ? @password_inputbox.value : nil
       save_config
       $game.login(@username_inputbox.value, @password_inputbox.value)
+      @last_clicked = Time.now
     when :register
       require 'launchy'
       Launchy.open(Iduel::Register_Url)
+      @last_clicked = Time.now
     when :replay
       require 'tk'
-      #由于Tk对话框点击取消的时候SDL会再识别一次点击，所以这里做一下处理，对两次间隔小于1s的点击忽略
-      return if @replay_clicked and Time.now - @replay_clicked < 1
       file = Tk.getOpenFile
       if !file.empty?
         $game = Iduel.new
@@ -26,7 +27,7 @@ class Window_Login
         $log.debug('iduel window_login'){'loading reply file'}
         $scene = Scene_Replay.new Replay.load file
       end
-      @replay_clicked = Time.now
+      @last_clicked = Time.now
     end
   end
 end

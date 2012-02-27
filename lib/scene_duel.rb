@@ -148,16 +148,15 @@ class Scene_Duel < Scene
       refresh
     when Game_Event::Leave
       $scene = Scene_Lobby.new
-    when Game_Event::NewRoom
-      if event.room == $game.room
-        @player_lp_window.player = $game.room.player1
-        @opponent_lp_window.player = $game.room.player2
-        player = $game.room.player1 == $game.user ? $game.room.player2 : $game.room.player1
-        if player
-          notify_send("对手加入房间", "#{player.name}(#{player.id})")
-        else
-          notify_send("对手离开房间", "对手离开房间")
-        end
+    when Game_Event::Join
+      $game.room = event.room
+      @player_lp_window.player = $game.room.player1
+      @opponent_lp_window.player = $game.room.player2
+      player = $game.room.player1 == $game.user ? $game.room.player2 : $game.room.player1
+      if player
+        notify_send("对手加入房间", "#{player.name}(#{player.id})")
+      else
+        notify_send("对手离开房间", "对手离开房间")
       end
     else
       super
@@ -177,6 +176,9 @@ class Scene_Duel < Scene
     @opponent_lp_window.lp = $game.opponent_field.lp
   end
   def terminate
+    unless $scene.is_a? Scene_Lobby or $scene.is_a? Scene_Duel
+      $game.exit
+    end
     save_replay
     super
   end
