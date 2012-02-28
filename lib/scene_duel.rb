@@ -37,11 +37,11 @@ class Scene_Duel < Scene
     init_replay
     
     @phases_window = Window_Phases.new(122, 356)
-    @fieldback_window = Window_FieldBack.new(130,174)
+    @fieldback_window = Window_FieldBack.new(131,173)
     @cardinfo_window = Window_CardInfo.new(715, 0)
     
-    @player_field_window = Window_Field.new(4, 398, $game.player_field, true)
-    @opponent_field_window = Window_Field.new(4, 60, $game.opponent_field, false)
+    @player_field_window = Window_Field.new(2, 397, $game.player_field, true)
+    @opponent_field_window = Window_Field.new(2, 56, $game.opponent_field, false)
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
 

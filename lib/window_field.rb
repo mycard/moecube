@@ -9,13 +9,13 @@ class Window_Field < Window
   require_relative 'card'
   require_relative 'window_action'
   require_relative 'window_cardinfo'
-  Field_Pos = [[56,0], #场地魔法
-    [140, 84], [234,84], [328,84],[422,84], [516, 84], #后场
-    [140, 0], [234, 0], [328, 0],[422, 0], [516, 0]] #前场
-  Extra_Pos = [56,84] #额外卡组
-  Graveyard_Pos = [598,0] #墓地
-  Removed_Pos = [657,0] #除外区
-  Deck_Pos = [598, 84]
+  Field_Pos = [[59,0], #场地魔法
+    [143, 84], [237,84], [331,84],[425,84], [519, 84], #后场
+    [143, 0],  [237, 0], [331, 0],[425, 0], [519, 0]] #前场
+  Extra_Pos = [59,84] #额外卡组
+  Graveyard_Pos = [601,0] #墓地
+  Removed_Pos = [660,0] #除外区
+  Deck_Pos = [601, 84]
   Hand_Pos = [0, 201, 62, 8] #手卡： x, y, width, 间距
   #Card_Size = [Card::CardBack.w, Card::CardBack.h]
   Card_Size = [54, 81]
@@ -24,7 +24,7 @@ class Window_Field < Window
 	def initialize(x, y, field,player=true)
     @border = Surface.load('graphics/field/border.png')
     @border_horizontal = Surface.load('graphics/field/border_horizontal.png') #@border.transform_surface(0x66000000,90,1,1,Surface::TRANSFORM_SAFE|Surface::TRANSFORM_AA)#FUCK!
-    super(x,y,711,282)
+    super(x,y,714,282)
     @field = field
     @player = player
     @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 12)

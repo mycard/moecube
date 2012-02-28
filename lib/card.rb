@@ -161,12 +161,12 @@ class Card
     @image ||= Surface.load("#{PicPath}/#{@id-1}.jpg").display_format rescue create_image
   end
   def image_small
-    @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,Surface::TRANSFORM_SAFE)
+    @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,Surface::TRANSFORM_SAFE).copy_rect(1, 1, 54, 81).display_format
   end
   def image_horizontal
     if @image_horizontal.nil?
       image_horizontal = image_small.transform_surface(0xFF000000,90,1,1,Surface::TRANSFORM_SAFE)
-      @image_horizontal = image_horizontal.copy_rect(1, 1, 81, 54) #SDL的bug，会多出1像素的黑边
+      @image_horizontal = image_horizontal.copy_rect(1, 1, 81, 54).display_format #SDL的bug，会多出1像素的黑边
       image_horizontal.destroy
     end
     @image_horizontal
