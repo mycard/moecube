@@ -6,6 +6,7 @@ begin
   def load_config(file="config.yml")
     require 'yaml'
     $config = YAML.load_file("config.yml") rescue {}
+    $config ||= {}
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024
     $config['screen']['height'] ||= 768

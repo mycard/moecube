@@ -33,11 +33,16 @@ class Action
   end
   def self.parse_card(card)
     if card['Token']
-      @token ||= Card.new('name'=>:Token, 'id'=>-1, 'token'=>true, 'number'=>:"00000000", 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "这张卡作为衍生物使用。")
+      @token ||= Card.new('name'=>:Token, 'id'=>-1, 'token'=>true, 'number'=>:"00000000", 'attribute' => :暗, 'level' => 1, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "这张卡作为衍生物使用。")
     elsif index = card.rindex('[')
-      index += 1
-      name = card[index, card.rindex(']')-index].to_sym
-      Card.find(name)
+      name = card[index+1, card.rindex(']')-index-1].to_sym
+      result = Card.find(name)
+      if result.diy? and index = card[0, index].index('[')
+        card_type = card[index+1, card.index(']')-2].to_sym
+        card_type = :超量怪兽 if [:XYZ怪兽, :XYZ怪].include? card_type
+        result.card_type = card_type
+      end
+      result
     else
       Card.find(nil)
     end
@@ -182,12 +187,12 @@ class Action
       when /^┊(.*)┊$/m
         Chat.new from_player, $1
       when /^※\[(.*)\]\n(.*)\n注释.*$/m
-        card = Card.find($1)
+        card = Card.find($1.to_sym)
         case $2 
         when /(.+怪兽),种族：(.+),属性：(.+),星级：(\d+),攻击：(\d+|？),防御：(\d+|？),效果：(.+)/
           CardInfo.new(card, $1.to_sym, $5 == "？" ? nil : $5.to_i, $6 == "？" ? nil : $6.to_i, $3.to_sym, $2.to_sym, $4.to_sym, $7)
         when /(魔法|陷阱)种类：(.+),效果：(.+)/
-          CardInfo.new(($2+$1).to_sym, nil, nil, nil, nil, nil, $3)
+          CardInfo.new(card, ($2+$1).to_sym, nil, nil, nil, nil, nil, $3)
         end
       when /^※(.*)$/
         Chat.new from_player, $1

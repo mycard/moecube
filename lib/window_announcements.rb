@@ -14,18 +14,16 @@ class Window_Announcements < Window
   end
   def refresh
     clear
-    return unless @item
-    if @focus
-      @font.style = TTF::STYLE_UNDERLINE
-      @font.draw_blended_utf8(@contents, @item.title, 0, 0, *@color)
-      @time_font.draw_blended_utf8(@contents, @item.time.strftime('%Y-%m-%d'), 300, 4, *@time_color) if @item.time
+    return unless @item      
+    if @transforming
       @font.style = TTF::STYLE_NORMAL
-    elsif @transforming
       @font.draw_blended_utf8(@contents, @last_item.title, 0, -@transforming, *@color)
       @time_font.draw_blended_utf8(@contents, @last_item.time.strftime('%Y-%m-%d'), 300, -@transforming+4, *@time_color) if @last_item.time
+      @font.style = TTF::STYLE_UNDERLINE if @focus
       @font.draw_blended_utf8(@contents, @item.title, 0, -@transforming+24, *@color)
       @time_font.draw_blended_utf8(@contents, @item.time.strftime('%Y-%m-%d'), 300, -@transforming+24+4, *@time_color) if @item.time
     else
+      @font.style = @focus ? TTF::STYLE_UNDERLINE : TTF::STYLE_NORMAL
       @font.draw_blended_utf8(@contents, @item.title, 0, 0, *@color)
       @time_font.draw_blended_utf8(@contents, @item.time.strftime('%Y-%m-%d'), 300, 4, *@time_color) if @item.time
     end

@@ -25,7 +25,7 @@ class Card
         if row
           @all[row['id'].to_i] || old_new(row)
         else
-          @diy[id] ||= Card.new('id' => 0, 'number' => :"00000000", 'name' => id, 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "")
+          @diy[id] ||= Card.new('id' => 0, 'number' => :"00000000", 'name' => id, 'attribute' => :暗, 'level' => 1,  'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "", 'lore' => "")
         end
       when Hash
         old_new(id)
@@ -34,6 +34,7 @@ class Card
       else
         sql = "select * from YGODATA where " << id
         sql << " order by #{order_by}" if order_by
+        $log.debug('查询卡片执行SQL'){sql}
         @db.execute(sql).collect {|row|@all[row['id'].to_i] || old_new(row)}
       end
     end
@@ -175,7 +176,7 @@ class Card
     @id == 1
   end
   def monster?
-    !@attribute.nil?
+    [:融合怪兽, :同调怪兽, :超量怪兽, :通常怪兽, :效果怪兽, :调整怪兽, :仪式怪兽].include? card_type 
   end
   def trap?
     [:通常陷阱, :反击陷阱, :永续陷阱].include? card_type 
@@ -189,9 +190,13 @@ class Card
   def token?
     @token
   end
+  def diy?
+    number == :"00000000"
+  end
   def inspect
     "[#{card_type}][#{name}]"
   end
-  Unknown = Card.new('id' => 0, 'number' => :"00000000", 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
+  Unknown = Card.new('id' => 0, 'number' => :"00000000", 'attribute' => :暗, 'level' => 1, 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end
+require_relative 'cardcreater'
