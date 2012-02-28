@@ -21,7 +21,7 @@ class Scene_Duel < Scene
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
-  BGM = "audio/bgm/duel.ogg"
+  BGM = "duel.ogg"
 	def initialize(room, deck=nil)
     super()
 		@room = room
