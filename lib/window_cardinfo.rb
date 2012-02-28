@@ -4,7 +4,7 @@ class Window_CardInfo < Window
   def initialize(x,y)
     super(x,y,1024-x,524,300)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
-    self.card = Game_Card.new Card.find('name' => :mycard, 'number' => :"000000", 'lore' => "提示：\n快捷键：\nF10退出房间\nF12 返回主界面", 'card_type' => :" ", 'stats' => "", 'archettypes' => "", "mediums" => "", "tokens" => 0)
+    self.card = Game_Card.new Card.find('name' => :mycard, 'number' => :"000000", 'lore' => "提示：\n快捷键：\nF10 退出房间\nF12 返回主界面", 'card_type' => :" ", 'stats' => "", 'archettypes' => "", "mediums" => "", "tokens" => 0)
   end
   def card=(card)
     return if card.nil? or card == @card or !card.known?

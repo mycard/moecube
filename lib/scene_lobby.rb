@@ -13,6 +13,7 @@ class Scene_Lobby < Scene
   require_relative 'chatmessage'
   require_relative 'scene_duel'
   attr_reader :chat_window
+  BGM = "lobby.ogg"
   def start
     WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
 		$game.refresh
@@ -24,10 +25,6 @@ class Scene_Lobby < Scene
 		
     @active_window = @roomlist
 		@chat_window = Window_Chat.new(313,543,698,212)
-    bgm = Mixer::Music.load("audio/bgm/lobby.ogg")
-    Mixer.fade_in_music(bgm, -1, 800)
-    @bgm.destroy if @bgm
-    @bgm = bgm
     @count = 0
     super
   end

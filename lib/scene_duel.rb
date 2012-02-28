@@ -21,6 +21,7 @@ class Scene_Duel < Scene
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
+  BGM = "audio/bgm/duel.ogg"
 	def initialize(room, deck=nil)
     super()
 		@room = room
@@ -28,8 +29,6 @@ class Scene_Duel < Scene
   end
   def start
     WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id}) - #{@room.name}(#{@room.id})", "MyCard")
-    @bgm = Mixer::Music.load "audio/bgm/duel.ogg"
-    Mixer.fade_in_music(@bgm, -1, 800)
     @background = Surface.load("graphics/field/main.png").display_format
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     

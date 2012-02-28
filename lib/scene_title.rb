@@ -6,6 +6,7 @@
 #==============================================================================
 require_relative 'scene'
 require_relative 'window_title'
+BGM = 'title.ogg'
 class Scene_Title < Scene
   def start
     WM::set_caption("MyCard", "MyCard")
@@ -18,9 +19,7 @@ class Scene_Title < Scene
     #@logo_window = Window.new(@command_window.x-(logo.w-@command_window.width)/2,150,logo.w,logo.h)
     #@logo_window.contents = logo
     #$screen.update_rect(0,0,0,0)
-    @bgm = Mixer::Music.load 'audio/bgm/title.ogg'
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
-    Mixer.fade_in_music @bgm, -1, 800
     super
     
   end
