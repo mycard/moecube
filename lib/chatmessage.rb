@@ -1,3 +1,4 @@
+#encoding: UTF-8
 class ChatMessage
   attr_accessor :user, :message, :channel, :time
   def initialize(user,message,channel=:lobby,time=Time.now)

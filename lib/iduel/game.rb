@@ -121,14 +121,19 @@ class Iduel < Game
     (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
   end
   #公告
-  $config['iDuel']['announcements'] ||= {"正在读取公告..." => nil}
+  $config['iDuel']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
   Thread.new do
     begin
       open('http://www.duelcn.com/topic-Announce.html') do |file|
         file.set_encoding "GBK"
-        announcements = {}
-        file.read.scan(/<li><em>.*?<\/em><a href="(.*?)" title="(.*?)" target="_blank">.*?<\/a><\/li>/).each do |url, title|
-          announcements[title.encode("UTF-8")] = "http://www.duelcn.com/#{url}"
+        announcements = []
+        file.read.scan(/<li><em>(.*?)<\/em><a href="(.*?)" title="(.*?)" target="_blank">.*?<\/a><\/li>/).each do |time, url, title|
+          if time =~ /(\d+)-(\d+)-(\d+)/
+            time = Time.new($1, $2, $3)
+          else
+            time = nil
+          end
+          announcements << Announcement.new(title.encode("UTF-8"), "http://www.duelcn.com/#{url}", time)
         end
         $config['iDuel']['announcements'].replace announcements
         save_config

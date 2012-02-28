@@ -14,6 +14,7 @@ begin
     File.open(file,"w"){|file| YAML.dump($config, file)}
   end
   
+  require_relative 'announcement'
   #读取配置文件
   load_config
   save_config
