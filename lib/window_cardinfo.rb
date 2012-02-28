@@ -4,7 +4,7 @@ class Window_CardInfo < Window
   def initialize(x,y)
     super(x,y,1024-x,524,300)
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
-    self.card = Game_Card.new Card.find(1)#new 'name' => :test, 'number' => :"000000", 'lore' => "test2", 'card_type' => :通常魔法, 'stats' => "", 'archettypes' => "", "mediums" => "", "tokens" => ""
+    self.card = Game_Card.new Card.find('name' => :mycard, 'number' => :"000000", 'lore' => "提示：\n快捷键：\nF10退出房间\nF12 返回主界面", 'card_type' => :" ", 'stats' => "", 'archettypes' => "", "mediums" => "", "tokens" => 0)
   end
   def card=(card)
     return if card.nil? or card == @card or !card.known?
@@ -18,6 +18,12 @@ class Window_CardInfo < Window
         return
       end
       char = @card.lore[@lore_start]
+      @lore_start += 1
+      if char == "\n"
+        @lore_pos[0] = 0
+        @lore_pos[1] += WLH
+        return
+      end
       width = @font.text_size(char)[0]
       if @lore_pos[0] + width > @width
         @lore_pos[0] = 0
@@ -25,9 +31,6 @@ class Window_CardInfo < Window
       end
       @font.draw_blended_utf8(@contents, char, @lore_pos[0], @lore_pos[1], 0xFF, 0xFF, 0xFF)
       @lore_pos[0] += width
-      @lore_start += 1
-
-      
     end
   end
   def refresh
@@ -45,6 +48,6 @@ class Window_CardInfo < Window
     @lore_start = 0
     @lore_pos = [0, 234]
     
-   # @font.draw_blended_utf8(@contents, @card.inspect, 0, 300, 0xFF, 0xFF, 0x66)
+    # @font.draw_blended_utf8(@contents, @card.inspect, 0, 300, 0xFF, 0xFF, 0x66)
   end
 end

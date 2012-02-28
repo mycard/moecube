@@ -30,14 +30,14 @@ class Replay
       result.player1 = User.new($2 ? $2.to_i : :player, $1) if contents =~ Player_Filter
       result.player2 = User.new($2 ? $2.to_i : :opponent, $1) if contents =~ Opponent_Filter
       from_players = contents.scan(Delimiter).collect do |matched|
-        id = matched[1].to_i
+        id = matched[1] || :player
         name = matched[0]
         if result.player1 and result.player1.id == id
           true
         elsif result.player2 and result.player2.id == id
           false
         elsif result.player1.nil?
-          result.player1 = User.new(id, name)
+          result.player1 = User.new(id , name)
           true
         elsif result.player2.nil?
           result.player2 = User.new(id, name)
@@ -48,8 +48,9 @@ class Replay
         end
       end
     end
-    result.player1 ||= User.new(0, "我")
-    result.player2 ||= User.new(1, "对手")
+    result.player1 ||= User.new(:player, "我")
+    result.player2 ||= User.new(:opponent, "对手")
+    p result.player1, result.player2
     lines = contents.split(Delimiter)
     lines.shift #split后，在第一个操作之前会多出一个空白元素
     if from_players.empty?

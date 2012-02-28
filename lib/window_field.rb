@@ -45,11 +45,11 @@ class Window_Field < Window
     end
     if !@field.removed.empty?
       @items[:removed] = Removed_Pos + Card_Size 
-      @cards[:removed] = @field.removed.first
+      @cards[:removed] = @field.removed.last
     end
     if !@field.graveyard.empty?
       @items[:graveyard] = Graveyard_Pos + Card_Size
-      @cards[:graveyard] = @field.graveyard.first
+      @cards[:graveyard] = @field.graveyard.last
     end
     
     @field.field.each_with_index do |card, index|
@@ -143,18 +143,21 @@ class Window_Field < Window
     refresh_action_window
   end
   def refresh_cardinfo_window
-    $scene.cardinfo_window.card = @card = case @index
+    @card = case @index
     when :deck
-      @field.deck.first
+      @field.deck.last
     when :extra
       @field.extra.first
     when :graveyard
-      @field.graveyard.first
+      @field.graveyard.last
+    when :removed
+      @field.removed.last
     when 0..10
       @field.field[@index]
     when Integer #手卡
       @field.hand[@index-11]
     end
+    $scene.cardinfo_window.card = @card unless @index == :deck
   end
   def refresh_action_window
     return unless @action_window

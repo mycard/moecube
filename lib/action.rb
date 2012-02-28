@@ -165,8 +165,18 @@ class Action
         else
           $log.error('移动操作3'){'错误的to_pos' + self.inspect}
         end
+        p to_field
       end
-      
+      if from_field == player_field.hand and !@card || !@card.known?
+        case @to_pos
+        when 0..5
+          player_field.hand.each{|card|card.card = Card::Unknown if card.known? and !card.monster?}
+        when 6..10
+          player_field.hand.each{|card|card.card = Card::Unknown if card.known? and card.monster?}
+        else
+          player_field.hand.each{|card|card.card = Card::Unknown if card.known?}
+        end
+      end
       super
     end
   end
@@ -696,6 +706,7 @@ class Action
   end
   class CardInfo < Action
     def initialize(card, card_type, atk, _def, attribute, type, level, lore)
+      return unless card.diy?
       card.card_type = card_type
       #card.monster_type = monster_type
       card.atk = atk

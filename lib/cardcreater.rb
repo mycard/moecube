@@ -10,7 +10,6 @@ class Card
   #AtkDef_Value_Font = TTF.open("graphics/cardcreater/Lucida Sans Unicode.ttf", 12)
   AtkDef_Value_Font = TTF.open("graphics/cardcreater/Lucida Sans Unicode.ttf", 8)
   def create_image
-    
     #载入背景图
     result = if monster?
       Surface.load "graphics/cardcreater/back/#{card_type}/#{attribute} #{level}.jpg"

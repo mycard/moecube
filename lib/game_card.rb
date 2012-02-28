@@ -27,9 +27,6 @@ class Game_Card
     @atk = @card.atk
     @def = @card.def
   end
-  def known?
-    @card != Card::Unknown
-  end
   def image_small
     if @position == :set and !$game.player_field.hand.include?(self)
       Card.find(nil).image_small

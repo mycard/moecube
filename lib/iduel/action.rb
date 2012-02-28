@@ -187,7 +187,7 @@ class Action
       when /^┊(.*)┊$/m
         Chat.new from_player, $1
       when /^※\[(.*)\]\n(.*)\n注释.*$/m
-        card = Card.find($1.to_sym)
+        p card = Card.find($1.to_sym)
         case $2 
         when /(.+怪兽),种族：(.+),属性：(.+),星级：(\d+),攻击：(\d+|？),防御：(\d+|？),效果：(.+)/
           CardInfo.new(card, $1.to_sym, $5 == "？" ? nil : $5.to_i, $6 == "？" ? nil : $6.to_i, $3.to_sym, $2.to_sym, $4.to_sym, $7)

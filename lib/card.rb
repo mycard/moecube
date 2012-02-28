@@ -5,7 +5,7 @@ class Card
 	@db = SQLite3::Database.new( "data/data.sqlite" )
 	@all = {}
   @diy = {}
-	@count = @db.get_first_value("select COUNT(*) from YGODATA") rescue 0
+	@count = @db.get_first_value("select COUNT(*) from `yu-gi-oh`") rescue 0
 	@db.results_as_hash = true
   PicPath = if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
     require 'win32/registry'
@@ -19,9 +19,9 @@ class Card
 		def find(id, order_by=nil)
       case id
 			when Integer
-        @all[id] || old_new(@db.get_first_row("select * from YGODATA where id = #{id}"))
+        @all[id] || old_new(@db.get_first_row("select * from `yu-gi-oh` where id = #{id}"))
       when Symbol
-				row = @db.get_first_row("select * from YGODATA where name = '#{id}'")
+				row = @db.get_first_row("select * from `yu-gi-oh` where name = '#{id}'")
         if row
           @all[row['id'].to_i] || old_new(row)
         else
@@ -32,7 +32,7 @@ class Card
       when nil
         Card::Unknown
       else
-        sql = "select * from YGODATA where " << id
+        sql = "select * from `yu-gi-oh` where " << id
         sql << " order by #{order_by}" if order_by
         $log.debug('查询卡片执行SQL'){sql}
         @db.execute(sql).collect {|row|@all[row['id'].to_i] || old_new(row)}
@@ -40,7 +40,7 @@ class Card
     end
     def all
       if @all.size != @count
-        sql = "select * from YGODATA where id not in (#{@all.keys.join(', ')})"
+        sql = "select * from `yu-gi-oh` where id not in (#{@all.keys.join(', ')})"
         @db.execute(sql).each{|row|old_new(row)}
       end
       @all
@@ -52,8 +52,7 @@ class Card
     def new(id)
       find(id)
     end
-
-    def load_from_ycff3(db = "E:/game/yu-gi-oh/YGODATA/YGODAT.mdb")
+    def load_from_ycff3(db = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"] ? (require 'win32/registry';Win32::Registry::HKEY_CURRENT_USER.open('Software\OCGSOFT\YFCC'){|reg|reg['Path']+"YGODATA/YGODAT.dat"} rescue '') : '')
       require 'win32ole'
       conn = WIN32OLE.new('ADODB.Connection')
       conn.open("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + db + ";Jet OLEDB:Database Password=paradisefox@sohu.com" )
@@ -65,33 +64,33 @@ class Card
       
       records = WIN32OLE.new('ADODB.Recordset')
       records.open("YGODATA", conn)
-
+      records.MoveNext #跳过首行那个空白卡
       sql = ""
       while !records.EOF
-        sql << "INSERT INTO YGODATA VALUES(
-          #{records.Fields.Item("CardID").value}, 
+        sql << "INSERT INTO `yu-gi-oh` VALUES(
+          #{records.Fields.Item("CardID").value-1}, 
           '#{records.Fields.Item("CardPass").value}',
           '#{records.Fields.Item("SCCardName").value}',
-          '#{records.Fields.Item("SCCardType").value}',
-          '#{records.Fields.Item("SCDCardType").value.empty? ? "NULL" : records.Fields.Item("SCDCardType").value}',
+          '#{records.Fields.Item("SCCardType").value == "XYZ怪兽" ? "超量怪兽" : records.Fields.Item("SCCardType").value}',
+          #{records.Fields.Item("SCDCardType").value == '　　　　' ? "NULL" : "'#{records.Fields.Item("SCDCardType").value}'"},
           #{records.Fields.Item("CardATK").value || "NULL"}, 
           #{records.Fields.Item("CardDef").value || "NULL"}, 
-          '#{records.Fields.Item("SCCardAttribute").value.empty? ? "NULL" : records.Fields.Item("SCCardAttribute").value}',
-          '#{records.Fields.Item("SCCardRace").value.empty? ? "NULL" : records.Fields.Item("SCCardRace").value}',
+          #{records.Fields.Item("SCCardAttribute").value == '　　　　' ? "NULL" : "'#{records.Fields.Item("SCCardAttribute").value}'"},
+          #{records.Fields.Item("SCCardRace").value == '　　　　' ? "NULL" : "'#{records.Fields.Item("SCCardRace").value}'"},
           #{records.Fields.Item("CardStarNum").value || "NULL"},
           '#{records.Fields.Item("SCCardDepict").value}',
           #{case records.Fields.Item("ENCardBan").value; when "Normal"; 3; when "SubConfine"; 2; when "Confine"; 1; else; 0; end},
           '#{records.Fields.Item("CardEfficeType").value}',
           '#{records.Fields.Item("CardPhal").value.split(",").collect{|stat|stats[stat.to_i]}.join("\t")}',
           '#{records.Fields.Item("CardCamp").value.gsub("、", "\t")}',
-          '#{records.Fields.Item("CardISTKEN").value.zero? ? "NULL" : ("1\t" * records.Fields.Item("CardISTKEN").value).chomp("\t")}'
+          #{records.Fields.Item("CardISTKEN").value}
         );"
         records.MoveNext
       end
-      
       @db.execute('begin transaction')
-      @db.execute('DROP TABLE "main"."YGODATA";') rescue nil
-      @db.execute('CREATE TABLE "YGODATA" (
+      @db.execute('DROP INDEX if exists "main"."name";')
+      @db.execute('DROP TABLE if exists "main"."yu-gi-oh";')
+      @db.execute('CREATE TABLE "yu-gi-oh" (
         "id"  INTEGER NOT NULL,
         "number"  TEXT NOT NULL,
         "name"  TEXT NOT NULL,
@@ -107,13 +106,13 @@ class Card
         "stats"  TEXT NOT NULL,
         "archettypes"  TEXT NOT NULL,
         "mediums"  TEXT NOT NULL,
-        "tokens"  TEXT,
+        "tokens"  INTEGER NOT NULL,
         PRIMARY KEY ("id")
       );')
       @db.execute_batch(sql)
+      @db.execute('CREATE UNIQUE INDEX "main"."name" ON "yu-gi-oh" ("name");')
       @db.execute('commit transaction')
-      
-      @count = @db.get_first_value("select COUNT(*) from YGODATA") #重建计数
+      @count = @db.get_first_value("select COUNT(*) from `yu-gi-oh`") #重建计数
       @all.clear #清空缓存
     end
   end
@@ -150,7 +149,7 @@ class Card
     @stats = hash['stats'].split("\t").collect{|stat|stat.to_i}
     @archettypes = hash['archettypes'].split("\t").collect{|archettype|stat.to_sym}
     @mediums = hash['mediums'].split("\t").collect{|medium|medium.to_sym}
-    @tokens = hash['tokens'] && hash['tokens'].split("\t").collect{|token|token.to_i}
+    @tokens = hash['tokens'].to_i
     @token = hash['token']
     
     Card.cache[@id] = self
@@ -159,7 +158,7 @@ class Card
     @image ||= Surface.load("graphics/field/card.jpg").display_format
   end
   def image
-    @image ||= Surface.load("#{PicPath}/#{@id-1}.jpg").display_format rescue create_image
+    @image ||= Surface.load("#{PicPath}/#{@id}.jpg").display_format rescue create_image
   end
   def image_small
     @image_small ||= image.transform_surface(0xFF000000,0,54.0/image.w, 81.0/image.h,Surface::TRANSFORM_SAFE).copy_rect(1, 1, 54, 81).display_format
@@ -193,6 +192,9 @@ class Card
   def diy?
     number == :"00000000"
   end
+  def known?
+    self != Unknown
+  end
   def inspect
     "[#{card_type}][#{name}]"
   end
@@ -200,3 +202,4 @@ class Card
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end
 require_relative 'cardcreater'
+#Card.load_from_ycff3

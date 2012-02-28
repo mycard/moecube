@@ -99,15 +99,15 @@ class Iduel < Game
           #@conn.connect Socket.pack_sockaddr_in(Port, Server)
           recv @conn.gets(RS) while @conn
         rescue => exception
-          Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
           $log.error('iduel-connect-1') {[exception.inspect, *exception.backtrace].join("\n")}
+          Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
         ensure
           self.exit
         end
       end
     rescue => exception
-      Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
       $log.error('iduel-connect-2') {[exception.inspect, *exception.backtrace].join("\n")}
+      Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
     end
   end
   def checknum(head, *args)
