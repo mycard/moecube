@@ -1,3 +1,4 @@
+#encoding: UTF-8
 require_relative 'window'
 class Window_BGM < Window
   WLH=20
