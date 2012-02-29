@@ -12,36 +12,46 @@ class Window_Config < Window
     
     @items = {
       :fullscreen => [0,0,120,WLH],
-      :avatar_cache => [220, WLH,@button.w/3, @button.h],
-      :return => [0,WLH*2,100,WLH]
+      :bgm => [0,WLH,120,WLH],
+      :avatar_cache => [220, WLH*2,@button.w/3, @button.h],
+      :return => [0,WLH*3+10,100,WLH]
     }
     refresh
   end
   def draw_item(index, status=0)
     case index
     when :fullscreen
-      clear(0,0,100,WLH)
-      Surface.blit(@checkbox, 20*status, $config["fullscreen"] ? 20 : 0, 20, 20, @contents, 0, 0)
+      Surface.blit(@checkbox, 20*status, $config['screen']['fullscreen'] ? 20 : 0, 20, 20, @contents, 0, 0)
       case status
       when 0
-        @font.draw_blended_utf8(@contents, "全屏模式", WLH, 0, 0x00,0x00,0x00)
+        @font.draw_blended_utf8(@contents, "全屏模式", 24, 0, 0x00,0x00,0x00)
       when 1
-        @font.draw_shaded_utf8(@contents, "全屏模式", WLH, 0, 0x00,0x00,0x00, 0xEE, 0xEE, 0xEE)
+        @font.draw_shaded_utf8(@contents, "全屏模式", 24, 0, 0x00,0x00,0x00, 0xEE, 0xEE, 0xEE)
       when 2
-        @font.draw_shaded_utf8(@contents, "全屏模式", WLH, 0, 0xEE,0xEE,0xEE, 0x00, 0x00, 0x00)
+        @font.draw_shaded_utf8(@contents, "全屏模式", 24, 0, 0xEE,0xEE,0xEE, 0x00, 0x00, 0x00)
+      end
+    when :bgm
+      Surface.blit(@checkbox, 20*status, $config['bgm'] ? 20 : 0, 20, 20, @contents, 0, WLH)
+      case status
+      when 0
+        @font.draw_blended_utf8(@contents, "BGM", 24, WLH, 0x00,0x00,0x00)
+      when 1
+        @font.draw_shaded_utf8(@contents, "BGM", 24, WLH, 0x00,0x00,0x00, 0xEE, 0xEE, 0xEE)
+      when 2
+        @font.draw_shaded_utf8(@contents, "BGM", 24, WLH, 0xEE,0xEE,0xEE, 0x00, 0x00, 0x00)
       end
     when :avatar_cache
-      clear(0,WLH,220+@button.w/3,@button.h)
       size = 0
       count = 0
       Dir.glob("graphics/avatars/*_*.png") do |file|
         count += 1
         size += File.size(file)
       end
-      @font.draw_blended_utf8(@contents, "头像缓存: #{count}个文件, #{filesize_inspect(size)}", 0, WLH, 0x00,0x00,0x00)
-      Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 220, WLH)
+      @font.draw_blended_utf8(@contents, "头像缓存: #{count}个文件, #{filesize_inspect(size)}", 0, WLH*2, 0x00,0x00,0x00)
+      Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 220, WLH*2)
+      @font.draw_blended_utf8(@contents, "清空", 220+10, WLH*2+5, 0x00,0x00,0x00)
     when :return
-      @font.draw_blended_utf8(@contents, "回到标题画面", 0, WLH*2, 0x00,0x00,0x00)
+      @font.draw_blended_utf8(@contents, "回到标题画面", 0, WLH*3+10, 0x00,0x00,0x00)
     end
     
   end
@@ -59,6 +69,7 @@ class Window_Config < Window
       @index = nil
     else
       @index = index
+      clear(*item_rect(@index))
       draw_item(@index, 1)
     end
   end
@@ -70,29 +81,40 @@ class Window_Config < Window
     end
   end
   def refresh
+    clear
     @items.each_key{|index|draw_item(index)}
   end
   def clicked
     case @index
     when :fullscreen
       clear(*item_rect(@index))
-      $config["fullscreen"] = !$config["fullscreen"]
+      $config['screen']['fullscreen'] = !$config['screen']['fullscreen']
       $screen.destroy
       style = HWSURFACE
-      style |= FULLSCREEN if $config["fullscreen"]
-      $screen = Screen.open($config["width"], $config["height"], 0, style)
-      draw_item(@index, 2)
+      style |= FULLSCREEN if $config['screen']["fullscreen"]
+      $screen = Screen.open($config['screen']["width"], $config['screen']["height"], 0, style)
+      draw_item(@index, 1)
+    when :bgm
+      clear(*item_rect(@index))
+      $config['bgm'] = !$config['bgm']
+      if $config['bgm']
+        $scene = Scene_Config.new
+      else
+        $scene.last_bgm = nil
+        Mixer.fade_out_music(800)
+      end
+      draw_item(@index, 1)
     when :avatar_cache
+      #clear(*item_rect(@index))
       Dir.glob("graphics/avatars/*_*.png") do |file|
         File.delete file
       end
-      draw_item(:avatar_cache)
+      refresh
+      #draw_item(:avatar_cache,1)
     when :return
-      File.open("config.yml","w") do |config| 
-        YAML.dump($config, config) 
-      end 
       $scene = Scene_Title.new
     end
+    save_config
   end
   def filesize_inspect(size)
     case size

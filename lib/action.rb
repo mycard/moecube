@@ -165,7 +165,6 @@ class Action
         else
           $log.error('移动操作3'){'错误的to_pos' + self.inspect}
         end
-        p to_field
       end
       if from_field == player_field.hand and !@card || !@card.known?
         case @to_pos

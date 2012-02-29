@@ -1,6 +1,6 @@
 #encoding: UTF-8
 class Replay
-  User_Filter = /(.+?)(?:\((\d+)\))?(?:\(\d+:\d+:\d+\))?(?::|：) */
+  User_Filter = /(.+?)(?:\((\d+)\))?(?:\(\d+:\d+:\d+\))?(?::   |：) */
   Delimiter = /^#{User_Filter}\n ?/
   Player_Filter = /#{Delimiter}\[\d+\] ◎→/
   Opponent_Filter =/#{Delimiter}\[\d+\] ●→/
@@ -27,10 +27,10 @@ class Replay
       require 'cgi'
       contents = CGI.unescape_html(contents)
     else
-      result.player1 = User.new($2 ? $2.to_i : :player, $1) if contents =~ Player_Filter
-      result.player2 = User.new($2 ? $2.to_i : :opponent, $1) if contents =~ Opponent_Filter
+      result.player1 = User.new($2 ? $2.to_i : $1.to_sym, $1) if contents =~ Player_Filter
+      result.player2 = User.new($2 ? $2.to_i : $1.to_sym, $1) if contents =~ Opponent_Filter
       from_players = contents.scan(Delimiter).collect do |matched|
-        id = matched[1] || :player
+        id = (matched[1] || matched[0]).to_sym
         name = matched[0]
         if result.player1 and result.player1.id == id
           true
@@ -48,9 +48,8 @@ class Replay
         end
       end
     end
-    result.player1 ||= User.new(:player, "我")
-    result.player2 ||= User.new(:opponent, "对手")
-    p result.player1, result.player2
+    result.player1 ||= User.new($1.to_sym, "我")
+    result.player2 ||= User.new($1.to_sym, "对手")
     lines = contents.split(Delimiter)
     lines.shift #split后，在第一个操作之前会多出一个空白元素
     if from_players.empty?

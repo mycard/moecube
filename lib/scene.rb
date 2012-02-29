@@ -46,13 +46,19 @@ class Scene
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
-    if @@last_bgm != self.class::BGM
+    if $config['bgm'] and @@last_bgm != self.class::BGM
       @@bgm.destroy if @@bgm
       @@bgm = Mixer::Music.load "audio/bgm/#{self.class::BGM}"
       Mixer.fade_in_music(@@bgm, -1, 800)
       @bgm_window = Window_BGM.new OggInfo.new("audio/bgm/#{self.class::BGM}", "UTF-8").tag["title"]
       @@last_bgm = self.class::BGM
     end
+  end
+  def last_bgm
+    @@last_bgm
+  end
+  def last_bgm=(bgm)
+    @@last_bgm = bgm
   end
   def refresh_rect(x, y, width, height, background=@background, ox=0,oy=0)
     Surface.blit(background,x+ox,y+oy,width,height,$screen,x,y)

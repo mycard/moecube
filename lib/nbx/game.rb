@@ -22,7 +22,7 @@ class NBX < Game
     Game_Event.push Game_Event::Host.new(@room)
     send(nil, "NewRoom", @room.player1.name)
     @conn_room_server = TCPServer.new '0.0.0.0', Port  #为了照顾NBX强制IPv4
-    @accept_room = Thread.new{Thread.start(@conn_room_server.accept) {|client| accept(client)} rescue p @conn_room_server while @conn_room_server}
+    @accept_room = Thread.new{(Thread.start(@conn_room_server.accept) {|client| accept(client)} while @conn_room_server) rescue nil}
   end
   def action(action)
     if @room.player2

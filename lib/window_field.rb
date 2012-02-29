@@ -428,7 +428,7 @@ class Window_Field < Window
   end
   def clear(x=0,y=0,width=@width,height=@height)
     super
-    if $scene.fieldback_window.visible?
+    if $scene.fieldback_window and $scene.fieldback_window.visible?
       Surface.blit($scene.fieldback_window.contents, @x+x-$scene.fieldback_window.x, @y+y-$scene.fieldback_window.y, width, height, @contents, x, y)
     end
   end

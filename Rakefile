@@ -7,6 +7,21 @@ require 'rake/rdoctask'
 #require 'rake/testtask'
 
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
+if Windows
+  STDOUT.set_encoding "GBK", "UTF-8"
+  STDERR.set_encoding "GBK", "UTF-8"
+end
+#在windows上UTF-8脚本编码环境中  Dir.glob无法列出中文目录下的文件 所以自己写个递归
+def list(path)
+	result = []
+	Dir.foreach(path) do |file|
+		next if file == "." or file == ".."
+    result << "#{path}/#{file}"
+		result.concat list(result.last) if File.directory? result.last
+	end
+	result
+end
+
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
   s.version = '0.3.9'
@@ -17,9 +32,10 @@ spec = Gem::Specification.new do |s|
   s.email = 'zh99998@gmail.com'
   s.homepage = 'http://card.touhou,cc'
   # s.executables = ['your_executable_here']
-  s.files = %w(LICENSE.txt README.txt replay) + Dir.glob("{lib,audio,data,fonts,graphics}/**/*")
+  s.files = %w(LICENSE.txt README.txt replay)
+  %w{lib audio data fonts graphics}.each{|dir|s.files.concat list(dir)}
   if Windows
-    s.files += %w(mycard.exe) + Dir.glob("{ruby}/**/*")
+    s.files += %w(mycard.exe) + list("ruby")
   else
     s.files += %w(install.sh)
   end
@@ -49,4 +65,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options << '--line-numbers'
 end
 
-CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc) + Dir.glob("{replay}/**/*") + Dir.glob("**/Thumbs.db") + Dir.glob("graphics/avatars/*_*.png")
+CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc) + list('replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/}

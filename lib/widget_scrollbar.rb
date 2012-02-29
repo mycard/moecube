@@ -57,7 +57,7 @@ class Widget_ScrollBar < Window
   end
   def mousemoved(x,y)
     if Mouse.state[2] and @scrolling and @scroll_max > 0
-      @parent_window.scroll = [[0, (y - @y - @scrolling) / ((@height-40-24)/@scroll_max)].max, @scroll_max].min
+      @parent_window.scroll = [[0, (y - @y - @scrolling) * @scroll_max / (@height-40-24)].max, @scroll_max].min
     end
     case y-@y
     when 0...20 #上按钮

@@ -7,6 +7,7 @@ begin
     require 'yaml'
     $config = YAML.load_file("config.yml") rescue {}
     $config ||= {}
+    $config['bgm'] = true if $config['bgm'].nil?
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024
     $config['screen']['height'] ||= 768
