@@ -9,7 +9,10 @@ class Card
 	@db.results_as_hash = true
   PicPath = if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
     require 'win32/registry'
-    Win32::Registry::HKEY_CURRENT_USER.open('Software\OCGSOFT\Cards'){|reg|reg['Path']} rescue ''
+    ospicpath = Win32::Registry::HKEY_CURRENT_USER.open('Software\OCGSOFT\Cards'){|reg|reg['Path']} rescue ''
+    p ospicpath.encoding
+    ospicpath.force_encoding "GBK"
+    p ospicpath.encode "UTF-8"
   else
     '' #其他操作系统卡图存放位置标准尚未制定。
   end

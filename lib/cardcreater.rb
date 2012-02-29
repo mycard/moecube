@@ -12,7 +12,7 @@ class Card
   def create_image
     #载入背景图
     result = if monster?
-      Surface.load "graphics/cardcreater/back/#{card_type}/#{attribute} #{level}.jpg"
+      Surface.load "graphics/cardcreater/back/#{card_type}/#{attribute}_#{level}.jpg"
     else 
       Surface.load "graphics/cardcreater/back/#{card_type}.jpg"
     end

@@ -32,6 +32,9 @@ Rake::GemPackageTask.new(spec) do |p|
   if Windows
     p.need_zip = true
     p.zip_command = '../7z.exe a -tzip'
+    def p.zip_file
+      "#{package_name}-win32.zip"
+    end
   else
     p.need_tar = true
   end
