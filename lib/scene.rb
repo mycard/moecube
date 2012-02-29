@@ -97,6 +97,12 @@ class Scene
       when 5
         @active_window.scroll_down if @active_window
       end
+    when Event::MouseButtonUp
+      case event.button
+      when Mouse::BUTTON_LEFT
+        update_active_window(event.x, event.y)
+        @active_window.mouseleftbuttonup if @active_window
+      end
     when Event::KeyDown
       case event.sym
       when Key::F12

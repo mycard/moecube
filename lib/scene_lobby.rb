@@ -57,16 +57,6 @@ class Scene_Lobby < Scene
         $game.exit
         $scene = Scene_Login.new
       end
-    when Event::KeyUp
-      case event.sym
-      when Key::RETURN
-        determine
-      end
-    when Event::MouseButtonUp
-      case event.button
-      when Mouse::BUTTON_LEFT
-        determine
-      end
     else
       super
     end
@@ -97,20 +87,6 @@ class Scene_Lobby < Scene
     end
     @count += 1
     super
-  end
-
-  def determine
-    case @active_window
-    when @roomlist
-      return unless @roomlist.index and room = @roomlist.items[@roomlist.index]
-      if room.full?
-        $game.watch room
-        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
-      else
-        $game.join room, "test"
-        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
-      end
-    end
   end
   def terminate
     unless $scene.is_a? Scene_Lobby or $scene.is_a? Scene_Duel

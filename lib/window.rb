@@ -72,6 +72,9 @@ class Window
   def clicked
     #子类定义
   end
+  def mouseleftbuttonup
+    #子类定义
+  end
   def lostfocus(active_window=nil)
     #子类定义
   end

@@ -2,7 +2,7 @@
 require_relative 'window_list'
 class Window_Scrollable < Window_List
   attr_reader :scroll
-  attr_accessor :scrolling
+  attr_accessor :scrollbar
   def initialize(x, y, width, height, z=200)
     super(x, y, width, height, z)
     @page_size ||= @height / self.class::WLH
@@ -40,8 +40,10 @@ class Window_Scrollable < Window_List
   def refresh
     clear
     (@scroll...[(@scroll+@page_size), @items.size].min).each{|index|draw_item(index, @index == index ? 1 : 0)}
-    @scrolling.scroll_max = [@items.size - @page_size, 0].max if @scrolling
-    @scrolling.scroll = @scroll if @scrolling
+    if @scrollbar
+      @scrollbar.scroll_max = [@items.size - @page_size, 0].max 
+      @scrollbar.scroll = @scroll
+    end
   end
   def item_rect(index)
     [0, (index-@scroll)*self.class::WLH, @width, self.class::WLH]

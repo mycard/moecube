@@ -10,6 +10,7 @@ class Widget_ScrollBar < Window
     @contents.fill_rect(0,0,@width, @height, 0xFFFFFFFF)
     @scroll ||= 0
     @scroll_max ||= 0
+    @scrolling = nil
     Surface.transform_draw(@back,@contents,0,1,@contents.h.to_f/@back.h,0,0,0,0,0)
     refresh
   end
@@ -55,6 +56,9 @@ class Widget_ScrollBar < Window
     end
   end
   def mousemoved(x,y)
+    if Mouse.state[2] and @scrolling and @scroll_max > 0
+      @parent_window.scroll = [[0, (y - @y - @scrolling) / ((@height-40-24)/@scroll_max)].max, @scroll_max].min
+    end
     case y-@y
     when 0...20 #上按钮
       self.index = :up
@@ -70,7 +74,20 @@ class Widget_ScrollBar < Window
       scroll_up
     when :down
       scroll_down
+    when :scroll
+      y = (@height-40-24)*@scroll/(@scroll_max)
+      case Mouse.state[1] - @y - 20
+      when 0...y
+        scroll_up
+      when y..(y+24)
+        @scrolling = Mouse.state[1] - @y - y
+      else
+        scroll_down
+      end
     end
+  end
+  def mouseleftbuttonup
+    @scrolling = nil
   end
   def scroll_up
     @parent_window.scroll_up

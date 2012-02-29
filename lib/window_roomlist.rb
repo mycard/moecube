@@ -17,7 +17,7 @@ class Window_RoomList < Window_Scrollable
     @item_max = 0
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @color = [0x03, 0x11, 0x22]
-    @scrolling = Widget_ScrollBar.new(self,@x+@width,@y,@height)
+    @scrollbar = Widget_ScrollBar.new(self,@x+@width,@y,@height)
     self.items = items
 	end
 
@@ -35,5 +35,15 @@ class Window_RoomList < Window_Scrollable
   def mousemoved(x,y)
     return unless self.include?(x,y)
     self.index = (y - @y) / WLH + @scroll
+  end
+  def clicked
+    return unless @index and room = @items[@index]
+    if room.full?
+      $game.watch room
+      @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
+    else
+      $game.join room, "test"
+      @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
+    end
   end
 end

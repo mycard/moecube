@@ -27,7 +27,7 @@ class Window_Chat < Window_Scrollable
       Game_Event.push Game_Event::Chat.new(chatmessage)
     end
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
-    @scrolling = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
+    @scrollbar = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
     @page_size = (@height-68)/WLH
     @@list ||= {}
     @list_splited = {}
@@ -121,7 +121,7 @@ class Window_Chat < Window_Scrollable
       @font.draw_blended_utf8(@contents, chatmessage.user.name+':', x, y, *chatmessage.name_color) if chatmessage.name_visible?
       @font.draw_blended_utf8(@contents, message, x+name_width(chatmessage), y, *chatmessage.message_color) unless chatmessage.message.empty?
     else
-      @font.draw_blended_utf8(@contents, message, x, y, *chatmessage)
+      @font.draw_blended_utf8(@contents, message, x, y, *chatmessage) unless message.empty?
     end
   end
   def item_rect(index)
