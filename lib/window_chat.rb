@@ -75,7 +75,6 @@ class Window_Chat < Window_Scrollable
   end
   def mousemoved(x,y)
     if y-@y < 31 and (x-@x) < @channels.size * 100
-      #p '**********',@channels, (x-@x) / 100
       self.index = @channels[(x-@x) / 100]
     else
       self.index = nil
