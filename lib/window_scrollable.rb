@@ -35,13 +35,13 @@ class Window_Scrollable < Window_List
     #  clear(0, 0, @width, self.class::WLH * (scroll - @scroll))
     #end
     @scroll = scroll
-    @scrolling.scroll = @scroll if @scrolling
     refresh
   end
   def refresh
     clear
     (@scroll...[(@scroll+@page_size), @items.size].min).each{|index|draw_item(index, @index == index ? 1 : 0)}
-    @scrolling.scroll_max = @items.size - @page_size if @scrolling
+    @scrolling.scroll_max = [@items.size - @page_size, 0].max if @scrolling
+    @scrolling.scroll = @scroll if @scrolling
   end
   def item_rect(index)
     [0, (index-@scroll)*self.class::WLH, @width, self.class::WLH]

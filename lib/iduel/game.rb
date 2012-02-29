@@ -83,6 +83,15 @@ class Iduel < Game
       send(4, @key, msg, checknum("CHATP", @session))
     when User #私聊
       send(3, @key, "#{chatmessage.channel.name}(#{chatmessage.channel.id})", msg, checknum("CHATX", @session + "X" + "#{chatmessage.channel.name}(#{chatmessage.channel.id})"))
+    when Room #房间消息：向双方分别私聊
+      channel = chatmessage.channel
+      chatmessage.channel = channel.player1
+      chat chatmessage
+      if channel.player2
+        chatmessage.channel = channel.player2
+        chat chatmessage
+      end
+      chatmessage.channel = channel
     end
     
     #4|241019,test,2368c6b89b3e2eedb92e1b624a2a157c

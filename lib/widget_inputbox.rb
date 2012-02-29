@@ -51,6 +51,9 @@ class Widget_InputBox < Window
     @contents.fill_rect(x,y,width,height,0x66FFFFFF)
     @contents.fill_rect(x+2,y+2,width-4,height-4,0xFFFFFFFF)
   end
+  def update
+    #puts "UPDATE:" + self.to_s
+  end
   def self.determine
     @@active.value=@@entry.get.encode("UTF-8");@@root.withdraw(true);@@active.refresh;true
   end

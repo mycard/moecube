@@ -20,6 +20,7 @@ class Scene_Login < Scene
 	end
   def update
     @announcements_window.update
+    #@gameselect_window.update
     super
   end
   def handle_game(event)

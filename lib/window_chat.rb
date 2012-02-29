@@ -6,12 +6,9 @@
 require_relative 'widget_scrollbar'
 require_relative 'widget_inputbox'
 require_relative 'chatmessage'
-class Window_Chat < Window_List
+require_relative 'window_scrollable'
+class Window_Chat < Window_Scrollable
   WLH=16
-  User_Color = [0,0,0xFF]
-  Text_Color = [0,0,0]
-  Player_Color = [0,0,0xFF]
-  Opponent_Color = [0xFF,0,0]
 	def initialize(x, y, width, height)
     super(x,y,width,height)
     if @width > 600 #判断大厅还是房间，这个判据比较囧，待优化
@@ -30,53 +27,138 @@ class Window_Chat < Window_List
       Game_Event.push Game_Event::Chat.new(chatmessage)
     end
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
-    @scroll = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
+    @scrolling = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
+    @page_size = (@height-68)/WLH
     @@list ||= {}
+    @list_splited = {}
+    @@list.each_pair do |channel, chatmessages|
+      chatmessages.each do |chatmessage|
+        add_split(chatmessage)
+      end
+    end
+    @channels = []
     self.channel = :lobby
-    #self.items = [:lobby]#, User.new(1,"zh99997"), Room.new(1,"测试房间")]
 	end
 	def add(chatmessage)
     @@list[chatmessage.channel] ||= []
-    self.items << chatmessage.channel unless self.items.include? chatmessage.channel
+    @channels << chatmessage.channel unless @channels.include? chatmessage.channel
     @@list[chatmessage.channel] << chatmessage
-    refresh
-	end
+    scroll_bottom = @items.size - self.scroll <= @page_size
+    add_split(chatmessage)
+    if chatmessage.channel == @channel
+      @scroll = [@items.size - @page_size, 0].max if scroll_bottom
+      refresh
+    end
+  end
+  def add_split(chatmessage)
+    @list_splited[chatmessage.channel] ||= []
+    @list_splited[chatmessage.channel] << [chatmessage, ""]
+    width = name_width(chatmessage)
+    line = 0
+    chatmessage.message.each_char do |char|
+      if char == "\n"
+        line += 1
+        width = 0
+        @list_splited[chatmessage.channel] << [chatmessage.message_color, ""]
+      else
+        char_width = @font.text_size(char)[0]
+        if char_width + width > @width-14-20
+          line += 1
+          width = char_width
+          @list_splited[chatmessage.channel] << [chatmessage.message_color, char]
+        else
+          @list_splited[chatmessage.channel].last[1] << char
+          width +=  char_width
+        end
+      end
+    end
+  end
   def mousemoved(x,y)
-    if y-@y < 31 and (x-@x) < @items.size * 100
-      self.index = (x-@x) / 100
+    if y-@y < 31 and (x-@x) < @channels.size * 100
+      #p '**********',@channels, (x-@x) / 100
+      self.index = @channels[(x-@x) / 100]
     else
       self.index = nil
     end
   end
   def clicked
-    self.channel = @items[@index] if @index
+    case @index
+    when nil
+    when Integer
+    else
+      self.channel = @index
+    end
   end
   def channel=(channel)
-    self.items << channel unless self.items.include? channel
+    return if @channel == channel
     @channel = channel
+    @channels << channel unless @channels.include? channel
+    @list_splited[channel] ||= []
+    @items = @list_splited[channel]
+    @scroll = [@items.size - @page_size, 0].max
     refresh
   end
   
   def draw_item(index, status=0)
-    Surface.blit(@tab,0,@channel == @items[index] ? 0 : 31,100,31,@contents,index*100+3,0)
-    channel_name = ChatMessage.channel_name @items[index]
+    case index
+    when nil
+    when Integer #描绘聊天消息
+      draw_item_chatmessage(index, status)
+    else #描绘频道标签
+      draw_item_channel(index, status)
+    end
+  end
+  def draw_item_channel(channel, status)
+    index = @channels.index(channel)
+    Surface.blit(@tab,0,@channel == channel ? 0 : 31,100,31,@contents,index*100+3,0)
+    channel_name = ChatMessage.channel_name channel
     x = index*100+(100 - @font.text_size(channel_name)[0])/2
-    draw_stroked_text(channel_name,x,8,1,@font, [255,255,255], ChatMessage.channel_color(@items[index]))
+    draw_stroked_text(channel_name,x,8,1,@font, [255,255,255], ChatMessage.channel_color(channel))
+  end
+  def draw_item_chatmessage(index, status)
+    x,y = item_rect_chatmessage(index)
+    chatmessage, message = @items[index]
+    if chatmessage.is_a? ChatMessage
+      @font.draw_blended_utf8(@contents, chatmessage.user.name+':', x, y, *chatmessage.name_color) if chatmessage.name_visible?
+      @font.draw_blended_utf8(@contents, message, x+name_width(chatmessage), y, *chatmessage.message_color) unless chatmessage.message.empty?
+    else
+      @font.draw_blended_utf8(@contents, message, x, y, *chatmessage)
+    end
   end
   def item_rect(index)
-    [index*100+3, 0, 100, 31]
+    case index
+    when nil
+    when Integer #描绘聊天消息
+      item_rect_chatmessage(index)
+    else #描绘频道标签
+      item_rect_channel(index)
+    end
+  end
+  def item_rect_channel(channel)
+    [@channels.index(channel)*100+3, 0, 100, 31]
+  end
+  def item_rect_chatmessage(index)
+    [8, (index-@scroll)*WLH+31+3, @width, self.class::WLH]
   end
   def refresh
     super
-    return unless @@list[@channel]
-    @@list[@channel].last((@height-68)/WLH).each_with_index do |chatmessage, index|
-      if chatmessage.name_visible?
-        @font.draw_blended_utf8(@contents, chatmessage.user.name+':', 8, index*WLH+31+3, *User_Color)
-        name_width = @font.text_size(chatmessage.user.name+':')[0]
-      else
-        name_width = 0
-      end
-      @font.draw_blended_utf8(@contents, chatmessage.message, 8+name_width, index*WLH+31+3, *chatmessage.message_color) unless chatmessage.message.empty?
+    @channels.each {|channel|draw_item_channel(channel, @index==channel)}
+  end
+  def name_width(chatmessage)
+    chatmessage.name_visible? ? @font.text_size(chatmessage.user.name+':')[0] : 0
+  end
+  def index_legal?(index)
+    case index
+    when nil,Integer
+      super
+    else
+      @channels.include? index
     end
+  end
+  def scroll_up
+    self.scroll -= 1
+  end
+  def scroll_down
+    self.scroll += 1
   end
 end

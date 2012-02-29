@@ -14,14 +14,14 @@ class Window_List < Window
     super(x,y,width, height,z)
 	end
   def index=(index)
-    index = nil if index < 0 or index >= @items.size if index
+    index = nil unless index_legal?(index)
     return if index == @index
     
     if @index
       clear(*item_rect(@index))
-      draw_item(@index, 0) if @items[@index]
+      draw_item(@index, 0) if index_legal?(@index)
     end
-    if index.nil? or index < 0 or index >= @items.size
+    if index.nil?
       @index = nil
     else
       @index = index
@@ -69,6 +69,8 @@ class Window_List < Window
   def clicked
     #子类定义
   end
-
+  def index_legal?(index)
+    index.nil? or (index >= 0 and index < @items.size)
+  end
 end
 

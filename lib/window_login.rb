@@ -66,6 +66,10 @@ class Window_Login < Window
       draw_item(@index, item_rect(@index), 1)
     end
   end
+  def update
+    @username_inputbox.update
+    @password_inputbox.update
+  end
   #def destroy
   #  @username_inputbox.destroy
   #  @password_inputbox.destroy

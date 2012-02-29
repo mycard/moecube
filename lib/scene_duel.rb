@@ -134,7 +134,10 @@ class Scene_Duel < Scene
       end
       @replay.add event.str
       str = event.str
-      if str =~ /^\[\d+\] (?:●|◎)→(.*)$/m
+      if str =~ /^\[\d+\] (.*)$/m
+        str = $1
+      end
+      if str =~ /^(?:●|◎)→(.*)$/m
         str = $1
       end
       user = if $game.room.player2 == $game.user

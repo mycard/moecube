@@ -86,7 +86,7 @@ class Widget_ScrollBar < Window
   def scroll_max=(scroll_max)
     return unless scroll_max and scroll_max != @scroll_max and scroll_max >=0
     @scroll_max = scroll_max
-    if @scroll >= @scroll_max
+    if @scroll > @scroll_max
       @scroll = @scroll_max
     end
     refresh
