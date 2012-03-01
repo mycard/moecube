@@ -169,7 +169,7 @@ class Scene_Duel < Scene
     super
   end
   def refresh
-    @fieldback_window.card = $game.player_field.field[0] || $game.opponent_field.field[0]
+    @fieldback_window.card = $game.player_field.field[0] && $game.player_field.field[0].card_type == :场地魔法 && $game.player_field.field[0].position == :attack ? $game.player_field.field[0] : $game.opponent_field.field[0] && $game.opponent_field.field[0].card_type == :场地魔法 && $game.opponent_field.field[0].position == :attack ? $game.opponent_field.field[0] : nil
     @player_field_window.refresh
     @opponent_field_window.refresh
     @phases_window.player = $game.turn_player

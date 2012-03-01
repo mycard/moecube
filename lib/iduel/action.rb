@@ -193,6 +193,8 @@ class Action
           CardInfo.new(card, $1.to_sym, $5 == "？" ? nil : $5.to_i, $6 == "？" ? nil : $6.to_i, $3.to_sym, $2.to_sym, $4.to_sym, $7)
         when /(魔法|陷阱)种类：(.+),效果：(.+)/
           CardInfo.new(card, ($2+$1).to_sym, nil, nil, nil, nil, nil, $3)
+        else
+          Unknown.new str
         end
       when /^※(.*)$/
         Chat.new from_player, $1
