@@ -25,7 +25,14 @@ class Game_Event
   class AllUsers < Game_Event
     attr_reader :users
     def initialize(users)
-      @users = users
+      @users = []
+      users.each do |user|
+        if user.friend?
+          @users.unshift user
+        else
+          @users << user
+        end
+      end
       $game.users.replace @users
     end
   end
@@ -34,7 +41,13 @@ class Game_Event
     attr_reader :users
     def initialize(user)
       @user = user
-      $game.users << @user unless $game.users.include? @user
+      unless $game.users.include? @user
+        if @user.friend?
+          $game.users.unshift @user
+        else
+          $game.users << @user
+        end
+      end
     end
   end
 

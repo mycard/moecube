@@ -47,16 +47,7 @@ class Game_Event
   end
   class AllUsers
     def self.parse(info)
-      users = []
-      info.split(',').each do |user|
-        user = User.parse(user)
-        if user.friend?
-          users.unshift user
-        else
-          users << user
-        end
-      end
-      self.new users
+      self.new info.split(',').collect{|user|User.parse(user)}
     end
   end
   class AllRooms
