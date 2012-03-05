@@ -69,7 +69,7 @@ class Scene_Lobby < Scene
     when Game_Event::AllRooms
       @roomlist.items = $game.rooms
     when Game_Event::Join
-      $scene = Scene_Duel.new(event.room, Deck.load("妖鸟.TXT"))
+      $scene = Scene_Duel.new(event.room, Deck.load("老I FTK２.txt"))
     when Game_Event::Watch
       require_relative 'scene_watch'
       $scene = Scene_Watch.new(event.room)

@@ -39,6 +39,7 @@ class Game_Event
       #>> $B|201629,zh99997,5da9e5fa,Level-1 (总经验:183),,20101118
       info[3] =~ /Level-(\d)+ \(总经验:(\d+)\)/
       result = self.new User.new(info[0].to_i, info[1], $1.to_i, $2.to_i)
+      $game.get_friends
       $game.session = info[2]
       $game.key = ($game.user.id - 0x186a0) ^ 0x22133
       result
@@ -46,7 +47,16 @@ class Game_Event
   end
   class AllUsers
     def self.parse(info)
-      self.new info.split(',').collect{|user|User.parse(user)}
+      users = []
+      info.split(',').each do |user|
+        user = User.parse(user)
+        if user.friend?
+          users.unshift user
+        else
+          users << user
+        end
+      end
+      self.new users
     end
   end
   class AllRooms

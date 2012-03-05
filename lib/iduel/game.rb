@@ -96,6 +96,27 @@ class Iduel < Game
     
     #4|241019,test,2368c6b89b3e2eedb92e1b624a2a157c
   end
+  def get_friends
+    $config['iDuel']['friends'] ||= []
+    $config['iDuel']['friends'].each {|id|User.new(id).friend = true}
+    Thread.new do
+      begin
+        open("http://www.duelcn.com/home.php?mod=space&uid=#{@user.id-100000}&do=friend&view=me&from=space") do |file|
+          $config['iDuel']['friends'].each {|id|User.new(id).friend = false}
+          $config['iDuel']['friends'].clear
+          file.set_encoding "GBK", "UTF-8"
+          file.read.scan(/<a href="home.php\?mod=space&amp;uid=(\d+)" title=".*" target="_blank">.*<\/a>/) do |uid, others|
+            id = uid.to_i + 100000
+            User.new(id).friend = true
+            $config['iDuel']['friends'] << id
+          end
+          save_config
+        end
+      rescue Exception => exception
+        $log.error('读取好友信息') {[exception.inspect, *exception.backtrace].join("\n").encode("UTF-8")}
+      end
+    end
+  end
   private
   def connect
     require 'socket'
@@ -129,26 +150,29 @@ class Iduel < Game
     info.gsub!("\n", "\r\n")
     (@conn.write info) rescue Game_Event.push Game_Event::Error.new($!.class.to_s, $!.message)
   end
-  #公告
-  $config['iDuel']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
-  Thread.new do
-    begin
-      open('http://www.duelcn.com/topic-Announce.html') do |file|
-        file.set_encoding "GBK"
-        announcements = []
-        file.read.scan(/<li><em>(.*?)<\/em><a href="(.*?)" title="(.*?)" target="_blank">.*?<\/a><\/li>/).each do |time, url, title|
-          if time =~ /(\d+)-(\d+)-(\d+)/
-            time = Time.new($1, $2, $3)
-          else
-            time = nil
+  def self.get_announcements
+    #公告
+    $config['iDuel']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
+    Thread.new do
+      begin
+        open('http://www.duelcn.com/topic-Announce.html') do |file|
+          file.set_encoding "GBK"
+          announcements = []
+          file.read.scan(/<li><em>(.*?)<\/em><a href="(.*?)" title="(.*?)" target="_blank">.*?<\/a><\/li>/).each do |time, url, title|
+            if time =~ /(\d+)-(\d+)-(\d+)/
+              time = Time.new($1, $2, $3)
+            else
+              time = nil
+            end
+            announcements << Announcement.new(title.encode("UTF-8"), "http://www.duelcn.com/#{url}", time)
           end
-          announcements << Announcement.new(title.encode("UTF-8"), "http://www.duelcn.com/#{url}", time)
+          $config['iDuel']['announcements'].replace announcements
+          save_config
         end
-        $config['iDuel']['announcements'].replace announcements
-        save_config
+      rescue Exception => exception
+        $log.error('公告') {[exception.inspect, *exception.backtrace].join("\n")}
       end
-    rescue Exception => exception
-      $log.error('公告') {[exception.inspect, *exception.backtrace].join("\n")}
     end
   end
+  get_announcements
 end
