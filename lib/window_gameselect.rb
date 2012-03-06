@@ -25,6 +25,7 @@ class Window_GameSelect < Window_List
     self.items = @items
     self.index = @items.find_index{|game|game["name"] == $config['game']} || 0
     clicked
+    @announcements_window = Window_Announcements.new(313,265,600,24)
     refresh
   end
   def draw_item(index, status=0)
@@ -59,9 +60,11 @@ class Window_GameSelect < Window_List
     $config['game'] = @items[@index]['name']
     @login_window.destroy if @login_window
     @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
+    @announcements_window.refresh if @announcements_window
+    
   end
   def update
-    @login_window.update if @login_window
+    @announcements_window.update if @announcements_window
   end
   #def destroy
   #  @login_window.destroy if @login_window

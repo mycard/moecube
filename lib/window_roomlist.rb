@@ -27,9 +27,10 @@ class Window_RoomList < Window_Scrollable
     Surface.blit(@button, @width*status, room.full? ? WLH : 0, @width, WLH, @contents, 0, y)
     @font.draw_blended_utf8(@contents, "R-#{room.id}", 24, y+8, *@color)
     @font.draw_blended_utf8(@contents, room.full? ? "【决斗中】" : room.private? ? "【私密房】" : "【等待中】", 8, y+24, *@color)
-    @font.draw_blended_utf8(@contents, room.name, 128, y+8, *room.color)
-    @font.draw_blended_utf8(@contents, room.player1.name, 128, y+24, *@color) 
-    @font.draw_blended_utf8(@contents, room.player2.name, 256, y+24, *@color) if room.full?
+    @font.draw_blended_utf8(@contents, room.name, 128, y+8, *room.color) unless room.name.empty? or room.name.size > 100
+    p room.name if room.name.size > 100
+    @font.draw_blended_utf8(@contents, room.player1.name, 128, y+24, *@color) if room.player1
+    @font.draw_blended_utf8(@contents, room.player2.name, 256, y+24, *@color) if room.player2
   end
   
   def mousemoved(x,y)
@@ -42,7 +43,7 @@ class Window_RoomList < Window_Scrollable
       $game.watch room
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
     else
-      $game.join room, "test"
+      $game.join room
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
     end
   end

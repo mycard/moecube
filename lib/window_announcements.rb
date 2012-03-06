@@ -42,7 +42,8 @@ class Window_Announcements < Window
         @transforming = 0
       end
     end
-    if @item != @items[@index]
+    if @item != $config[$config['game']]['announcements'][@index]
+      @items = $config[$config['game']]['announcements']
       @index = 0
       @count = 0
       @item = @items[@index]
