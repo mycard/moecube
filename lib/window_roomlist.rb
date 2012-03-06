@@ -40,11 +40,11 @@ class Window_RoomList < Window_Scrollable
   def clicked
     return unless @index and room = @items[@index]
     if room.full?
-      $game.watch room
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
+      $game.watch room
     else
-      $game.join room
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
+      $game.join room
     end
   end
 end

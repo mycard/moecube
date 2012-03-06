@@ -26,7 +26,7 @@ class Ygocore < Game
     Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
   end
   def watch(room)
-    join(room)
+    Widget_Msgbox.new("观战", "ygocore不支持加入已经开始游戏的房间", :ok => "确定")
   end
   def join(room)
     return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
@@ -94,11 +94,11 @@ class Ygocore < Game
           @@keybd_event.call(VK_RETURN,0,0,0)
           @@keybd_event.call(VK_RETURN,0,KEYEVENTF_KEYUP,0)
         else
-          Widget_Msgbox.new("加入房间", 'ygocore运行失败')
+          Widget_Msgbox.new("加入房间", 'ygocore运行失败', :ok => "确定")
         end
       end
     end
-    $scene = Scene_Lobby.new
+    Widget_Msgbox.new("加入房间","已经加入房间").destroy  #仅仅为了消掉正在加入房间的消息框
   end
   def refresh
     Thread.new do
