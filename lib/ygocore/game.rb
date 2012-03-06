@@ -2,7 +2,7 @@
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
 require 'open-uri'
 class Ygocore < Game
-  Register_Url = 'http://sh.convnet.net:7922/?userregist=NEW'
+  Register_Url = 'http://sh.convnet.net:7955/regist.html'
   Port = 7911
   Server = '221.226.68.62'
   
@@ -21,6 +21,9 @@ class Ygocore < Game
     load File.expand_path('room.rb', File.dirname(__FILE__))
   end
   def login(username, password)
+    if username.empty?
+      return Widget_Msgbox.new("登陆", "请输入用户名", :ok => "确定")
+    end
     connect
     @password = password
     Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))

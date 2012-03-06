@@ -15,7 +15,7 @@ class Window_Announcements < Window
   def refresh
     clear
     return unless @item      
-    if @transforming
+    if @transforming and @last_item
       @font.style = TTF::STYLE_NORMAL
       @font.draw_blended_utf8(@contents, @last_item.title, 0, -@transforming, *@color)
       @time_font.draw_blended_utf8(@contents, @last_item.time.strftime('%Y-%m-%d'), 300, -@transforming+4, *@time_color) if @last_item.time

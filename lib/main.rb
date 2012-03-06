@@ -6,7 +6,7 @@ begin
   def load_config(file="config.yml")
     require 'yaml'
     $config = YAML.load_file("config.yml") rescue {}
-    $config ||= {}
+    $config = {} unless $config.is_a? Hash
     $config['bgm'] = true if $config['bgm'].nil?
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024

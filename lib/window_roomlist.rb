@@ -38,6 +38,7 @@ class Window_RoomList < Window_Scrollable
     self.index = (y - @y) / WLH + @scroll
   end
   def clicked
+    return if @last_clicked and Time.now - @last_clicked < 3 #ygocore 加入房间时可能弹Tk窗询问主程序位置 防止重复点击
     return unless @index and room = @items[@index]
     if room.full?
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
@@ -46,5 +47,6 @@ class Window_RoomList < Window_Scrollable
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
       $game.join room
     end
+    @last_clicked = Time.now
   end
 end
