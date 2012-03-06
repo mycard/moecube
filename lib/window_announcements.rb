@@ -53,7 +53,7 @@ class Window_Announcements < Window
     else
       @count += 1
     end
-    if @count>= 180
+    if @count>= 180 and !@items.empty?
       @index = (@index + 1) % @items.size
       @count = 0
       @item = @items[@index]

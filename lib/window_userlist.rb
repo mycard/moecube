@@ -20,30 +20,18 @@ class Window_UserList < Window_Scrollable
     #@contents.set_alpha(RLEACCEL, 80)
     @contents.fill_rect(0,0,@width,@height,0xFFFFFFFF)
     self.items = items
-    #@contents.f
 	end
   def draw_item(index, status=0)
     case status
     when 0
-      @font.draw_blended_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *(item_color(index)))
+      @font.draw_blended_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *@items[index].color)
     when 1
-      @font.draw_shaded_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *(item_color(index)+@color_over))
+      @font.draw_shaded_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *(@items[index].color+@color_over))
     when 2
-      @font.draw_shaded_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *(item_color(index)+@color_click))
+      @font.draw_shaded_utf8(@contents, @items[index].name, 0, item_rect(index)[1], *(@items[index].color+@color_click))
     end
   end
-  def item_color(index)
-    @items[index].friend? ? @color_friend : @color
-  end
-  #def clear(x=0, y=0, width=@width, height=@height)
-  #  Surface.blit(x, )
-  #end
-
- #def clear(x=0,y=0,width=@width,height=@height)
-  #  @contents.fill_rect(x,y,width,height,0x66FFFFFF)
-  #end
   def clicked
-    #$scene.refresh_rect(*item_rect(@index)){draw_item(@index, 2)} if @index
     return unless @index
     @userwindow = Window_User.new(100,100,@items[@index]) 
   end

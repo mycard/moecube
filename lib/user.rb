@@ -31,4 +31,7 @@ class User
   def viewinfo
     
   end
+  def color
+    [0,0,0]
+  end
 end

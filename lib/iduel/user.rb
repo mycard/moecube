@@ -51,4 +51,7 @@ class User
     require 'launchy'
     Launchy.open("http://www.duelcn.com/home.php?mod=space&uid=#{@id-100000}")
   end
+  def color
+    @friend ? [255,0,0] : [0,0,0]
+  end
 end
