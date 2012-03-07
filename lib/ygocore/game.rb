@@ -33,8 +33,7 @@ class Ygocore < Game
     Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
   end
   def watch(room)
-    #Widget_Msgbox.new("观战", "ygocore不支持加入已经开始游戏的房间", :ok => "确定")
-    join(room)
+    Widget_Msgbox.new("观战", "ygocore不支持加入已经开始游戏的房间", :ok => "确定")
   end
   def join(room)
     return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
@@ -71,7 +70,7 @@ class Ygocore < Game
       @@SendMessage = Win32API.new('user32', 'SendMessage', ["L", "L", "L", "L"], "L")
       @@SetForegroundWindow = Win32API.new('user32', 'SetForegroundWindow', 'l', 'v')
       @@keybd_event = Win32API.new('user32', 'keybd_event', 'llll', 'v')
-      @@lstrcpy = Win32API.new('kernel32', 'lstrcpyA', ['I', 'P'], 'P');
+      @@lstrcpy = Win32API.new('kernel32', 'lstrcpy', ['I', 'P'], 'P');
       @@lstrlen = Win32API.new('kernel32', 'lstrlen', ['P'], 'I');
       @@OpenClipboard = Win32API.new('user32', 'OpenClipboard', ['I'], 'I');
       @@CloseClipboard = Win32API.new('user32', 'CloseClipboard', [], 'I');
