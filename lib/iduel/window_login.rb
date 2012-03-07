@@ -18,7 +18,7 @@ class Window_Login
       @last_clicked = Time.now
     when :replay
       require 'tk'
-      file = Tk.getOpenFile
+      file = Tk.getOpenFile.encode("UTF-8")
       if !file.empty?
         $game = Iduel.new
         $game.user = User.new(0)
