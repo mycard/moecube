@@ -34,4 +34,7 @@ class User
   def color
     [0,0,0]
   end
+  def space
+    
+  end
 end

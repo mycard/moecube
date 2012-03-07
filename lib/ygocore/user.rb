@@ -1,6 +1,4 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-
+#encoding: UTF-8
 class User
   def initialize(id, name = "", certified = true)
     @id = id
@@ -14,5 +12,8 @@ class User
   end
   def color
     @certified ? [0,0,255] : [128,128,128]
+  end
+  def space
+    Widget_Msgbox.new("查看资料", "ygocore没有这个功能", :ok => "确定")
   end
 end

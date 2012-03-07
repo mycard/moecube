@@ -48,13 +48,14 @@ class Ygocore < Game
       Dir.chdir(File.dirname($config['ygocore']['path'])) do 
         system_conf = {}
         IO.readlines('system.conf').each do |line|
+          line.force_encoding "UTF-8"
           next if line[0,1] == '#'
           field, contents = line.chomp.split(' = ',2)
           system_conf[field] = contents
-          system_conf['nickname'] = "#{@user.name}#{"$" unless @password.empty?}#{@password}"
-          system_conf['lastip'] = Server
-          system_conf['lastport'] = Port.to_s  
         end
+        system_conf['nickname'] = "#{@user.name}#{"$" unless @password.empty?}#{@password}"
+        system_conf['lastip'] = Server
+        system_conf['lastport'] = Port.to_s  
         open('system.conf', 'w') {|file|file.write system_conf.collect{|key,value|"#{key} = #{value}"}.join("\n")}
         
         #运行ygocore
@@ -80,7 +81,7 @@ class Ygocore < Game
           #操作ygocore进入主机
           @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(507,242))
           @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(507,242))
-          sleep 0.2
+          sleep 0.3
           require 'win32/clipboard'
           Win32::Clipboard.set_data(room.name.encode("GBK").force_encoding("UTF-8"))
           @@SetForegroundWindow.call(hwnd)

@@ -75,6 +75,7 @@ class Widget_ScrollBar < Window
     when :down
       scroll_down
     when :scroll
+      return if @scroll_max.zero?
       y = (@height-40-24)*@scroll/(@scroll_max)
       case Mouse.state[1] - @y - 20
       when 0...y
