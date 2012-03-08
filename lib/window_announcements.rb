@@ -61,6 +61,7 @@ class Window_Announcements < Window
     super
   end
   def clicked
+    return unless @item
     require 'launchy'
     Launchy.open(@item.url) if @item.url
   end

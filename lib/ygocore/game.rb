@@ -2,9 +2,9 @@
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
 require 'open-uri'
 class Ygocore < Game
-  Register_Url = 'http://sh.convnet.net:7955/regist.html'
+  Register_Url = 'http://140.113.242.65/register.html'
   Port = 7911
-  Server = '221.226.68.62'
+  Server = '140.113.242.65'
   
   WM_LBUTTONDOWN = 0x201
   WM_LBUTTONUP = 0x202
@@ -128,7 +128,7 @@ class Ygocore < Game
   def refresh
     Thread.new do
       begin
-        open('http://sh.convnet.net:7922/') do |file|
+        open('http://140.113.242.65:7922/') do |file|
           file.set_encoding("GBK")
           info = file.read.encode("UTF-8")
           Game_Event.push Game_Event::AllUsers.parse info
@@ -149,11 +149,11 @@ class Ygocore < Game
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin
-        open('http://sh.convnet.net:7922/') do |file|
+        open('http://140.113.242.65:7922/') do |file|
           file.set_encoding "GBK"
           announcements = []
-          file.read.scan(/<div style="color:red" >(.*?)<\/div>/).each do |title,others|
-            announcements << Announcement.new(title.encode("UTF-8"), "http://sh.convnet.net:7922/", nil)
+          file.read.encode("UTF-8").scan(/<div style="color:red" >公告：(.*?)<\/div>/).each do |title,others|
+            announcements << Announcement.new(title, "http://140.113.242.65/", nil)
           end
           $config['ygocore']['announcements'].replace announcements
           save_config
