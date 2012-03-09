@@ -28,9 +28,13 @@ class Window_RoomList < Window_Scrollable
     @font.draw_blended_utf8(@contents, "R-#{room.id}", 24, y+8, *@color)
     @font.draw_blended_utf8(@contents, room.full? ? "【决斗中】" : room.private? ? "【私密房】" : "【等待中】", 8, y+24, *@color)
     @font.draw_blended_utf8(@contents, room.name, 128, y+8, *room.color) unless room.name.empty? or room.name.size > 100
-    p room.name if room.name.size > 100
+    $log.error('标题过长') {room.name} if room.name.size > 100
     @font.draw_blended_utf8(@contents, room.player1.name, 128, y+24, *room.player1.color) if room.player1
     @font.draw_blended_utf8(@contents, room.player2.name, 256, y+24, *room.player2.color) if room.player2
+    room.extra.each_with_index do |extra, index|
+      str, color = extra
+      @font.draw_blended_utf8(@contents, str, 300+index*96, y+8, *color)
+    end
   end
   
   def mousemoved(x,y)

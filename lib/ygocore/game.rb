@@ -2,9 +2,11 @@
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
 require 'open-uri'
 class Ygocore < Game
-  Register_Url = 'http://140.113.242.65/register.html'
-  Port = 7911
-  Server = '140.113.242.65'
+  Register_Url = 'http://card.touhou.cc/register' #用户点击注册时打开的地址
+  Port = 7911 #加入房间时填写到ygocore的服务器端口
+  Server = '140.113.242.65'  #加入房间时填写到ygocore的服务器IP
+  API_Url = 'http://card.touhou.cc:7922/'  #获取房间列表和公告的地址
+  Index_Url = 'http://card.touhou.cc/' #用户点击公告之后打开的地址
   
   WM_LBUTTONDOWN = 0x201
   WM_LBUTTONUP = 0x202
@@ -32,6 +34,16 @@ class Ygocore < Game
     @password = password
     Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
   end
+  def host(room_name, room_config)
+    room = Room.new(0, room_name)
+    if room_config[:pvp]
+      room.pvp = true
+    end
+    if room_config[:match]
+      room.match = true
+    end
+    join room
+  end
   def watch(room)
     Widget_Msgbox.new("观战", "ygocore不支持加入已经开始游戏的房间", :ok => "确定")
   end
@@ -44,6 +56,15 @@ class Ygocore < Game
       $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
       save_config
       @last_clicked = Time.now
+    end
+    room_name = if room.pvp? and room.match?
+      "PM#" + room.name
+    elsif room.pvp?
+      "P#" + room.name
+    elsif room.match?
+      "M#" + room.name
+    else
+      room.name
     end
     if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
       $scene.draw
@@ -95,17 +116,17 @@ class Ygocore < Game
         sleep 0.3
         if @@OpenClipboard.Call(0) != 0
           @@EmptyClipboard.Call();
-          len = @@lstrlen.Call(room.name.encode("GBK"));
+          len = @@lstrlen.Call(room_name.encode("GBK"));
           hmem = @@GlobalAlloc.Call(GMEM_DDESHARE, len+1);
           pmem = @@GlobalLock.Call(hmem);
-          @@lstrcpy.Call(pmem, room.name.encode("GBK"));
+          @@lstrcpy.Call(pmem, room_name.encode("GBK"));
           @@SetClipboardData.Call(CF_TEXT, hmem);
           @@GlobalUnlock.Call(hmem);
           @@CloseClipboard.Call;
         else
           return Widget_Msgbox.new("加入房间", '填写房间名失败 请把房间名手动填写到房间密码处', :ok => "确定")
         end
-        $log.debug('加入房间'){room.name}
+        $log.debug('加入房间'){room_name}
         @@SetForegroundWindow.call(hwnd)
         @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(380,500))
         @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(380,500))
@@ -128,7 +149,7 @@ class Ygocore < Game
   def refresh
     Thread.new do
       begin
-        open('http://140.113.242.65:7922/') do |file|
+        open(API_Url) do |file|
           file.set_encoding("GBK")
           info = file.read.encode("UTF-8")
           Game_Event.push Game_Event::AllUsers.parse info
@@ -149,11 +170,11 @@ class Ygocore < Game
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin
-        open('http://140.113.242.65:7922/') do |file|
+        open(API_Url) do |file|
           file.set_encoding "GBK"
           announcements = []
           file.read.encode("UTF-8").scan(/<div style="color:red" >公告：(.*?)<\/div>/).each do |title,others|
-            announcements << Announcement.new(title, "http://140.113.242.65/", nil)
+            announcements << Announcement.new(title, Index_Url, nil)
           end
           $config['ygocore']['announcements'].replace announcements
           save_config

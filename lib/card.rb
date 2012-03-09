@@ -19,6 +19,7 @@ class Card
   CardBack_Small = Surface.load("graphics/field/card_small.gif").display_format
 	class << self
 		def find(id, order_by=nil)
+      $log.debug('查找卡片'){id.inspect}
       case id
 			when Integer
         @all[id] || old_new(@db.get_first_row("select * from `yu-gi-oh` where id = #{id}"))
@@ -203,5 +204,4 @@ class Card
   Unknown = Card.new('id' => 0, 'number' => :"00000000", 'attribute' => :暗, 'level' => 1, 'name' => "", 'lore' => '', 'card_type' => :通常怪兽, 'stats' => "", 'archettypes' => "", 'mediums' => "")
   Unknown.instance_eval{@image = CardBack; @image_small = CardBack_Small}
 end
-require_relative 'cardcreater'
 #Card.load_from_ycff3

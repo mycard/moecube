@@ -556,7 +556,7 @@ class Action
           player_field.field[@from_pos]
         else
           $log.warn('攻击宣言'){'似乎凭空产生了卡片' + self.inspect}
-          player_field[@from_pos] = Card.new(@card)
+          player_field[@from_pos] = Game_Card.new(@card)
         end
       end
       $log.info('攻击宣言'){self.inspect}

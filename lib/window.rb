@@ -1,6 +1,6 @@
 class Window
   WLH = 24
-  attr_accessor :x, :y, :width, :height, :z, :contents, :visible, :viewport
+  attr_accessor :x, :y, :width, :height, :z, :contents, :visible, :viewport, :background
   alias visible? visible
   def initialize(x, y, width, height, z=200)
     @x = x

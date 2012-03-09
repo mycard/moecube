@@ -27,6 +27,9 @@ class Room
   def include?(user)
     @player1 == user or @player2 == user
   end
+  def extra
+    {}
+  end
   alias full? player2
   alias private? private
 end

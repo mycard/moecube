@@ -16,7 +16,7 @@ class Game
   end
   def refresh
   end
-  def host
+  def host(room_name, room_config)
   end
   def join(room)
   end

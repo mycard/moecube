@@ -11,6 +11,7 @@ class Scene_Lobby < Scene
   require_relative 'window_roomlist'
   require_relative 'window_chat'
   require_relative 'window_host'
+  require_relative 'window_lobbybuttons'
   require_relative 'chatmessage'
   require_relative 'scene_duel'
   attr_reader :chat_window
@@ -23,7 +24,7 @@ class Scene_Lobby < Scene
 		@userlist = Window_UserList.new(24,204,$game.users)
     @roomlist = Window_RoomList.new(320,50,$game.rooms)
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
-		@host_window = Window_Host.new(900,16)
+		@host_window = Window_LobbyButtons.new(900,16)
     @active_window = @roomlist
 		@chat_window = Window_Chat.new(313,543,698,212)
     @count = 0
@@ -47,14 +48,14 @@ class Scene_Lobby < Scene
         #@joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
         #$game.join 'localhost'
       when Key::F5
-        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
-          $game.qroom room
-        end
+#        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
+#          $game.qroom room
+#        end
         $game.refresh
       when Key::F12
-        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
-          $game.qroom room
-        end
+#        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
+#          $game.qroom room
+#        end
         $game.exit
         $scene = Scene_Login.new
       end

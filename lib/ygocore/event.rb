@@ -15,6 +15,10 @@ class Game_Event
           end
         end
         room = Room.new(id.to_i, name, player1, player2, false, status["等待"] ? [0,0,255] : [255,0,0])
+        room.name =~ /^(P)?(M)?\#?(.*)$/
+        room.name = $3
+        room.pvp = !!$1
+        room.match = !!$2
         if status["等待"]
           @rooms.unshift room
         else
