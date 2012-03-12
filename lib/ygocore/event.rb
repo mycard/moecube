@@ -5,7 +5,7 @@ class Game_Event
   class AllRooms < Game_Event
     def self.parse(info)
       @rooms = []
-      info.scan(Room_Filter) do |name, status, pvp, id|
+      info.scan(Room_Filter) do |name, pvp, status, id|
         player1 = player2 = nil
         $&.scan(User_Filter) do |player, name, certified|
           if player["1"]
