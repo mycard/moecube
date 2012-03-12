@@ -118,7 +118,7 @@ class Ygocore < Game
         #操作ygocore进入主机
         @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(507,242))
         @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(507,242))
-        sleep 0.3
+        sleep 0.5
         if @@OpenClipboard.Call(0) != 0
           @@EmptyClipboard.Call();
           len = @@lstrlen.Call(room_name.encode("GBK"));
