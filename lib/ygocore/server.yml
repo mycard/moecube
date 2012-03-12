@@ -1,0 +1,6 @@
+---
+register: http://card.touhou.cc/regist.html
+api: http://140.113.242.66:7922/
+index: http://card.touhou.cc/
+server: 140.113.242.66
+port: 7911

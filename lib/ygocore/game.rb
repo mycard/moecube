@@ -2,11 +2,12 @@
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
 require 'open-uri'
 class Ygocore < Game
-  Register_Url = 'http://card.touhou.cc/register' #用户点击注册时打开的地址
-  Port = 7911 #加入房间时填写到ygocore的服务器端口
-  Server = '140.113.242.65'  #加入房间时填写到ygocore的服务器IP
-  API_Url = 'http://card.touhou.cc:7922/'  #获取房间列表和公告的地址
-  Index_Url = 'http://card.touhou.cc/' #用户点击公告之后打开的地址
+  config = YAML.load_file("lib/ygocore/server.yml")
+  Register_Url = config['register']
+  Port = config['port']
+  Server = config['server']
+  API_Url = config['api']
+  Index_Url = config['index']
   
   WM_LBUTTONDOWN = 0x201
   WM_LBUTTONUP = 0x202
@@ -36,12 +37,8 @@ class Ygocore < Game
   end
   def host(room_name, room_config)
     room = Room.new(0, room_name)
-    if room_config[:pvp]
-      room.pvp = true
-    end
-    if room_config[:match]
-      room.match = true
-    end
+    room.pvp = room_config[:pvp]
+    room.match = room_config[:match]
     join room
   end
   def watch(room)

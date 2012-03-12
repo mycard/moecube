@@ -1,7 +1,7 @@
 #encoding: UTF-8
 class Game_Event
   User_Filter = /<li>(：：：观战：|===决斗1=|===决斗2=)<font color="(?:blue|gray)">(.+?)(\(未认证\)|)<\/font>;<\/li>/
-  Room_Filter = /<div style="width:300px; height:150px; border:1px #ececec solid; float:left;padding:5px; margin:5px;">房间名称：(.+?) (<font color=(?:\")?red(?:\")?>决斗已开始!<\/font>|<font color=(?:\")?blue(?:\")?>等待<\/font>)(<font color="#CC6633" title="竞技场，接受服务器录像、场次统计，非认证玩家不得加入">\[竞\]<\/font>|)<font size="1">\(ID：(\d+)\)<\/font>#{User_Filter}+?<\/div>/
+  Room_Filter = /<div style="width:300px; height:150px; border:1px #ececec solid; float:left;padding:5px; margin:5px;">房间名称：(.+?)(<font color="d28311" title="竞技场模式">\[竞\]<\/font>|) (<font color=(?:\")?red(?:\")?>决斗已开始!<\/font>|<font color=(?:\")?blue(?:\")?>等待<\/font>)<font size="1">\(ID：(\d+)\)<\/font>#{User_Filter}+?<\/div>/
   class AllRooms < Game_Event
     def self.parse(info)
       @rooms = []
