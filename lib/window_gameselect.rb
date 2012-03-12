@@ -29,11 +29,12 @@ class Window_GameSelect < Window_List
     refresh
   end
   def draw_item(index, status=0)
-    Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 0, WLH*index)
+    Surface.blit(@button, @button.w/3*status, @game == index ? @button.h/2 : 0, @button.w/3, @button.h/2, @contents, 0, WLH*index)
     draw_stroked_text(@items[index]["name"], 24, WLH*index+14, 2)
   end
   def item_rect(index)
-    [0, WLH*index, @button.w, @button.h]
+    return [0,0,0,0] unless index
+    [0, WLH*index, @button.w/3, @button.h/2]
   end
   def draw_stroked_text(text,x,y,size=1)
     [[x-size,y-size], [x-size,y], [x-size,y+size],
@@ -46,26 +47,31 @@ class Window_GameSelect < Window_List
     self.index = (y-@y) / WLH
   end
   def index=(index)
-    return if @index == index or index.nil?
+    return if @index == index# or index.nil?
     if @index
       clear(*item_rect(@index))
       draw_item(@index, 0)
     end
     @index = index
     clear(*item_rect(@index))
-    draw_item(@index, 1)
+    draw_item(@index, 1) if @index
   end
   def clicked
+    return unless @index
     load @items[@index]["file"] #TODO: load的这种架构微蛋疼，一时想不到更好的方案
     $config['game'] = @items[@index]['name']
     @login_window.destroy if @login_window
     @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
     @announcements_window.refresh if @announcements_window
-    
+    @game = @index
+    refresh
   end
   def update
     @announcements_window.update if @announcements_window
   end
+  #def lostfocus
+ #   self.index = nil
+  #end
   #def destroy
   #  @login_window.destroy if @login_window
   #  super
