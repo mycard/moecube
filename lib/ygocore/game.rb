@@ -69,11 +69,19 @@ class Ygocore < Game
       Dir.chdir(File.dirname($config['ygocore']['path'])) do 
         $log.debug('当前目录'){Dir.pwd.encode("UTF-8")}
         system_conf = {}
-        IO.readlines('system.conf').each do |line|
-          line.force_encoding "UTF-8"
-          next if line[0,1] == '#'
-          field, contents = line.chomp.split(' = ',2)
-          system_conf[field] = contents
+        begin
+          IO.readlines('system.conf').each do |line|
+            line.force_encoding "UTF-8"
+            next if line[0,1] == '#'
+            field, contents = line.chomp.split(' = ',2)
+            system_conf[field] = contents
+          end
+        rescue
+          system_conf['antialias'] = 2
+          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
+          $log.error('找不到system.conf')
+          $log.debug(Dir.foreach('.').to_a.inspect)
         end
         system_conf['nickname'] = "#{@user.name}#{"$" unless @password.empty?}#{@password}"
         system_conf['lastip'] = Server
@@ -88,8 +96,8 @@ class Ygocore < Game
       @@SendMessage = Win32API.new('user32', 'SendMessage', ["L", "L", "L", "L"], "L")
       @@SetForegroundWindow = Win32API.new('user32', 'SetForegroundWindow', 'l', 'v')
       @@keybd_event = Win32API.new('user32', 'keybd_event', 'llll', 'v')
-      @@lstrcpy = Win32API.new('kernel32', 'lstrcpy', ['I', 'P'], 'P');
-      @@lstrlen = Win32API.new('kernel32', 'lstrlen', ['P'], 'I');
+      @@lstrcpy = Win32API.new('kernel32', 'lstrcpyA', ['I', 'P'], 'P');
+      @@lstrlen = Win32API.new('kernel32', 'lstrlenA', ['P'], 'I');
       @@OpenClipboard = Win32API.new('user32', 'OpenClipboard', ['I'], 'I');
       @@CloseClipboard = Win32API.new('user32', 'CloseClipboard', [], 'I');
       @@EmptyClipboard = Win32API.new('user32', 'EmptyClipboard', [], 'I');
