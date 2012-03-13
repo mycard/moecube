@@ -11,7 +11,13 @@ class Window_Host < Window
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
     @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH){clicked;false}
-    @roomname_inputbox.value = $game.user.name
+    default_name = $game.user.name
+    1.upto(1000) do |i|
+      if $game.rooms.all?{|room|room.name != i.to_s}
+        break default_name = i.to_s
+      end
+    end
+    @roomname_inputbox.value = default_name
     @pvp = Widget_Checkbox.new(self, 33+@x,70+@y,120,24,false,"竞技场")
     @pvp.background = @background.copy_rect(33,70,120,24)
     @match = Widget_Checkbox.new(self, 120+@x,70+@y,120,24,true,"三回决斗")

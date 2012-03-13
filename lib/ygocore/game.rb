@@ -31,9 +31,22 @@ class Ygocore < Game
     if username.empty?
       return Widget_Msgbox.new("登陆", "请输入用户名", :ok => "确定")
     end
-    connect
-    @password = password
-    Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
+    if password.empty?
+      return Widget_Msgbox.new("登陆", "请输入密码", :ok => "确定")
+    end
+    require 'cgi'
+    open("#{API_Url}?userregist=CHANGEPASS&username=#{CGI.escape username}&password=#{CGI.escape password}&oldpass=#{CGI.escape password}") do |file|
+      file.set_encoding "GBK"
+      result = file.read.encode("UTF-8")
+      $log.debug('用户登陆传回消息'){result}
+      if result == "修改成功"
+        connect
+        @password = password
+        Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
+      else
+        Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
+      end
+    end
   end
   def host(room_name, room_config)
     room = Room.new(0, room_name)
