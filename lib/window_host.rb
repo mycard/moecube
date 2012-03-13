@@ -3,10 +3,10 @@ class Window_Host < Window
   attr_reader :index
   def initialize(x,y)
     super(x,y,300,150,300)
-    @items = {:ok => [116,114,100,20]}
+    @button = Surface.load("graphics/system/button.png")
+    @items = {:ok => [116,114,@button.w/3,@button.h]}
     @buttons = {:ok => "确定"}
     @background = Surface.load('graphics/system/msgbox.png').display_format
-    @button = Surface.load("graphics/system/button.png")
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
@@ -62,6 +62,7 @@ class Window_Host < Window
     case self.index
     when :ok
       return if @roomname_inputbox.value.empty?
+      @joinroom_msgbox = Widget_Msgbox.new("建立房间", "正在建立房间")
       $game.host(@roomname_inputbox.value, :pvp => @pvp.checked?, :match => @match.checked?)
       @roomname_inputbox.destroy
       @pvp.destroy

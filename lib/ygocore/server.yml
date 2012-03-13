@@ -1,6 +1,6 @@
 ---
-register: http://card.touhou.cc/register
-api: http://140.113.242.66:7922/
-index: http://card.touhou.cc/
-server: 140.113.242.66
+register: http://sh.convnet.net:7955/regist.html
+api: http://sh.convnet.net:7922/
+index: http://sh.convnet.net:7922/
+server: 221.226.68.62
 port: 7911

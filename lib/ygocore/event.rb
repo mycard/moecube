@@ -37,4 +37,10 @@ class Game_Event
       self.new @users
     end
   end
+  class Join < Game_Event
+    def initialize(room)
+      @room = room
+      $game.room = @room
+    end
+  end
 end

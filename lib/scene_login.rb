@@ -8,6 +8,7 @@ require_relative 'window_gameselect'
 require_relative 'window_announcements'
 require_relative 'window_login'
 require_relative 'scene_replay'
+require_relative 'scene_lobby'
 BGM = "title.ogg"
 class Scene_Login < Scene
 	def start

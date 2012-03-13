@@ -8,161 +8,68 @@ class Ygocore < Game
   Server = config['server']
   API_Url = config['api']
   Index_Url = config['index']
-  
-  WM_LBUTTONDOWN = 0x201
-  WM_LBUTTONUP = 0x202
-  #WM_KEYDOWN = 0x0100
-  #WM_KEYUP = 0x0100
-  VK_CONTROL = 0x11
-  VK_A = 0x41
-  VK_V = 0x56
-  VK_TAB = 0x09
-  VK_RETURN = 0x0D
-  KEYEVENTF_KEYUP = 0x02
-  CF_TEXT = 1;
-  GMEM_DDESHARE = 0x2000;
+  attr_reader :password
   def initialize
     super
     load File.expand_path('event.rb', File.dirname(__FILE__))
     load File.expand_path('user.rb', File.dirname(__FILE__))
     load File.expand_path('room.rb', File.dirname(__FILE__))
+    load File.expand_path('scene_lobby.rb', File.dirname(__FILE__))
   end
   def login(username, password)
     if username.empty?
       return Widget_Msgbox.new("登陆", "请输入用户名", :ok => "确定")
     end
     if password.empty?
-      return Widget_Msgbox.new("登陆", "请输入密码", :ok => "确定")
-    end
-    require 'cgi'
-    open("#{API_Url}?userregist=CHANGEPASS&username=#{CGI.escape username}&password=#{CGI.escape password}&oldpass=#{CGI.escape password}") do |file|
-      file.set_encoding "GBK"
-      result = file.read.encode("UTF-8")
-      $log.debug('用户登陆传回消息'){result}
-      if result == "修改成功"
-        connect
-        @password = password
-        Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
-      else
-        Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
+      Widget_Msgbox.new("登陆", "无密码登陆，不能建房，不能加入竞技场", :ok => "确定"){Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))}
+    else
+      require 'cgi'
+      open("#{API_Url}?userregist=CHANGEPASS&username=#{CGI.escape username}&password=#{CGI.escape password}&oldpass=#{CGI.escape password}") do |file|
+        file.set_encoding "GBK"
+        result = file.read.encode("UTF-8")
+        $log.debug('用户登陆传回消息'){result}
+        if result == "修改成功"
+          connect
+          @password = password
+          Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
+        else
+          Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
+        end
       end
     end
   end
   def host(room_name, room_config)
+    if $game.password.nil? or $game.password.empty?
+      return Widget_Msgbox.new("建立房间", "必须有账号才能建立房间", :ok => "确定")
+    end
     room = Room.new(0, room_name)
     room.pvp = room_config[:pvp]
     room.match = room_config[:match]
-    join room
+    refresh do
+      if $game.rooms.any?{|game_room|game_room.name == room_name}
+        Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
+      else
+        Game_Event.push Game_Event::Join.new(room)
+      end
+    end
   end
   def watch(room)
-    Widget_Msgbox.new("观战", "ygocore不支持加入已经开始游戏的房间", :ok => "确定")
+    Widget_Msgbox.new("加入房间", "游戏已经开始", :ok => "确定")
   end
   def join(room)
-    return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
-    unless $config['ygocore']['path'] and  File.file? $config['ygocore']['path']
-      Widget_Msgbox.new("加入房间", "请指定ygocore主程序位置")
-      $scene.draw
-      require 'tk'
-      $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
-      save_config
-      @last_clicked = Time.now
+    if $game.password.nil? or $game.password.empty? and room.pvp?
+      return Widget_Msgbox.new("加入房间", "必须有账号才能加入竞技场房间", :ok => "确定")
     end
-    room_name = if room.pvp? and room.match?
-      "PM#" + room.name
-    elsif room.pvp?
-      "P#" + room.name
-    elsif room.match?
-      "M#" + room.name
-    else
-      room.name
-    end
-    if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
-      $scene.draw
-      #写入配置文件并运行ygocore
-      Dir.chdir(File.dirname($config['ygocore']['path'])) do 
-        $log.debug('当前目录'){Dir.pwd.encode("UTF-8")}
-        system_conf = {}
-        begin
-          IO.readlines('system.conf').each do |line|
-            line.force_encoding "UTF-8"
-            next if line[0,1] == '#'
-            field, contents = line.chomp.split(' = ',2)
-            system_conf[field] = contents
-          end
-        rescue
-          system_conf['antialias'] = 2
-          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
-          $log.error('找不到system.conf')
-          $log.debug(Dir.foreach('.').to_a.inspect)
-        end
-        system_conf['nickname'] = "#{@user.name}#{"$" unless @password.empty?}#{@password}"
-        system_conf['lastip'] = Server
-        system_conf['lastport'] = Port.to_s  
-        open('system.conf', 'w') {|file|file.write system_conf.collect{|key,value|"#{key} = #{value}"}.join("\n")}
-        $log.debug('ygocore路径') {$config['ygocore']['path']}
-        IO.popen("\"#{$config['ygocore']['path']}\"".encode("GBK")) #执行外部程序....有中文的情况下貌似只能这样了orz
-      end
-      #初始化windows API
-      require 'win32api'
-      @@FindWindow = Win32API.new("user32","FindWindow","pp","l")
-      @@SendMessage = Win32API.new('user32', 'SendMessage', ["L", "L", "L", "L"], "L")
-      @@SetForegroundWindow = Win32API.new('user32', 'SetForegroundWindow', 'l', 'v')
-      @@keybd_event = Win32API.new('user32', 'keybd_event', 'llll', 'v')
-      @@lstrcpy = Win32API.new('kernel32', 'lstrcpyA', ['I', 'P'], 'P');
-      @@lstrlen = Win32API.new('kernel32', 'lstrlenA', ['P'], 'I');
-      @@OpenClipboard = Win32API.new('user32', 'OpenClipboard', ['I'], 'I');
-      @@CloseClipboard = Win32API.new('user32', 'CloseClipboard', [], 'I');
-      @@EmptyClipboard = Win32API.new('user32', 'EmptyClipboard', [], 'I');
-      @@SetClipboardData = Win32API.new('user32', 'SetClipboardData', ['I', 'I'], 'I');
-      @@GlobalAlloc = Win32API.new('kernel32', 'GlobalAlloc', ['I','I'], 'I');
-      @@GlobalLock = Win32API.new('kernel32', 'GlobalLock', ['I'], 'I');
-      @@GlobalUnlock = Win32API.new('kernel32', 'GlobalUnlock', ['I'], 'I');
-      #获取句柄
-      hwnd = nil
-      100.times do
-        if (hwnd = @@FindWindow.call('CIrrDeviceWin32', nil)) != 0
-          break
-        else
-          sleep 0.1
-        end
-      end
-      if hwnd and hwnd != 0
-        #操作ygocore进入主机
-        @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(507,242))
-        @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(507,242))
-        sleep 0.5
-        if @@OpenClipboard.Call(0) != 0
-          @@EmptyClipboard.Call();
-          len = @@lstrlen.Call(room_name.encode("GBK"));
-          hmem = @@GlobalAlloc.Call(GMEM_DDESHARE, len+1);
-          pmem = @@GlobalLock.Call(hmem);
-          @@lstrcpy.Call(pmem, room_name.encode("GBK"));
-          @@SetClipboardData.Call(CF_TEXT, hmem);
-          @@GlobalUnlock.Call(hmem);
-          @@CloseClipboard.Call;
-        else
-          return Widget_Msgbox.new("加入房间", '填写房间名失败 请把房间名手动填写到房间密码处', :ok => "确定")
-        end
-        $log.debug('加入房间'){room_name}
-        @@SetForegroundWindow.call(hwnd)
-        @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(380,500))
-        @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(380,500))
-        @@keybd_event.call(VK_CONTROL,0,0,0)
-        @@keybd_event.call(VK_A,0,0,0)#全选以避免密码处已经有字的情况，正常情况下应该无用
-        @@keybd_event.call(VK_A,0,KEYEVENTF_KEYUP,0)
-        @@keybd_event.call(VK_V,0,0,0)
-        @@keybd_event.call(VK_V,0,KEYEVENTF_KEYUP,0)
-        @@keybd_event.call(VK_CONTROL,0,KEYEVENTF_KEYUP,0)
-        @@keybd_event.call(VK_TAB,0,0,0)
-        @@keybd_event.call(VK_TAB,0,KEYEVENTF_KEYUP,0)
-        @@keybd_event.call(VK_RETURN,0,0,0)
-        @@keybd_event.call(VK_RETURN,0,KEYEVENTF_KEYUP,0)
+    return unless ygocore_path
+    refresh do
+      if room.full? #如果游戏已经开了
+        Widget_Msgbox.new("加入房间", "游戏已经开始", :ok => "确定")
+      elsif !$game.rooms.include? room
+        Widget_Msgbox.new("加入房间", "游戏已经取消", :ok => "确定")
       else
-        return Widget_Msgbox.new("加入房间", 'ygocore运行失败', :ok => "确定")
+        Game_Event.push Game_Event::Join.new(room)
       end
     end
-    Widget_Msgbox.new("加入房间","已经加入房间").destroy  #仅仅为了消掉正在加入房间的消息框
   end
   def refresh
     Thread.new do
@@ -172,6 +79,8 @@ class Ygocore < Game
           info = file.read.encode("UTF-8")
           Game_Event.push Game_Event::AllUsers.parse info
           Game_Event.push Game_Event::AllRooms.parse info
+          p block_given?
+          yield if block_given?
         end
       end
     end
@@ -179,10 +88,16 @@ class Ygocore < Game
   private
   def connect
   end
-  def MAKELPARAM(w1,w2)
-    return (w2<<16) | w1
+  def ygocore_path
+    return $config['ygocore']['path'] if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
+    return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
+    Widget_Msgbox.new("加入房间", "请指定ygocore主程序位置")
+    $scene.draw
+    require 'tk'
+    $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
+    save_config
+    @last_clicked = Time.now
   end
-
   def self.get_announcements
     #公告
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
