@@ -11,6 +11,8 @@ class Scene_Lobby
   CF_UNICODETEXT = 13;
   GMEM_DDESHARE = 0x2000;
   def join(room)
+    return unless $game.ygocore_path
+    
     room_name = if room.pvp? and room.match?
       "PM#" + room.name
     elsif room.pvp?
@@ -23,7 +25,7 @@ class Scene_Lobby
       
     $scene.draw
     #写入配置文件并运行ygocore
-    Dir.chdir(File.dirname($config['ygocore']['path'])) do 
+    Dir.chdir(File.dirname($game.ygocore_path)) do 
       $log.debug('当前目录'){Dir.pwd.encode("UTF-8")}
       system_conf = {}
       begin
@@ -49,19 +51,19 @@ class Scene_Lobby
     end
     #初始化windows API
     require 'win32api'
-    @@FindWindow = Win32API.new("user32","FindWindow","pp","l")
-    @@SendMessage = Win32API.new('user32', 'SendMessage', ["L", "L", "L", "L"], "L")
-    @@SetForegroundWindow = Win32API.new('user32', 'SetForegroundWindow', 'l', 'v')
-    @@keybd_event = Win32API.new('user32', 'keybd_event', 'llll', 'v')
-    @@lstrcpy = Win32API.new('kernel32', 'lstrcpyW', ['I', 'P'], 'P');
-    @@lstrlen = Win32API.new('kernel32', 'lstrlenW', ['P'], 'I');
-    @@OpenClipboard = Win32API.new('user32', 'OpenClipboard', ['I'], 'I');
-    @@CloseClipboard = Win32API.new('user32', 'CloseClipboard', [], 'I');
-    @@EmptyClipboard = Win32API.new('user32', 'EmptyClipboard', [], 'I');
-    @@SetClipboardData = Win32API.new('user32', 'SetClipboardData', ['I', 'I'], 'I');
-    @@GlobalAlloc = Win32API.new('kernel32', 'GlobalAlloc', ['I','I'], 'I');
-    @@GlobalLock = Win32API.new('kernel32', 'GlobalLock', ['I'], 'I');
-    @@GlobalUnlock = Win32API.new('kernel32', 'GlobalUnlock', ['I'], 'I');
+    @@FindWindow ||= Win32API.new("user32","FindWindow","pp","l")
+    @@SendMessage ||= Win32API.new('user32', 'SendMessage', ["L", "L", "L", "L"], "L")
+    @@SetForegroundWindow ||= Win32API.new('user32', 'SetForegroundWindow', 'l', 'v')
+    @@keybd_event ||= Win32API.new('user32', 'keybd_event', 'llll', 'v')
+    @@lstrcpy ||= Win32API.new('kernel32', 'lstrcpyW', ['I', 'P'], 'P');
+    @@lstrlen ||= Win32API.new('kernel32', 'lstrlenW', ['P'], 'I');
+    @@OpenClipboard ||= Win32API.new('user32', 'OpenClipboard', ['I'], 'I');
+    @@CloseClipboard ||= Win32API.new('user32', 'CloseClipboard', [], 'I');
+    @@EmptyClipboard ||= Win32API.new('user32', 'EmptyClipboard', [], 'I');
+    @@SetClipboardData ||= Win32API.new('user32', 'SetClipboardData', ['I', 'I'], 'I');
+    @@GlobalAlloc ||= Win32API.new('kernel32', 'GlobalAlloc', ['I','I'], 'I');
+    @@GlobalLock ||= Win32API.new('kernel32', 'GlobalLock', ['I'], 'I');
+    @@GlobalUnlock ||= Win32API.new('kernel32', 'GlobalUnlock', ['I'], 'I');
     #获取句柄
     hwnd = nil
     50.times do
@@ -79,7 +81,8 @@ class Scene_Lobby
       if @@OpenClipboard.Call(0) != 0
         $log.debug('加入房间'){room_name}
         @@EmptyClipboard.Call();
-        len=room_name.encode("UTF-16LE").bytesize
+        p len = room_name.encode("UTF-16LE").bytesize
+        #p len=@@lstrlen.call(room_name.encode("UTF-16LE"))#
         $log.debug('房间名长度'){len.to_s}
         hmem = @@GlobalAlloc.Call(GMEM_DDESHARE, len+2);
         pmem = @@GlobalLock.Call(hmem);
@@ -107,6 +110,8 @@ class Scene_Lobby
     else
       Widget_Msgbox.new("加入房间", 'ygocore运行失败', :ok => "确定")
     end
+    #这里似乎有个能引起ruby解释器崩溃的故障，但是没法稳定重现。
+    GC.start
   end
   def MAKELPARAM(w1,w2)
     return (w2<<16) | w1

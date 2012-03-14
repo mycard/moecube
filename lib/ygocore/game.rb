@@ -28,10 +28,15 @@ class Ygocore < Game
         file.set_encoding "GBK"
         result = file.read.encode("UTF-8")
         $log.debug('用户登陆传回消息'){result}
-        if result == "修改成功"
+        case result
+        when "修改成功"
           connect
           @password = password
           Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
+        when "用户注册禁止"
+          connect
+          @password = password
+          Widget_Msgbox.new("登陆", "验证关闭，加房连接断开请自行检查密码", :ok => "确定"){Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))}
         else
           Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
         end
@@ -42,6 +47,7 @@ class Ygocore < Game
     if $game.password.nil? or $game.password.empty?
       return Widget_Msgbox.new("建立房间", "必须有账号才能建立房间", :ok => "确定")
     end
+    return unless ygocore_path
     room = Room.new(0, room_name)
     room.pvp = room_config[:pvp]
     room.match = room_config[:match]
@@ -79,14 +85,10 @@ class Ygocore < Game
           info = file.read.encode("UTF-8")
           Game_Event.push Game_Event::AllUsers.parse info
           Game_Event.push Game_Event::AllRooms.parse info
-          p block_given?
           yield if block_given?
         end
       end
     end
-  end
-  private
-  def connect
   end
   def ygocore_path
     return $config['ygocore']['path'] if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
@@ -97,6 +99,9 @@ class Ygocore < Game
     $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
     save_config
     @last_clicked = Time.now
+  end
+  private
+  def connect
   end
   def self.get_announcements
     #公告
