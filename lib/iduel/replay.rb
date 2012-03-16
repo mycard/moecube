@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Replay
   User_Filter = /(.+?)(?:\((\d+)\))?(?:\(\d+:\d+:\d+\))?(?::   |：) */
   Delimiter = /^#{User_Filter}\n ?/

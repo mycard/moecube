@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Window_Login
   def clicked
     return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击

@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Scene_Lobby
   WM_LBUTTONDOWN = 0x201
   WM_LBUTTONUP = 0x202

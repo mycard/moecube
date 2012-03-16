@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Widget_InputBox < Window
   attr_reader :value, :proc
   attr_accessor :type

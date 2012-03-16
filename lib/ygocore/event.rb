@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Game_Event
   User_Filter = /\[(\d+),<font color="(?:blue|gray)">(.+?)(\(未认证\)|)<\/font>\]/
   Room_Filter = /\[(\d+),(.+?),(wait|start)#{User_Filter}+?\]/

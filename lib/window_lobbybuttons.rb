@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'window_host'
 class Window_LobbyButtons < Window_List
   def initialize(x,y)

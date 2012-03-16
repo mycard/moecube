@@ -1,5 +1,3 @@
-#encoding: UTF-8
-
 #游戏适配器的抽象类
 require_relative 'game_event'
 require_relative 'action'

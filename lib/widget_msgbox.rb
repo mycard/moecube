@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Widget_Msgbox < Window
   Title_Color = [0xFF, 0xFF, 0xFF]
   Message_Color = [0x04, 0x47, 0x7c]

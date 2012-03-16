@@ -47,9 +47,9 @@ Gem::PackageTask.new(spec) do |p|
   p.gem_spec = spec
   if Windows
     p.need_zip = true
-    p.zip_command = '../7z.exe a -tzip'
+    p.zip_command = '../7z.exe a'
     def p.zip_file
-      "#{package_name}-win32.zip"
+      "#{package_name}-win32.7z"
     end
   else
     p.need_tar = true

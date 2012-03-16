@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'scene_watch'
 class Scene_Replay < Scene_Watch
   def initialize(replay)

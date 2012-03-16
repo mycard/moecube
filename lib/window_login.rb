@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'widget_inputbox'
 require_relative 'widget_msgbox'
 require_relative 'widget_checkbox'

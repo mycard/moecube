@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'widget_msgbox'
 class Scene_Error < Scene
   def start

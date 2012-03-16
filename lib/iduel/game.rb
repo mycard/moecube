@@ -113,7 +113,7 @@ class Iduel < Game
           save_config
         end
       rescue Exception => exception
-        $log.error('读取好友信息') {[exception.inspect, *exception.backtrace].join("\n").encode("UTF-8")}
+        $log.error('读取好友信息') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       end
     end
   end
@@ -124,19 +124,20 @@ class Iduel < Game
       @conn = TCPSocket.new(Server, Port) #TODO: 阻塞优化，注意login。下面注释掉的两句实现connect无阻塞，但是login依然会阻塞所以只优化这里没有意义
       #@conn = Socket.new(:INET, :STREAM)
       @conn.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
+      Thread.abort_on_exception=true
       @recv = Thread.new do
         begin
           #@conn.connect Socket.pack_sockaddr_in(Port, Server)
           recv @conn.gets(RS) while @conn
         rescue => exception
-          $log.error('iduel-connect-1') {[exception.inspect, *exception.backtrace].join("\n")}
+          $log.error('iduel-connect-1') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
           Game_Event.push Game_Event::Error.new(exception.class.to_s, exception.message)
         ensure
           self.exit
         end
       end
     rescue => exception
-      $log.error('iduel-connect-2') {[exception.inspect, *exception.backtrace].join("\n")}
+      $log.error('iduel-connect-2') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       Game_Event.push Game_Event::Error.new("网络错误", "连接服务器失败")
     end
   end
@@ -170,7 +171,7 @@ class Iduel < Game
           save_config
         end
       rescue Exception => exception
-        $log.error('公告') {[exception.inspect, *exception.backtrace].join("\n")}
+        $log.error('公告') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       end
     end
   end

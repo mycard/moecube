@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'window_list'
 class Window_Scrollable < Window_List
   attr_reader :scroll

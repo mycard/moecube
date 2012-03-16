@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Window_Host < Window
   attr_reader :index
   def initialize(x,y)

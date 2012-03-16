@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Game_Event
   def self.parse(info)
     info =~ /^\$([A-Z])\|(.*)$/m

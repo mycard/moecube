@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Window_Config < Window
   def initialize(x,y)
     super(x,y,$screen.w, $screen.h)

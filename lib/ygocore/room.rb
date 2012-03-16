@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Room
   attr_accessor :pvp
   attr_accessor :match

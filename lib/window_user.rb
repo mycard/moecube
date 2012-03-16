@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Window_User < Window_List
   WLH = 20
 	def initialize(x, y, user)

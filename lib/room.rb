@@ -1,4 +1,3 @@
-#encoding: UTF-8
 require_relative 'cacheable'
 class Room
   Color = [[0,0,0], [255,0,0], [0,128,0], [0,0,255], [255, 165, 0]]

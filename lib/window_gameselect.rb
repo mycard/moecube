@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class Window_GameSelect < Window_List
   WLH = 56
   def initialize(x,y)

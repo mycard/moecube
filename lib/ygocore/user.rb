@@ -1,4 +1,3 @@
-#encoding: UTF-8
 class User
   def initialize(id, name = "", certified = true)
     @id = id
