@@ -15,7 +15,6 @@ class Scene_Lobby < Scene
   require_relative 'chatmessage'
   require_relative 'scene_duel'
   attr_reader :chat_window
-  BGM = "lobby.ogg"
   def start
     WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
 		$game.refresh
@@ -30,7 +29,9 @@ class Scene_Lobby < Scene
     @count = 0
     super
   end
-
+  def bgm
+    "lobby.ogg"
+  end
   def handle(event)
     case event
     when Event::KeyDown

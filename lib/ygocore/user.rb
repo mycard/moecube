@@ -11,9 +11,9 @@ class User
     @certified = certified unless certified == :keep
   end
   def color
-    @certified ? [0,0,255] : [128,128,128]
+    @certified ? [0,0,0] : [128,128,128]
   end
   def space
-    Widget_Msgbox.new("查看资料", "ygocore没有这个功能", :ok => "确定")
+    Widget_Msgbox.new("查看资料", "功能未实现", :ok => "确定")
   end
 end

@@ -11,7 +11,7 @@ class Scene_Lobby
   CF_UNICODETEXT = 13;
   GMEM_DDESHARE = 0x2000;
   def join(room)
-    return unless $game.ygocore_path
+    path = $game.ygocore_path
     
     room_name = if room.pvp? and room.match?
       "PM#" + room.name
@@ -25,8 +25,8 @@ class Scene_Lobby
       
     $scene.draw
     #写入配置文件并运行ygocore
-    Dir.chdir(File.dirname($game.ygocore_path)) do 
-      $log.debug('当前目录'){Dir.pwd.encode("UTF-8")}
+    Dir.chdir(File.dirname(path)) do 
+      $log.info('当前目录'){Dir.pwd.encode("UTF-8")}
       system_conf = {}
       begin
         IO.readlines('system.conf').each do |line|
@@ -40,14 +40,14 @@ class Scene_Lobby
         system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
         system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
         $log.error('找不到system.conf')
-        $log.debug(Dir.foreach('.').to_a.inspect)
+        $log.info(Dir.foreach('.').to_a.inspect)
       end
       system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}"
-      system_conf['lastip'] = Ygocore::Server
-      system_conf['lastport'] = Ygocore::Port.to_s  
+      system_conf['lastip'] = $game.server
+      system_conf['lastport'] = $game.port.to_s
       open('system.conf', 'w') {|file|file.write system_conf.collect{|key,value|"#{key} = #{value}"}.join("\n")}
-      $log.debug('ygocore路径') {$config['ygocore']['path']}
-      IO.popen("\"#{$config['ygocore']['path']}\"".encode("GBK")) #执行外部程序....有中文的情况下貌似只能这样了orz
+      $log.info('ygocore路径') {path}
+      IO.popen("\"#{path}\"".encode("GBK")) #执行外部程序....有中文的情况下貌似只能这样了orz
     end
     #初始化windows API
     require 'win32api'
@@ -79,11 +79,11 @@ class Scene_Lobby
       @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(507,242))
       sleep 0.5
       if @@OpenClipboard.Call(0) != 0
-        $log.debug('加入房间'){room_name}
+        $log.info('加入房间'){room_name}
         @@EmptyClipboard.Call();
-        p len = room_name.encode("UTF-16LE").bytesize
+        len = room_name.encode("UTF-16LE").bytesize
         #p len=@@lstrlen.call(room_name.encode("UTF-16LE"))#
-        $log.debug('房间名长度'){len.to_s}
+        $log.info('房间名长度'){len.to_s}
         hmem = @@GlobalAlloc.Call(GMEM_DDESHARE, len+2);
         pmem = @@GlobalLock.Call(hmem);
         @@lstrcpy.Call(pmem, room_name.encode("UTF-16LE"));
@@ -103,7 +103,7 @@ class Scene_Lobby
         @@keybd_event.call(VK_TAB,0,KEYEVENTF_KEYUP,0)
         @@keybd_event.call(VK_RETURN,0,0,0)
         @@keybd_event.call(VK_RETURN,0,KEYEVENTF_KEYUP,0)
-        Widget_Msgbox.new("加入房间","已经加入房间", :ok => "确定").destroy  #仅仅为了消掉正在加入房间的消息框
+        Widget_Msgbox.destroy  #仅仅为了消掉正在加入房间的消息框
       else
         Widget_Msgbox.new("加入房间", '填写房间名失败 请把房间名手动填写到房间密码处', :ok => "确定")
       end
@@ -111,7 +111,6 @@ class Scene_Lobby
       Widget_Msgbox.new("加入房间", 'ygocore运行失败', :ok => "确定")
     end
     #这里似乎有个能引起ruby解释器崩溃的故障，但是没法稳定重现。
-    GC.start
   end
   def MAKELPARAM(w1,w2)
     return (w2<<16) | w1

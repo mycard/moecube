@@ -87,4 +87,8 @@ class Widget_Msgbox < Window
     @proc.call(@index) if @proc
     self.destroy
   end
+  def self.destroy
+    instance = $scene.windows.find{|window|window.class == self and !window.destroyed?}
+    instance.destroy if instance
+  end
 end

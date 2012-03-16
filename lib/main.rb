@@ -15,7 +15,7 @@ begin
   def save_config(file="config.yml")
     File.open(file,"w"){|file| YAML.dump($config, file)}
   end
-  
+  Thread.abort_on_exception = true
   require_relative 'announcement'
   #读取配置文件
   load_config
@@ -23,11 +23,14 @@ begin
   
   #读取命令行参数
   log = "log.log"
+  log_level = "INFO"
   profile = nil
   ARGV.each do |arg|
     case arg
     when /--log=(.*)/
       log.replace $1
+    when /--log-level=(.*)/
+      log_level.replace $1
     when /--profile=(.*)/
       profile = $1
     end
@@ -36,6 +39,7 @@ begin
   #初始化SDL
   require 'sdl'
   include SDL
+  SDL.putenv ("SDL_VIDEO_CENTERED=1");
   SDL.init(INIT_VIDEO | INIT_AUDIO)
   WM::set_caption("MyCard", "MyCard")
   WM::icon = Surface.load("graphics/system/icon.gif")
@@ -51,7 +55,7 @@ begin
     log = STDOUT
   end
   $log = Logger.new(log)
-    
+  $log.level = Logger.const_get log_level
   #性能分析
   if profile
     if profile == "STDOUT"
@@ -82,7 +86,7 @@ begin
   $scene.main while $scene
 rescue Exception => exception
   exception.backtrace.each{|backtrace|break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/} #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
-  $log.fatal($1){[exception.inspect, *exception.backtrace].join("\n")}
+  $log.fatal($1){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
   $game.exit if $game
   require_relative 'scene_error'
   $scene = Scene_Error.new

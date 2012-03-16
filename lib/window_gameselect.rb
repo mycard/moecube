@@ -58,7 +58,7 @@ class Window_GameSelect < Window_List
   end
   def clicked
     return unless @index
-    load @items[@index]["file"] #TODO: load的这种架构微蛋疼，一时想不到更好的方案
+    load @items[@index]["file"].encode("GBK") #TODO: load的这种架构微蛋疼，一时想不到更好的方案
     $config['game'] = @items[@index]['name']
     @login_window.destroy if @login_window
     @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])

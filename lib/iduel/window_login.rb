@@ -24,7 +24,7 @@ class Window_Login
         $game.user = User.new(0)
         Widget_Msgbox.new("回放战报", "战报读取中...")
         $scene.draw
-        $log.debug('iduel window_login'){'loading reply file'}
+        $log.info('iduel window_login'){'loading reply file'}
         $scene = Scene_Replay.new Replay.load file
       end
       @last_clicked = Time.now

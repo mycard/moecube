@@ -1,8 +1,8 @@
 #encoding: UTF-8
 #==============================================================================
-# 鈻�Scene_Title
+# �Scene_Title
 #------------------------------------------------------------------------------
-# 銆�itle
+# �title
 #==============================================================================
 require_relative 'scene'
 require_relative 'window_title'
@@ -20,6 +20,7 @@ class Scene_Title < Scene
     #@logo_window.contents = logo
     #$screen.update_rect(0,0,0,0)
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
+    
     super
     
   end

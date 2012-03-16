@@ -13,8 +13,7 @@ class Window_Login
       $game.login(@username_inputbox.value, @password_inputbox.value)
       @last_clicked = Time.now
     when :register
-      require 'launchy'
-      Launchy.open(Ygocore::Register_Url)
+      Ygocore.register
       @last_clicked = Time.now
       #when :replay
       #  require 'tk'

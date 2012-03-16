@@ -92,7 +92,7 @@ class Action
       end
     end
     def run
-      $log.debug('移动操作执行'){self.inspect}
+      $log.info('移动操作执行'){self.inspect}
       
       from_field = parse_field(@from_pos)
       

@@ -62,7 +62,7 @@ class Replay
       action = Action.parse action_str
       action.from_player = from_players.next
       Game_Event::Action.new(action, action_str)
-    end
+    end    
     $game.room = result.room = Room.new(0, "Replay", result.player1, result.player2)
     result
   end

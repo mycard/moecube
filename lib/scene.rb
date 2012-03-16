@@ -46,13 +46,16 @@ class Scene
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
-    if $config['bgm'] and @@last_bgm != self.class::BGM
+    if $config['bgm'] and @@last_bgm != bgm
       @@bgm.destroy if @@bgm
-      @@bgm = Mixer::Music.load "audio/bgm/#{self.class::BGM}"
+      @@bgm = Mixer::Music.load "audio/bgm/#{bgm}"
       Mixer.fade_in_music(@@bgm, -1, 800)
-      @bgm_window = Window_BGM.new OggInfo.new("audio/bgm/#{self.class::BGM}", "UTF-8").tag["title"]
-      @@last_bgm = self.class::BGM
+      @bgm_window = Window_BGM.new OggInfo.new("audio/bgm/#{bgm}", "UTF-8").tag["title"]
+      @@last_bgm = bgm
     end
+  end
+  def bgm
+    "title.ogg"
   end
   def last_bgm
     @@last_bgm
@@ -114,12 +117,12 @@ class Scene
       when Key::F12
         $scene = Scene_Title.new
       else
-        $log.debug('unhandled event'){event.inspect}
+        #$log.debug('unhandled event'){event.inspect}
       end
     when Event::Quit
       $scene = nil
     else
-      $log.debug('unhandled event'){event.inspect}
+      #$log.debug('unhandled event'){event.inspect}
     end
   end
   def handle_game(event)

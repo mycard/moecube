@@ -1,20 +1,15 @@
 #encoding: UTF-8
 load File.expand_path('window_login.rb', File.dirname(__FILE__))
-require 'open-uri'
 class Ygocore < Game
-  config = YAML.load_file("lib/ygocore/server.yml")
-  Register_Url = config['register']
-  Port = config['port']
-  Server = config['server']
-  API_Url = config['api']
-  Index_Url = config['index']
   attr_reader :password
+  @@config = YAML.load_file("lib/ygocore/server.yml")
   def initialize
     super
     load File.expand_path('event.rb', File.dirname(__FILE__))
     load File.expand_path('user.rb', File.dirname(__FILE__))
     load File.expand_path('room.rb', File.dirname(__FILE__))
     load File.expand_path('scene_lobby.rb', File.dirname(__FILE__))
+    require 'json'
   end
   def login(username, password)
     if username.empty?
@@ -24,22 +19,21 @@ class Ygocore < Game
       Widget_Msgbox.new("登陆", "无密码登陆，不能建房，不能加入竞技场", :ok => "确定"){Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))}
     else
       require 'cgi'
-      open("#{API_Url}?userregist=CHANGEPASS&username=#{CGI.escape username}&password=#{CGI.escape password}&oldpass=#{CGI.escape password}") do |file|
+      result = open("#{@@config['api']}?operation=passcheck&username=#{CGI.escape username}&pass=#{CGI.escape password}") do |file|
         file.set_encoding "GBK"
         result = file.read.encode("UTF-8")
-        $log.debug('用户登陆传回消息'){result}
-        case result
-        when "修改成功"
-          connect
-          @password = password
-          Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
-        when "用户注册禁止"
-          connect
-          @password = password
-          Widget_Msgbox.new("登陆", "验证关闭，加房连接断开请自行检查密码", :ok => "确定"){Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))}
-        else
-          Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
-        end
+        $log.info('用户登陆传回消息'){result}
+        result
+      end rescue nil
+      case result
+      when "true"
+        connect
+        @password = password
+        Game_Event.push Game_Event::Login.new(User.new(username.to_sym, username))
+      when "false"
+        Game_Event.push Game_Event::Error.new("登陆", "用户名或密码错误")
+      else
+        Widget_Msgbox.new("登陆", "连接服务器失败", :ok => "确定")
       end
     end
   end
@@ -47,7 +41,9 @@ class Ygocore < Game
     if $game.password.nil? or $game.password.empty?
       return Widget_Msgbox.new("建立房间", "必须有账号才能建立房间", :ok => "确定")
     end
-    return unless ygocore_path
+    if !ygocore_path
+      return Widget_Msgbox.destroy
+    end
     room = Room.new(0, room_name)
     room.pvp = room_config[:pvp]
     room.match = room_config[:match]
@@ -66,7 +62,9 @@ class Ygocore < Game
     if $game.password.nil? or $game.password.empty? and room.pvp?
       return Widget_Msgbox.new("加入房间", "必须有账号才能加入竞技场房间", :ok => "确定")
     end
-    return unless ygocore_path
+    if !ygocore_path
+      return Widget_Msgbox.destroy
+    end
     refresh do
       if room.full? #如果游戏已经开了
         Widget_Msgbox.new("加入房间", "游戏已经开始", :ok => "确定")
@@ -80,7 +78,7 @@ class Ygocore < Game
   def refresh
     Thread.new do
       begin
-        open(API_Url) do |file|
+        open("#{@@config['api']}?operation=getroom") do |file|
           file.set_encoding("GBK")
           info = file.read.encode("UTF-8")
           Game_Event.push Game_Event::AllUsers.parse info
@@ -93,26 +91,39 @@ class Ygocore < Game
   def ygocore_path
     return $config['ygocore']['path'] if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
     return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
-    Widget_Msgbox.new("加入房间", "请指定ygocore主程序位置")
+    msgbox = Widget_Msgbox.new("加入房间", "请指定ygocore主程序位置")
     $scene.draw
     require 'tk'
     $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
     save_config
+    msgbox.destroy
     @last_clicked = Time.now
+  end
+  def self.register
+    require 'launchy'
+    Launchy.open @@config['register']
+  end
+  def server
+    @@config['server']
+  end
+  def port
+    @@config['port']
   end
   private
   def connect
+    require 'open-uri'
   end
   def self.get_announcements
     #公告
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin
-        open(API_Url) do |file|
+        require 'open-uri'
+        open(@@config['api']) do |file|
           file.set_encoding "GBK"
           announcements = []
           file.read.encode("UTF-8").scan(/<div style="color:red" >公告：(.*?)<\/div>/).each do |title,others|
-            announcements << Announcement.new(title, Index_Url, nil)
+            announcements << Announcement.new(title, @@config['index'], nil)
           end
           $config['ygocore']['announcements'].replace announcements
           save_config

@@ -5,7 +5,7 @@ class Scene_Replay < Scene_Watch
     @replay = replay
     @count = 0
     super(@replay.room)
-    $log.debug('scene_reply'){'inited'}
+    $log.info('scene_reply'){'inited'}
   end
   def init_replay
   end

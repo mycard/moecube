@@ -5,7 +5,7 @@ class Game_Card
   @@count = 0
   def initialize(card=nil)
     @@count += 1
-    $log.info  "创建活动卡片<#{card ? card.name : '??'}>，共计#{@@count}张"
+    $log.debug  "创建活动卡片<#{card ? card.name : '??'}>，共计#{@@count}张"
     @card = card || Card.find(nil)
     reset
   end

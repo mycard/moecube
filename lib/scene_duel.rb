@@ -21,7 +21,6 @@ class Scene_Duel < Scene
   attr_reader :player_field_window
   attr_reader :opponent_field_window
   attr_reader :fieldback_window
-  BGM = "duel.ogg"
 	def initialize(room, deck=nil)
     super()
 		@room = room
@@ -47,6 +46,9 @@ class Scene_Duel < Scene
     create_action_window
     create_chat_window
     super
+  end
+  def bgm
+    "duel.ogg"
   end
   def create_action_window
     @player_field_window.action_window = Window_Action.new

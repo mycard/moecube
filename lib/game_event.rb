@@ -140,8 +140,7 @@ class Game_Event
       @title = title
       @message = message
       @fatal = fatal
-      $log.error(@fatal ? "致命错误" : "一般错误"){"#{@title}: #{@message}"}
-      $log.debug caller
+      $log.error(@fatal ? "致命错误" : "一般错误"){"#{@title}: #{@message} #{caller}"}
     end
   end
   class Unknown < Error

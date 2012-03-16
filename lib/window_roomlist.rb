@@ -30,7 +30,7 @@ class Window_RoomList < Window_Scrollable
     @font.draw_blended_utf8(@contents, room.name, 128, y+8, *room.color) unless room.name.empty? or room.name.size > 100
     $log.error('标题过长') {room.name} if room.name.size > 100
     @font.draw_blended_utf8(@contents, room.player1.name, 128, y+24, *room.player1.color) if room.player1
-    @font.draw_blended_utf8(@contents, room.player2.name, 256, y+24, *room.player2.color) if room.player2
+    @font.draw_blended_utf8(@contents, room.player2.name, 320, y+24, *room.player2.color) if room.player2
     room.extra.each_with_index do |extra, index|
       str, color = extra
       @font.draw_blended_utf8(@contents, str, 300+index*96, y+8, *color)

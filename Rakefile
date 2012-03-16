@@ -2,8 +2,8 @@
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
+require 'rubygems/package_task'
+require 'rdoc/task'
 #require 'rake/testtask'
 
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
@@ -43,7 +43,7 @@ spec = Gem::Specification.new do |s|
   #s.bindir = "bin"
 end
 
-Rake::GemPackageTask.new(spec) do |p|
+Gem::PackageTask.new(spec) do |p|
   p.gem_spec = spec
   if Windows
     p.need_zip = true

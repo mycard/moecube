@@ -2,10 +2,11 @@
 class Room
   attr_accessor :pvp
   attr_accessor :match
+  attr_writer :status
   alias pvp? pvp
   alias match? match
   def full?
-    color == [255,0,0]  #方法不规范 凑合用
+    @status == :start
   end
   def extra
     result = {}

@@ -1,4 +1,3 @@
----
 register: http://sh.convnet.net:7955/regist.html
 api: http://sh.convnet.net:7922/
 index: http://sh.convnet.net:7922/
