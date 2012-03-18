@@ -22,9 +22,15 @@ class Window_Chat < Window_Scrollable
     @background.put(@chat_background,0,31-4)
     @tab = Surface.load "graphics/system/tab.png"
     @chat_input = Widget_InputBox.new(@x+8, @y+@height-24-10, @width-14, 24) do |key|
-      chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
-      $game.chat chatmessage
-      Game_Event.push Game_Event::Chat.new(chatmessage)
+      case key
+      when :ENTER
+        chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
+        $game.chat chatmessage
+        Game_Event.push Game_Event::Chat.new(chatmessage)
+        true
+      when :esc
+        true  
+      end
     end
     @chat_input.refresh
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
