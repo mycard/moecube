@@ -64,6 +64,7 @@ class Iduel < Game
       @conn.close
       @conn = nil
     end
+    super
   end
   def recv(info)
     if info.nil?

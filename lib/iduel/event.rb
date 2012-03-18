@@ -8,8 +8,10 @@ class Game_Event
       Login
     when "C"
       AllUsers
-    when "F", "Q" #F=加入观战
+    when "F"
       Join
+    when "Q"
+      NewRoom
     when "G"
       Watch
     when "H", "M"

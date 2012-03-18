@@ -136,8 +136,12 @@ class Scene
   def handle_game(event)
     case event
     when Game_Event::Error
-      $game.exit if $game
-      Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Login.new if event.fatal}
+      if event.fatal
+        $game.exit if $game
+        Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Login.new}
+      else
+        Widget_Msgbox.new(event.title, event.message, :ok => "确定")
+      end
     else
       $log.debug('未处理的游戏事件'){event.inspect}
     end
