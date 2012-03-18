@@ -31,7 +31,13 @@ class Iduel < Game
     send(1, @key, checknum("UPINFOMSG", @session))
   end
   def host(name, password="", lv=0, color = 0)
-    send(6, @key, name, password, checknum("JOINROOMMSG", @session + name + password + "0"), 0, color, lv, 0, 0, 0) #TODO:v.ak, v.al
+    
+  end
+  def host(room_name, room_config)
+    password = ""
+    color = 0
+    lv = 0
+    send(6, @key, room_name, password, checknum("JOINROOMMSG", @session + room_name + password + "0"), 0, color, lv, 0, 0, 0) #TODO:v.ak, v.al
   end
   def join(room, password="")
     send(6, @key, room.id, password, checknum("JOINROOMMSG", @session + room.id.to_s + password + "1"),1)
