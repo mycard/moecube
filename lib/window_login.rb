@@ -9,7 +9,7 @@ class Window_Login < Window
     super(x,y,597,338)
     @username_inputbox = Widget_InputBox.new(@x+192, @y+80, 165, WLH) do |key|
       case key
-      when :TAB, :ENTER
+      when :TAB
         @password_inputbox.clicked
         false
       when :ESC
