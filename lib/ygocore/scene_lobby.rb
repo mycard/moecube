@@ -75,6 +75,7 @@ class Scene_Lobby
     end
     if hwnd and hwnd != 0
       #操作ygocore进入主机
+      WM.iconify
       @@SendMessage.call(hwnd, WM_LBUTTONDOWN, 0, MAKELPARAM(507,242))
       @@SendMessage.call(hwnd, WM_LBUTTONUP, 0, MAKELPARAM(507,242))
       sleep 0.5
