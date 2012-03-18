@@ -1,23 +1,33 @@
 class Game_Event
-  User_Filter = /\[(\d+),<font color="(?:blue|gray)">(.+?)(\(未认证\)|)<\/font>\]/
-  Room_Filter = /\[(\d+),(.+?),(wait|start)#{User_Filter}+?\]/
+  User_Filter = /\[(\d+),(.+?)\]/
+  Room_Filter = /\[(\d+),(.+?),(wait|start)(#{User_Filter}+?)\]/
   #User_Filter = /<li>(：：：观战：|===决斗1=|===决斗2=)<font color="(?:blue|gray)">(.+?)(\(未认证\)|)<\/font>;<\/li>/
   #Room_Filter = /<div style="width:300px; height:150px; border:1px #ececec solid; float:left;padding:5px; margin:5px;">房间名称：(.+?)(<font color="d28311" title="竞技场模式">\[竞\]<\/font>|) (<font color=(?:\")?red(?:\")?>决斗已开始!<\/font>|<font color=(?:\")?blue(?:\")?>等待<\/font>)<font size="1">\(ID：(\d+)\)<\/font>#{User_Filter}+?<\/div>/
   class AllRooms < Game_Event
     def self.parse(info)
       @rooms = []
-      info.scan(Room_Filter) do |id, name, status|
+      info.scan(Room_Filter) do |id, name, status, users|
+        #p id, name, status, users, '------------'
         player1 = player2 = nil
-        $&.scan(User_Filter) do |player, name, certified|
+        users.scan(User_Filter) do |player, name|
+          if name =~ /^<font color="(?:blue|gray)">(.+?)<\/font>$/
+            name = $1
+          end
+          if name =~ /^(.+?)\(未认证\)$/
+            name = $1
+            certified = false
+          else
+            certified = true
+          end
           if player["1"]
-            player1 = User.new(name.to_sym, name, certified.empty?)
+            player1 = User.new(name.to_sym, name, certified)
           elsif player["2"]
-            player2 = User.new(name.to_sym, name, certified.empty?)
+            player2 = User.new(name.to_sym, name, certified)
           end
         end
         room = Room.new(id.to_i, name, player1, player2, false, [0,0,0])
         room.status = status.to_sym
-        room.name =~ /^(P)?(M)?\#?(.*)$/
+        room.name =~ /^(P)?(M)?\#?(.*)(?:<font color="d28311" title="竞技场模式">[竞]<\/font>)?$/
         room.name = $3
         room.pvp = !!$1
         room.match = !!$2
@@ -33,8 +43,9 @@ class Game_Event
   class AllUsers < Game_Event
     def self.parse(info)
       @users = []
-      info.scan(User_Filter) do |player, name, certified|
-        @users << User.new(name.to_sym, name, certified.empty?)
+      $game.rooms.each do |room|
+        @users << room.player1 if room.player1
+        @users << room.player2 if room.player2
       end
       self.new @users
     end

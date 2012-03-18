@@ -66,6 +66,7 @@ class Window_GameSelect < Window_List
     refresh
   end
   def update
+    @login_window.update if @login_window
     @announcements_window.update if @announcements_window
   end
   #def lostfocus

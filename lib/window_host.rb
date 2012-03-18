@@ -9,7 +9,15 @@ class Window_Host < Window
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
-    @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH){clicked;false}
+    @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH) do |key|
+      case key
+      when :ENTER
+        clicked
+        false
+      when :ESC
+        true
+      end
+    end
     default_name = $game.user.name
     1.upto(1000) do |i|
       if $game.rooms.all?{|room|room.name != i.to_s}
@@ -71,5 +79,8 @@ class Window_Host < Window
     @pvp.destroy
     @match.destroy
     super
+  end
+  def update
+    @roomname_inputbox.update
   end
 end

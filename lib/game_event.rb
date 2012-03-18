@@ -138,8 +138,7 @@ class Game_Event
       @title = title
       @message = message
       @fatal = fatal
-      p @title, @title.encoding, @message, @message.encoding, caller.to_s.encoding
-      $log.error(@fatal ? "致命错误" : "一般错误"){"#{@title}: #{@message.encode("UTF-8")} #{caller}"}
+      $log.error(@fatal ? "致命错误" : "一般错误"){"#{@title}: #{@message} #{caller}"}
     end
   end
   class Unknown < Error

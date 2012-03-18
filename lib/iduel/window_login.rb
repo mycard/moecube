@@ -16,8 +16,8 @@ class Window_Login
       Launchy.open(Iduel::Register_Url)
       @last_clicked = Time.now
     when :replay
-      require 'tk'
-      file = Tk.getOpenFile.encode("UTF-8")
+      require_relative '../dialog'
+      file = Dialog.get_open_file("播放战报", "所有支持的战报 (*.txt;*.htm)" => "*.txt;*.htm", "iDuel的html的战报 (*.htm)" => "*.htm", "文本战报 (*.txt)" => "*.txt")
       if !file.empty?
         $game = Iduel.new
         $game.user = User.new(0)

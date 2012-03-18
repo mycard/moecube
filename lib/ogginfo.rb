@@ -31,7 +31,7 @@
 # see http://www.xiph.org/ogg/vorbis/docs.html for documentation on vorbis format
 # http://www.xiph.org/ogg/vorbis/doc/v-comment.html
 
-require "iconv"
+#require "iconv"
 
 # Raised on any kind of error related to ruby-ogginfo
 class OggInfoError < StandardError ; end

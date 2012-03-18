@@ -76,13 +76,15 @@ class Ygocore < Game
     end
   end
   def refresh
+    $log.info('刷新大厅信息'){'开始'}
     Thread.new do
       begin
         open("#{@@config['api']}?operation=getroom") do |file|
           file.set_encoding("GBK")
           info = file.read.encode("UTF-8")
-          Game_Event.push Game_Event::AllUsers.parse info
+          $log.info('刷新大厅信息'){'完成'}
           Game_Event.push Game_Event::AllRooms.parse info
+          Game_Event.push Game_Event::AllUsers.parse info
           yield if block_given?
         end
       end
@@ -93,8 +95,8 @@ class Ygocore < Game
     return if @last_clicked and Time.now - @last_clicked < 3 #防止重复点击
     msgbox = Widget_Msgbox.new("加入房间", "请指定ygocore主程序位置")
     $scene.draw
-    require 'tk'
-    $config['ygocore']['path'] = Tk.getOpenFile.encode("UTF-8")
+    require_relative '../dialog'
+    $config['ygocore']['path'] = Dialog.get_open_file("请指定ygocore主程序位置","ygocore主程序 (gframe.exe)" => "gframe.exe")
     save_config
     msgbox.destroy
     @last_clicked = Time.now

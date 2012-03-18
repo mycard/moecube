@@ -11,7 +11,8 @@ class Scene_Lobby
   GMEM_DDESHARE = 0x2000;
   def join(room)
     path = $game.ygocore_path
-    
+    return Widget_Msgbox.destroy unless path
+    Widget_Msgbox.new("加入房间", "正在启动ygocore")
     room_name = if room.pvp? and room.match?
       "PM#" + room.name
     elsif room.pvp?

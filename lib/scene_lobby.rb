@@ -86,6 +86,8 @@ class Scene_Lobby < Scene
     $scene = Scene_Duel.new(room)
   end
   def update
+    @chat_window.update
+    @host_window.update
     if @count >= 600
       $game.refresh
       @count = 0

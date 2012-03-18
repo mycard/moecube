@@ -8,6 +8,7 @@ require_relative 'fpstimer'
 require_relative 'game'
 require_relative 'window_bgm'
 require_relative 'ogginfo'
+require_relative 'widget_inputbox'
 class Scene
   attr_reader :windows
   attr_reader :background
@@ -106,6 +107,9 @@ class Scene
       when 5
         @active_window.scroll_down if @active_window
       end
+      if !@active_window.is_a? Widget_InputBox
+        Widget_InputBox.focus = false
+      end
     when Event::MouseButtonUp
       case event.button
       when Mouse::BUTTON_LEFT
@@ -117,12 +121,16 @@ class Scene
       when Key::F12
         $scene = Scene_Title.new
       else
-        #$log.debug('unhandled event'){event.inspect}
+        #$log.info('unhandled event'){event.inspect}
       end
     when Event::Quit
       $scene = nil
+    when Event::Active
+      if (event.state & Event::APPINPUTFOCUS) != 0
+        Widget_InputBox.focus = event.gain
+      end
     else
-      #$log.debug('unhandled event'){event.inspect}
+      #$log.info('unhandled event'){event.inspect}
     end
   end
   def handle_game(event)
@@ -143,6 +151,7 @@ class Scene
   # ● 结束处理
   #--------------------------------------------------------------------------
   def terminate
+    self.windows.each{|window|window.destroy}
   end
   def update_active_window(x, y)
     self.windows.reverse.each do |window|

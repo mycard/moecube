@@ -38,6 +38,9 @@ begin
   #初始化SDL
   require 'sdl'
   include SDL
+  SDL::Event::APPMOUSEFOCUS = 1
+  SDL::Event::APPINPUTFOCUS = 2
+  SDL::Event::APPACTIVE = 4
   SDL.putenv ("SDL_VIDEO_CENTERED=1");
   SDL.init(INIT_VIDEO | INIT_AUDIO)
   WM::set_caption("MyCard", "MyCard")

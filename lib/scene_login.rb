@@ -18,7 +18,6 @@ class Scene_Login < Scene
     super
 	end
   def update
-    #@announcements_window.update
     @gameselect_window.update
     super
   end

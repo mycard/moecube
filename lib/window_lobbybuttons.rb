@@ -18,6 +18,9 @@ class Window_LobbyButtons < Window_List
     self.index = nil
   end
   def clicked
-    Window_Host.new(300,200)
+    @host_window = Window_Host.new(300,200)
+  end
+  def update
+    @host_window.update if @host_window and !@host_window.destroyed?
   end
 end

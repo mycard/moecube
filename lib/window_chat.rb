@@ -21,11 +21,12 @@ class Window_Chat < Window_Scrollable
     @background.fill_rect(0,0,@background.w, @background.h, 0xFFb2cefe)
     @background.put(@chat_background,0,31-4)
     @tab = Surface.load "graphics/system/tab.png"
-    @chat_input = Widget_InputBox.new(@x+8, @y+@height-24-10, @width-14, 24) do |message|
-      chatmessage = ChatMessage.new($game.user, message, @channel)
+    @chat_input = Widget_InputBox.new(@x+8, @y+@height-24-10, @width-14, 24) do |key|
+      chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
       $game.chat chatmessage
       Game_Event.push Game_Event::Chat.new(chatmessage)
     end
+    @chat_input.refresh
     @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
     @scrollbar = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
     @page_size = (@height-68)/WLH
@@ -159,5 +160,8 @@ class Window_Chat < Window_Scrollable
   end
   def scroll_down
     self.scroll += 1
+  end
+  def update
+    @chat_input.update
   end
 end
