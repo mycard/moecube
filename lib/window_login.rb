@@ -34,8 +34,8 @@ class Window_Login < Window
     @password && !@password.empty? ? @password_inputbox.value = @password : @password_inputbox.refresh
     @color = [255,255,255]
     @color_stroke = [0,0,0]
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
-    @font_button = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 18)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    @font_button = TTF.open("fonts/wqy-microhei.ttc", 18)
     #@font.draw_blended_utf8(@contents, text, 105,80, *@game_color)
     @items = {
       #:username => [192,80,165,WLH],

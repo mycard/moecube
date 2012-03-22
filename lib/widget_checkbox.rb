@@ -10,7 +10,7 @@ class Widget_Checkbox < Window
     @text = text
     @checked = checked
     @checkbox = Surface.load('graphics/system/checkbox.png').display_format
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 20)
     @proc = proc
     refresh
   end

@@ -1,5 +1,5 @@
 class Game_Event
-  User_Filter = /\[(\d+),(.+?)\]/
+  User_Filter = /\[(\d+),(.+?)(?:,(-1|0)|)\]/
   Room_Filter = /\[(\d+),(.+?),(wait|start)(#{User_Filter}+?)\]/
   #User_Filter = /<li>(：：：观战：|===决斗1=|===决斗2=)<font color="(?:blue|gray)">(.+?)(\(未认证\)|)<\/font>;<\/li>/
   #Room_Filter = /<div style="width:300px; height:150px; border:1px #ececec solid; float:left;padding:5px; margin:5px;">房间名称：(.+?)(<font color="d28311" title="竞技场模式">\[竞\]<\/font>|) (<font color=(?:\")?red(?:\")?>决斗已开始!<\/font>|<font color=(?:\")?blue(?:\")?>等待<\/font>)<font size="1">\(ID：(\d+)\)<\/font>#{User_Filter}+?<\/div>/
@@ -9,11 +9,13 @@ class Game_Event
       info.scan(Room_Filter) do |id, name, status, users|
         #p id, name, status, users, '------------'
         player1 = player2 = nil
-        users.scan(User_Filter) do |player, name|
+        users.scan(User_Filter) do |player, name, certified|
           if name =~ /^<font color="(?:blue|gray)">(.+?)<\/font>$/
             name = $1
           end
-          if name =~ /^(.+?)\(未认证\)$/
+          if certified == '0'
+            certified = false
+          elsif name =~ /^(.+?)\(未认证\)$/
             name = $1
             certified = false
           else
@@ -27,7 +29,7 @@ class Game_Event
         end
         room = Room.new(id.to_i, name, player1, player2, false, [0,0,0])
         room.status = status.to_sym
-        room.name =~ /^(P)?(M)?\#?(.*)(?:<font color="d28311" title="竞技场模式">[竞]<\/font>)?$/
+        room.name =~ /^(P)?(M)?\#?(.*?)(?:<font color="d28311" title="竞技场模式">\[竞\]<\/font>)?$/
         room.name = $3
         room.pvp = !!$1
         room.match = !!$2

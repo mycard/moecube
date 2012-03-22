@@ -12,8 +12,7 @@ class Window_Login
       $game.login(@username_inputbox.value, @password_inputbox.value)
       @last_clicked = Time.now
     when :register
-      require 'launchy'
-      Launchy.open(Iduel::Register_Url)
+      system("start #{Iduel::Register_Url}")
       @last_clicked = Time.now
     when :replay
       require_relative '../dialog'

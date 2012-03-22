@@ -141,7 +141,7 @@ class Widget_InputBox < Window
   @@focus = true
   def initialize(x,y,width,height,z=300, &proc)
     super(x,y,width,height,z)
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 20)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 20)
     @proc = proc
     @value = ""
     @type = :text

@@ -5,10 +5,10 @@ class Window_Announcements < Window
     @count = 0
     @items = $config[$config['game']]['announcements']
     @last_item = @item = @items.first
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 18)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 18)
     @color = [44,64,78]
     @time_color = [0x66, 0x66, 0x66]
-    @time_font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 14)
+    @time_font = TTF.open("fonts/wqy-microhei.ttc", 14)
     @transforming = nil
     refresh
   end
@@ -62,8 +62,7 @@ class Window_Announcements < Window
   end
   def clicked
     return unless @item
-    require 'launchy'
-    Launchy.open(@item.url) if @item.url
+    system("start #{@item.url}") if @item.url
   end
   def mousemoved(x,y)
     if !@focus

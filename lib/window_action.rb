@@ -12,7 +12,7 @@ class Window_Action < Window_List
     @up.set_alpha(RLEACCEL,255)
     @middle.set_alpha(RLEACCEL,255)
     @down.set_alpha(RLEACCEL,255)
-    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
+    @font = TTF.open('fonts/wqy-microhei.ttc', 16)
     @visible = false
   end
   def items=(items)

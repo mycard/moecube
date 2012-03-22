@@ -21,7 +21,7 @@ class Scene
     @background = nil
     @windows = []
     @active_window = nil
-    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 16)
+    @font = TTF.open('fonts/wqy-microhei.ttc', 16)
   end
   def main
     start
@@ -40,7 +40,11 @@ class Scene
     @windows.each do |window|
       window.draw($screen)
     end
-    @font.draw_blended_utf8($screen, "%.1f" % @@fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
+    if Update.status
+      @font.draw_blended_utf8($screen, Update.status, 0, 0, 0xFF, 0xFF, 0xFF) 
+    else
+      @font.draw_blended_utf8($screen, "%.1f" % @@fpstimer.real_fps, 0, 0, 0xFF, 0xFF, 0xFF)
+    end
     $screen.update_rect(0,0,0,0)
   end
   #--------------------------------------------------------------------------

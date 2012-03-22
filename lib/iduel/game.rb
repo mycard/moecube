@@ -1,5 +1,5 @@
 #encoding: UTF-8
-load File.expand_path('window_login.rb', File.dirname(__FILE__))
+load 'lib/iduel/window_login.rb'
 require 'open-uri'
 class Iduel < Game
   Version = "20110131"
@@ -12,10 +12,10 @@ class Iduel < Game
   def initialize
     super
     require 'digest/md5'
-    load File.expand_path('action.rb', File.dirname(__FILE__))
-    load File.expand_path('event.rb', File.dirname(__FILE__))
-    load File.expand_path('user.rb', File.dirname(__FILE__))
-    load File.expand_path('replay.rb', File.dirname(__FILE__))
+    load 'lib/iduel/action.rb'
+    load 'lib/iduel/event.rb'
+    load 'lib/iduel/user.rb'
+    load 'lib/iduel/replay.rb'
   end
 
   def rename

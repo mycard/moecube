@@ -15,7 +15,7 @@ class Window_RoomList < Window_Scrollable
     #@contents = Surface.load 'graphics/lobby/roomitems.png'
     super(x,y,@button.w / 3, 48 * 10)
     @item_max = 0
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
     @color = [0x03, 0x11, 0x22]
     @scrollbar = Widget_ScrollBar.new(self,@x+@width,@y,@height)
     self.items = items

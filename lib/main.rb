@@ -72,10 +72,15 @@ begin
     }
     Profiler__::start_profile
   end
+
   
   #初始化标题场景
   require_relative 'scene_title'
   $scene = Scene_Title.new
+  
+  #自动更新
+  require_relative 'update'
+  Update.start
   
   $log.info("main"){"初始化成功"}
 rescue Exception => exception

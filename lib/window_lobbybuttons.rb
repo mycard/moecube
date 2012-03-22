@@ -4,7 +4,7 @@ class Window_LobbyButtons < Window_List
     super(x,y,86,30)
     @items = ["新房间"]
     @button = Surface.load("graphics/lobby/button.png")
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
     refresh
   end
   def draw_item(index, status=0)

@@ -24,7 +24,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.4.3'
+  s.version = '0.4.4'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
@@ -33,7 +33,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://card.touhou,cc'
   # s.executables = ['your_executable_here']
   s.files = %w(LICENSE.txt README.txt replay)
-  %w{lib audio data fonts graphics}.each{|dir|s.files.concat list(dir)}
+  %w{lib audio data fonts graphics ygocore}.each{|dir|s.files.concat list(dir)}
   if Windows
     s.files += %w(mycard.exe) + list("ruby")
   else
@@ -65,4 +65,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options << '--line-numbers'
 end
 
-CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc) + list('replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/}
+CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc ygocore/pics) + list('replay') + list('ygocore/replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/}

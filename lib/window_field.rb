@@ -26,7 +26,7 @@ class Window_Field < Window
     super(x,y,714,282)
     @field = field
     @player = player
-    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 12)
+    @font = TTF.open('fonts/wqy-microhei.ttc', 12)
     @items = {}
     @cards = {}
     refresh

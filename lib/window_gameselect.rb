@@ -1,7 +1,7 @@
 class Window_GameSelect < Window_List
   WLH = 56
   def initialize(x,y)
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 24)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 24)
     @color = [255,255,255]
     @game_color = [47,156,192]
     @game_stroke_color = [0xFF,0xFF,0xFF]

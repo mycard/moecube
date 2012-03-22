@@ -27,7 +27,7 @@ class Game
   def chat(chatmessage)
   end
   def exit
-    $scene = Scene_Login.new
+    $scene = Scene_Login.new if $scene
   end
   def watching?
     @room and @room.include? @user

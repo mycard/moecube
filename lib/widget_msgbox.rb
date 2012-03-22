@@ -16,7 +16,7 @@ class Widget_Msgbox < Window
     #@background = Surface.load 'graphics/system/msgbox.png'
     @contents = Surface.load('graphics/system/msgbox.png').display_format
     @button = Surface.load('graphics/system/button.png')
-    @font = TTF.open("fonts/WenQuanYi Micro Hei.ttf", 16)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
     super((1024-@contents.w)/2, 230, @contents.w, @contents.h)
     set(title, message, buttons, &proc)
   end
@@ -33,7 +33,7 @@ class Widget_Msgbox < Window
     button_y = 100
     
     @buttons.each_with_index do |button, index|
-      @items[button[0]] = [(@space+@button.w)*index+@space, button_y, @button.w/3, @button.h]
+      @items[button[0]] = [(@space+@button.w/3)*index+@space, button_y, @button.w/3, @button.h]
     end
     refresh
   end
@@ -83,8 +83,8 @@ class Widget_Msgbox < Window
   end
   def clicked
     return if @index.nil?
-    @proc.call(@index) if @proc
     self.destroy
+    @proc.call(@index) if @proc
   end
   def self.destroy
     instance = $scene.windows.find{|window|window.class == self and !window.destroyed?}

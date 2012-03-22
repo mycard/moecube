@@ -6,7 +6,7 @@ class Window_Config < Window
     @button = Surface.load('graphics/system/button.png')
     @background = Surface.load('graphics/config/background.png').display_format
     @contents = Surface.load('graphics/config/background.png').display_format
-    @font = TTF.open('fonts/WenQuanYi Micro Hei.ttf', 20)
+    @font = TTF.open('fonts/wqy-microhei.ttc', 20)
     @index = nil
     
     @items = {
