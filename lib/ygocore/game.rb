@@ -94,7 +94,9 @@ class Ygocore < Game
           Game_Event.push Game_Event::AllRooms.parse info
           Game_Event.push Game_Event::AllUsers.parse info
           yield if block_given?
-        end rescue nil
+        end
+      rescue Exception => exception
+        $log.warn('刷新大厅'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       end
     end
   end

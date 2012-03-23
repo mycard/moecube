@@ -43,6 +43,8 @@ class Scene_Duel < Scene
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
 
+    @join_se = Mixer::Wave.load("audio/se/join.ogg")
+    
     create_action_window
     create_chat_window
     super
@@ -159,6 +161,7 @@ class Scene_Duel < Scene
       player = $game.room.player1 == $game.user ? $game.room.player2 : $game.room.player1
       if player
         notify_send("对手加入房间", "#{player.name}(#{player.id})")
+        Mixer.play_channel(-1,@join_se,0)
       else
         notify_send("对手离开房间", "对手离开房间")
       end

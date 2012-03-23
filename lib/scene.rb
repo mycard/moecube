@@ -51,7 +51,7 @@ class Scene
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
-    if $config['bgm'] and @@last_bgm != bgm
+    if $config['bgm'] and @@last_bgm != bgm and File.file? "audio/bgm/#{bgm}"
       @@bgm.destroy if @@bgm
       @@bgm = Mixer::Music.load "audio/bgm/#{bgm}"
       Mixer.fade_in_music(@@bgm, -1, 800)
