@@ -5,6 +5,7 @@
 # �title
 #==============================================================================
 require_relative 'scene'
+require_relative 'widget_inputbox'
 require_relative 'window_title'
 BGM = 'title.ogg'
 class Scene_Title < Scene

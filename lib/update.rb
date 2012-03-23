@@ -1,7 +1,7 @@
 require 'open-uri'
 module Update
-  Version = '0.4.4'
-  URL = 'http://card.touhou.cc/mycard/update.json?version=0.4.4'
+  Version = '0.4.5'
+  URL = 'http://card.touhou.cc/mycard/update.json?version=0.4.5'
   class <<self
     attr_reader :thumbnails, :images, :status
     def start
