@@ -171,6 +171,7 @@ class Scene_Duel < Scene
   end
   def update
     @cardinfo_window.update
+    @chat_window.update
     super
   end
   def refresh
