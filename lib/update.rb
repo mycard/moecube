@@ -1,4 +1,5 @@
 require 'open-uri'
+require_relative 'card'
 module Update
   Version = '0.4.6'
   URL = 'http://card.touhou.cc/mycard/update.json?version=0.4.6'
@@ -27,7 +28,7 @@ module Update
       end
       if @updated
         IO.popen('./mycard')
-        exit
+        $scene = nil
       end
       @status = '正在检查更新'
       Thread.new do
@@ -76,36 +77,69 @@ module Update
               end
             end
             @images -= existed_images
-            $log.info('待下载的完整卡图'){@images.inspect}
-            threads = 5.times.collect do 
-              thread = Thread.new do
-                while number = @thumbnails.pop
-                  @status.replace "正在下载缩略卡图 (剩余#{@thumbnails.size}张)"
-                  open("http://card.touhou.cc/images/cards/ygocore/thumbnail/#{number}.jpg", 'rb') do |remote|
-                    next if File.file? "ygocore/pics/thumbnail/#{number}.jpg"
-                    open("ygocore/pics/thumbnail/#{number}.jpg", 'wb') do |local|
-                      local.write remote.read
+            existed_images = []
+            if !@images.empty? and File.file?("#{Card::PicPath}/1.jpg")
+              db_mycard = SQLite3::Database.new( "data/data.sqlite" )
+              can_link = true
+              db_mycard.execute( "select id, number from `yu-gi-oh` where number in (#{@images.collect{|number|"%08d" % number}.join(',')})" ) do |row|
+                id = row[0]
+                number = row[1].to_i
+                existed_images << number
+                src = "#{Card::PicPath}/#{id}.jpg"
+                dest = "ygocore/pics/#{number}.jpg"
+                if File.file?(src) and !File.file?(dest)
+                  @status.replace "检测到存在iDuel卡图 正在导入 #{id}.jpg"
+                  if can_link
+                    begin
+                      File.link(src, dest)
+                    rescue
+                      can_link = false
+                      redo
                     end
-                  end rescue nil
+                  else
+                    open(src, 'rb') do |src|
+                      open(dest, 'wb') do |dest|
+                        dest.write src.read
+                      end
+                    end
+                  end
                 end
-                while number = @images.pop
-                  @status.replace "正在下载完整卡图 (剩余#{@images.size}张)"
-                  open("http://card.touhou.cc/images/cards/ygocore/#{number}.jpg", 'rb') do |remote|
-                    next if File.file? "ygocore/pics/#{number}.jpg"
-                    open("ygocore/pics/#{number}.jpg", 'wb') do |local|
-                      local.write remote.read
-                    end
-                  end rescue nil
-                end 
               end
-              thread.priority = -1
-              thread
             end
-            threads.each{|thread|thread.join}
+            @images -= existed_images
+            @thumbnails = (@thumbnails & @images) + (@thumbnails - @images)
+            unless @thumbnails.empty? and @images.empty?
+              $log.info('待下载的完整卡图'){@images.inspect}
+              threads = 5.times.collect do 
+                thread = Thread.new do
+                  while number = @thumbnails.pop
+                    @status.replace "正在下载缩略卡图 (剩余#{@thumbnails.size}张)"
+                    open("http://card.touhou.cc/images/cards/ygocore/thumbnail/#{number}.jpg", 'rb') do |remote|
+                      next if File.file? "ygocore/pics/thumbnail/#{number}.jpg"
+                      open("ygocore/pics/thumbnail/#{number}.jpg", 'wb') do |local|
+                        local.write remote.read
+                      end
+                    end rescue nil
+                  end
+                  while number = @images.pop
+                    @status.replace "正在下载完整卡图 (剩余#{@images.size}张)"
+                    open("http://card.touhou.cc/images/cards/ygocore/#{number}.jpg", 'rb') do |remote|
+                      next if File.file? "ygocore/pics/#{number}.jpg"
+                      open("ygocore/pics/#{number}.jpg", 'wb') do |local|
+                        local.write remote.read
+                      end
+                    end rescue nil
+                  end 
+                end
+                thread.priority = -1
+                thread
+              end
+              threads.each{|thread|thread.join}
+            end
           end
         end rescue nil
         @status = nil
-      end
+      end.priority = -1
     end
   end
 end
