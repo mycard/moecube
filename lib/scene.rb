@@ -141,8 +141,7 @@ class Scene
     case event
     when Game_Event::Error
       if event.fatal
-        $game.exit if $game
-        Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$scene = Scene_Login.new}
+        Widget_Msgbox.new(event.title, event.message, :ok => "确定"){$game.exit if $game;$scene = Scene_Login.new}
       else
         Widget_Msgbox.new(event.title, event.message, :ok => "确定")
       end

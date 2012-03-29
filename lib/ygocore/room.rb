@@ -5,7 +5,7 @@ class Room
   alias pvp? pvp
   alias match? match
   def full?
-    $game.is_a?(Ygocore) ? (@status == :start) : super #不规范修正iduel房间识别问题
+    $game.is_a?(Ygocore) ? (@status == :start) : player2 #不规范修正iduel房间识别问题
   end
   def extra
     result = {}

@@ -1,8 +1,9 @@
 require 'open-uri'
+require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.4.6'
-  URL = 'http://card.touhou.cc/mycard/update.json?version=0.4.6'
+  Version = '0.4.7'
+  URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
     def start
@@ -15,7 +16,6 @@ module Update
           Zip::ZipFile::open(file) do |zip|
             zip.each do |f|
               if !File.directory?(f.name)
-                require "fileutils.rb"
                 FileUtils.mkdir_p(File.dirname(f.name)) 
               end
               f.extract{true}
@@ -58,7 +58,6 @@ module Update
             @images = @thumbnails.dup
           
             if !File.directory?('ygocore/pics/thumbnail')
-              require "fileutils.rb"
               FileUtils.mkdir_p('ygocore/pics/thumbnail') 
             end
           
@@ -78,35 +77,48 @@ module Update
             end
             @images -= existed_images
             existed_images = []
-            if !@images.empty? and File.file?("#{Card::PicPath}/1.jpg")
+            if (!@images.empty? or !@thumbnails.empty?) and File.file?("#{Card::PicPath}/1.jpg")
               db_mycard = SQLite3::Database.new( "data/data.sqlite" )
               can_link = true
-              db_mycard.execute( "select id, number from `yu-gi-oh` where number in (#{@images.collect{|number|"%08d" % number}.join(',')})" ) do |row|
+              internal_can_link = true
+              
+              db_mycard.execute( "select id, number from `yu-gi-oh` where number in (#{(@images+@thumbnails).uniq.collect{|number|"'%08d'" % number}.join(',')})" ) do |row|
                 id = row[0]
                 number = row[1].to_i
                 existed_images << number
                 src = "#{Card::PicPath}/#{id}.jpg"
                 dest = "ygocore/pics/#{number}.jpg"
-                if File.file?(src) and !File.file?(dest)
+                dest_thumb = "ygocore/pics/thumbnail/#{number}.jpg"
+                if File.file?(src)
                   @status.replace "检测到存在iDuel卡图 正在导入 #{id}.jpg"
-                  if can_link
-                    begin
-                      File.link(src, dest)
-                    rescue
-                      can_link = false
-                      redo
+                  if !File.exist?(dest)
+                    if can_link
+                      File.link(src, dest) rescue can_link = false
                     end
-                  else
-                    open(src, 'rb') do |src|
-                      open(dest, 'wb') do |dest|
-                        dest.write src.read
+                    if !can_link
+                      FileUtils.copy_file(src, dest)
+                    end
+                    if !File.exist?(dest_thumb)
+                      if internal_can_link
+                        File.link(dest, dest_thumb) rescue internal_can_link = false
                       end
+                      if !internal_can_link
+                        FileUtils.copy_file(dest, dest_thumb)
+                      end
+                    end
+                  elsif !File.exist?(dest_thumb)
+                    if can_link
+                      File.link(src, dest_thumb) rescue can_link = false
+                    end
+                    if !can_link
+                      FileUtils.copy_file(src, dest_thumb)
                     end
                   end
                 end
               end
             end
             @images -= existed_images
+            @thumbnails -= existed_images
             @thumbnails = (@thumbnails & @images) + (@thumbnails - @images)
             unless @thumbnails.empty? and @images.empty?
               $log.info('待下载的完整卡图'){@images.inspect}
@@ -140,6 +152,17 @@ module Update
         end rescue nil
         @status = nil
       end.priority = -1
+    end
+    def copy(src, dest, can_link)
+      if can_link
+        File.link(src, dest)
+      else
+        open(src, 'rb') do |src|
+          open(dest, 'wb') do |dest|
+            dest.write src.read
+          end
+        end
+      end
     end
   end
 end
