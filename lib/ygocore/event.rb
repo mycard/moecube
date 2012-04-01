@@ -69,13 +69,8 @@ class Game_Event
         @users << room.player1 if room.player1
         @users << room.player2 if room.player2
       end
+      @users.uniq!
       self.new @users
-    end
-  end
-  class Join < Game_Event
-    def initialize(room)
-      @room = room
-      $game.room = @room
     end
   end
 end

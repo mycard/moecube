@@ -37,6 +37,41 @@ class Ygocore < Game
       end
     end
   end
+  def user=(user)
+    super
+    begin
+      require 'net/yail'
+      $log.info('聊天'){user.inspect}
+      @irc = Net::YAIL.new(
+        address: 'card.touhou.cc',
+        username: hexencode(user.id),
+        nicknames: [hexencode(user.name), hexencode("#{user.name}_#{rand(10000)}"), hexencode("#{user.name}_#{rand(10000)}")]) 
+      $log.info('聊天连接')
+      @irc.on_welcome proc { |event| $log.info('连接聊天服务器成功'); Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'system'), '聊天服务器连接成功,聊天功能测试中，可能引发程序崩溃，如果崩得过于频繁请暂时不要使用.', :lobby))); @irc.join('#lobby') }
+      @irc.hearing_msg {|event| 
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::Chat.new(ChatMessage.new(user, event.message, event.channel ? event.channel[1,event.channel.size-1].to_sym : user))
+      }
+      $log.info('聊天开始监听')
+      @irc.start_listening
+      $log.info('聊天加载完毕')
+    rescue Exception => exception
+      $log.error('聊天出错'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
+      Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'system'), '连接聊天服务器失败', :lobby)))
+    end
+      
+  end
+  def chat(chatmessage)
+    $log.info('发送聊天消息'){chatmessage.inspect}
+    return unless @irc
+    case chatmessage.channel
+    when Symbol
+      @irc.msg "##{chatmessage.channel}", chatmessage.message
+    when User
+      @irc.msg hexencode(chatmessage.channel.id), chatmessage.message
+    end
+    $log.info('发送聊天消息完毕')
+  end
   def host(room_name, room_config)
     if $game.password.nil? or $game.password.empty?
       return Widget_Msgbox.new("建立房间", "必须有账号才能建立房间", :ok => "确定")
@@ -99,6 +134,11 @@ class Ygocore < Game
         $log.warn('刷新大厅'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       end
     end
+  end
+  def exit
+    (@irc.quit if @irc) rescue nil
+    @irc = nil
+    @chat_thread = nil
   end
   def ygocore_path
     #    return $config['ygocore']['path'] if $config['ygocore']['path'] and File.file? $config['ygocore']['path']
@@ -175,6 +215,16 @@ class Ygocore < Game
   def connect
     require 'open-uri'
   end
+  def hexencode(str)
+    '_' + str.to_s.unpack('H*').first
+  end
+  def hexdecode(str)
+    result = str[1, str.size-1]
+    [result.to_s].pack('H*')
+  end
+  def MAKELPARAM(w1,w2)
+    (w2<<16) | w1
+  end
   def self.get_announcements
     #公告
     $config['ygocore'] ||= {}
@@ -197,8 +247,4 @@ class Ygocore < Game
     end
   end
   get_announcements
-end
-
-def MAKELPARAM(w1,w2)
-  (w2<<16) | w1
 end

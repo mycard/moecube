@@ -2,7 +2,7 @@ require 'open-uri'
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.4.8'
+  Version = '0.4.9'
   URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
@@ -30,6 +30,9 @@ module Update
         IO.popen('./mycard')
         $scene = nil
       end
+      @images = []
+      @thumbnails = []
+      
       @status = '正在检查更新'
       Thread.new do
         open(URL) do |file|
@@ -51,11 +54,10 @@ module Update
           if File.file? "ygocore/cards.cdb"
             require 'sqlite3'
             db = SQLite3::Database.new( "ygocore/cards.cdb" )
-            @thumbnails = []
             db.execute( "select id from datas" ) do |row|
               @thumbnails << row[0]
             end
-            @images = @thumbnails.dup
+            @images.replace @thumbnails
           
             if !File.directory?('ygocore/pics/thumbnail')
               FileUtils.mkdir_p('ygocore/pics/thumbnail') 
