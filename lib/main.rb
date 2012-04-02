@@ -46,7 +46,7 @@ begin
   WM::set_caption("MyCard", "MyCard")
   WM::icon = Surface.load("graphics/system/icon.gif")
   $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
-  Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,512)
+  Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,4096)
   Mixer.set_volume_music(60)
   TTF.init
   Thread.abort_on_exception = true
