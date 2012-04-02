@@ -28,7 +28,7 @@ class User
       Thread.new do
         require 'cgi'
         open("http://card.touhou.cc/users/#{CGI.escape @id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
-        yield Surface.load(cache) if scene == $scene
+        (yield Surface.load(cache) if scene == $scene) rescue nil
       end
     else
       result

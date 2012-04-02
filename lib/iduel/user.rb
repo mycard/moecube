@@ -27,7 +27,7 @@ class User
       yield result
       Thread.new do
         open("http://www.duelcn.com/uc_server/avatar.php?uid=#{id-100000}&size=#{size}", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
-        yield Surface.load(cache) if scene == $scene
+        (yield Surface.load(cache) if scene == $scene) rescue nil
       end
     else
       result

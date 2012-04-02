@@ -20,7 +20,7 @@ module Update
               end
               f.extract{true}
             end
-          end
+          end rescue $log.error('安装更新出错'){file+$!.inspect+$!.backtrace.inspect}
           Version.replace $2
           File.delete file
           @updated = true
