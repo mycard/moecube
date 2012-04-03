@@ -32,6 +32,8 @@ class Game
   def watching?
     @room and @room.include? @user
   end
+  def self.deck_edit
+  end
 end
 
 

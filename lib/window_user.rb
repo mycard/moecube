@@ -6,7 +6,7 @@ class Window_User < Window_List
     @font = TTF.open('fonts/wqy-microhei.ttc', 16)
     @user = user
     @contents = Surface.load("graphics/lobby/user.png").display_format #TODO:调用已经加载了的背景
-    
+    @close = Surface.load("graphics/lobby/userclose.png")
     @avatar_boarder = Surface.load("graphics/lobby/avatar_boader.png")
     @items = ["发送消息", "查看资料"]
     @items << "加入游戏" if user.status == :waiting
@@ -25,7 +25,8 @@ class Window_User < Window_List
       
     @font.draw_blended_utf8(@contents, @user.name, 172, 24, 0x00,0x00,0x00)
     @font.draw_blended_utf8(@contents, "id: #{@user.id}" , 172, 32+WLH, 0x00,0x00,0x00)
-    @font.draw_blended_utf8(@contents, "#{'房间' + @user.room.id.to_s + ' ' if @user.room}#{case @user.status;when :lobby;'大厅';when :dueling;'决斗中';when :waiting;'等待中';end}", 172, 32+WLH*2, 0x00,0x00,0x00)
+    @font.draw_blended_utf8(@contents, "#{'房间' + @user.room.id.to_s + '' if @user.room}#{case @user.status;when :lobby;'大厅';when :dueling;'决斗中';when :waiting;'等待中';end}", 172, 32+WLH*2, 0x00,0x00,0x00)
+    Surface.blit(@close, 0, 0, @close.w/3, @close.h, @contents, @width-24,10)
     
   end
   def clear(x=0,y=0,width=@width,height=@height)

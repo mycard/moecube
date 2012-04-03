@@ -24,7 +24,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.5.0'
+  s.version = '0.5.1'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary

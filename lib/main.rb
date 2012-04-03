@@ -83,6 +83,8 @@ begin
   require_relative 'update'
   Update.start
   
+  require_relative 'dialog'
+  
   $log.info("main"){"初始化成功"}
 rescue Exception => exception
   open('error-程序出错请到论坛反馈.txt', 'w'){|f|f.write [exception.inspect, *exception.backtrace].join("\n")}
