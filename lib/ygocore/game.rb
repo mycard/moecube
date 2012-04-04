@@ -2,6 +2,7 @@
 load 'lib/ygocore/window_login.rb'
 class Ygocore < Game
   attr_reader :password
+  attr_reader :irc_users
   @@config = YAML.load_file("lib/ygocore/server.yml")
   def initialize
     super
@@ -10,6 +11,7 @@ class Ygocore < Game
     load 'lib/ygocore/room.rb'
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
+    @irc_users = []
   end
   def login(username, password)
     if username.empty?
@@ -52,6 +54,24 @@ class Ygocore < Game
         user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
         Game_Event.push Game_Event::Chat.new(ChatMessage.new(user, event.message, event.channel ? event.channel[1,event.channel.size-1].to_sym : user))
       }
+      @irc.heard_namreply{|event| 
+        @irc_users.concat @irc.instance_variable_get(:@nicklist).collect {|user|
+          User.new(hexdecode(user).to_sym, hexdecode(user))
+        }
+        Game_Event.push Game_Event::AllUsers.new(@users|@irc_users)
+        $log.info('irc用户列表'){user}
+      }
+      @irc.heard_join{|event|
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::NewUser.new(user)
+        $log.info('irc用户上线'){user}
+      }
+      @irc.heard_quit{|event|
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::MissingUser.new(user)
+        $log.info('irc用户下线'){user}
+      }
+      #@irc.hearing_join {}
       $log.info('聊天开始监听')
       @irc.start_listening
       $log.info('聊天加载完毕')
@@ -59,7 +79,6 @@ class Ygocore < Game
       $log.error('聊天出错'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'system'), '连接聊天服务器失败', :lobby)))
     end
-      
   end
   def chat(chatmessage)
     $log.info('发送聊天消息'){chatmessage.inspect}
@@ -127,7 +146,14 @@ class Ygocore < Game
           info = file.read.encode("UTF-8")
           $log.info('刷新大厅信息'){'完成'}
           Game_Event.push Game_Event::AllRooms.parse info
-          Game_Event.push Game_Event::AllUsers.parse info
+          @users.clear
+          @rooms.each do |room|
+            @users << room.player1 if room.player1
+            @users << room.player2 if room.player2
+          end
+          @users.concat @irc_users
+          @users.uniq!
+          Game_Event.push Game_Event::AllUsers.new(@users)
           yield if block_given?
         end
       rescue Exception => exception

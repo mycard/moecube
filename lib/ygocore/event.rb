@@ -62,15 +62,4 @@ class Game_Event
       self.new @rooms
     end
   end
-  class AllUsers < Game_Event
-    def self.parse(info)
-      @users = []
-      $game.rooms.each do |room|
-        @users << room.player1 if room.player1
-        @users << room.player2 if room.player2
-      end
-      @users.uniq!
-      self.new @users
-    end
-  end
 end
