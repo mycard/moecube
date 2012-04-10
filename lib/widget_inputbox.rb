@@ -76,11 +76,11 @@ module RM_IME
   module_function
   def init
     return if @active
+    $log.info('输入法'){'开启'}
     _init(HWND, 0, 0)
     @x = 0
     @y = 0
     @active = true
-    $log.info('输入法'){'开启'}
   end
   def set(x,y)
     @x = x
@@ -102,8 +102,8 @@ module RM_IME
   end
   def dispose
     return if !@active
-    _dispose
     $log.info('输入法'){'关闭'}
+    _dispose
     @active = false
   end
   def active?

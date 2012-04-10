@@ -1,24 +1,37 @@
 require_relative 'window_host'
 class Window_LobbyButtons < Window_List
   def initialize(x,y)
-    super(x,y,86,30)
-    @items = ["新房间"]
+    @items = ["卡组编辑","建立房间"]
     @button = Surface.load("graphics/lobby/button.png")
-    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    super(x,y,@items.size*@button.w/3+@items.size*4,30)
+    @font = TTF.open("fonts/wqy-microhei.ttc", 15)
     refresh
   end
   def draw_item(index, status=0)
-    Surface.blit(@button, status*@button.w/3,0,@button.w/3,@button.h, @contents, 0, 0)
-    @font.draw_blended_utf8(@contents,"新房间",16,5,20,10,180)
+    x,y=item_rect(index)
+    Surface.blit(@button, status*@button.w/3,0,@button.w/3,@button.h, @contents, x,y)
+    draw_stroked_text(@items[index], x+8,y+3,2,@font,[0xdf,0xf1,0xff], [0x27,0x43,0x59])
+  end
+  def item_rect(index)
+    [index*@button.w/3+(index)*4, 0, @button.w/3, @height]
   end
   def mousemoved(x,y)
-    self.index = 0
+    if (x-@x) % (@button.w/3+4) >= @button.w/3
+      self.index = nil
+    else
+      self.index = (x-@x)/(@button.w/3+4)
+    end
   end
   def lostfocus(active_window = nil)
     self.index = nil
   end
   def clicked
-    @host_window = Window_Host.new(300,200)
+    case @index
+    when 0 #卡组编辑
+      $game.class.deck_edit
+    when 1 #建立房间
+      @host_window = Window_Host.new(300,200)
+    end
   end
   def update
     @host_window.update if @host_window and !@host_window.destroyed?

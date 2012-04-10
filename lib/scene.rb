@@ -106,13 +106,13 @@ class Scene
       when Mouse::BUTTON_LEFT
         update_active_window(event.x, event.y)
         @active_window.clicked if @active_window
+        if !(@active_window.is_a? Widget_InputBox)
+          Widget_InputBox.focus = false
+        end
       when 4
         @active_window.scroll_up if @active_window
       when 5
         @active_window.scroll_down if @active_window
-      end
-      if !@active_window.is_a? Widget_InputBox
-        Widget_InputBox.focus = false
       end
     when Event::MouseButtonUp
       case event.button

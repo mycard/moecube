@@ -24,10 +24,12 @@ class Window_Chat < Window_Scrollable
     @chat_input = Widget_InputBox.new(@x+8, @y+@height-24-10, @width-14, 24) do |key|
       case key
       when :ENTER
-        chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
-        $game.chat chatmessage
-        Game_Event.push Game_Event::Chat.new(chatmessage)
-        true
+        if !@chat_input.value.empty?
+          chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
+          $game.chat chatmessage
+          Game_Event.push Game_Event::Chat.new(chatmessage)
+          true
+        end
       when :ESC
         true  
       end
@@ -48,7 +50,10 @@ class Window_Chat < Window_Scrollable
 	end
 	def add(chatmessage)
     @@list[chatmessage.channel] ||= []
-    @channels << chatmessage.channel unless @channels.include? chatmessage.channel
+    unless @channels.include? chatmessage.channel
+      @channels << chatmessage.channel
+      refresh
+    end
     @@list[chatmessage.channel] << chatmessage
     scroll_bottom = @items.size - self.scroll <= @page_size
     add_split(chatmessage)

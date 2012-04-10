@@ -1,7 +1,7 @@
 class Room
   attr_accessor :pvp
   attr_accessor :match
-  attr_writer :status
+  attr_accessor :status
   alias pvp? pvp
   alias match? match
   def full?

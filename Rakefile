@@ -24,7 +24,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.4.8'
+  s.version = '0.5.2'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
@@ -65,4 +65,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options << '--line-numbers'
 end
 
-CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc ygocore/pics) + list('replay') + list('ygocore/replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/}
+CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc ygocore/pics) + list('replay') + list('ygocore/replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/} + list("ygocore/deck").keep_if{|file|File.basename(file) != 'sample.ydk'}

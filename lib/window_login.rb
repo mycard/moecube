@@ -45,9 +45,9 @@ class Window_Login < Window
       :replay => [378,200,@button.w/3,@button.h]
     }
     @items_text = {
-      :login => "登陆",
+      :login => "登录",
       :register => "注册",
-      :replay => "战报"
+      :replay => "录像"
     }
     #self.index = nil
     @remember_password = Widget_Checkbox.new(self, 357+@x,80+@y,self.width-357,24,password,"记住密码")
