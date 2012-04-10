@@ -14,6 +14,9 @@ class Ygocore < Game
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
   end
+  def refresh_interval
+    60
+  end
   def login(username, password)
     @username = username
     @password = password

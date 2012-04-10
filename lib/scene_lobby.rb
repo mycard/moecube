@@ -88,7 +88,7 @@ class Scene_Lobby < Scene
   def update
     @chat_window.update
     @host_window.update
-    if @count >= 600
+    if @count >= $game.refresh_interval*60
       $game.refresh
       @count = 0
     end

@@ -34,6 +34,9 @@ class Game
   end
   def self.deck_edit
   end
+  def refresh_interval
+    5
+  end
 end
 
 

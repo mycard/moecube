@@ -69,10 +69,15 @@ class Game_Event
     attr_reader :room
     def initialize(room)
       @room = room
-      $game.rooms << @room unless $game.rooms.include? @room
+      unless $game.rooms.include? @room
+        if @room.full?
+          $game.rooms << @room
+        else
+          $game.rooms.unshift @room
+        end
+      end
     end
   end
-
   class MissingRoom < AllRooms
     attr_reader :room
     def initialize(room)
