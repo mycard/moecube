@@ -5,6 +5,7 @@ require 'open-uri'
 class Ygocore < Game
   attr_reader :username
   attr_reader :password
+  attr_reader :irc_users
   @@config = YAML.load_file("lib/ygocore/server.yml")
   def initialize
     super
@@ -13,6 +14,7 @@ class Ygocore < Game
     load 'lib/ygocore/room.rb'
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
+    @irc_users = []
   end
   def refresh_interval
     60
@@ -37,6 +39,58 @@ class Ygocore < Game
       send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
     end
     
+  end
+  def user=(user)
+    super
+    begin
+      require 'net/yail'
+      $log.info('聊天'){user.inspect}
+      @irc = Net::YAIL.new(
+        address: 'card.touhou.cc',
+        username: hexencode(user.id),
+        nicknames: [hexencode(user.name), hexencode("#{user.name}_#{rand(10000)}"), hexencode("#{user.name}_#{rand(10000)}")]) 
+      $log.info('聊天连接')
+      @irc.on_welcome proc { |event| $log.info('连接聊天服务器成功'); Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'system'), '聊天服务器连接成功,聊天功能测试中，可能引发程序崩溃，如果崩得过于频繁请暂时不要使用.', :lobby))); @irc.join('#lobby') }
+      @irc.hearing_msg {|event| 
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::Chat.new(ChatMessage.new(user, event.message, event.channel ? event.channel[1,event.channel.size-1].to_sym : user))
+      }
+      @irc.heard_namreply{|event| 
+        @irc_users.concat @irc.instance_variable_get(:@nicklist).collect {|user|
+          User.new(hexdecode(user).to_sym, hexdecode(user))
+        }
+        Game_Event.push Game_Event::AllUsers.new(@users|@irc_users)
+        $log.info('irc用户列表'){user}
+      }
+      @irc.heard_join{|event|
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::NewUser.new(user)
+        $log.info('irc用户上线'){user}
+      }
+      @irc.heard_quit{|event|
+        user = User.new(hexdecode(event.msg.user).to_sym, hexdecode(event.nick))
+        Game_Event.push Game_Event::MissingUser.new(user)
+        $log.info('irc用户下线'){user}
+      }
+      #@irc.hearing_join {}
+      $log.info('聊天开始监听')
+      @irc.start_listening
+      $log.info('聊天加载完毕')
+    rescue Exception => exception
+      $log.error('聊天出错'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
+      Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'system'), '连接聊天服务器失败', :lobby)))
+    end
+  end
+  def chat(chatmessage)
+    $log.info('发送聊天消息'){chatmessage.inspect}
+    return unless @irc
+    case chatmessage.channel
+    when Symbol
+      @irc.msg "##{chatmessage.channel}", chatmessage.message
+    when User
+      @irc.msg hexencode(chatmessage.channel.id), chatmessage.message
+    end
+    $log.info('发送聊天消息完毕')
   end
   def host(room_name, room_config)
     room = Room.new(0, room_name)
@@ -64,6 +118,11 @@ class Ygocore < Game
   def exit
     @recv.exit if @recv
     @recv = nil
+  end
+  def exit
+    (@irc.quit if @irc) rescue nil
+    @irc = nil
+    @chat_thread = nil
   end
   def ygocore_path
     "ygocore/gframe.exe"
