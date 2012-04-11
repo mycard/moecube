@@ -7,7 +7,7 @@
 require_relative 'fpstimer'
 require_relative 'game'
 require_relative 'window_bgm'
-require_relative 'ogginfo'
+require 'ogginfo'
 require_relative 'widget_inputbox'
 class Scene
   attr_reader :windows
@@ -55,7 +55,8 @@ class Scene
       @@bgm.destroy if @@bgm
       @@bgm = Mixer::Music.load "audio/bgm/#{bgm}"
       Mixer.fade_in_music(@@bgm, -1, 800)
-      @bgm_window = Window_BGM.new OggInfo.new("audio/bgm/#{bgm}", "UTF-8").tag["title"]
+      title = OggInfo.new("audio/bgm/#{bgm}").tag["title"]
+      @bgm_window = Window_BGM.new title if title and !title.empty?
       @@last_bgm = bgm
     end
   end

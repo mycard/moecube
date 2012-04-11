@@ -46,7 +46,7 @@ begin
   WM::set_caption("MyCard", "MyCard")
   WM::icon = Surface.load("graphics/system/icon.gif")
   $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
-  Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,4096)
+  Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,1024)
   Mixer.set_volume_music(60)
   TTF.init
   Thread.abort_on_exception = true
@@ -96,7 +96,7 @@ begin
   $scene.main while $scene
 rescue Exception => exception
   exception.backtrace.each{|backtrace|break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/} #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
-  $log.fatal($1){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
+  $log.fatal($1){[exception.inspect, *exception.backtrace].collect{|str|str.force_encoding("UTF-8")}.join("\n")}
   $game.exit if $game
   require_relative 'scene_error'
   $scene = Scene_Error.new
