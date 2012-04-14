@@ -62,7 +62,7 @@ class Window_Announcements < Window
   end
   def clicked
     return unless @item
-    system("start #{@item.url}") if @item.url
+    Dialog.web @item.url if @item.url
   end
   def mousemoved(x,y)
     if !@focus

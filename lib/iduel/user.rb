@@ -49,7 +49,7 @@ class User
     $game.rooms.find{|room|room.include? self}
   end
   def space
-    system("start http://www.duelcn.com/home.php?mod=space&uid=#{@id-100000}")
+    Dialog.web "http://www.duelcn.com/home.php?mod=space&uid=#{@id-100000}"
   end
   def color
     @friend ? [255,0,0] : [0,0,0]

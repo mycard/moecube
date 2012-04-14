@@ -15,7 +15,7 @@ class User
   end
   def space
     if @certified
-      system("start http://card.touhou.cc/users/#{CGI.escape @id.to_s}")
+      Dialog.web "http://card.touhou.cc/users/#{CGI.escape @id.to_s}"
     else
       Widget_Msgbox.new("查看资料", "用户#{@name}没有注册", :ok => "确定")
     end

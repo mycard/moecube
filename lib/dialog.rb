@@ -1,24 +1,23 @@
-require 'win32api'
 module Dialog
-  #--------------------------------------------------------------------------
-  # ● 选择文件对话框
-  #--------------------------------------------------------------------------
+  #选择文件对话框
+  require 'win32api'
   GetOpenFileName = Win32API.new("comdlg32.dll", "GetOpenFileNameW", "p", "i")
-  
   OFN_EXPLORER            = 0x00080000
   OFN_PATHMUSTEXIST       = 0x00000800
   OFN_FILEMUSTEXIST       = 0x00001000
   OFN_ALLOWMULTISELECT    = 0x00000200
-  
   OFN_FLAGS = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST |
   OFN_ALLOWMULTISELECT
+  #打开网页
+  require 'win32ole'
+  Shell = WIN32OLE.new('Shell.Application')
+  
   module_function
   def get_open_file(title="选择文件", filter = {"所有文件 (*.*)" => "*.*"})
     szFile        = (0.chr * 20481).encode("UTF-16LE")
     szFileTitle   = 0.chr * 2049
     szTitle       = (title+"\0").encode("UTF-16LE")
     szFilter      = (filter.flatten.join("\0")+"\0\0").encode("UTF-16LE")
-    #p szFilter.encode("GBK")
     szInitialDir  = "\0"
     
     ofn = 
@@ -47,5 +46,8 @@ module Dialog
     Dir.chdir{GetOpenFileName.call(ofn)}
     szFile.delete!("\0".encode("UTF-16LE"))
     szFile.encode("UTF-8")
+  end
+  def web(url)
+    Shell.ShellExecute url
   end
 end

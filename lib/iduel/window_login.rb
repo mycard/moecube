@@ -12,7 +12,7 @@ class Window_Login
       $game.login(@username_inputbox.value, @password_inputbox.value)
       @last_clicked = Time.now
     when :register
-      system("start #{Iduel::Register_Url}")
+      Dialog.web Iduel::Register_Url
       @last_clicked = Time.now
     when :replay
       file = Dialog.get_open_file("播放录像", "所有支持的录像 (*.txt;*.htm)" => "*.txt;*.htm", "iDuel的html的录像 (*.htm)" => "*.htm", "文本录像 (*.txt)" => "*.txt")
