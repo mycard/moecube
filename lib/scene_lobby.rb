@@ -40,23 +40,15 @@ class Scene_Lobby < Scene
         @active_window.cursor_up
       when Key::DOWN
         @active_window.cursor_down
-      when Key::RETURN
-        @active_window.clicked
       when Key::F2
         #@joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
-        $game.host Room.new(0, $game.user.name)        
+        #$game.host Room.new(0, $game.user.name)        
       when Key::F3
         #@joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
         #$game.join 'localhost'
       when Key::F5
-        #        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
-        #          $game.qroom room
-        #        end
         $game.refresh
       when Key::F12
-        #        if @roomlist.items and room = @roomlist.items.find{|room|room.player1 == $game.user or room.player2 == $game.user}
-        #          $game.qroom room
-        #        end
         $game.exit
         $scene = Scene_Login.new
       end

@@ -123,6 +123,15 @@ class Scene
       end
     when Event::KeyDown
       case event.sym
+      when Key::RETURN
+        if event.mod & Key::MOD_ALT != 0
+          $config['screen']['fullscreen'] = !$config['screen']['fullscreen']
+          $screen.destroy
+          style = HWSURFACE
+          style |= FULLSCREEN if $config['screen']["fullscreen"]
+          $screen = Screen.open($config['screen']["width"], $config['screen']["height"], 0, style)
+          save_config
+        end
       when Key::F12
         $scene = Scene_Title.new
       else
