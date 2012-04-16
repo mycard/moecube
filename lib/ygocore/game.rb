@@ -14,6 +14,9 @@ class Ygocore < Game
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
   end
+  def refresh_interval
+    60
+  end
   def login(username, password)
     @username = username
     @password = password
@@ -170,7 +173,7 @@ class Ygocore < Game
           save_config
         end
       rescue Exception => exception
-        $log.error('公告') {[exception.inspect, *exception.backtrace].join("\n")}
+        $log.error('公告读取失败'){[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
       end
     end
   end

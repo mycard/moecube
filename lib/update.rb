@@ -2,7 +2,7 @@ require 'open-uri'
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.5.3'
+  Version = '0.5.4'
   URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
@@ -34,6 +34,7 @@ module Update
       @thumbnails = []
       
       @status = '正在检查更新'
+      @updated = false
       Thread.new do
         open(URL) do |file|
           require 'json'
@@ -46,12 +47,16 @@ module Update
             @status.replace "正在下载更新#{name}"
             open(fil, 'rb') do |fi|
               $log.info('下载完毕'){name}
+              @updated = true
               open(name, 'wb') do |f|
                 f.write fi.read
               end
             end rescue $log.error('下载更新'){'下载更新失败'}
           end
         end rescue $log.error('检查更新'){'检查更新失败'}
+        if @updated
+          Widget_Msgbox.new('mycard', '下载更新完毕，点击确定重新运行mycard并安装更新', :ok => "确定"){IO.popen('./mycard'); $scene = nil}
+        end
         if File.file? "ygocore/cards.cdb"
           require 'sqlite3'
           db = SQLite3::Database.new( "ygocore/cards.cdb" )
