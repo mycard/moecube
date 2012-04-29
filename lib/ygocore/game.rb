@@ -66,7 +66,7 @@ class Ygocore < Game
     @recv = nil
   end
   def ygocore_path
-    "ygocore/gframe.exe"
+    "ygocore/ygopro_vs.exe"
   end
   def self.register
     Dialog.web @@config['register']
@@ -81,7 +81,7 @@ class Ygocore < Game
     if !image_downloading and !Update.images.empty?
       return Widget_Msgbox.new("加入房间", "卡图正在下载中，可能显示不出部分卡图", :ok => "确定"){run_ygocore(option, true)}
     end
-    path = 'ygocore/gframe.exe'
+    path = 'ygocore/ygopro_vs.exe'
     Widget_Msgbox.new("ygocore", "正在启动ygocore")
     #写入配置文件并运行ygocore
     Dir.chdir(File.dirname(path)) do 
@@ -125,7 +125,7 @@ class Ygocore < Game
         args = '-d'
       end
       $log.info('ygocore参数') {args}
-      IO.popen("gframe.exe #{args}")
+      IO.popen("ygopro_vs.exe #{args}")
       WM.iconify
     end
     Widget_Msgbox.destroy
