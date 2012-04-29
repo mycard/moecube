@@ -2,7 +2,7 @@ require 'open-uri'
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.5.6'
+  Version = '0.5.7'
   URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
@@ -55,6 +55,7 @@ module Update
           end
         end rescue $log.error('检查更新'){'检查更新失败'}
         if @updated
+          require_relative 'widget_msgbox'
           Widget_Msgbox.new('mycard', '下载更新完毕，点击确定重新运行mycard并安装更新', :ok => "确定"){IO.popen('./mycard'); $scene = nil}
         end
         if File.file? "ygocore/cards.cdb"
