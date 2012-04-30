@@ -27,7 +27,7 @@ class Scene_Duel < Scene
     @deck = deck
   end
   def start
-    WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id}) - #{@room.name}(#{@room.id})", "MyCard")
+    WM::set_caption("MyCard v#{Update::Version} - #{$config['game']} - #{$game.user.name}(#{$game.user.id}) - #{@room.name}(#{@room.id})", "MyCard")
     @background = Surface.load("graphics/field/main.png").display_format
     Surface.blit(@background, 0, 0, 0, 0, $screen, 0, 0)
     

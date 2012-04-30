@@ -10,20 +10,14 @@ require_relative 'window_title'
 BGM = 'title.ogg'
 class Scene_Title < Scene
   def start
-    WM::set_caption("MyCard", "MyCard")
+    WM::set_caption("MyCard v#{Update::Version}", "MyCard")
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
     @background = Surface.load(title).display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
     @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, 300)
-    #logo = Surface.load("graphics/system/logo.png")
-    #@logo_window = Window.new(@command_window.x-(logo.w-@command_window.width)/2,150,logo.w,logo.h)
-    #@logo_window.contents = logo
-    #$screen.update_rect(0,0,0,0)
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
-    
     super
-    
   end
   def clear(x,y,width,height)
     Surface.blit(@background,x,y,width,height,$screen,x,y)

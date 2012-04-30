@@ -82,7 +82,7 @@ begin
   #自动更新
   require_relative 'update'
   Update.start
-  
+  WM::set_caption("MyCard v#{Update::Version}", "MyCard")
   require_relative 'dialog'
   
   $log.info("main"){"初始化成功"}

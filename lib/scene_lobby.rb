@@ -16,7 +16,7 @@ class Scene_Lobby < Scene
   require_relative 'scene_duel'
   attr_reader :chat_window
   def start
-    WM::set_caption("MyCard - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
+    WM::set_caption("MyCard v#{Update::Version} - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
 		$game.refresh
 		@background = Surface.load("graphics/lobby/background.png").display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)

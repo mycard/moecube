@@ -11,7 +11,7 @@ require_relative 'scene_replay'
 require_relative 'scene_lobby'
 class Scene_Login < Scene
 	def start
-    WM::set_caption("MyCard", "MyCard")
+    WM::set_caption("MyCard v#{Update::Version}", "MyCard")
     @background = Surface.load("graphics/login/background.png").display_format
     $config['game'] = 'iDuel' if $config['game'] == '局域网' #临时修补点击过一次局域网之后无限进入局域网的问题
     @gameselect_window = Window_GameSelect.new(117,269)
