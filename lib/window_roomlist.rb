@@ -5,6 +5,7 @@
 # 　大厅内房间列表
 #==============================================================================
 require_relative 'window_scrollable'
+require_relative 'window_join'
 class Window_RoomList < Window_Scrollable
 	attr_reader :items
   WLH = 48
@@ -36,7 +37,9 @@ class Window_RoomList < Window_Scrollable
       @font.draw_blended_utf8(@contents, str, 300+index*96, y+8, *color)
     end
   end
-  
+  def update
+    @join_window.update if @join_window and !@join_window.destroyed?
+  end
   def mousemoved(x,y)
     return unless self.include?(x,y)
     self.index = (y - @y) / WLH + @scroll
@@ -47,8 +50,12 @@ class Window_RoomList < Window_Scrollable
       @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入观战")
       $game.watch room
     else
-      @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
-      $game.join room
+      if room.private
+        @join_window = Window_Join.new(0,0,room)
+      else
+        @joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
+        $game.join room
+      end
     end
   end
 end

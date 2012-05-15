@@ -14,6 +14,10 @@ class Widget_Checkbox < Window
     @proc = proc
     refresh
   end
+  def checked=(checked)
+    @checked = checked
+    refresh
+  end
   def mousemoved(x,y)
     if x-@x < 24
       @index = 0

@@ -42,8 +42,11 @@ class Game_Event
     result = Room.new(room[:id], room[:name])
     result.player1 = room[:player1] && parse_user(room[:player1])
     result.player2 = room[:player2] && parse_user(room[:player2])
+    result.private = room[:private]
     result.pvp = room[:pvp]
     result.match = room[:match]
+    result.tag = room[:tag]
+    result.ot = room[:ot]
     result.status = room[:status]
     result
   end

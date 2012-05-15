@@ -42,6 +42,9 @@ class Ygocore < Game
     room = Room.new(0, room_name)
     room.pvp = room_config[:pvp]
     room.match = room_config[:match]
+    room.tag = room_config[:tag]
+    room.password = room_config[:password]
+    room.ot = room_config[:ot]
     if $game.rooms.any?{|game_room|game_room.name == room_name}
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
     else
@@ -89,7 +92,12 @@ class Ygocore < Game
       case option
       when Room
         room = option
-        room_name = if room.pvp? and room.match?
+        room_name = if room.ot != 0
+          mode = case when room.match? then 1; when room.tag? then 2 else 0 end
+          room_name = "#{room.ot}#{mode}FFF8000,5,1,#{room.name}"
+        elsif room.tag?
+          "T#"  + room.name
+        elsif room.pvp? and room.match?
           "PM#" + room.name
         elsif room.pvp?
           "P#" + room.name
@@ -97,6 +105,9 @@ class Ygocore < Game
           "M#" + room.name
         else
           room.name
+        end
+        if room.password and !room.password.empty?
+          room_name += "$" + room.password
         end
         system_conf = {}
         begin

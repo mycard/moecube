@@ -17,7 +17,7 @@ class Widget_Msgbox < Window
     @contents = Surface.load('graphics/system/msgbox.png').display_format
     @button = Surface.load('graphics/system/button.png')
     @font = TTF.open("fonts/wqy-microhei.ttc", 16)
-    super((1024-@contents.w)/2, 230, @contents.w, @contents.h)
+    super((1024-@contents.w)/2, 230, @contents.w, @contents.h,500)
     set(title, message, buttons, &proc)
   end
   def set(title, message, buttons={}, &proc)
