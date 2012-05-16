@@ -10,34 +10,34 @@ class Window_Config < Window
     @index = nil
     
     @items = {
-      :fullscreen => [0,0,120,WLH],
-      :bgm => [0,WLH,120,WLH],
-      :avatar_cache => [220, WLH*2,@button.w/3, @button.h],
-      :return => [0,WLH*3+10,100,WLH]
+      :fullscreen => [200,160,120,WLH],
+      :bgm => [200,160+WLH,120,WLH],
+      :avatar_cache => [200+220, 160+WLH*2,@button.w/3, @button.h],
+      :return => [200,160+WLH*3+10,100,WLH]
     }
     refresh
   end
   def draw_item(index, status=0)
     case index
     when :fullscreen
-      Surface.blit(@checkbox, 20*status, $config['screen']['fullscreen'] ? 20 : 0, 20, 20, @contents, 0, 0)
+      Surface.blit(@checkbox, 20*status, $config['screen']['fullscreen'] ? 20 : 0, 20, 20, @contents, @items[:fullscreen][0],@items[:fullscreen][1])
       case status
       when 0
-        @font.draw_blended_utf8(@contents, "全屏模式", 24, 0, 0x00,0x00,0x00)
+        @font.draw_blended_utf8(@contents, "全屏模式", @items[:fullscreen][0]+24, @items[:fullscreen][1], 0xFF,0xFF,0xFF)
       when 1
-        @font.draw_shaded_utf8(@contents, "全屏模式", 24, 0, 0x00,0x00,0x00, 0xEE, 0xEE, 0xEE)
+        @font.draw_shaded_utf8(@contents, "全屏模式", @items[:fullscreen][0]+24, @items[:fullscreen][1], 0xFF,0xFF,0xFF, 0x11, 0x11, 0x11)
       when 2
-        @font.draw_shaded_utf8(@contents, "全屏模式", 24, 0, 0xEE,0xEE,0xEE, 0x00, 0x00, 0x00)
+        @font.draw_shaded_utf8(@contents, "全屏模式", @items[:fullscreen][0]+24, @items[:fullscreen][1], 0x11,0x11,0x11, 0xFF, 0xFF, 0xFF)
       end
     when :bgm
-      Surface.blit(@checkbox, 20*status, $config['bgm'] ? 20 : 0, 20, 20, @contents, 0, WLH)
+      Surface.blit(@checkbox, 20*status, $config['bgm'] ? 20 : 0, 20, 20, @contents, @items[:bgm][0], @items[:bgm][1])
       case status
       when 0
-        @font.draw_blended_utf8(@contents, "BGM", 24, WLH, 0x00,0x00,0x00)
+        @font.draw_blended_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF)
       when 1
-        @font.draw_shaded_utf8(@contents, "BGM", 24, WLH, 0x00,0x00,0x00, 0xEE, 0xEE, 0xEE)
+        @font.draw_shaded_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF, 0x11, 0x11, 0x11)
       when 2
-        @font.draw_shaded_utf8(@contents, "BGM", 24, WLH, 0xEE,0xEE,0xEE, 0x00, 0x00, 0x00)
+        @font.draw_shaded_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0x11,0x11,0x11, 0xFF, 0xFF, 0xFF)
       end
     when :avatar_cache
       size = 0
@@ -46,11 +46,11 @@ class Window_Config < Window
         count += 1
         size += File.size(file)
       end
-      @font.draw_blended_utf8(@contents, "头像缓存: #{count}个文件, #{filesize_inspect(size)}", 0, WLH*2, 0x00,0x00,0x00)
-      Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, 220, WLH*2)
-      @font.draw_blended_utf8(@contents, "清空", 220+10, WLH*2+5, 0x00,0x00,0x00)
+      @font.draw_blended_utf8(@contents, "头像缓存: #{count}个文件, #{filesize_inspect(size)}", 200, @items[:avatar_cache][1], 0xFF,0xFF,0xFF)
+      Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, @items[:avatar_cache][0],@items[:avatar_cache][1])
+      @font.draw_blended_utf8(@contents, "清空", @items[:avatar_cache][0]+10, @items[:avatar_cache][1]+5, 0xFF,0xFF,0xFF)
     when :return
-      @font.draw_blended_utf8(@contents, "回到标题画面", 0, WLH*3+10, 0x00,0x00,0x00)
+      @font.draw_blended_utf8(@contents, "回到标题画面", @items[:return][0],@items[:return][1], 0xFF,0xFF,0xFF)
     end
     
   end

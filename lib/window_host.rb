@@ -12,11 +12,11 @@ class Window_Host < Window
     @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH)
     @password_inputbox = Widget_InputBox.new(@x+96, @y+41+WLH, 165, WLH)
     
-    @pvp = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*2,120,24,false,"竞技场") {|checked|@tag.checked = false if checked}
+    @pvp = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*2,120,24,false,"竞技场") {|checked|(@ocg.checked = true; @tcg.checked = @tag.checked = false) if checked}
     @pvp.background = @background.copy_rect(33,70,120,24)
     @match = Widget_Checkbox.new(self, 120+@x,@y+41+WLH*2,120,24,true,"三回决斗"){|checked|@tag.checked = false if checked}
     @match.background = @background.copy_rect(120,70,120,24)
-    @tag = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*4+4,120,24,false,"TAG双打"){|checked|(@pvp.checked = false; @match.checked = false) if checked}
+    @tag = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*4+4,120,24,false,"TAG双打"){|checked|@pvp.checked = @match.checked = false if checked}
     @tag.background = @background.copy_rect(120,70,120,24)
     @ocg = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*5+4,120,24,true,"OCG"){|checked|@tcg.checked = true if !checked}
     @ocg.background = @background.copy_rect(120,70,120,24)
@@ -39,7 +39,6 @@ class Window_Host < Window
     @font.draw_blended_utf8(@contents, "房间密码", 33,43+WLH, *@color)
     @contents.fill_rect(4,43+WLH*3,@contents.w-8, 2, 0xAA0A7AC5)
     @font.draw_blended_utf8(@contents, "自定义模式", 20,43+WLH*3+4, *@color)
-    @font.draw_blended_utf8(@contents, "TCG目前不能用，只是给以后预留位置", 20,43+WLH*6+4, *@color)
     @items.each_key do |index|
       draw_item(index, self.index==index ? 1 : 0)
     end
