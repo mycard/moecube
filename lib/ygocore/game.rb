@@ -25,7 +25,7 @@ class Ygocore < Game
   def connect
     @recv = Thread.new do
       EventMachine::run {
-        EventMachine::connect "122.0.65.71", 9998, Client
+        EventMachine::connect "bbs.66rpg.com", 9998, Client
       }
     end
   end

@@ -23,7 +23,7 @@ class Scene_Lobby < Scene
 		@userlist = Window_UserList.new(24,204,$game.users)
     @roomlist = Window_RoomList.new(320,50,$game.rooms)
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
-		@host_window = Window_LobbyButtons.new(830,18)
+		@host_window = Window_LobbyButtons.new(748,18)
     @active_window = @roomlist
 		@chat_window = Window_Chat.new(313,543,698,212)
     @count = 0
