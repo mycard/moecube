@@ -139,6 +139,23 @@ class Ygocore < Game
         args = '-r'
       when :deck
         args = '-d'
+      when String
+        system_conf = {}
+        begin
+          IO.readlines('system.conf').each do |line|
+            line.force_encoding "UTF-8"
+            next if line[0,1] == '#'
+            field, contents = line.chomp.split(' = ',2)
+            system_conf[field] = contents
+          end
+        rescue
+          system_conf['antialias'] = 2
+          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
+        end
+        system_conf['lastdeck'] = option
+        open('system.conf', 'w') {|file|file.write system_conf.collect{|key,value|"#{key} = #{value}"}.join("\n")}
+        args = '-d'
       end
       IO.popen("ygopro_vs.exe #{args}")
       WM.iconify rescue nil
@@ -164,11 +181,11 @@ class Ygocore < Game
       end
     end
   end
-  def self.replay(file)
+  def self.replay(file, skip_image_downloading = false)
     require 'fileutils'
     FileUtils.mv Dir.glob('ygocore/replay/*.yrp'), 'replay/'
     FileUtils.copy_file(file, "ygocore/replay/#{File.basename(file)}")
-    run_ygocore(:replay)
+    run_ygocore(:replay, skip_image_downloading)
   end
   private
 
