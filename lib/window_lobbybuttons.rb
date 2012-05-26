@@ -29,7 +29,7 @@ class Window_LobbyButtons < Window_List
     case @index
     when 0 #常见问题
       require_relative 'dialog'
-      Dialog.web "http://card.touhou.cc/login?user[name]=#{CGI.escape $game.username}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
+      Dialog.web "http://card.touhou.cc/login?user[name]=#{CGI.escape $game.user.name}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
     when 1 #卡组编辑
       $game.class.deck_edit
     when 2 #建立房间

@@ -48,6 +48,7 @@ class Game_Event
     result.tag = room[:tag]
     result.ot = room[:ot]
     result.status = room[:status]
+    result.lp = room[:lp]
     result
   end
   def self.parse_user(user)

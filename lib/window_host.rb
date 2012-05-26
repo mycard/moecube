@@ -11,8 +11,9 @@ class Window_Host < Window
     @color = [0x04, 0x47, 0x7c]
     @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH)
     @password_inputbox = Widget_InputBox.new(@x+96, @y+41+WLH, 165, WLH)
+    @lp_inputbox = Widget_InputBox.new(@x+96, @y+41+WLH*6+4, 64, WLH)
     
-    @pvp = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*2,120,24,false,"竞技场") {|checked|(@ocg.checked = true; @tcg.checked = @tag.checked = false) if checked}
+    @pvp = Widget_Checkbox.new(self, 33+@x,@y+41+WLH*2,120,24,false,"竞技场") {|checked|(@ocg.checked = true; @tcg.checked = @tag.checked = false; @lp_inputbox.value = "8000") if checked}
     @pvp.background = @background.copy_rect(33,70,120,24)
     @match = Widget_Checkbox.new(self, 120+@x,@y+41+WLH*2,120,24,true,"三回决斗"){|checked|@tag.checked = false if checked}
     @match.background = @background.copy_rect(120,70,120,24)
@@ -24,6 +25,7 @@ class Window_Host < Window
     @tcg.background = @background.copy_rect(120,70,120,24)
     
     @roomname_inputbox.value = rand(1000).to_s
+    @lp_inputbox.value = 8000.to_s
     @password_inputbox.refresh
     @pvp.refresh
     @match.refresh
@@ -34,11 +36,12 @@ class Window_Host < Window
   end
   def refresh
     clear
-    @font.draw_blended_utf8(@contents, "新房间", (@width-@font.text_size("新房间")[0])/2, 2, *@title_color)
+    @font.draw_blended_utf8(@contents, "建立房间", (@width-@font.text_size("建立房间")[0])/2, 2, *@title_color)
     @font.draw_blended_utf8(@contents, "房间名", 33,43, *@color)
     @font.draw_blended_utf8(@contents, "房间密码", 33,43+WLH, *@color)
     @contents.fill_rect(4,43+WLH*3,@contents.w-8, 2, 0xAA0A7AC5)
     @font.draw_blended_utf8(@contents, "自定义模式", 20,43+WLH*3+4, *@color)
+    @font.draw_blended_utf8(@contents, "初始LP", 33,44+WLH*6+4, *@color)
     @items.each_key do |index|
       draw_item(index, self.index==index ? 1 : 0)
     end
@@ -82,10 +85,12 @@ class Window_Host < Window
         Widget_Msgbox.new("建立房间", "请输入房间名", ok: "确定" )
       elsif !name_check
         Widget_Msgbox.new("建立房间", "房间名/房间密码超过长度上限", ok: "确定")
+      elsif @lp_inputbox.value.to_i >= 99999
+        Widget_Msgbox.new("建立房间", "初始LP超过上限", ok: "确定")
       else
         Widget_Msgbox.new("建立房间", "正在建立房间")
         destroy
-        $game.host(@roomname_inputbox.value, password: @password_inputbox.value, pvp: @pvp.checked?, match: @match.checked?, tag: @tag.checked?, ot: @tcg.checked? ? @ocg.checked? ? 2 : 1 : 0)
+        $game.host(@roomname_inputbox.value, password: @password_inputbox.value, pvp: @pvp.checked?, match: @match.checked?, tag: @tag.checked?, ot: @tcg.checked? ? @ocg.checked? ? 2 : 1 : 0, lp: @lp_inputbox.value.to_i)
       end
     when :cancel
       destroy
@@ -94,6 +99,7 @@ class Window_Host < Window
   def destroy
     @roomname_inputbox.destroy
     @password_inputbox.destroy
+    @lp_inputbox.destroy
     @pvp.destroy
     @match.destroy
     @tag.destroy
@@ -104,6 +110,7 @@ class Window_Host < Window
   def update
     @roomname_inputbox.update
     @password_inputbox.update
+    @lp_inputbox.update
   end
   def name_check
     name = @roomname_inputbox.value
@@ -124,6 +131,7 @@ class Window_Host < Window
       max = 20
       max -= 1 if name.ascii_only?
     end
+    max -= @lp_inputbox.value.size - 4
     if !@password_inputbox.value.empty?
       max -= 1
       max -= @password_inputbox.value.encode("GBK").bytesize

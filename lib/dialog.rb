@@ -50,4 +50,7 @@ module Dialog
   def web(url)
     Shell.ShellExecute url
   end
+  def uac(command, *args)
+    Shell.ShellExecute File.expand_path(command), args.join(' '), Dir.pwd, "runas"
+  end
 end

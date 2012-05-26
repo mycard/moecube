@@ -3,11 +3,14 @@ class Room
   attr_accessor :match
   attr_accessor :tag
   attr_accessor :ot
-  
+  attr_accessor :lp
   attr_accessor :status
   alias pvp? pvp
   alias match? match
   alias tag? tag
+  def lp
+    @lp ||= 8000
+  end
   def ot
     @ot ||= 0
   end
@@ -28,6 +31,9 @@ class Room
       result["[TCG]"] = [255,0,0]
     elsif ot == 2
       result["[O/T混]"] = [255,0,0]
+    end
+    if lp != 8000
+      result["[LP: #{lp}]"] = [255,0,0]
     end
     result
   end

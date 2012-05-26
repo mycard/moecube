@@ -2,9 +2,10 @@
 load 'lib/ygocore/window_login.rb'
 require 'eventmachine'
 require 'open-uri'
+require 'yaml'
 class Ygocore < Game
   attr_reader :username
-  attr_reader :password
+  attr_accessor :password
   @@config = YAML.load_file("lib/ygocore/server.yml")
   def initialize
     super
@@ -45,6 +46,7 @@ class Ygocore < Game
     room.tag = room_config[:tag]
     room.password = room_config[:password]
     room.ot = room_config[:ot]
+    room.lp = room_config[:lp]
     if $game.rooms.any?{|game_room|game_room.name == room_name}
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
     else
@@ -80,21 +82,26 @@ class Ygocore < Game
   def port
     @@config['port']
   end
+  def server=(server)
+    @@config['server'] = server
+  end
+  def port=(port)
+    @@config['port'] = port
+  end
   def self.run_ygocore(option, image_downloading=false)
     if !image_downloading and !Update.images.empty?
       return Widget_Msgbox.new("加入房间", "卡图正在下载中，可能显示不出部分卡图", :ok => "确定"){run_ygocore(option, true)}
     end
     path = 'ygocore/ygopro_vs.exe'
-    Widget_Msgbox.new("ygocore", "正在启动ygocore")
+    Widget_Msgbox.new("ygocore", "正在启动ygocore") rescue nil
     #写入配置文件并运行ygocore
     Dir.chdir(File.dirname(path)) do 
-      $log.info('当前目录'){Dir.pwd.encode("UTF-8")}
       case option
       when Room
         room = option
-        room_name = if room.ot != 0
+        room_name = if room.ot != 0 or room.lp != 8000
           mode = case when room.match? then 1; when room.tag? then 2 else 0 end
-          room_name = "#{room.ot}#{mode}FFF8000,5,1,#{room.name}"
+          room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
         elsif room.tag?
           "T#"  + room.name
         elsif room.pvp? and room.match?
@@ -121,8 +128,6 @@ class Ygocore < Game
           system_conf['antialias'] = 2
           system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
           system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
-          $log.error('找不到system.conf')
-          $log.info(Dir.foreach('.').to_a.inspect)
         end
         system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}"
         system_conf['lastip'] = $game.server
@@ -135,11 +140,10 @@ class Ygocore < Game
       when :deck
         args = '-d'
       end
-      $log.info('ygocore参数') {args}
       IO.popen("ygopro_vs.exe #{args}")
-      WM.iconify
+      WM.iconify rescue nil
     end
-    Widget_Msgbox.destroy
+    Widget_Msgbox.destroy rescue nil
   end
   def self.deck_edit
     Widget_Msgbox.new("编辑卡组", "\"导入\"导入已有卡组，\"编辑\"启动ygocore", :import => "导入", :edit => "编辑") do |button|
