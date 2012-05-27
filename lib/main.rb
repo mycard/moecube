@@ -34,7 +34,7 @@ begin
   log_level = "INFO"
   profile = nil
   ARGV.each do |arg|
-    case arg
+    case arg.dup.force_encoding("UTF-8")
     when /--log=(.*)/
       log.replace $1
     when /--log-level=(.*)/

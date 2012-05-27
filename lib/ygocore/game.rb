@@ -129,7 +129,7 @@ class Ygocore < Game
           system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
           system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
         end
-        system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}"
+        (system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}") rescue nil
         system_conf['lastip'] = $game.server
         system_conf['lastport'] = $game.port.to_s
         system_conf['roompass'] = room_name
