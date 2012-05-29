@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+p ARGV
+STDIN.gets
 begin
   #定义全局方法
   def load_config(file="config.yml")
@@ -17,7 +19,7 @@ begin
     if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
       require 'win32/registry'
       pwd = Dir.pwd.gsub('/', '\\')
-      path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
+      path = '"' + pwd + '\ruby\bin\ruby.exe" -C"' + pwd + '" -KU lib/main.rb'
       command = path + ' "%1"'
       Win32::Registry::HKEY_CLASSES_ROOT.create('mycard'){|reg|reg['URL Protocol'] = path unless (reg['URL Protocol'] == path rescue false)}
       Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command'){|reg|reg[nil] = command unless (reg[nil] == command rescue false)}
@@ -34,6 +36,8 @@ begin
   log_level = "INFO"
   profile = nil
   ARGV.each do |arg|
+    p arg
+    STDIN.gets
     case arg.dup.force_encoding("UTF-8")
     when /--log=(.*)/
       log.replace $1
