@@ -4,11 +4,7 @@ require_relative 'room'
 
 require_relative 'ygocore/game'
 $game = Ygocore.new
-p 1
-STDIN.gets
 uri = URI.unescape URI.unescape ARGV.first[9, ARGV.first.size-9]
-p uri
-STDIN.gets
 case uri
 when /^(.*\.yrp)$/
   require 'open-uri'
@@ -29,8 +25,6 @@ when /^(.*\.ydk)$/
   }
   Ygocore.run_ygocore(File.basename($1, '.ydk'), true)
 when /^(?:(.*)\:(.*)\@)?(.*)\:(\d+)\/(.*)$/
-  p $1
-  STDIN.gets
   require 'uri'
   $game.user = User.new($1.to_sym, $1) if $1
   $game.password = $2 if $2

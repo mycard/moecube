@@ -7,10 +7,6 @@ require 'rdoc/task'
 #require 'rake/testtask'
 
 Windows = RUBY_PLATFORM["mingw"] || RUBY_PLATFORM["mswin"]
-if Windows
-  STDOUT.set_encoding "GBK", "UTF-8"
-  STDERR.set_encoding "GBK", "UTF-8"
-end
 #在windows上UTF-8脚本编码环境中  Dir.glob无法列出中文目录下的文件 所以自己写个递归
 def list(path)
 	result = []
@@ -24,7 +20,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.6.4'
+  s.version = '0.6.6'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary

@@ -1,6 +1,4 @@
 #!/usr/bin/env ruby
-p ARGV
-STDIN.gets
 begin
   #定义全局方法
   def load_config(file="config.yml")
@@ -19,8 +17,10 @@ begin
     if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
       require 'win32/registry'
       pwd = Dir.pwd.gsub('/', '\\')
-      path = '"' + pwd + '\ruby\bin\ruby.exe" -C"' + pwd + '" -KU lib/main.rb'
+      path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
       command = path + ' "%1"'
+      path.replace path.ljust path.bytesize
+      command.replace command.ljust command.bytesize
       Win32::Registry::HKEY_CLASSES_ROOT.create('mycard'){|reg|reg['URL Protocol'] = path unless (reg['URL Protocol'] == path rescue false)}
       Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command'){|reg|reg[nil] = command unless (reg[nil] == command rescue false)}
     end
@@ -30,14 +30,12 @@ begin
   #读取配置文件
   load_config
   save_config
-  
+
   #读取命令行参数
   log = "log.log"
   log_level = "INFO"
   profile = nil
   ARGV.each do |arg|
-    p arg
-    STDIN.gets
     case arg.dup.force_encoding("UTF-8")
     when /--log=(.*)/
       log.replace $1
@@ -69,12 +67,11 @@ begin
     Mixer.set_volume_music(60)
     TTF.init
     Thread.abort_on_exception = true
-  
+
     #初始化日志
     require 'logger'
     if log == "STDOUT" #调试用
       log = STDOUT
-      STDOUT.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
     end
     $log = Logger.new(log)
     $log.level = Logger.const_get log_level
@@ -93,11 +90,11 @@ begin
       Profiler__::start_profile
     end
 
-  
+
     #初始化标题场景
     require_relative 'scene_title'
     $scene = Scene_Title.new
-  
+
     #自动更新
     require_relative 'update'
     Update.start
