@@ -1,7 +1,7 @@
 == mycard
 
 这是一个游戏王对战器，与iDuel、ygocore协议兼容
-目前开发进度约60%，iDuel实现了观战、播放Replay和几个简单的战斗指令，ygocore的大厅
+目前开发进度约70%，iDuel实现了观战、播放Replay和几个简单的战斗指令，ygocore的对战平台
 
 快捷键：
 F12 返回标题画面
@@ -15,7 +15,7 @@ A: 请注意mycard左上角是否在自动更新，如果显示正在下载更�
 Q: 程序崩溃或无任何提示自动退出 或提示 【程序可能出现了一个bug，请到论坛反馈】
 A: 重试一次。如果仍然这样 请联系作者
 
+
 作者联系方式：
-1. mycard的论坛(http://card.touhou.cc/boards)留言。
+1. mycard的论坛 http://card.touhou.cc/boards
 2. E-mail/QQ/GT: zh99998@gmail.com
-3. 在iduel社区或nwbbs的mycard发布帖回复
