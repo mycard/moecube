@@ -37,6 +37,7 @@ class Scene_Title < Scene
     when 2
       require_relative 'widget_msgbox'
       require_relative 'scene_login'
+      require_relative 'deck'
       load 'lib/ygocore/game.rb' #TODO:不规范啊不规范
       Ygocore.deck_edit
     when 3

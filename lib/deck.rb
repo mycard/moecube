@@ -4,14 +4,12 @@
 #------------------------------------------------------------------------------
 # 　title
 #==============================================================================
-
+require_relative 'card'
 class Deck
 	attr_accessor :main
 	attr_accessor :side
 	attr_accessor :extra
 	attr_accessor :temp
-  #DeckPath = '/media/44CACC1DCACC0D5C/game/yu-gi-oh/deck'
-  DeckPath = 'E:/game/yu-gi-oh/deck'
 	def initialize(main, side=[], extra=[], temp=[])
 		@main = main
 		@side = side
@@ -24,7 +22,7 @@ class Deck
     extra = []
     temp = []
     now = main
-    open(File.expand_path(name, DeckPath)) do |file|
+    open(name) do |file|
       file.set_encoding "GBK", "UTF-8", :invalid => :replace, :undef => :replace
       while line = file.readline.chomp!
         case line
