@@ -19,10 +19,8 @@ begin
       pwd = Dir.pwd.gsub('/', '\\')
       path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
       command = path + ' "%1"'
-      path.replace path.ljust path.bytesize
-      command.replace command.ljust command.bytesize
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard'){|reg|reg['URL Protocol'] = path unless (reg['URL Protocol'] == path rescue false)}
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command'){|reg|reg[nil] = command unless (reg[nil] == command rescue false)}
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard'){|reg|reg['URL Protocol'] = path.ljust path.bytesize unless (reg['URL Protocol'] == path rescue false)}
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command'){|reg|reg[nil] = command.ljust command.bytesize unless (reg[nil] == command rescue false)}
     end
   end
   Thread.abort_on_exception = true
