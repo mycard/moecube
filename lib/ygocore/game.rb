@@ -193,11 +193,11 @@ class Ygocore < Game
           file = Dialog.get_open_file("导入卡组", "所有支持的卡组 (*.txt;*.deck;*.ydk)" => "*.ydk;*.txt;*.deck", "OcgSoft卡组 (*.txt;*.deck)" => "*.txt;*.deck", "ygocore卡组 (*.ydk)" => "*.ydk")
           if !file.empty?
             #fix for stdlib File.extname
-            file =~ /(\.deck|\.txt|\.yrp)$/i
+            file =~ /(\.deck|\.txt|\.ydk)$/i
             extname = $1
             Dir.mkdir "ygocore/deck" unless File.directory?("ygocore/deck")
             open("ygocore/deck/#{File.basename(file, extname)+".ydk"}", 'w') do |dest|
-              if file =~ /(\.deck|\.txt)$/
+              if file =~ /(\.deck|\.txt)$/i
                 deck = Deck.load(file)
                 dest.puts("#main")
                 deck.main.each { |card| dest.puts card.number }
