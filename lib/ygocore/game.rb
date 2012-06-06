@@ -186,39 +186,6 @@ class Ygocore < Game
     Widget_Msgbox.destroy rescue nil
   end
 
-  def self.deck_edit
-    Widget_Msgbox.new("编辑卡组", "\"导入\"导入已有卡组，\"编辑\"启动ygocore", :import => "导入", :edit => "编辑") do |button|
-      case button
-        when :import
-          file = Dialog.get_open_file("导入卡组", "所有支持的卡组 (*.txt;*.deck;*.ydk)" => "*.ydk;*.txt;*.deck", "OcgSoft卡组 (*.txt;*.deck)" => "*.txt;*.deck", "ygocore卡组 (*.ydk)" => "*.ydk")
-          if !file.empty?
-            #fix for stdlib File.extname
-            file =~ /(\.deck|\.txt|\.ydk)$/i
-            extname = $1
-            Dir.mkdir "ygocore/deck" unless File.directory?("ygocore/deck")
-            open("ygocore/deck/#{File.basename(file, extname)+".ydk"}", 'w') do |dest|
-              if file =~ /(\.deck|\.txt)$/i
-                deck = Deck.load(file)
-                dest.puts("#main")
-                deck.main.each { |card| dest.puts card.number }
-                dest.puts("#extra")
-                deck.extra.each { |card| dest.puts card.number }
-                dest.pust("!side")
-                deck.side.each { |card| dest.puts card.number }
-              else
-                open(file) do |src|
-                  dest.write src.read
-                end
-              end
-            end rescue Widget_Msgbox.new("导入卡组", "导入卡组失败", :ok => "确定")
-            Ygocore.run_ygocore(File.basename(file, extname))
-          end
-        when :edit
-          Ygocore.run_ygocore(:deck)
-      end
-    end
-  end
-
   def self.replay(file, skip_image_downloading = false)
     require 'fileutils'
     FileUtils.mv Dir.glob('ygocore/replay/*.yrp'), 'replay/'

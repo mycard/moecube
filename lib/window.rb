@@ -27,7 +27,7 @@ class Window
       end == true
       $scene.windows << self
     end
-    
+
   end
   def draw_stroked_text(text,x,y,size=1,font=@font,color=@color,color_stroke=@color_stroke)
     [[x-size,y-size], [x-size,y], [x-size,y+size],
