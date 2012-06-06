@@ -112,7 +112,7 @@ class Window_Deck < Window
       when Array
         case index[1]
           when :edit
-            Ygocore.run_ygocore(@items[index[0]])
+            Ygocore.run_ygocore(File.basename(@items[index[0]], ".ydk"))
           when :delete
             require_relative 'widget_msgbox'
             Widget_Msgbox.new("删除卡组", "确定要删除卡组 #{File.basename(@items[index[0]], '.ydk')} 吗", buttons={ok: "确定", cancel: "取消"}) do |clicked|
