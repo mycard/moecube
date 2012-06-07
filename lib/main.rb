@@ -10,8 +10,9 @@ begin
     $config['screen']['width'] ||= 1024
     $config['screen']['height'] ||= 768
   end
+
   def save_config(file="config.yml")
-    File.open(file,"w"){|file| YAML.dump($config, file)}
+    File.open(file, "w") { |file| YAML.dump($config, file) }
   end
   def register_url_protocol
     if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
@@ -19,34 +20,41 @@ begin
       pwd = Dir.pwd.gsub('/', '\\')
       path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
       command = path + ' "%1"'
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard'){|reg|reg['URL Protocol'] = path.ljust path.bytesize unless (reg['URL Protocol'] == path rescue false)}
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command'){|reg|reg[nil] = command.ljust command.bytesize unless (reg[nil] == command rescue false)}
+      icon = '"' + pwd + '\mycard.exe", 0'
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard') { |reg| reg['URL Protocol'] = path.ljust path.bytesize unless (reg['URL Protocol'] == path rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command') { |reg| reg[nil] = command.ljust command.bytesize unless (reg[nil] == command rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\DefaultIcon') { |reg| reg[nil] = icon.ljust icon.bytesize unless (reg[nil] == icon rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.ydk') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.yrp') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.deck') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
     end
   end
+
   Thread.abort_on_exception = true
   require_relative 'announcement'
   #读取配置文件
   load_config
   save_config
-
   #读取命令行参数
   log = "log.log"
   log_level = "INFO"
   profile = nil
   ARGV.each do |arg|
-    case arg.dup.force_encoding("UTF-8")
-    when /--log=(.*)/
-      log.replace $1
-    when /--log-level=(.*)/
-      log_level.replace $1
-    when /--profile=(.*)/
-      profile = $1
-    when /mycard:.*/
-      require_relative 'quickstart'
-      $scene = false
-    when /register_web_protocol/
-      register_url_protocol
-      $scene = false
+    arg = arg.dup.force_encoding("UTF-8")
+    arg.force_encoding("GBK") unless arg.valid_encoding?
+    case arg
+      when /--log=(.*)/
+        log.replace $1
+      when /--log-level=(.*)/
+        log_level.replace $1
+      when /--profile=(.*)/
+        profile = $1
+      when /^mycard:.*|\.ydk$|\.yrp$|\.deck$/
+        require_relative 'quickstart'
+        $scene = false
+      when /register_web_protocol/
+        register_url_protocol
+        $scene = false
     end
   end
   unless $scene == false
@@ -61,7 +69,7 @@ begin
     WM::set_caption("MyCard", "MyCard")
     WM::icon = Surface.load("graphics/system/icon.gif")
     $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
-    Mixer.open(Mixer::DEFAULT_FREQUENCY,Mixer::DEFAULT_FORMAT,Mixer::DEFAULT_CHANNELS,1024)
+    Mixer.open(Mixer::DEFAULT_FREQUENCY, Mixer::DEFAULT_FORMAT, Mixer::DEFAULT_CHANNELS, 1024)
     Mixer.set_volume_music(60)
     TTF.init
     Thread.abort_on_exception = true
@@ -82,8 +90,8 @@ begin
       end
       require 'profiler'
       RubyVM::InstructionSequence.compile_option = {
-        :trace_instruction => true,
-        :specialized_instruction => false
+          :trace_instruction => true,
+          :specialized_instruction => false
       }
       Profiler__::start_profile
     end
@@ -99,10 +107,10 @@ begin
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
     require_relative 'dialog'
     register_url_protocol rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_web_protocol")
-    $log.info("main"){"初始化成功"}
+    $log.info("main") { "初始化成功" }
   end
 rescue Exception => exception
-  open('error-程序出错请到论坛反馈.txt', 'w'){|f|f.write [exception.inspect, *exception.backtrace].join("\n")}
+  open('error-程序出错请到论坛反馈.txt', 'w') { |f| f.write [exception.inspect, *exception.backtrace].join("\n") }
   $scene = false
 end
 
@@ -110,8 +118,8 @@ end
 begin
   $scene.main while $scene
 rescue Exception => exception
-  exception.backtrace.each{|backtrace|break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/} #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
-  $log.fatal($1){[exception.inspect, *exception.backtrace].collect{|str|str.force_encoding("UTF-8")}.join("\n")}
+  exception.backtrace.each { |backtrace| break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/ } #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
+  $log.fatal($1) { [exception.inspect, *exception.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
   $game.exit if $game
   require_relative 'scene_error'
   $scene = Scene_Error.new

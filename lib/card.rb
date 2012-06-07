@@ -15,11 +15,10 @@ class Card
   else
     '' #其他操作系统卡图存放位置标准尚未制定。
   end
-  CardBack = Surface.load("graphics/field/card.jpg").display_format
-  CardBack_Small = Surface.load("graphics/field/card_small.gif").display_format
+  CardBack = Surface.load("graphics/field/card.jpg").display_format rescue nil
+  CardBack_Small = Surface.load("graphics/field/card_small.gif").display_format rescue nil
 	class << self
 		def find(id, order_by=nil)
-      $log.debug('查找卡片'){id.inspect}
       case id
 			when Integer
         @all[id] || old_new(@db.get_first_row("select * from `yu-gi-oh` where id = #{id}"))
@@ -64,7 +63,7 @@ class Card
       stats = records.GetRows.first
       stats.unshift nil
       records.close
-      
+
       records = WIN32OLE.new('ADODB.Recordset')
       records.open("YGODATA", conn)
       records.MoveNext #跳过首行那个空白卡
@@ -154,7 +153,7 @@ class Card
     @mediums = hash['mediums'].split("\t").collect{|medium|medium.to_sym}
     @tokens = hash['tokens'].to_i
     @token = hash['token']
-    
+
     Card.cache[@id] = self
   end
   def create_image
@@ -178,16 +177,16 @@ class Card
     @id == 1
   end
   def monster?
-    [:融合怪兽, :同调怪兽, :超量怪兽, :通常怪兽, :效果怪兽, :调整怪兽, :仪式怪兽].include? card_type 
+    [:融合怪兽, :同调怪兽, :超量怪兽, :通常怪兽, :效果怪兽, :调整怪兽, :仪式怪兽].include? card_type
   end
   def trap?
-    [:通常陷阱, :反击陷阱, :永续陷阱].include? card_type 
+    [:通常陷阱, :反击陷阱, :永续陷阱].include? card_type
   end
   def spell?
-    [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type 
+    [:通常魔法, :速攻魔法, :装备魔法, :场地魔法, :仪式魔法, :永续魔法].include? card_type
   end
   def extra?
-    [:融合怪兽, :同调怪兽, :超量怪兽].include? card_type 
+    [:融合怪兽, :同调怪兽, :超量怪兽].include? card_type
   end
   def token?
     @token

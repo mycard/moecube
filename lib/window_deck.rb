@@ -3,6 +3,7 @@ class Window_Deck < Window
 
   def initialize
     @items = Dir.glob("ygocore/deck/*.ydk")[0, 10]
+    p @items
     @background = Surface.load(@items.size > 4 ? 'graphics/lobby/host.png' : 'graphics/system/msgbox.png').display_format
     super((1024-@background.w)/2, 230, @background.w, @background.h, 300)
 
@@ -61,6 +62,8 @@ class Window_Deck < Window
       i = (x - @x - (@width - @items_buttons.size * @items_button.w / 3)) / (@items_button.w/3)
       if i >= 0
         new_index = [line, @items_buttons.keys[i]]
+      else
+        new_index = [line, :edit]
       end
     else
       @buttons_pos.each_key do |index|
