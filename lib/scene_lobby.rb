@@ -25,7 +25,7 @@ class Scene_Lobby < Scene
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
 		@host_window = Window_LobbyButtons.new(748,18)
     @active_window = @roomlist
-		@chat_window = Window_Chat.new(313,543,698,212)
+		@chat_window = Window_Chat.new(313,$config['screen']['height'] - 225,698,212)
     @count = 0
     super
   end

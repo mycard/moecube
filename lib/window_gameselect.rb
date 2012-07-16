@@ -24,7 +24,19 @@ class Window_GameSelect < Window_List
     self.items = @items
     self.index = @items.find_index{|game|game["name"] == $config['game']} || 0
     clicked
-    @announcements_window = Window_Announcements.new(313,265,600,24)
+	#======================================================
+	# We'll pay fpr that soon or later.
+	#======================================================
+	if $config['screen']['height'] == 768
+		@announcements_window = Window_Announcements.new(313,265,600,24)
+	elsif $config['screen']['height'] == 640
+		@announcements_window = Window_Announcements.new(313,130,600,24)
+	else
+		raise "无法分辨的分辨率"
+	end	
+	#======================================================
+	# ENDS HERE
+	#======================================================
     refresh
   end
   def draw_item(index, status=0)
@@ -60,7 +72,19 @@ class Window_GameSelect < Window_List
     load @items[@index]["file"].encode("GBK") #TODO: load的这种架构微蛋疼，一时想不到更好的方案
     $config['game'] = @items[@index]['name']
     @login_window.destroy if @login_window
-    @login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
+	#======================================================
+	# We'll pay fpr that soon or later.
+	#======================================================
+	if $config['screen']['height'] == 768
+		@login_window = Window_Login.new(316,316,$config[$config['game']]["username"],$config[$config['game']]["password"])
+	elsif $config['screen']['height'] == 640
+		@login_window = Window_Login.new(316,183,$config[$config['game']]["username"],$config[$config['game']]["password"])
+	else
+		raise "无法分辨的分辨率"
+	end	
+	#======================================================
+	# ENDS HERE
+	#======================================================
     @announcements_window.refresh if @announcements_window
     @game = @index
     refresh

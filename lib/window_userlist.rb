@@ -11,7 +11,7 @@ class Window_UserList < Window_Scrollable
 	def initialize(x, y, items)
     #@contents = Surface.load "graphics/lobby/useritems.png"
     #@background = Surface.load "graphics/lobby/useritems.png"
-    super(x,y,272,540)
+    super(x,y,272,$config['screen']['height'] - 220)
     @font = TTF.open("fonts/wqy-microhei.ttc", 16)
     @color = [0x03, 0x11, 0x22]
     @color_friend = [0, 128, 0]

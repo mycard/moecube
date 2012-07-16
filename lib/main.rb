@@ -8,7 +8,7 @@ begin
     $config['bgm'] = true if $config['bgm'].nil?
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024
-    $config['screen']['height'] ||= 768
+    $config['screen']['height'] ||= 640
   end
 
   def save_config(file="config.yml")

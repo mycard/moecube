@@ -13,7 +13,19 @@ class Scene_Login < Scene
 	def start
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
     @background = Surface.load("graphics/login/background.png").display_format
-    @gameselect_window = Window_GameSelect.new(117,269)
+	#======================================================
+	# We'll pay fpr that soon or later.
+	#======================================================
+	if $config['screen']['height'] == 768
+		@gameselect_window = Window_GameSelect.new(117,269)
+	elsif $config['screen']['height'] == 640
+		@gameselect_window = Window_GameSelect.new(117,134)
+	else
+		raise "无法分辨的分辨率"
+	end	
+	#======================================================
+	# ENDS HERE
+	#======================================================
     super
 	end
   def update
