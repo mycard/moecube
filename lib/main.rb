@@ -8,12 +8,17 @@ begin
     $config['bgm'] = true if $config['bgm'].nil?
     $config['screen'] ||= {}
     $config['screen']['width'] ||= 1024
+<<<<<<< HEAD
     $config['screen']['height'] ||= 768
+=======
+    $config['screen']['height'] ||= 640
+>>>>>>> 8031a2a
   end
 
   def save_config(file="config.yml")
     File.open(file, "w") { |file| YAML.dump($config, file) }
   end
+<<<<<<< HEAD
 
   def register_url_protocol
     if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
@@ -63,6 +68,21 @@ begin
         $config['no_assoc'] = true
         save_config
       end
+=======
+  def register_url_protocol
+    if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+      require 'win32/registry'
+      pwd = Dir.pwd.gsub('/', '\\')
+      path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
+      command = path + ' "%1"'
+      icon = '"' + pwd + '\mycard.exe", 0'
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard') { |reg| reg['URL Protocol'] = path.ljust path.bytesize unless (reg['URL Protocol'] == path rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command') { |reg| reg[nil] = command.ljust command.bytesize unless (reg[nil] == command rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\DefaultIcon') { |reg| reg[nil] = icon.ljust icon.bytesize unless (reg[nil] == icon rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.ydk') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.yrp') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
+      Win32::Registry::HKEY_CLASSES_ROOT.create('.deck') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
+>>>>>>> 8031a2a
     end
   end
 
@@ -89,7 +109,10 @@ begin
         require_relative 'quickstart'
         $scene = false
       when /register_web_protocol/
+<<<<<<< HEAD
         $assoc_requested = true
+=======
+>>>>>>> 8031a2a
         register_url_protocol
         $scene = false
     end
@@ -136,19 +159,27 @@ begin
 
     #初始化标题场景
     require_relative 'scene_title'
+<<<<<<< HEAD
     require_relative 'dialog'
+=======
+>>>>>>> 8031a2a
     $scene = Scene_Title.new
 
     #自动更新
     require_relative 'update'
     Update.start
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
+<<<<<<< HEAD
     if assoc_need?
       request_assoc do
         register_url_protocol rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_web_protocol")
       end
     end
 
+=======
+    require_relative 'dialog'
+    register_url_protocol rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_web_protocol")
+>>>>>>> 8031a2a
     $log.info("main") { "初始化成功" }
   end
 rescue Exception => exception
