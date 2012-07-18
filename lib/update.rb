@@ -3,7 +3,7 @@ require "fileutils"
 require_relative 'card'
 module Update
   Version = '0.7.3'
-  URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
+  URL = "http://my-card.in/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
     def start
@@ -114,23 +114,23 @@ module Update
               thread = Thread.new do
                 while number = @thumbnails.pop
                   @status.replace "正在下载缩略卡图 (剩余#{@thumbnails.size}张)"
-                  open("http://card.touhou.cc/images/cards/ygocore/thumbnail/#{number}.jpg", 'rb') do |remote|
+                  open("http://my-card.in/images/cards/ygocore/thumbnail/#{number}.jpg", 'rb') do |remote|
                     next if File.file? "ygocore/pics/thumbnail/#{number}.jpg"
-                    #$log.debug('下载缩略卡图'){"http://card.touhou.cc/images/cards/ygocore/thumbnail/#{number}.jpg 到 ygocore/pics/thumbnail/#{number}.jpg" }
+                    #$log.debug('下载缩略卡图'){"http://my-card.in/images/cards/ygocore/thumbnail/#{number}.jpg 到 ygocore/pics/thumbnail/#{number}.jpg" }
                     open("ygocore/pics/thumbnail/#{number}.jpg", 'wb') do |local|
                       local.write remote.read
                     end
-                  end rescue $log.error('下载缩略出错'){"http://card.touhou.cc/images/cards/ygocore/thumbnail/#{number}.jpg 到 ygocore/pics/thumbnail/#{number}.jpg" }
+                  end rescue $log.error('下载缩略出错'){"http://my-card.in/images/cards/ygocore/thumbnail/#{number}.jpg 到 ygocore/pics/thumbnail/#{number}.jpg" }
                 end
                 while number = @images.pop
                   @status.replace "正在下载完整卡图 (剩余#{@images.size}张)"
-                  #$log.debug('下载完整卡图'){"http://card.touhou.cc/images/cards/ygocore/#{number}.jpg 到 ygocore/pics/#{number}.jpg" }
-                  open("http://card.touhou.cc/images/cards/ygocore/#{number}.jpg", 'rb') do |remote|
+                  #$log.debug('下载完整卡图'){"http://my-card.in/images/cards/ygocore/#{number}.jpg 到 ygocore/pics/#{number}.jpg" }
+                  open("http://my-card.in/images/cards/ygocore/#{number}.jpg", 'rb') do |remote|
                     next if File.file? "ygocore/pics/#{number}.jpg"
                     open("ygocore/pics/#{number}.jpg", 'wb') do |local|
                       local.write remote.read
                     end
-                  end rescue $log.error('下载完整卡图出错'){"http://card.touhou.cc/images/cards/ygocore/#{number}.jpg 到 ygocore/pics/#{number}.jpg" }
+                  end rescue $log.error('下载完整卡图出错'){"http://my-card.in/images/cards/ygocore/#{number}.jpg 到 ygocore/pics/#{number}.jpg" }
                 end 
               end
               thread.priority = -1

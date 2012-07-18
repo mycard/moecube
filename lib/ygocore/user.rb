@@ -15,7 +15,7 @@ class User
   end
   def space
     if @certified
-      Dialog.web "http://card.touhou.cc/users/#{CGI.escape @id.to_s}"
+      Dialog.web "http://my-card.in/users/#{CGI.escape @id.to_s}"
     else
       Widget_Msgbox.new("查看资料", "用户#{@name}没有注册", :ok => "确定")
     end
@@ -28,7 +28,7 @@ class User
       yield result
       Thread.new do
         require 'cgi'
-        open("http://card.touhou.cc/users/#{CGI.escape @id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
+        open("http://my-card.in/users/#{CGI.escape @id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
         (yield Surface.load(cache) if scene == $scene) rescue nil
       end
     else

@@ -45,7 +45,7 @@ module Association
       if clicked == :ok
         yield
       else
-        Widget_Msgbox.new("mycard", "没有进行关联,要重新关联请删除config.yml")
+        Widget_Msgbox.new("mycard", "未进行关联,要重新关联请删除config.yml", ok: "确定")
         $config['no_assoc'] = true
         Config.save
       end
