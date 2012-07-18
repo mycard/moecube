@@ -76,6 +76,7 @@ begin
     SDL.init(INIT_VIDEO)
 
     WM::set_caption("MyCard", "MyCard")
+    WM::icon = Surface.load("graphics/system/icon.gif")
     $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
     TTF.init
 
