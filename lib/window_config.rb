@@ -100,7 +100,7 @@ class Window_Config < Window
         $scene = Scene_Config.new
       else
         $scene.last_bgm = nil
-        Mixer.fade_out_music(800)
+        Mixer.fade_out_music(800) if SDL.inited_system(INIT_AUDIO) != 0
       end
       draw_item(@index, 1)
     when :avatar_cache
@@ -113,7 +113,7 @@ class Window_Config < Window
     when :return
       $scene = Scene_Title.new
     end
-    save_config
+    Config.save
   end
   def filesize_inspect(size)
     case size

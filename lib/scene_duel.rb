@@ -43,7 +43,7 @@ class Scene_Duel < Scene
     @player_lp_window = Window_LP.new(0,0, @room.player1, true)
     @opponent_lp_window = Window_LP.new(360,0, @room.player2, false)
 
-    @join_se = Mixer::Wave.load("audio/se/join.ogg")
+    @join_se = Mixer::Wave.load("audio/se/join.ogg") if SDL.inited_system(INIT_AUDIO) != 0
     
     create_action_window
     create_chat_window
@@ -161,7 +161,7 @@ class Scene_Duel < Scene
       player = $game.room.player1 == $game.user ? $game.room.player2 : $game.room.player1
       if player
         notify_send("对手加入房间", "#{player.name}(#{player.id})")
-        Mixer.play_channel(-1,@join_se,0)
+        Mixer.play_channel(-1,@join_se,0) if SDL.inited_system(INIT_AUDIO) != 0
       else
         notify_send("对手离开房间", "对手离开房间")
       end
@@ -175,7 +175,7 @@ class Scene_Duel < Scene
     super
   end
   def refresh
-    @fieldback_window.card = $game.player_field.field[0] && $game.player_field.field[0].card_type == :场地魔法 && $game.player_field.field[0].position == :attack ? $game.player_field.field[0] : $game.opponent_field.field[0] && $game.opponent_field.field[0].card_type == :场地魔法 && $game.opponent_field.field[0].position == :attack ? $game.opponent_field.field[0] : nil
+    @fieldback_window.card = $game.player_field.field[0] && $game.player_field.field[0].card_type == :"场地魔法" && $game.player_field.field[0].position == :attack ? $game.player_field.field[0] : $game.opponent_field.field[0] && $game.opponent_field.field[0].card_type == :"场地魔法" && $game.opponent_field.field[0].position == :attack ? $game.opponent_field.field[0] : nil
     @player_field_window.refresh
     @opponent_field_window.refresh
     @phases_window.player = $game.turn_player

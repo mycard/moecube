@@ -1,96 +1,18 @@
 #!/usr/bin/env ruby
 begin
-  #定义全局方法
-  def load_config(file="config.yml")
-    require 'yaml'
-    $config = YAML.load_file("config.yml") rescue {}
-    $config = {} unless $config.is_a? Hash
-    $config['bgm'] = true if $config['bgm'].nil?
-    $config['screen'] ||= {}
-    $config['screen']['width'] ||= 1024
-<<<<<<< HEAD
-    $config['screen']['height'] ||= 768
-=======
-    $config['screen']['height'] ||= 640
->>>>>>> 8031a2a
-  end
 
-  def save_config(file="config.yml")
-    File.open(file, "w") { |file| YAML.dump($config, file) }
-  end
-<<<<<<< HEAD
-
-  def register_url_protocol
-    if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-      require 'win32/registry'
-      path, command, icon = assoc_paths
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard') { |reg| reg['URL Protocol'] = path.ljust path.bytesize }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command') { |reg| reg[nil] = command.ljust command.bytesize }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\DefaultIcon') { |reg| reg[nil] = icon.ljust icon.bytesize }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.ydk') { |reg| reg[nil] = 'mycard' }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.yrp') { |reg| reg[nil] = 'mycard' }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.deck') { |reg| reg[nil] = 'mycard' }
-    end
-  end
-
-  def assoc_paths
-    pwd = Dir.pwd.gsub('/', '\\')
-    path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
-    command = path + ' "%1"'
-    icon = '"' + pwd + '\mycard.exe", 0'
-    [path, command, icon]
-  end
-
-  def assoc_need?
-    return false unless RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-    return false if $config['no_assoc']
-    path, command, icon = assoc_paths
-    require 'win32/registry'
-    begin
-      Win32::Registry::HKEY_CLASSES_ROOT.open('mycard') { |reg| return true unless reg['URL Protocol'] == path }
-      Win32::Registry::HKEY_CLASSES_ROOT.open('mycard\shell\open\command') { |reg| return true unless reg[nil] == command }
-      Win32::Registry::HKEY_CLASSES_ROOT.open('mycard\DefaultIcon') { |reg| return true unless reg[nil] == icon }
-      Win32::Registry::HKEY_CLASSES_ROOT.open('.ydk') { |reg| return true unless reg[nil] == 'mycard' }
-      Win32::Registry::HKEY_CLASSES_ROOT.open('.yrp') { |reg| return true unless reg[nil] == 'mycard' }
-      Win32::Registry::HKEY_CLASSES_ROOT.open('.deck') { |reg| return true unless reg[nil] == 'mycard' }
-    rescue
-      return true
-    end
-  end
-
-  def request_assoc
-    require_relative 'widget_msgbox'
-    Widget_Msgbox.new("mycard", "即将进行文件关联, 弹出安全警告请点允许", ok: "确定", cancel: "取消") do |clicked|
-      if clicked == :ok
-        yield
-      else
-        Widget_Msgbox.new("mycard", "没有进行关联,要重新关联请删除config.yml")
-        $config['no_assoc'] = true
-        save_config
-      end
-=======
-  def register_url_protocol
-    if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-      require 'win32/registry'
-      pwd = Dir.pwd.gsub('/', '\\')
-      path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
-      command = path + ' "%1"'
-      icon = '"' + pwd + '\mycard.exe", 0'
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard') { |reg| reg['URL Protocol'] = path.ljust path.bytesize unless (reg['URL Protocol'] == path rescue false) }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\shell\open\command') { |reg| reg[nil] = command.ljust command.bytesize unless (reg[nil] == command rescue false) }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('mycard\DefaultIcon') { |reg| reg[nil] = icon.ljust icon.bytesize unless (reg[nil] == icon rescue false) }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.ydk') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.yrp') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
-      Win32::Registry::HKEY_CLASSES_ROOT.create('.deck') { |reg| reg[nil] = 'mycard' unless (reg[nil] == 'mycard' rescue false) }
->>>>>>> 8031a2a
-    end
-  end
-
+  Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
   Thread.abort_on_exception = true
+
+  require_relative 'resolution'
   require_relative 'announcement'
+  require_relative 'config'
+  require_relative 'association'
+
   #读取配置文件
-  load_config
-  save_config
+  $config = Config.load
+  Config.save
+
   #读取命令行参数
   log = "log.log"
   log_level = "INFO"
@@ -108,39 +30,30 @@ begin
       when /^mycard:.*|\.ydk$|\.yrp$|\.deck$/
         require_relative 'quickstart'
         $scene = false
-      when /register_web_protocol/
-<<<<<<< HEAD
-        $assoc_requested = true
-=======
->>>>>>> 8031a2a
-        register_url_protocol
+      when /register_association/
+        Association.register
         $scene = false
     end
   end
+
   unless $scene == false
-    #初始化SDL
+    #加载文件
+    require 'logger'
     require 'sdl'
     include SDL
-    SDL::Event::APPMOUSEFOCUS = 1
-    SDL::Event::APPINPUTFOCUS = 2
-    SDL::Event::APPACTIVE = 4
-    SDL.putenv ("SDL_VIDEO_CENTERED=1");
-    SDL.init(INIT_VIDEO | INIT_AUDIO)
-    WM::set_caption("MyCard", "MyCard")
-    WM::icon = Surface.load("graphics/system/icon.gif")
-    $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
-    Mixer.open(Mixer::DEFAULT_FREQUENCY, Mixer::DEFAULT_FORMAT, Mixer::DEFAULT_CHANNELS, 1024)
-    Mixer.set_volume_music(60)
-    TTF.init
-    Thread.abort_on_exception = true
 
-    #初始化日志
-    require 'logger'
+    require_relative 'dialog'
+    require_relative 'graphics'
+    require_relative 'window'
+    require_relative 'widget_msgbox'
+
+    #日志
     if log == "STDOUT" #调试用
       log = STDOUT
     end
     $log = Logger.new(log)
     $log.level = Logger.const_get log_level
+
     #性能分析
     if profile
       if profile == "STDOUT"
@@ -156,30 +69,38 @@ begin
       Profiler__::start_profile
     end
 
+    SDL::Event::APPMOUSEFOCUS = 1
+    SDL::Event::APPINPUTFOCUS = 2
+    SDL::Event::APPACTIVE = 4
+    SDL.putenv ("SDL_VIDEO_CENTERED=1");
+    SDL.init(INIT_VIDEO)
 
-    #初始化标题场景
+    WM::set_caption("MyCard", "MyCard")
+    $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
+    TTF.init
+
+    #声音
+    begin
+      SDL.init(INIT_AUDIO)
+      Mixer.open(Mixer::DEFAULT_FREQUENCY, Mixer::DEFAULT_FORMAT, Mixer::DEFAULT_CHANNELS, 1536)
+      Mixer.set_volume_music(60)
+    rescue
+      nil
+    end
+
+    #标题场景
     require_relative 'scene_title'
-<<<<<<< HEAD
-    require_relative 'dialog'
-=======
->>>>>>> 8031a2a
     $scene = Scene_Title.new
 
-    #自动更新
+    #自动更新, 加载放到SDL前面会崩, 原因不明
     require_relative 'update'
     Update.start
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
-<<<<<<< HEAD
-    if assoc_need?
-      request_assoc do
-        register_url_protocol rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_web_protocol")
-      end
-    end
 
-=======
-    require_relative 'dialog'
-    register_url_protocol rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_web_protocol")
->>>>>>> 8031a2a
+    #文件关联
+    Association.start
+
+    #初始化完毕
     $log.info("main") { "初始化成功" }
   end
 rescue Exception => exception

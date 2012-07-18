@@ -51,7 +51,7 @@ class Scene
   # ● 开始处理
   #--------------------------------------------------------------------------
   def start
-    if $config['bgm'] and @@last_bgm != bgm and File.file? "audio/bgm/#{bgm}"
+    if $config['bgm'] and @@last_bgm != bgm and SDL.inited_system(INIT_AUDIO) != 0 and File.file? "audio/bgm/#{bgm}"
       @@bgm.destroy if @@bgm
       @@bgm = Mixer::Music.load "audio/bgm/#{bgm}"
       Mixer.fade_in_music(@@bgm, -1, 800)
@@ -130,7 +130,7 @@ class Scene
           style = HWSURFACE
           style |= FULLSCREEN if $config['screen']["fullscreen"]
           $screen = Screen.open($config['screen']["width"], $config['screen']["height"], 0, style)
-          save_config
+          Config.save
         end
       when Key::F12
         $scene = Scene_Title.new

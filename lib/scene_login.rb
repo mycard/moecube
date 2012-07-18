@@ -12,7 +12,7 @@ require_relative 'scene_lobby'
 class Scene_Login < Scene
 	def start
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
-    @background = Surface.load("graphics/login/background.png").display_format
+    @background = Graphics.load('login', 'background', false)
 	#======================================================
 	# We'll pay fpr that soon or later.
 	#======================================================

@@ -2,11 +2,7 @@ require 'open-uri'
 require "fileutils"
 require_relative 'card'
 module Update
-<<<<<<< HEAD
-  Version = '0.7.2'
-=======
-  Version = '0.7.0'
->>>>>>> 8031a2a
+  Version = '0.7.3'
   URL = "http://card.touhou.cc/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status

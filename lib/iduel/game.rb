@@ -117,7 +117,7 @@ class Iduel < Game
             User.new(id).friend = true
             $config['iDuel']['friends'] << id
           end
-          save_config
+          Config.save
         end
       rescue Exception => exception
         $log.error('读取好友信息') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}
@@ -169,7 +169,7 @@ class Iduel < Game
             announcements << Announcement.new(title.encode("UTF-8"), "http://www.duelcn.com/#{url}", nil)
           end
           $config['iDuel']['announcements'].replace announcements
-          save_config
+          Config.save
         end
       rescue Exception => exception
         $log.error('公告') {[exception.inspect, *exception.backtrace].collect{|str|str.encode("UTF-8")}.join("\n")}

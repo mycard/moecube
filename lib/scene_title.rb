@@ -1,8 +1,8 @@
 #encoding: UTF-8
 #==============================================================================
-# �Scene_Title
+# Scene_Title
 #------------------------------------------------------------------------------
-# �title
+# title
 #==============================================================================
 require_relative 'scene'
 require_relative 'widget_inputbox'
@@ -15,8 +15,8 @@ class Scene_Title < Scene
     title = title[rand(title.size)]
     @background = Surface.load(title).display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
-    @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, 300)
-    @decision_se = Mixer::Wave.load("audio/se/decision.ogg")
+    @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, $config['screen']['height']/2-100)
+    @decision_se = Mixer::Wave.load("audio/se/decision.ogg") if SDL.inited_system(INIT_AUDIO) != 0
     super
   end
   def clear(x,y,width,height)
@@ -24,7 +24,7 @@ class Scene_Title < Scene
   end
   def determine
     return unless @command_window.index
-    Mixer.play_channel(-1,@decision_se,0)
+    Mixer.play_channel(-1,@decision_se,0) if SDL.inited_system(INIT_AUDIO) != 0
     case @command_window.index
     when 0
       require_relative 'scene_login'

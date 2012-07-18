@@ -8,12 +8,12 @@ class Window_Title < Window_List
     @button.set_alpha(RLEACCEL,255)
     @single_height = @button.h / Button_Count
     super(x,y,@button.w / 3,WLH * Button_Count - (WLH - @button.h / Button_Count))
-    @cursor_se = Mixer::Wave.load 'audio/se/cursor.ogg'
+    @cursor_se = Mixer::Wave.load 'audio/se/cursor.ogg' if SDL.inited_system(INIT_AUDIO) != 0
     self.items = [:决斗开始, :单人模式, :卡组编成, :选项设置, :退出游戏]
   end
   def index=(index)
     if index and @index != index
-      Mixer.play_channel(-1,@cursor_se,0)
+      Mixer.play_channel(-1,@cursor_se,0) if SDL.inited_system(INIT_AUDIO) != 0
     end
     super
   end

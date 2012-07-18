@@ -14,11 +14,7 @@ class Window_RoomList < Window_Scrollable
     @button.set_alpha(RLEACCEL, 255)
     #@background = Surface.load 'graphics/lobby/roomitems.png'
     #@contents = Surface.load 'graphics/lobby/roomitems.png'
-<<<<<<< HEAD
-    super(x,y,@button.w / 3, 48 * 10)
-=======
     super(x,y,@button.w / 3, ($config['screen']['height'] - 288) / 48 * 48)
->>>>>>> 8031a2a
     @item_max = 0
     @font = TTF.open("fonts/wqy-microhei.ttc", 16)
     @color = [0x03, 0x11, 0x22]

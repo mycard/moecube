@@ -18,18 +18,14 @@ class Scene_Lobby < Scene
   def start
     WM::set_caption("MyCard v#{Update::Version} - #{$config['game']} - #{$game.user.name}(#{$game.user.id})", "MyCard")
 		$game.refresh
-		@background = Surface.load("graphics/lobby/background.png").display_format
+		@background = Graphics.load('lobby', 'background', false)
     Surface.blit(@background,0,0,0,0,$screen,0,0)
 		@userlist = Window_UserList.new(24,204,$game.users)
     @roomlist = Window_RoomList.new(320,50,$game.rooms)
 		@userinfo = Window_UserInfo.new(24,24, $game.user)
 		@host_window = Window_LobbyButtons.new(748,18)
     @active_window = @roomlist
-<<<<<<< HEAD
-		@chat_window = Window_Chat.new(313,543,698,212)
-=======
 		@chat_window = Window_Chat.new(313,$config['screen']['height'] - 225,698,212)
->>>>>>> 8031a2a
     @count = 0
     super
   end

@@ -208,7 +208,7 @@ class Ygocore < Game
             announcements << Announcement.new(title, @@config['index'], nil)
           end
           $config['ygocore']['announcements'].replace announcements
-          save_config
+          Config.save
         end
       rescue Exception => exception
         $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }

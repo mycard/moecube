@@ -8,7 +8,7 @@ class Window_Login
       $game = Iduel.new
       $config[$config['game']]['username'] = @username_inputbox.value
       $config[$config['game']]['password'] = @remember_password.checked? ? @password_inputbox.value : nil
-      save_config
+      Config.save
       $game.login(@username_inputbox.value, @password_inputbox.value)
       @last_clicked = Time.now
     when :register
