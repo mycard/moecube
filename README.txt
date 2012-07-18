@@ -15,7 +15,8 @@ A: 请注意mycard左上角是否在自动更新，如果显示正在下载更�
 Q: 程序崩溃或无任何提示自动退出 或提示 【程序可能出现了一个bug，请到论坛反馈】
 A: 重试一次。如果仍然这样 请联系作者
 
+更多常见问题请到 http://my-card.in/topics/1453
 
 作者联系方式：
-1. mycard的论坛 http://card.touhou.cc/boards
+1. mycard的论坛 http://my-card.in/boards
 2. E-mail/QQ/GT: zh99998@gmail.com
