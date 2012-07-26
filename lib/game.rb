@@ -39,6 +39,9 @@ class Game
   def refresh_interval
     5
   end
+  def show_chat_self
+    false
+  end
 end
 
 

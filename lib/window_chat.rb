@@ -27,11 +27,9 @@ class Window_Chat < Window_Scrollable
         if !@chat_input.value.empty?
           chatmessage = ChatMessage.new($game.user, @chat_input.value, @channel)
           $game.chat chatmessage
-          Game_Event.push Game_Event::Chat.new(chatmessage)
+          Game_Event.push Game_Event::Chat.new(chatmessage) if $game.show_chat_self
           true
         end
-      when :ESC
-        true  
       end
     end
     @chat_input.refresh

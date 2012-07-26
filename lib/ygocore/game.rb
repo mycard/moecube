@@ -15,6 +15,8 @@ class Ygocore < Game
     load 'lib/ygocore/room.rb'
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
+    require 'xmpp4r/client'
+    require 'xmpp4r/muc'
   end
 
   def refresh_interval
@@ -22,9 +24,54 @@ class Ygocore < Game
   end
 
   def login(username, password)
-    @username = username
-    @password = password
+    @username          = username
+    @password          = password
+    @nickname_conflict = []
+    @@im               = Jabber::Client.new(Jabber::JID::new(@username, 'my-card.in', 'mycard'))
+    @@im_room          = Jabber::MUC::MUCClient.new(@@im)
+    #Jabber.debug       = true
+
+    @@im.on_exception do |exception, c, where|
+      $log.error('聊天出错') { [exception, c, where] }
+      if where == :close
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天连接断开, 可能是网络问题或帐号从其他地点登录')))
+      else
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天连接断开, 5秒后重新连接')))
+        sleep 5
+        im_connect
+      end
+    end
+    @@im_room.add_message_callback do |m|
+      user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
+      Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
+    end
+    @@im_room.add_private_message_callback do |m|
+      if m.body #忽略无消息的正在输入等内容
+        user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
+        Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, user) rescue $log.error('收到私聊消息') { $! }
+      end
+    end
+    @@im_room.add_join_callback do |m|
+      Game_Event.push Game_Event::NewUser.new User.new m.from.resource.to_sym, m.from.resource
+    end
+    @@im_room.add_leave_callback do |m|
+      Game_Event.push Game_Event::MissingUser.new User.new m.from.resource.to_sym, m.from.resource
+    end
     connect
+    im_connect
+  end
+
+  def nickname
+    return @nickname if @nickname
+    if @nickname_conflict.include? @username
+      1.upto(9) do |i|
+        result = "#{@username}-#{i}"
+        return result unless @nickname_conflict.include? result
+      end
+      raise 'can`t get available nickname'
+    else
+      @username
+    end
   end
 
   def connect
@@ -35,24 +82,54 @@ class Ygocore < Game
     end
   end
 
+  def im_connect
+    Thread.new {
+      begin
+        @@im.allow_tls = false
+        @@im.use_ssl   = true
+        @@im.connect('my-card.in', 5223)
+        #ruby19/windows下 使用tls连接时会卡住
+
+        @@im.auth(@password)
+        @@im.send(Jabber::Presence.new.set_type(:available))
+        begin
+          nickname = nickname()
+          @@im_room.join(Jabber::JID.new('lobby@conference.my-card.in/' + nickname))
+        rescue Jabber::ServerError => exception
+          if exception.error.error == 'conflict'
+            @nickname_conflict << nickname
+            retry
+          end
+        end
+        Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
+      rescue StandardError => exception
+        $log.error('聊天连接出错') { exception }
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务器连接失败')))
+      end
+    }
+  end
+
   def chat(chatmessage)
     case chatmessage.channel
-      when :lobby
-        send(:chat, channel: :lobby, message: chatmessage.message, time: chatmessage.time)
-      when User
-        send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
+    when :lobby
+      msg = Jabber::Message::new(nil, chatmessage.message)
+      @@im_room.send msg
+    when User
+      msg = Jabber::Message::new(nil, chatmessage.message)
+      @@im_room.send msg, chatmessage.channel.id
+      #send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
     end
 
   end
 
   def host(room_name, room_config)
-    room = Room.new(0, room_name)
-    room.pvp = room_config[:pvp]
-    room.match = room_config[:match]
-    room.tag = room_config[:tag]
+    room          = Room.new(0, room_name)
+    room.pvp      = room_config[:pvp]
+    room.match    = room_config[:match]
+    room.tag      = room_config[:tag]
     room.password = room_config[:password]
-    room.ot = room_config[:ot]
-    room.lp = room_config[:lp]
+    room.ot       = room_config[:ot]
+    room.lp       = room_config[:lp]
     if $game.rooms.any? { |game_room| game_room.name == room_name }
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
     else
@@ -115,70 +192,70 @@ class Ygocore < Game
     #写入配置文件并运行ygocore
     Dir.chdir(File.dirname(path)) do
       case option
-        when Room
-          room = option
-          room_name = if room.ot != 0 or room.lp != 8000
-                        mode = case when room.match? then
-                                      1; when room.tag? then
-                                           2
-                                 else
-                                   0
-                               end
-                        room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
-                      elsif room.tag?
-                        "T#" + room.name
-                      elsif room.pvp? and room.match?
-                        "PM#" + room.name
-                      elsif room.pvp?
-                        "P#" + room.name
-                      elsif room.match?
-                        "M#" + room.name
-                      else
-                        room.name
-                      end
-          if room.password and !room.password.empty?
-            room_name += "$" + room.password
+      when Room
+        room      = option
+        room_name = if room.ot != 0 or room.lp != 8000
+                      mode      = case when room.match? then
+                                         1; when room.tag? then
+                                              2
+                                  else
+                                    0
+                                  end
+                      room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
+                    elsif room.tag?
+                      "T#" + room.name
+                    elsif room.pvp? and room.match?
+                      "PM#" + room.name
+                    elsif room.pvp?
+                      "P#" + room.name
+                    elsif room.match?
+                      "M#" + room.name
+                    else
+                      room.name
+                    end
+        if room.password and !room.password.empty?
+          room_name += "$" + room.password
+        end
+        system_conf = {}
+        begin
+          IO.readlines('system.conf').each do |line|
+            line.force_encoding "UTF-8"
+            next if line[0, 1] == '#'
+            field, contents    = line.chomp.split(' = ', 2)
+            system_conf[field] = contents
           end
-          system_conf = {}
-          begin
-            IO.readlines('system.conf').each do |line|
-              line.force_encoding "UTF-8"
-              next if line[0, 1] == '#'
-              field, contents = line.chomp.split(' = ', 2)
-              system_conf[field] = contents
-            end
-          rescue
-            system_conf['antialias'] = 2
-            system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-            system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
+        rescue
+          system_conf['antialias'] = 2
+          system_conf['textfont']  = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont']   = 'c:/windows/fonts/arialbd.ttf'
+        end
+        (system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}") rescue nil
+        system_conf['lastip']   = $game.server
+        system_conf['lastport'] = $game.port.to_s
+        system_conf['roompass'] = room_name
+        open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
+        args = '-j'
+      when :replay
+        args = '-r'
+      when :deck
+        args = '-d'
+      when String
+        system_conf = {}
+        begin
+          IO.readlines('system.conf').each do |line|
+            line.force_encoding "UTF-8"
+            next if line[0, 1] == '#'
+            field, contents    = line.chomp.split(' = ', 2)
+            system_conf[field] = contents
           end
-          (system_conf['nickname'] = "#{$game.user.name}#{"$" unless $game.password.nil? or $game.password.empty?}#{$game.password}") rescue nil
-          system_conf['lastip'] = $game.server
-          system_conf['lastport'] = $game.port.to_s
-          system_conf['roompass'] = room_name
-          open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
-          args = '-j'
-        when :replay
-          args = '-r'
-        when :deck
-          args = '-d'
-        when String
-          system_conf = {}
-          begin
-            IO.readlines('system.conf').each do |line|
-              line.force_encoding "UTF-8"
-              next if line[0, 1] == '#'
-              field, contents = line.chomp.split(' = ', 2)
-              system_conf[field] = contents
-            end
-          rescue
-            system_conf['antialias'] = 2
-            system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-            system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
-          end
-          system_conf['lastdeck'] = option
-          open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
-          args = '-d'
+        rescue
+          system_conf['antialias'] = 2
+          system_conf['textfont']  = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont']   = 'c:/windows/fonts/arialbd.ttf'
+        end
+        system_conf['lastdeck'] = option
+        open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
+        args = '-d'
       end
       IO.popen("ygopro_vs.exe #{args}")
       WM.iconify rescue nil
@@ -197,7 +274,7 @@ class Ygocore < Game
 
   def self.get_announcements
     #公告
-    $config['ygocore'] ||= {}
+    $config['ygocore']                  ||= {}
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin

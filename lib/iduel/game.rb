@@ -124,6 +124,9 @@ class Iduel < Game
       end
     end
   end
+  def show_chat_self
+    true
+  end
   private
   def connect
     require 'socket'
