@@ -1,6 +1,5 @@
 #encoding: UTF-8
 load 'lib/ygocore/window_login.rb'
-require 'eventmachine'
 require 'open-uri'
 require 'yaml'
 class Ygocore < Game
@@ -272,44 +271,4 @@ class Ygocore < Game
 
   private
 
-  def self.get_announcements
-    #公告
-    $config['ygocore']                  ||= {}
-    $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
-    Thread.new do
-      begin
-        open(@@config['api']) do |file|
-          file.set_encoding "GBK"
-          announcements = []
-          file.read.encode("UTF-8").scan(/<div style="color:red" >公告：(.*?)<\/div>/).each do |title, others|
-            announcements << Announcement.new(title, @@config['index'], nil)
-          end
-          $config['ygocore']['announcements'].replace announcements
-          Config.save
-        end
-      rescue Exception => exception
-        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
-      end
-    end
-  end
-
-  module Client
-    MycardChannel = EM::Channel.new
-    include EM::P::ObjectProtocol
-
-    def post_init
-      send_object header: :login, data: {name: $game.username, password: $game.password}
-      MycardChannel.subscribe { |msg| send_object(msg) }
-    end
-
-    def receive_object obj
-      $log.info('收到消息') { obj.inspect }
-      Game_Event.push Game_Event.parse obj[:header], obj[:data]
-    end
-
-    def unbind
-      Game_Event.push Game_Event::Error.new('ygocore', '网络连接中断', true)
-    end
-  end
-  get_announcements
 end
