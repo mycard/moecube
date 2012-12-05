@@ -2,7 +2,7 @@ require_relative 'cacheable'
 class Room
   Color = [[0,0,0], [255,0,0], [0,128,0], [0,0,255], [255, 165, 0]]
   extend Cacheable
-  attr_accessor :id, :name, :player1, :player2, :private, :color, :forbid
+  attr_accessor :id, :name, :player1, :player2, :private, :color, :forbid, :_deleted
   attr_accessor :password
   def initialize(id, name="等待更新", player1=nil, player2=nil, private=false, color=[0,0,0], session = nil, forbid = nil)
     @id = id
@@ -29,6 +29,9 @@ class Room
   end
   def extra
     {}
+  end
+  def status
+    player2 ? :start : :wait
   end
   alias full? player2
   alias private? private

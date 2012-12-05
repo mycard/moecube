@@ -21,12 +21,12 @@ class User
   end
   def avatar(size = :small)
     cache = "graphics/avatars/#{@id}_#{size}.png"
-    result = Surface.load(cache) rescue Surface.load("graphics/avatars/loading_#{size}.gif")
+    result = Surface.load(cache) rescue Surface.load("graphics/avatars/loading_#{size}.png")
     scene = $scene
     if block_given?
       yield result
       Thread.new do
-        open("http://www.duelcn.com/uc_server/avatar.php?uid=#{id-100000}&size=#{size}", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/noavatar_#{size}.gif"
+        open("http://www.duelcn.com/uc_server/avatar.php?uid=#{id-100000}&size=#{size}", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/error_#{size}.png"
         (yield Surface.load(cache) if scene == $scene) rescue nil
       end
     else

@@ -1,5 +1,5 @@
 register: http://my-card.in/register
-api: http://122.0.65.71:7922/
+api: http://master.smdcn.net:7922/
 index: http://my-card.in/
-server: 122.0.65.71
+server: 122.0.65.70
 port: 7911

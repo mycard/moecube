@@ -2,6 +2,7 @@
 begin
 
   Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+  Dir.glob('post_update_*.rb').sort.each { |file| load file }
   Thread.abort_on_exception = true
 
   require_relative 'resolution'
@@ -9,30 +10,36 @@ begin
   require_relative 'config'
   require_relative 'association'
 
+  #i18n
+  require 'i18n'
+  require 'locale'
+  I18n.load_path += Dir['locales/*.yml']
+  I18n::Backend::Simple.include(I18n::Backend::Fallbacks)
+
   #读取配置文件
   $config = Config.load
   Config.save
 
   #读取命令行参数
-  log = "log.log"
+  log       = "log.log"
   log_level = "INFO"
-  profile = nil
+  profile   = nil
   ARGV.each do |arg|
     arg = arg.dup.force_encoding("UTF-8")
     arg.force_encoding("GBK") unless arg.valid_encoding?
     case arg
-      when /--log=(.*)/
-        log.replace $1
-      when /--log-level=(.*)/
-        log_level.replace $1
-      when /--profile=(.*)/
-        profile = $1
-      when /^mycard:.*|\.ydk$|\.yrp$|\.deck$/
-        require_relative 'quickstart'
-        $scene = false
-      when /register_association/
-        Association.register
-        $scene = false
+    when /--log=(.*)/
+      log.replace $1
+    when /--log-level=(.*)/
+      log_level.replace $1
+    when /--profile=(.*)/
+      profile = $1
+    when /^mycard:.*|\.ydk$|\.yrp$|\.deck$/
+      require_relative 'quickstart'
+      $scene = false
+    when /register_association/
+      Association.register
+      $scene = false
     end
   end
 
@@ -51,7 +58,7 @@ begin
     if log == "STDOUT" #调试用
       log = STDOUT
     end
-    $log = Logger.new(log)
+    $log       = Logger.new(log)
     $log.level = Logger.const_get log_level
 
     #性能分析
@@ -63,7 +70,7 @@ begin
       end
       require 'profiler'
       RubyVM::InstructionSequence.compile_option = {
-          :trace_instruction => true,
+          :trace_instruction       => true,
           :specialized_instruction => false
       }
       Profiler__::start_profile
@@ -71,13 +78,13 @@ begin
 
     SDL::Event::APPMOUSEFOCUS = 1
     SDL::Event::APPINPUTFOCUS = 2
-    SDL::Event::APPACTIVE = 4
+    SDL::Event::APPACTIVE     = 4
     SDL.putenv ("SDL_VIDEO_CENTERED=1");
     SDL.init(INIT_VIDEO)
 
     WM::set_caption("MyCard", "MyCard")
     WM::icon = Surface.load("graphics/system/icon.gif")
-    $screen = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
+    $screen  = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
     TTF.init
 
     #声音

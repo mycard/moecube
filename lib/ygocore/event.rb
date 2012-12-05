@@ -7,20 +7,10 @@ class Game_Event
       else
         Error.new('登录', '用户名或密码错误')
       end
-    #when :users
-#      AllUsers.new data.collect{|user|parse_user(user)}
     when :rooms
-      rooms_wait = []
-      rooms_start = []
-      data.each do |room|
-        room = parse_room(room)
-        if room.full?
-          rooms_start << room
-        else
-          rooms_wait << room
-        end
-      end
-      AllRooms.new rooms_wait + rooms_start
+      AllRooms.new data.collect{|room|parse_room(room)}
+    when :rooms_update
+      RoomsUpdate.new data.collect{|room|parse_room(room)}
     #when :newuser
       #NewUser.new parse_user data
     #when :missinguser
@@ -29,13 +19,13 @@ class Game_Event
       NewRoom.new parse_room data
     when :missingroom
       MissingRoom.new parse_room data
-    #when :chat
-    #  case data[:channel]
-    #  when :lobby
-    #    Chat.new ChatMessage.new User.new(data[:from][:id],data[:from][:name]), data[:message], :lobby
-    #  else
-    #    Chat.new ChatMessage.new User.new(data[:from][:id],data[:from][:name]), data[:message], User.new(data[:channel])
-    #  end
+    when :chat
+      case data[:channel]
+      when :lobby
+        Chat.new ChatMessage.new User.new(data[:from][:id],data[:from][:name]), data[:message], :lobby
+      else
+        Chat.new ChatMessage.new User.new(data[:from][:id],data[:from][:name]), data[:message], User.new(data[:channel])
+      end
     end
   end
   def self.parse_room(room)
@@ -49,6 +39,11 @@ class Game_Event
     result.ot = room[:ot]
     result.status = room[:status]
     result.lp = room[:lp]
+    result._deleted = room[:_deleted]
+    result.server_id = room[:server_id]
+    result.server_ip = room[:server_ip]
+    result.server_port = room[:server_port]
+    result.server_auth = room[:server_auth]
     result
   end
   def self.parse_user(user)

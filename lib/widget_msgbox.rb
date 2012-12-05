@@ -4,7 +4,7 @@ class Widget_Msgbox < Window
   class <<self
     alias old_new new
     def new(title, message, buttons={}, &proc)
-      if instance = $scene.windows.find{|window|window.class == self and !window.destroyed?}
+      if instance = $scene.windows.find{|window|window.class == self and !window.destroyed?} rescue nil
         instance.set(title, message, buttons, &proc)
         instance
       else

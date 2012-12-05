@@ -5,6 +5,7 @@ class Room
   attr_accessor :ot
   attr_accessor :lp
   attr_accessor :status
+  attr_accessor :server_id, :server_ip, :server_port, :server_auth
   alias pvp? pvp
   alias match? match
   alias tag? tag

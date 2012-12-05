@@ -42,7 +42,7 @@ class Window_Config < Window
     when :avatar_cache
       size = 0
       count = 0
-      Dir.glob("graphics/avatars/*_*.png") do |file|
+      Dir.glob("graphics/avatars/*").reject{|file|File.basename(file) =~ /(?:error|loading)_(?:small|middle|large)\.png/}.each do |file|
         count += 1
         size += File.size(file)
       end
@@ -105,7 +105,7 @@ class Window_Config < Window
       draw_item(@index, 1)
     when :avatar_cache
       #clear(*item_rect(@index))
-      Dir.glob("graphics/avatars/*_*.png") do |file|
+      Dir.glob("graphics/avatars/*").reject{|file|File.basename(file) =~ /(?:error|loading)_(?:small|middle|large)\.png/}.each do |file|
         File.delete file
       end
       refresh

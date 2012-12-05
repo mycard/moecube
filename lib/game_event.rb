@@ -1,12 +1,15 @@
 #游戏事件的抽象类
 class Game_Event
   @queue = []
+
   def self.push(event)
     @queue << event
   end
+
   def self.poll
     @queue.shift
   end
+
   def self.parse(info, *args)
     #适配器定义
   end
@@ -14,14 +17,16 @@ class Game_Event
 
   class Login < Game_Event
     attr_reader :user
+
     def initialize(user)
-      @user = user
+      @user      = user
       $game.user = @user
     end
   end
-  
+
   class AllUsers < Game_Event
     attr_reader :users
+
     def initialize(users)
       @users = []
       users.each do |user|
@@ -34,9 +39,10 @@ class Game_Event
       $game.users.replace @users
     end
   end
-  
+
   class NewUser < AllUsers
     attr_reader :users
+
     def initialize(user)
       @user = user
       unless $game.users.include? @user
@@ -51,6 +57,7 @@ class Game_Event
 
   class MissingUser < AllUsers
     attr_reader :users
+
     def initialize(user)
       @user = user
       $game.users.delete @user
@@ -59,14 +66,27 @@ class Game_Event
 
   class AllRooms < Game_Event
     attr_reader :rooms
+
     def initialize(rooms)
       @rooms = rooms
       $game.rooms.replace @rooms
+      $game.rooms.sort_by! { |room| [room.status == :start ? 1 : 0, room.private ? 1 : 0, room.id] }
+    end
+
+  end
+  class RoomsUpdate < AllRooms
+    attr_reader :rooms
+
+    def initialize(rooms)
+      @rooms = rooms
+      $game.rooms.replace $game.rooms | @rooms
+      $game.rooms.delete_if { |room| room._deleted }
+      $game.rooms.sort_by! { |room| [room.status == :start ? 1 : 0, room.private ? 1 : 0, room.id] }
     end
   end
-  
   class NewRoom < AllRooms
     attr_reader :room
+
     def initialize(room)
       @room = room
       unless $game.rooms.include? @room
@@ -80,6 +100,7 @@ class Game_Event
   end
   class MissingRoom < AllRooms
     attr_reader :room
+
     def initialize(room)
       @room = room
       $game.rooms.delete @room
@@ -87,9 +108,9 @@ class Game_Event
   end
 
 
-
   class Chat < Game_Event
     attr_reader :chatmessage
+
     def initialize(chatmessage)
       @chatmessage = chatmessage
     end
@@ -97,8 +118,9 @@ class Game_Event
 
   class Join < Game_Event
     attr_reader :room
+
     def initialize(room)
-      @room = room
+      @room      = room
       $game.room = @room
     end
   end
@@ -106,8 +128,9 @@ class Game_Event
   end
   class Watch < Game_Event
     attr_reader :room
+
     def initialize(room)
-      @room = room
+      @room      = room
       $game.room = @room
     end
   end
@@ -117,8 +140,9 @@ class Game_Event
   end
   class PlayerJoin < Game_Event
     attr_reader :user
+
     def initialize(user)
-      @user = user
+      @user              = user
       $game.room.player2 = @user
     end
   end
@@ -130,20 +154,22 @@ class Game_Event
 
   class Action < Game_Event
     attr_reader :action, :str
+
     def initialize(action, str=action.escape)
       @action = action
-      @str = str
+      @str    = str
     end
   end
 
 
   class Error < Game_Event
     attr_reader :title, :message, :fatal
+
     def initialize(title, message, fatal=true)
-      @title = title
+      @title   = title
       @message = message
-      @fatal = fatal
-      $log.error(@fatal ? "致命错误" : "一般错误"){"#{@title}: #{@message} #{caller}"}
+      @fatal   = fatal
+      $log.error(@fatal ? "致命错误" : "一般错误") { "#{@title}: #{@message} #{caller}" }
     end
   end
   class Unknown < Error

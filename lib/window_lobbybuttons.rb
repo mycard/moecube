@@ -1,7 +1,7 @@
 require_relative 'window_host'
 class Window_LobbyButtons < Window_List
   def initialize(x, y)
-    @items = ["常见问题", "卡组编辑", "建立房间"]
+    @items = [I18n.t('lobby.faq'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom')]
     @button = Surface.load("graphics/lobby/button.png")
     super(x, y, @items.size*@button.w/3+@items.size*4, 30)
     @font = TTF.open("fonts/wqy-microhei.ttc", 15)
@@ -9,9 +9,9 @@ class Window_LobbyButtons < Window_List
   end
 
   def draw_item(index, status=0)
-    x, y=item_rect(index)
+    x, y, width=item_rect(index)
     Surface.blit(@button, status*@button.w/3, 0, @button.w/3, @button.h, @contents, x, y)
-    draw_stroked_text(@items[index], x+8, y+3, 2, @font, [0xdf, 0xf1, 0xff], [0x27, 0x43, 0x59])
+    draw_stroked_text(@items[index], x+center_margin(@items[index],width,@font), y+3, 2, @font, [0xdf, 0xf1, 0xff], [0x27, 0x43, 0x59])
   end
 
   def item_rect(index)
