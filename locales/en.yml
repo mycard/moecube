@@ -1,0 +1,18 @@
+en:
+  lang: "English"
+  chat:
+    room: "lobby.en"
+    server: "conference.my-card.in"
+  login: 
+    name: "Username"
+    password: "Password"
+    login: "Login"
+    register: "Register"
+    remember: "Remember Password"
+    replay: "Replay"
+  lobby:
+    faq: "FAQ"
+    editdeck: "Edit Deck"
+    newroom: "NewRoom"
+    lobby: "Lobby"
+

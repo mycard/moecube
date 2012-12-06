@@ -1,0 +1,19 @@
+en:
+  lang: "中文"
+  chat:
+    room: "lobby.zh"
+    server: "conference.my-card.in"
+  login: 
+    name: "用户名"
+    password: "密码"
+    login: "登录"
+    register: "注册"
+    remember: "记住密码"
+    replay: "录像"
+  lobby:
+    faq: "常见问题"
+    editdeck: "卡组编辑"
+    newroom: "建立房间"
+    lobby: "大厅"
+    filter: "房间筛选"
+
