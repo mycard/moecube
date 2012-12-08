@@ -36,7 +36,11 @@ class Window_LobbyButtons < Window_List
         require_relative 'dialog'
         Dialog.web "http://my-card.in/login?user[name]=#{CGI.escape $game.user.name}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
       when 1 #房间筛选
-
+        if @filter_window and !@filter_window.destroyed?
+          @filter_window.destroy
+        else
+          @filter_window = Window_Filter.new(678, 44)
+        end
       when 2 #卡组编辑
         require_relative 'deck'
         $game.class.deck_edit

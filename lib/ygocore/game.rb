@@ -77,7 +77,7 @@ class Ygocore < Game
   def connect
     @recv = Thread.new do
       EventMachine::run {
-        EventMachine::connect "mycard-server.my-card.in", 9997, Client
+        EventMachine::connect "localhost", 9997, Client
       }
     end
   end
@@ -137,9 +137,10 @@ class Ygocore < Game
     room.password = room_config[:password]
     room.ot       = room_config[:ot]
     room.lp       = room_config[:lp]
-    room.server_ip = $game.server
-    room.server_port = $game.port
-    room.server_auth = true
+    server = @filter[:servers].sample || Server.new(nil, "", $game.server, $game.port, true)
+    room.server_ip = server.ip
+    room.server_port = server.port
+    room.server_auth = server.auth
     if $game.rooms.any? { |game_room| game_room.name == room_name }
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
     else

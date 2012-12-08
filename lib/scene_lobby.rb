@@ -11,6 +11,7 @@ class Scene_Lobby < Scene
   require_relative 'window_roomlist'
   require_relative 'window_chat'
   require_relative 'window_host'
+  require_relative 'window_filter'
   require_relative 'window_lobbybuttons'
   require_relative 'chatmessage'
   require_relative 'scene_duel'
@@ -62,7 +63,9 @@ class Scene_Lobby < Scene
     when Game_Event::AllUsers
       @userlist.items = $game.users
     when Game_Event::AllRooms
-      @roomlist.items = $game.rooms
+      @roomlist.items = $game.rooms.find_all{|room|$game.filter[:servers].collect{|server|server.id}.include?(room.server_id)}
+    when Game_Event::AllServers
+      @roomlist.items = $game.rooms.find_all{|room|$game.filter[:servers].collect{|server|server.id}.include?(room.server_id)}
     when Game_Event::Join
       join(event.room)
     when Game_Event::Watch

@@ -40,6 +40,13 @@ class Game_Event
     end
   end
 
+  class AllServers < Game_Event
+    attr_reader :servers
+    def initialize(servers)
+      $game.servers.replace servers
+    end
+  end
+
   class NewUser < AllUsers
     attr_reader :users
 

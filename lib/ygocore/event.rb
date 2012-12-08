@@ -11,6 +11,10 @@ class Game_Event
       AllRooms.new data.collect{|room|parse_room(room)}
     when :rooms_update
       RoomsUpdate.new data.collect{|room|parse_room(room)}
+    when :servers
+      servers = data.collect{|server|parse_server(server)}
+      $game.filter[:servers].concat (servers - $game.servers)
+      AllServers.new servers
     #when :newuser
       #NewUser.new parse_user data
     #when :missinguser
@@ -48,5 +52,8 @@ class Game_Event
   end
   def self.parse_user(user)
     User.new(user[:id], user[:name], user[:certified])
+  end
+  def self.parse_server(server)
+    Server.new(server[:id], server[:name], server[:ip], server[:port], server[:auth])
   end
 end
