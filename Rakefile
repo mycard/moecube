@@ -14,22 +14,22 @@ def list(path)
 		next if file == "." or file == ".."
     result << "#{path}/#{file}"
 		result.concat list(result.last) if File.directory? result.last
-	end
+	end rescue p $!
 	result
 end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.7.4'
+  s.version = '0.8.2'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game'
   s.description = s.summary
   s.author = 'zh99998'
   s.email = 'zh99998@gmail.com'
-  s.homepage = 'http://card.touhou,cc'
+  s.homepage = 'http://my-card.in'
   # s.executables = ['your_executable_here']
-  s.files = %w(LICENSE.txt README.txt replay)
-  %w{lib audio data fonts graphics ygocore}.each{|dir|s.files.concat list(dir)}
+  s.files = %w(LICENSE.txt README.txt config.yml replay)
+  %w{lib audio data fonts locales graphics ygocore}.each{|dir|s.files.concat list(dir)}
   if Windows
     s.files += %w(mycard.exe) + list("ruby")
   else
@@ -43,7 +43,7 @@ Gem::PackageTask.new(spec) do |p|
   p.gem_spec = spec
   if Windows
     p.need_zip = true
-    p.zip_command = '../7z.exe a'
+    p.zip_command = '7z a'
     def p.zip_file
       "#{package_name}-win32.7z"
     end
@@ -61,4 +61,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options << '--line-numbers'
 end
 
-CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc ygocore/pics) + list('replay') + list('ygocore/replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").keep_if{|file|File.basename(file) =~ /.*_(?:small|middle|large)\.png/} + list("ygocore/deck").keep_if{|file|File.basename(file) != 'sample.ydk'}
+CLOBBER.include %w(error-程序出错请到论坛反馈.txt log.log profile.log config.yml doc ygocore/pics) + list('replay') + list('ygocore/replay') + list('.').keep_if{|file|File.basename(file) == "Thumbs.db"} + list("graphics/avatars").reject{|file|File.basename(file) =~ /(?:error|loading)_(?:small|middle|large)\.png/} + list("ygocore/deck").keep_if{|file|File.basename(file) != 'sample.ydk'}

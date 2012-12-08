@@ -77,7 +77,7 @@ class Ygocore < Game
   def connect
     @recv = Thread.new do
       EventMachine::run {
-        EventMachine::connect "localhost", 9997, Client
+        EventMachine::connect "mycard-server.my-card.in", 9997, Client
       }
     end
   end
