@@ -13,7 +13,7 @@ class Server
     @id = id
     @name = name unless name == :keep
     @ip = ip unless ip == :keep
-    @port = name unless port == :keep
-    @auth = name unless auth == :keep
+    @port = port unless port == :keep
+    @auth = auth unless auth == :keep
   end
 end
