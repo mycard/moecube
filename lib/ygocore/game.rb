@@ -1,6 +1,8 @@
 #encoding: UTF-8
 load 'lib/ygocore/window_login.rb'
 require 'eventmachine'
+require 'em-http'
+require 'websocket'
 require 'open-uri'
 require 'yaml'
 class Ygocore < Game
@@ -24,8 +26,8 @@ class Ygocore < Game
   end
 
   def login(username, password)
-    @username          = username
-    @password          = password
+    @username = username
+    @password = password
     #@nickname_conflict = []
     #@@im               = Jabber::Client.new(Jabber::JID::new(@username, 'my-card.in', 'mycard'))
     #@@im_room          = Jabber::MUC::MUCClient.new(@@im)
@@ -77,7 +79,30 @@ class Ygocore < Game
   def connect
     @recv = Thread.new do
       EventMachine::run {
-        EventMachine::connect "mycard-server.my-card.in", 9997, Client
+        http = EM::HttpRequest.new("http://my-card.in/servers.json").get
+        http.callback {
+          begin
+            self.servers.replace JSON.parse(http.response).collect {|data| Server.new(data['id'], data['name'], data['ip'], data['port'], data['auth'])}
+            self.filter[:servers] = self.servers.clone
+          rescue
+            Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败', true)
+          end
+
+          EventMachine::connect "mycard-server.my-card.in", 9997, Client
+          ws = WebSocket::EventMachine::Client.connect(:host => "mycard-server.my-card.in", :port => 9998);
+          ws.onmessage do |msg, type|
+            $log.info('收到websocket消息'){msg.force_encoding("UTF-8")}
+            Game_Event.push Game_Event::RoomsUpdate.new JSON.parse(msg).collect { |room| Game_Event.parse_room(room) }
+          end
+          ws.onclose do
+            $log.info('websocket连接断开')
+            Game_Event.push Game_Event::Error.new('ygocore', '网络连接中断.1', true)
+          end
+
+        }
+        http.errback{
+          Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败', true)
+        }
       }
     end
   end
@@ -130,17 +155,16 @@ class Ygocore < Game
   end
 
   def host(room_name, room_config)
-    room          = Room.new(0, room_name)
-    room.pvp      = room_config[:pvp]
-    room.match    = room_config[:match]
-    room.tag      = room_config[:tag]
+    room = Room.new(0, room_name)
+    room.pvp = room_config[:pvp]
+    room.match = room_config[:match]
+    room.tag = room_config[:tag]
     room.password = room_config[:password]
-    room.ot       = room_config[:ot]
-    room.lp       = room_config[:lp]
-    server = @filter[:servers].sample || Server.new(nil, "", $game.server, $game.port, true)
-    room.server_ip = server.ip
-    room.server_port = server.port
-    room.server_auth = server.auth
+    room.ot = room_config[:ot]
+    room.lp = room_config[:lp]
+
+    room.host_server
+
     if $game.rooms.any? { |game_room| game_room.name == room_name }
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
     else
@@ -157,7 +181,7 @@ class Ygocore < Game
   end
 
   def refresh
-    send(:refresh)
+    #send(:refresh)
   end
 
   def send(header, data=nil)
@@ -204,14 +228,14 @@ class Ygocore < Game
     Dir.chdir(File.dirname(path)) do
       case option
       when Room
-        room      = option
+        room = option
         room_name = if room.ot != 0 or room.lp != 8000
-                      mode      = case when room.match? then
-                                         1; when room.tag? then
-                                              2
-                                  else
-                                    0
-                                  end
+                      mode = case when room.match? then
+                                    1; when room.tag? then
+                                         2
+                             else
+                               0
+                             end
                       room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
                     elsif room.tag?
                       "T#" + room.name
@@ -232,19 +256,19 @@ class Ygocore < Game
           IO.readlines('system.conf').each do |line|
             line.force_encoding "UTF-8"
             next if line[0, 1] == '#'
-            field, contents    = line.chomp.split(' = ', 2)
+            field, contents = line.chomp.split(' = ', 2)
             system_conf[field] = contents
           end
         rescue
           system_conf['antialias'] = 2
-          system_conf['textfont']  = 'c:/windows/fonts/simsun.ttc 14'
-          system_conf['numfont']   = 'c:/windows/fonts/arialbd.ttf'
+          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
         end
         system_conf['nickname'] = $game.user.name
-        system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server_auth
-        p room
-        system_conf['lastip']   = room.server_ip
-        system_conf['lastport'] = room.server_port.to_s
+        system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
+        $log.info room
+        system_conf['lastip'] = room.server.ip
+        system_conf['lastport'] = room.server.port.to_s
         system_conf['roompass'] = room_name
         open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
         args = '-j'
@@ -258,13 +282,13 @@ class Ygocore < Game
           IO.readlines('system.conf').each do |line|
             line.force_encoding "UTF-8"
             next if line[0, 1] == '#'
-            field, contents    = line.chomp.split(' = ', 2)
+            field, contents = line.chomp.split(' = ', 2)
             system_conf[field] = contents
           end
         rescue
           system_conf['antialias'] = 2
-          system_conf['textfont']  = 'c:/windows/fonts/simsun.ttc 14'
-          system_conf['numfont']   = 'c:/windows/fonts/arialbd.ttf'
+          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
         end
         system_conf['lastdeck'] = option
         open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
@@ -287,7 +311,7 @@ class Ygocore < Game
 
   def self.get_announcements
     #公告
-    $config['ygocore']                  ||= {}
+    $config['ygocore'] ||= {}
     $config['ygocore']['announcements'] ||= [Announcement.new("开放注册", nil, nil)]
     #Thread.new do
     #  begin
@@ -326,3 +350,265 @@ class Ygocore < Game
   end
   get_announcements
 end
+
+
+# websocket, due to the author hasn't release separate gem yet
+#https://github.com/imanel/websocket-ruby/issues/12
+
+module WebSocket
+  module EventMachine
+    class Base < ::EventMachine::Connection
+
+      ###########
+      ### API ###
+      ###########
+
+      def onopen(&blk)
+        ; @onopen = blk;
+      end
+
+      # Called when connection is opened
+      def onclose(&blk)
+        ; @onclose = blk;
+      end
+
+      # Called when connection is closed
+      def onerror(&blk)
+        ; @onerror = blk;
+      end
+
+      # Called when error occurs
+      def onmessage(&blk)
+        ; @onmessage = blk;
+      end
+
+      # Called when message is received from server
+      def onping(&blk)
+        ; @onping = blk;
+      end
+
+      # Called when ping message is received from server
+      def onpong(&blk)
+        ; @onpong = blk;
+      end
+
+      # Called when pond message is received from server
+
+      # Send data to client
+      # @param data [String] Data to send
+      # @param args [Hash] Arguments for send
+      # @option args [String] :type Type of frame to send - available types are "text", "binary", "ping", "pong" and "close"
+      # @return [Boolean] true if data was send, otherwise call on_error if needed
+      def send(data, args = {})
+        type = args[:type] || :text
+        unless type == :plain
+          frame = outgoing_frame.new(:version => @handshake.version, :data => data, :type => type)
+          if !frame.supported?
+            trigger_onerror("Frame type '#{type}' is not supported in protocol version #{@handshake.version}")
+            return false
+          elsif !frame.require_sending?
+            return false
+          end
+          data = frame.to_s
+        end
+        # debug "Sending raw: ", data
+        send_data(data)
+        true
+      end
+
+      # Close connection
+      # @return [Boolean] true if connection is closed immediately, false if waiting for server to close connection
+      def close
+        if @state == :open
+          @state = :closing
+          return false if send('', :type => :close)
+        else
+          send('', :type => :close) if @state == :closing
+          @state = :closed
+        end
+        close_connection_after_writing
+        true
+      end
+
+      # Send ping message to client
+      # @return [Boolean] false if protocol version is not supporting ping requests
+      def ping(data = '')
+        send(data, :type => :ping)
+      end
+
+      # Send pong message to client
+      # @return [Boolean] false if protocol version is not supporting pong requests
+      def pong(data = '')
+        send(data, :type => :pong)
+      end
+
+      ############################
+      ### EventMachine methods ###
+      ############################
+
+      def receive_data(data)
+        # debug "Received raw: ", data
+        case @state
+        when :connecting then
+          handle_connecting(data)
+        when :open then
+          handle_open(data)
+        when :closing then
+          handle_closing(data)
+        end
+      end
+
+      def unbind
+        unless @state == :closed
+          @state = :closed
+          close
+          trigger_onclose('')
+        end
+      end
+
+      #######################
+      ### Private methods ###
+      #######################
+
+      private
+
+      ['onopen'].each do |m|
+        define_method "trigger_#{m}" do
+          callback = instance_variable_get("@#{m}")
+          callback.call if callback
+        end
+      end
+
+      ['onerror', 'onping', 'onpong', 'onclose'].each do |m|
+        define_method "trigger_#{m}" do |data|
+          callback = instance_variable_get("@#{m}")
+          callback.call(data) if callback
+        end
+      end
+
+      def trigger_onmessage(data, type)
+        @onmessage.call(data, type) if @onmessage
+      end
+
+      def handle_connecting(data)
+        @handshake << data
+        return unless @handshake.finished?
+        if @handshake.valid?
+          send(@handshake.to_s, :type => :plain) if @handshake.should_respond?
+          @frame = incoming_frame.new(:version => @handshake.version)
+          @state = :open
+          trigger_onopen
+          handle_open(@handshake.leftovers) if @handshake.leftovers
+        else
+          trigger_onerror(@handshake.error)
+          close
+        end
+      end
+
+      def handle_open(data)
+        @frame << data
+        while frame = @frame.next
+          case frame.type
+          when :close
+            @state = :closing
+            close
+            trigger_onclose(frame.to_s)
+          when :ping
+            pong(frame.to_s)
+            trigger_onping(frame.to_s)
+          when :pong
+            trigger_onpong(frame.to_s)
+          when :text
+            trigger_onmessage(frame.to_s, :text)
+          when :binary
+            trigger_onmessage(frame.to_s, :binary)
+          end
+        end
+        unbind if @frame.error?
+      end
+
+      def handle_closing(data)
+        @state = :closed
+        close
+        trigger_onclose
+      end
+
+      def debug(description, data)
+        puts(description + data.bytes.to_a.collect { |b| '\x' + b.to_s(16).rjust(2, '0') }.join) unless @state == :connecting
+      end
+
+    end
+  end
+end
+# Example WebSocket Client (using EventMachine)
+# @example
+#   ws = WebSocket::EventMachine::Client.connect(:host => "0.0.0.0", :port => 8080)
+#   ws.onmessage { |msg| ws.send "Pong: #{msg}" }
+#   ws.send "data"
+module WebSocket
+  module EventMachine
+    class Client < Base
+
+      # Connect to websocket server
+      # @param args [Hash] The request arguments
+      # @option args [String] :host The host IP/DNS name
+      # @option args [Integer] :port The port to connect too(default = 80)
+      # @option args [Integer] :version Version of protocol to use(default = 13)
+      def self.connect(args = {})
+        host = nil
+        port = nil
+        if args[:uri]
+          uri = URI.parse(args[:uri])
+          host = uri.host
+          port = uri.port
+        end
+        host = args[:host] if args[:host]
+        port = args[:port] if args[:port]
+        port ||= 80
+
+        ::EventMachine.connect host, port, self, args
+      end
+
+      # Initialize connection
+      # @param args [Hash] Arguments for connection
+      # @option args [String] :host The host IP/DNS name
+      # @option args [Integer] :port The port to connect too(default = 80)
+      # @option args [Integer] :version Version of protocol to use(default = 13)
+      def initialize(args)
+        @args = args
+      end
+
+      ############################
+      ### EventMachine methods ###
+      ############################
+
+      # Called after initialize of connection, but before connecting to server
+      def post_init
+        @state = :connecting
+        @handshake = WebSocket::Handshake::Client.new(@args)
+      end
+
+      # Called by EventMachine after connecting.
+      # Sends handshake to server
+      def connection_completed
+        send(@handshake.to_s, :type => :plain)
+      end
+
+      private
+
+      def incoming_frame
+        WebSocket::Frame::Incoming::Client
+      end
+
+      def outgoing_frame
+        WebSocket::Frame::Outgoing::Client
+      end
+
+    end
+  end
+end
+
+
+
+
+

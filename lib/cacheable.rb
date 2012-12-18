@@ -8,5 +8,8 @@ module Cacheable
     else
       @@all[self][id] = super(id, *args)
     end
-	end
+  end
+  def find(id)
+    @@all[self][id]
+  end
 end

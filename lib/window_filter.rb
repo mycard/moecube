@@ -11,6 +11,7 @@ class Window_Filter < Window
     @servers = $game.servers.each_with_index.collect do |server, index|
       result = Widget_Checkbox.new(self, 4+@x,@y+WLH+WLH*index,@width-8,24,true,server.name){|checked|checked ? $game.filter[:servers].push(server) : $game.filter[:servers].delete(server) ; Game_Event.push(Game_Event::AllRooms.new($game.rooms))}
       result.background = @background.copy_rect(4,WLH+WLH*index,@width-8,24)
+      result.checked = $game.filter[:servers].include? server
       result.refresh
       result
     end

@@ -5,7 +5,7 @@ class Room
   attr_accessor :ot
   attr_accessor :lp
   attr_accessor :status
-  attr_accessor :server_id, :server_ip, :server_port, :server_auth
+  attr_accessor :server
   alias pvp? pvp
   alias match? match
   alias tag? tag
@@ -37,5 +37,20 @@ class Room
       result["[LP: #{lp}]"] = [255,0,0]
     end
     result
+  end
+
+  def host_server
+    servers = $game.servers
+    servers.select!{|server|server.auth} if @pvp
+    s = servers & $game.filter[:servers]
+    servers = s if !s.empty?
+
+    server = servers.min_by{|server|$game.rooms.select{|room|room.server == server}.size}
+
+    p server
+
+    server ||= Server.new(nil, "", $game.server, $game.port, true)
+    self.server = server
+    server
   end
 end
