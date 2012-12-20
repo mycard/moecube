@@ -39,9 +39,9 @@ class Ygocore < Game
       if where == :close
         Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断')))
       else
-        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断, 5秒后重新连接')))
-        sleep 5
-        im_connect
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断.1')))
+        #sleep 5
+        #im_connect
       end
     end
     @@im_room.add_message_callback do |m|
