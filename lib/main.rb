@@ -58,7 +58,7 @@ begin
     if log == "STDOUT" #调试用
       log = STDOUT
     end
-    $log       = Logger.new(log)
+    $log       = Logger.new(log, 1, 1024000)
     $log.level = Logger.const_get log_level
 
     #性能分析

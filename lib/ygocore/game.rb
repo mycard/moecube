@@ -17,8 +17,8 @@ class Ygocore < Game
     load 'lib/ygocore/room.rb'
     load 'lib/ygocore/scene_lobby.rb'
     require 'json'
-    #require 'xmpp4r/client'
-    #require 'xmpp4r/muc'
+    require 'xmpp4r/client'
+    require 'xmpp4r/muc'
   end
 
   def refresh_interval
@@ -28,53 +28,54 @@ class Ygocore < Game
   def login(username, password)
     @username = username
     @password = password
-    #@nickname_conflict = []
-    #@@im               = Jabber::Client.new(Jabber::JID::new(@username, 'my-card.in', 'mycard'))
-    #@@im_room          = Jabber::MUC::MUCClient.new(@@im)
-    #Jabber.debug       = true
+    @nickname_conflict = []
+    @@im               = Jabber::Client.new(Jabber::JID::new(@username, 'my-card.in', 'mycard'))
+    @@im_room          = Jabber::MUC::MUCClient.new(@@im)
+    Jabber.logger       = $log
+    Jabber.debug        = true
 
-    #@@im.on_exception do |exception, c, where|
-    #  $log.error('聊天出错') { [exception, c, where] }
-    #  if where == :close
-    #    Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天连接断开, 可能是网络问题或帐号从其他地点登录')))
-    #  else
-    #    Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天连接断开, 5秒后重新连接')))
-    #    sleep 5
-    #    im_connect
-    #  end
-    #end
-    #@@im_room.add_message_callback do |m|
-    #  user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
-    #  Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
-    #end
-    #@@im_room.add_private_message_callback do |m|
-    #  if m.body #忽略无消息的正在输入等内容
-    #    user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
-    #    Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, user) rescue $log.error('收到私聊消息') { $! }
-    #  end
-    #end
-    #@@im_room.add_join_callback do |m|
-    #  Game_Event.push Game_Event::NewUser.new User.new m.from.resource.to_sym, m.from.resource
-    #end
-    #@@im_room.add_leave_callback do |m|
-    #  Game_Event.push Game_Event::MissingUser.new User.new m.from.resource.to_sym, m.from.resource
-    #end
+    @@im.on_exception do |exception, c, where|
+      $log.error('聊天出错') { [exception, c, where] }
+      if where == :close
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断')))
+      else
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断, 5秒后重新连接')))
+        sleep 5
+        im_connect
+      end
+    end
+    @@im_room.add_message_callback do |m|
+      user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
+      Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
+    end
+    @@im_room.add_private_message_callback do |m|
+      if m.body #忽略无消息的正在输入等内容
+        user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
+        Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, user) rescue $log.error('收到私聊消息') { $! }
+      end
+    end
+    @@im_room.add_join_callback do |m|
+      Game_Event.push Game_Event::NewUser.new User.new m.from.resource.to_sym, m.from.resource
+    end
+    @@im_room.add_leave_callback do |m|
+      Game_Event.push Game_Event::MissingUser.new User.new m.from.resource.to_sym, m.from.resource
+    end
     connect
-    #im_connect
+    im_connect
   end
 
-  #def nickname
-  #  return @nickname if @nickname
-  #  if @nickname_conflict.include? @username
-  #    1.upto(9) do |i|
-  #      result = "#{@username}-#{i}"
-  #      return result unless @nickname_conflict.include? result
-  #    end
-  #    raise 'can`t get available nickname'
-  #  else
-  #    @username
-  #  end
-  #end
+  def nickname
+    return @nickname if @nickname
+    if @nickname_conflict.include? @username
+      1.upto(9) do |i|
+        result = "#{@username}-#{i}"
+        return result unless @nickname_conflict.include? result
+      end
+      raise 'can`t get available nickname'
+    else
+      @username
+    end
+  end
 
   def connect
     @recv = Thread.new do
@@ -88,7 +89,7 @@ class Ygocore < Game
             Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败', true)
           end
 
-          EventMachine::connect "mycard-server.my-card.in", 9997, Client
+          #EventMachine::connect "mycard-server.my-card.in", 9997, Client
           ws = WebSocket::EventMachine::Client.connect(:host => "mycard-server.my-card.in", :port => 9998);
           ws.onmessage do |msg, type|
             $log.info('收到websocket消息'){msg.force_encoding("UTF-8")}
@@ -107,52 +108,58 @@ class Ygocore < Game
     end
   end
 
-  #def im_connect
-  #  Thread.new {
-  #    begin
-  #      @@im.allow_tls = false
-  #      @@im.use_ssl   = true
-  #      @@im.connect('my-card.in', 5223)
-  #      #ruby19/windows下 使用tls连接时会卡住
-  #
-  #      @@im.auth(@password)
-  #      @@im.send(Jabber::Presence.new.set_type(:available))
-  #      begin
-  #        nickname = nickname()
-  #        @@im_room.join(Jabber::JID.new(I18n.t('lobby.room'), I18n.t('lobby.server'), nickname))
-  #      rescue Jabber::ServerError => exception
-  #        if exception.error.error == 'conflict'
-  #          @nickname_conflict << nickname
-  #          retry
-  #        end
-  #      end
-  #      Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
-  #    rescue StandardError => exception
-  #      $log.error('聊天连接出错') { exception }
-  #      Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务器连接失败')))
-  #    end
-  #  }
-  #end
+  def im_connect
+    Thread.new {
+      begin
+        @@im.allow_tls = false
+        @@im.use_ssl   = true
+        @@im.connect('chat.my-card.in', 5223) #ruby19/windows下 使用tls连接时会卡住
 
-  #def chat(chatmessage)
-  #  case chatmessage.channel
-  #  when :lobby
-  #    msg = Jabber::Message::new(nil, chatmessage.message)
-  #    @@im_room.send msg
-  #  when User
-  #    msg = Jabber::Message::new(nil, chatmessage.message)
-  #    @@im_room.send msg, chatmessage.channel.id
-  #    #send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
-  #  end
-  #end
+        begin
+          @@im.auth(@password)
+        rescue Jabber::ClientAuthenticationFailure
+          Game_Event.push Game_Event::Error.new('登录', '用户名或密码错误')
+          Thread.exit
+        end
+        Game_Event.push Game_Event::Login.new User.new(@@im.jid, @username, true)
+        @@im.send(Jabber::Presence.new.set_type(:available))
+        begin
+          nickname = nickname()
+          #@@im_room.join(Jabber::JID.new(I18n.t('lobby.room'), I18n.t('lobby.server'), nickname))
+          @@im_room.join(Jabber::JID.new('mycard', 'conference.my-card.in', nickname))
+        rescue Jabber::ServerError => exception
+          if exception.error.error == 'conflict'
+            @nickname_conflict << nickname
+            retry
+          end
+        end
+        Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
+      rescue StandardError => exception
+        $log.error('聊天连接出错') { exception }
+        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务器连接失败')))
+      end
+    }
+  end
+
   def chat(chatmessage)
     case chatmessage.channel
     when :lobby
-      send(:chat, channel: :lobby, message: chatmessage.message, time: chatmessage.time)
+      msg = Jabber::Message::new(nil, chatmessage.message)
+      @@im_room.send msg
     when User
-      send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
+      msg = Jabber::Message::new(nil, chatmessage.message)
+      @@im_room.send msg, chatmessage.channel.id
+      #send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
     end
   end
+  #def chat(chatmessage)
+  #  case chatmessage.channel
+  #  when :lobby
+  #    send(:chat, channel: :lobby, message: chatmessage.message, time: chatmessage.time)
+  #  when User
+  #    send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
+  #  end
+  #end
 
   def host(room_name, room_config)
     room = Room.new(0, room_name)
@@ -185,8 +192,8 @@ class Ygocore < Game
   end
 
   def send(header, data=nil)
-    $log.info('发送消息') { {header: header, data: data} }
-    Client::MycardChannel.push header: header, data: data
+    #$log.info('发送消息') { {header: header, data: data} }
+    #Client::MycardChannel.push header: header, data: data
   end
 
   def exit
@@ -330,24 +337,24 @@ class Ygocore < Game
     #end
   end
 
-  module Client
-    MycardChannel = EM::Channel.new
-    include EM::P::ObjectProtocol
-
-    def post_init
-      send_object header: :login, data: {name: $game.username, password: $game.password}
-      MycardChannel.subscribe { |msg| send_object(msg) }
-    end
-
-    def receive_object obj
-      $log.info('收到消息') { obj.inspect }
-      Game_Event.push Game_Event.parse obj[:header], obj[:data]
-    end
-
-    def unbind
-      Game_Event.push Game_Event::Error.new('ygocore', '网络连接中断', true)
-    end
-  end
+  #module Client
+  #  MycardChannel = EM::Channel.new
+  #  include EM::P::ObjectProtocol
+  #
+  #  def post_init
+  #    send_object header: :login, data: {name: $game.username, password: $game.password}
+  #    MycardChannel.subscribe { |msg| send_object(msg) }
+  #  end
+  #
+  #  def receive_object obj
+  #    $log.info('收到消息') { obj.inspect }
+  #    Game_Event.push Game_Event.parse obj[:header], obj[:data]
+  #  end
+  #
+  #  def unbind
+  #    Game_Event.push Game_Event::Error.new('ygocore', '网络连接中断', true)
+  #  end
+  #end
   get_announcements
 end
 

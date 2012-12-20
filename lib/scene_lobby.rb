@@ -66,7 +66,7 @@ class Scene_Lobby < Scene
     when Game_Event::AllUsers
       @userlist.items = $game.users
     when Game_Event::AllRooms, Game_Event::AllServers
-      @roomlist.items = p $game.rooms.find_all { |room|
+      @roomlist.items = $game.rooms.find_all { |room|
         $game.filter[:servers].include?(room.server) and
             $game.filter[:waiting_only] ? (room.status == :wait) : true and
             $game.filter[:normal_only] ? (!room.tag? && (room.ot == 0) && (room.lp = 8000)) : true

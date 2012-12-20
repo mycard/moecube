@@ -1,12 +1,12 @@
 class Game_Event
   def self.parse(header, data)
     case header
-    when :login
-      if data
-        Login.new parse_user data
-      else
-        Error.new('登录', '用户名或密码错误')
-      end
+    #when :login
+    #  if data
+    #    Login.new parse_user data
+    #  else
+    #    Error.new('登录', '用户名或密码错误')
+    #  end
     #when :rooms
       #AllRooms.new data.collect{|room|parse_room(room)}
     #when :rooms_update
