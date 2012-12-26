@@ -29,20 +29,22 @@ class Ygocore < Game
     @username = username
     @password = password
     @nickname_conflict = []
-    @@im               = Jabber::Client.new(Jabber::JID::new(@username, 'my-card.in', 'mycard'))
+    matched = @username.match Jabber::JID::PATTERN
+    if matched[1] && matched[2]
+      @username = matched[1]
+      jid = Jabber::JID::new @username, matched[2], matched[3] || 'mycard'
+    else
+      jid = Jabber::JID::new @username, 'my-card.in', 'mycard'
+    end
+
+    @@im               = Jabber::Client.new(jid)
     @@im_room          = Jabber::MUC::MUCClient.new(@@im)
     Jabber.logger       = $log
     Jabber.debug        = true
 
     @@im.on_exception do |exception, c, where|
       $log.error('聊天出错') { [exception, c, where] }
-      if where == :close
-        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断')))
-      else
-        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断.1')))
-        #sleep 5
-        #im_connect
-      end
+      Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断: ' + exception.to_s)))
     end
     @@im_room.add_message_callback do |m|
       user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
@@ -86,7 +88,7 @@ class Ygocore < Game
             self.servers.replace JSON.parse(http.response).collect {|data| Server.new(data['id'], data['name'], data['ip'], data['port'], data['auth'])}
             self.filter[:servers] = self.servers.clone
           rescue
-            Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败', true)
+            Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败.1', true)
           end
 
           #EventMachine::connect "mycard-server.my-card.in", 9997, Client
@@ -113,7 +115,27 @@ class Ygocore < Game
       begin
         @@im.allow_tls = false
         @@im.use_ssl   = true
-        @@im.connect('chat.my-card.in', 5223) #ruby19/windows下 使用tls连接时会卡住
+
+        #由于XMPP4r在windows
+          srv = []
+          Resolv::DNS.open { |dns|
+            # If ruby version is too old and SRV is unknown, this will raise a NameError
+            # which is caught below
+            Jabber::debuglog("RESOLVING:\n_xmpp-client._tcp.#{@@im.jid.domain} (SRV)")
+            srv = dns.getresources("_xmpp-client._tcp.#{@@im.jid.domain}", Resolv::DNS::Resource::IN::SRV)
+          }
+          # Sort SRV records: lowest priority first, highest weight first
+          srv.sort! { |a,b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
+
+          srv.each { |record|
+            begin
+              @@im.connect(record.target.to_s, 5223)
+              # Success
+              break
+            rescue SocketError, Errno::ECONNREFUSED
+              # Try next SRV record
+            end
+          }
 
         begin
           @@im.auth(@password)
