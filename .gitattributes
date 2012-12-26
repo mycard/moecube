@@ -4,11 +4,5 @@
 *.rb text
 *.yml text
 
-*.html text
-*.js text
-*.coffee text
-*.css text
-*.less text
-
 *.png binary
 *.jpg binary
