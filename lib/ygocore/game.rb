@@ -32,9 +32,9 @@ class Ygocore < Game
     matched = @username.match Jabber::JID::PATTERN
     if matched[1] && matched[2]
       @username = matched[1]
-      jid = Jabber::JID::new @username, matched[2], matched[3] || 'mycard'
+      jid = Jabber::JID::new matched[1], matched[2], matched[3] || 'mycard'
     else
-      jid = Jabber::JID::new @username, 'my-card.in', 'mycard'
+      jid = Jabber::JID::new @username.dup, 'my-card.in', 'mycard'
     end
 
     @@im               = Jabber::Client.new(jid)
@@ -116,7 +116,10 @@ class Ygocore < Game
         @@im.allow_tls = false
         @@im.use_ssl   = true
 
-        #由于XMPP4r在windows
+        if @@im.jid.domain == 'my-card.in'
+          @@im.connect(record.target.to_s, 5223)
+        else
+          #由于XMPP4r在windows下TLS有问题...
           srv = []
           Resolv::DNS.open { |dns|
             # If ruby version is too old and SRV is unknown, this will raise a NameError
@@ -124,18 +127,25 @@ class Ygocore < Game
             Jabber::debuglog("RESOLVING:\n_xmpp-client._tcp.#{@@im.jid.domain} (SRV)")
             srv = dns.getresources("_xmpp-client._tcp.#{@@im.jid.domain}", Resolv::DNS::Resource::IN::SRV)
           }
+          if srv.empty?
+            Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
+            Thread.exit
+          end
+
           # Sort SRV records: lowest priority first, highest weight first
           srv.sort! { |a,b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
 
           srv.each { |record|
             begin
-              @@im.connect(record.target.to_s, 5223)
+              @@im.connect
               # Success
               break
             rescue SocketError, Errno::ECONNREFUSED
               # Try next SRV record
             end
           }
+
+        end
 
         begin
           @@im.auth(@password)
@@ -219,6 +229,7 @@ class Ygocore < Game
   end
 
   def exit
+    @@im.close rescue nil
     @recv.exit if @recv
     @recv = nil
   end
