@@ -1,4 +1,4 @@
-#encoding: UTF-8
+﻿#encoding: UTF-8
 load 'lib/ygocore/window_login.rb'
 require 'eventmachine'
 require 'em-http'
@@ -32,9 +32,9 @@ class Ygocore < Game
     matched = @username.match Jabber::JID::PATTERN
     if matched[1] && matched[2]
       @username = matched[1]
-      jid = Jabber::JID::new matched[1], matched[2], matched[3] || 'mycard'
+      jid = Jabber::JID::new @username, matched[2], matched[3] || 'mycard'
     else
-      jid = Jabber::JID::new @username.dup, 'my-card.in', 'mycard'
+      jid = Jabber::JID::new @username, 'my-card.in', 'mycard'
     end
 
     @@im               = Jabber::Client.new(jid)
@@ -116,59 +116,63 @@ class Ygocore < Game
         @@im.allow_tls = false
         @@im.use_ssl   = true
 
-        if @@im.jid.domain == 'my-card.in'
-          @@im.connect(record.target.to_s, 5223)
+        connected = false
+        if @@im.jid.domain == "my-card.in"
+        	@@im.connect("ygopro-server.my-card.in", 5223) rescue Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
+            connected = true
         else
-          #由于XMPP4r在windows下TLS有问题...
           srv = []
           Resolv::DNS.open { |dns|
-            # If ruby version is too old and SRV is unknown, this will raise a NameError
-            # which is caught below
             Jabber::debuglog("RESOLVING:\n_xmpp-client._tcp.#{@@im.jid.domain} (SRV)")
             srv = dns.getresources("_xmpp-client._tcp.#{@@im.jid.domain}", Resolv::DNS::Resource::IN::SRV)
           }
+          
           if srv.empty?
-            Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
-            Thread.exit
+          	  Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
+              Thread.exit
           end
-
           # Sort SRV records: lowest priority first, highest weight first
           srv.sort! { |a,b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
 
           srv.each { |record|
             begin
-              @@im.connect
+              @@im.connect(record.target.to_s, 5223)
               # Success
+              connected = true
               break
-            rescue SocketError, Errno::ECONNREFUSED
+            rescue
               # Try next SRV record
             end
           }
-
         end
 
-        begin
-          @@im.auth(@password)
-        rescue Jabber::ClientAuthenticationFailure
-          Game_Event.push Game_Event::Error.new('登录', '用户名或密码错误')
-          Thread.exit
-        end
-        Game_Event.push Game_Event::Login.new User.new(@@im.jid, @username, true)
-        @@im.send(Jabber::Presence.new.set_type(:available))
-        begin
-          nickname = nickname()
-          #@@im_room.join(Jabber::JID.new(I18n.t('lobby.room'), I18n.t('lobby.server'), nickname))
-          @@im_room.join(Jabber::JID.new('mycard', 'conference.my-card.in', nickname))
-        rescue Jabber::ServerError => exception
-          if exception.error.error == 'conflict'
-            @nickname_conflict << nickname
-            retry
+        if connected
+          begin
+            @@im.auth(@password)
+          rescue Jabber::ClientAuthenticationFailure
+            Game_Event.push Game_Event::Error.new('登录', '用户名或密码错误')
+            Thread.exit
           end
+          @@im.send(Jabber::Presence.new.set_type(:available))
+          Game_Event.push Game_Event::Login.new User.new(@@im.jid, @username, true)
+          begin
+            nickname = nickname()
+            #@@im_room.join(Jabber::JID.new(I18n.t('lobby.room'), I18n.t('lobby.server'), nickname))
+            @@im_room.join(Jabber::JID.new('mycard', 'conference.my-card.in', nickname))
+          rescue Jabber::ServerError => exception
+            if exception.error.error == 'conflict'
+              @nickname_conflict << nickname
+              retry
+            end
+          end
+          Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
+        else
+          $log.error('聊天连接出错.1') { exception }
+          Game_Event.push Game_Event::Error.new('登录', '连接服务器失败.1')
         end
-        Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
       rescue StandardError => exception
         $log.error('聊天连接出错') { exception }
-        Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务器连接失败')))
+        Game_Event.push Game_Event::Error.new('登录', '登录失败')
       end
     }
   end
@@ -229,7 +233,6 @@ class Ygocore < Game
   end
 
   def exit
-    @@im.close rescue nil
     @recv.exit if @recv
     @recv = nil
   end
@@ -304,12 +307,13 @@ class Ygocore < Game
           system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
           system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
         end
-        system_conf['nickname'] = $game.user.name
-        system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
-        $log.info room
+		if $game.user
+		  system_conf['nickname'] = $game.user.name
+		  system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
+		end
         system_conf['lastip'] = room.server.ip
         system_conf['lastport'] = room.server.port.to_s
-        system_conf['roompass'] = room_name
+        system_conf['roompass'] = room_name if room_name and !room_name.empty?
         open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
         args = '-j'
       when :replay

@@ -2,6 +2,8 @@
 begin
 
   Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+  #System_Encoding = Windows ? "CP#{`chcp`.scan(/\d+$/)}" : `locale |grep LANG |awk -F '=' '{print $2}'`
+  
   Dir.glob('post_update_*.rb').sort.each { |file| load file }
   Thread.abort_on_exception = true
 
@@ -45,6 +47,9 @@ begin
 
   unless $scene == false
     #加载文件
+	  require 'openssl'
+	  require 'digest/sha1'
+	  require 'digest/md5'
     require 'logger'
     require 'sdl'
     include SDL
