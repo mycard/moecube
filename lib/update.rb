@@ -114,6 +114,7 @@ module Update
 
             open('http://my-card.in/cards/image.json') do |f|
               image_index = JSON.parse(f.read)
+              $log.info('卡图路径'){image_index}
               url = image_index['url']
               uri = URI(url)
               image_req = uri.path
@@ -138,9 +139,9 @@ module Update
                       ids = []
                       while !@thumbnails.empty?
                         ids.replace @thumbnails.pop(100)
-                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
+                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载缩略卡图 (剩余#{@thumbnails_left}张)"
+                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left})"
                           @thumbnails_left -= 1
                           id = ids.pop
                           next if File.file? "ygocore/pics/thumbnail/#{id}.jpg"
@@ -152,9 +153,9 @@ module Update
                       ids = []
                       while !@images.empty?
                         ids.replace @images.pop(100)
-                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
+                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载完整卡图 (剩余#{@images_left}张)"
+                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left})"
                           @images_left -= 1
                           id = ids.pop
                           next if File.file? "ygocore/pics/#{id}.jpg"
