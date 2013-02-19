@@ -5,6 +5,8 @@ require 'em-http'
 require 'websocket'
 require 'open-uri'
 require 'yaml'
+require 'json'
+require 'date'
 class Ygocore < Game
   attr_reader :username
   attr_accessor :password
@@ -357,21 +359,18 @@ class Ygocore < Game
     #公告
     $config['ygocore'] ||= {}
     $config['ygocore']['announcements'] ||= [Announcement.new("开放注册", nil, nil)]
-    #Thread.new do
-    #  begin
-    #    open(@@config['api']) do |file|
-    #      file.set_encoding "GBK"
-    #      announcements = []
-    #      file.read.encode("UTF-8").scan(/<div style="color:red" >公告：(.*?)<\/div>/).each do |title, others|
-    #        announcements << Announcement.new(title, @@config['index'], nil)
-    #      end
-    #      $config['ygocore']['announcements'].replace announcements
-    #      Config.save
-    #    end
-    #  rescue Exception => exception
-    #    $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
-    #  end
-    #end
+    Thread.new do
+      begin
+        open('http://my-card.in/announcements.json') do |file|
+          $config['ygocore']['announcements'].replace JSON.parse(file.read).collect { |announcement|
+            Announcement.new(announcement['title'], announcement['url'], Date.parse(announcement['created_at']))
+          }
+          Config.save
+        end
+      rescue Exception => exception
+        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
+      end
+    end
   end
 
   #module Client

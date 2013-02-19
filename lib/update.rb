@@ -2,7 +2,7 @@
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.9.3'
+  Version = '0.9.4'
   URL = "http://my-card.in/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
@@ -129,39 +129,44 @@ module Update
               require 'net/http/pipeline'
               @thumbnails_left = @thumbnails.size
               @images_left = @images.size
-              threads = 1.times.collect do
+              threads = 5.times.collect do
                 thread = Thread.new do
                   Net::HTTP.start uri.host, uri.port do |http|
                     http.pipelining = true
-                    while !@thumbnails.empty?
-                      ids = @thumbnails.pop(100)
-                      reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
-                      http.pipeline reqs do |res|
-                        @status.replace "正在下载缩略卡图 (剩余#{@thumbnails_left}张)"
-                        @thumbnails_left -= 1
-                        id = ids.pop
-                        next if File.file? "ygocore/pics/thumbnail/#{id}.jpg"
-                        content = res.body
-                        open("ygocore/pics/thumbnail/#{id}.jpg", 'wb') do |local|
-                          local.write content
+                    begin
+                      list = @thumbnails
+                      ids = []
+                      while !@thumbnails.empty?
+                        ids.replace @thumbnails.pop(100)
+                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
+                        http.pipeline reqs do |res|
+                          @status.replace "正在下载缩略卡图 (剩余#{@thumbnails_left}张)"
+                          @thumbnails_left -= 1
+                          id = ids.pop
+                          next if File.file? "ygocore/pics/thumbnail/#{id}.jpg"
+                          content = res.body
+                          open("ygocore/pics/thumbnail/#{id}.jpg", 'wb') {|local|local.write content}
                         end
-                      end rescue $log.error('下载缩略卡图') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
-                    end
-                    while !@images_reqs.empty?
-                      ids = @images_reqs.pop(100)
-                      reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
-                      http.pipeline reqs do |res|
-                        @status.replace "正在下载完整卡图 (剩余#{@images_left}张)"
-                        @images_left -= 1
-                        id = ids.pop
-                        next if File.file? "ygocore/pics/#{id}.jpg"
-                        content = res.body
-                        open("ygocore/pics/#{id}.jpg", 'wb') do |local|
-                          local.write content
+                      end
+                      list = @images_reqs
+                      ids = []
+                      while !@images_reqs.empty?
+                        ids.replace @images_reqs.pop(100)
+                        reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
+                        http.pipeline reqs do |res|
+                          @status.replace "正在下载完整卡图 (剩余#{@images_left}张)"
+                          @images_left -= 1
+                          id = ids.pop
+                          next if File.file? "ygocore/pics/#{id}.jpg"
+                          content = res.body
+                          open("ygocore/pics/#{id}.jpg", 'wb') {|local|local.write content}
                         end
-                      end rescue $log.error('下载完整卡图') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+                      end
+                    rescue
+                      $log.error('卡图下载') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+                      list.concat ids
                     end
-                  end rescue $log.error('下载完整卡图出错') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+                  end
                 end
                 thread.priority = -1
                 thread
