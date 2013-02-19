@@ -148,10 +148,10 @@ module Update
                           open("ygocore/pics/thumbnail/#{id}.jpg", 'wb') {|local|local.write content}
                         end
                       end
-                      list = @images_reqs
+                      list = @images
                       ids = []
-                      while !@images_reqs.empty?
-                        ids.replace @images_reqs.pop(100)
+                      while !@images.empty?
+                        ids.replace @images.pop(100)
                         reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
                           @status.replace "正在下载完整卡图 (剩余#{@images_left}张)"
