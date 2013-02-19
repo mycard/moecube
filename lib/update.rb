@@ -130,6 +130,7 @@ module Update
               require 'net/http/pipeline'
               @thumbnails_left = @thumbnails.size
               @images_left = @images.size
+              @error_count = 0
               threads = 5.times.collect do
                 thread = Thread.new do
                   Net::HTTP.start uri.host, uri.port do |http|
@@ -141,12 +142,17 @@ module Update
                         ids.replace @thumbnails.pop(100)
                         reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left})"
+                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
                           @thumbnails_left -= 1
                           id = ids.pop
-                          next if File.file? "ygocore/pics/thumbnail/#{id}.jpg"
-                          content = res.body
-                          open("ygocore/pics/thumbnail/#{id}.jpg", 'wb') {|local|local.write content}
+                          if res.code[0] == '2' #http 2xx
+                            next if File.file? "ygocore/pics/thumbnail/#{id}.jpg"
+                            content = res.body
+                            open("ygocore/pics/thumbnail/#{id}.jpg", 'wb') {|local|local.write content}
+                          else
+                            $log.warn("下载缩略卡图#{id}出错"){res}
+                            @error_count += 1
+                          end
                         end
                       end
                       list = @images
@@ -155,12 +161,17 @@ module Update
                         ids.replace @images.pop(100)
                         reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left})"
+                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
                           @images_left -= 1
                           id = ids.pop
-                          next if File.file? "ygocore/pics/#{id}.jpg"
-                          content = res.body
-                          open("ygocore/pics/#{id}.jpg", 'wb') {|local|local.write content}
+                          if res.code[0] == '2' #http 2xx
+                            next if File.file? "ygocore/pics/#{id}.jpg"
+                            content = res.body
+                            open("ygocore/pics/#{id}.jpg", 'wb') {|local|local.write content}
+                          else
+                            $log.warn("下载完整卡图#{id}出错"){res}
+                            @error_count += 1
+                          end
                         end
                       end
                     rescue
