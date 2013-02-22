@@ -48,6 +48,12 @@ class Ygocore < Game
       $log.error('聊天出错') { [exception, c, where] }
       Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断: ' + exception.to_s)))
     end
+    @@im.add_message_callback do |m|
+      p m
+    end
+    @@im.add_presence_callback do |m|
+      p m
+    end
     @@im_room.add_message_callback do |m|
       user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
       Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
@@ -120,8 +126,13 @@ class Ygocore < Game
 
         connected = false
         if @@im.jid.domain == "my-card.in"
-        	@@im.connect("ygopro-server.my-card.in", 5223) rescue Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
+          begin
+        	  @@im.connect("chat.my-card.in", 5223)
             connected = true
+          rescue
+            Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
+            Thread.exit
+          end
         else
           srv = []
           Resolv::DNS.open { |dns|
