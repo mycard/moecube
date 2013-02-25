@@ -48,12 +48,6 @@ class Ygocore < Game
       $log.error('聊天出错') { [exception, c, where] }
       Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断: ' + exception.to_s)))
     end
-    @@im.add_message_callback do |m|
-      p m
-    end
-    @@im.add_presence_callback do |m|
-      p m
-    end
     @@im_room.add_message_callback do |m|
       user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
       Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
@@ -126,23 +120,18 @@ class Ygocore < Game
 
         connected = false
         if @@im.jid.domain == "my-card.in"
-          begin
-        	  @@im.connect("chat.my-card.in", 5223)
-            connected = true
-          rescue
-            Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
-            Thread.exit
-          end
+          @@im.connect("ygopro-server.my-card.in", 5223) rescue Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
+          connected = true
         else
           srv = []
           Resolv::DNS.open { |dns|
             Jabber::debuglog("RESOLVING:\n_xmpp-client._tcp.#{@@im.jid.domain} (SRV)")
             srv = dns.getresources("_xmpp-client._tcp.#{@@im.jid.domain}", Resolv::DNS::Resource::IN::SRV)
           }
-          
+
           if srv.empty?
-          	  Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
-              Thread.exit
+            Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
+            Thread.exit
           end
           # Sort SRV records: lowest priority first, highest weight first
           srv.sort! { |a,b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
@@ -192,12 +181,12 @@ class Ygocore < Game
 
   def chat(chatmessage)
     case chatmessage.channel
-    when :lobby
-      msg = Jabber::Message::new(nil, chatmessage.message)
-      @@im_room.send msg
-    when User
-      msg = Jabber::Message::new(nil, chatmessage.message)
-      @@im_room.send msg, chatmessage.channel.id
+      when :lobby
+        msg = Jabber::Message::new(nil, chatmessage.message)
+        @@im_room.send msg
+      when User
+        msg = Jabber::Message::new(nil, chatmessage.message)
+        @@im_room.send msg, chatmessage.channel.id
       #send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
     end
   end
@@ -283,73 +272,73 @@ class Ygocore < Game
     #写入配置文件并运行ygocore
     Dir.chdir(File.dirname(path)) do
       case option
-      when Room
-        room = option
-        room_name = if room.ot != 0 or room.lp != 8000
-                      mode = case when room.match? then
-                                    1; when room.tag? then
-                                         2
-                             else
-                               0
-                             end
-                      room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
-                    elsif room.tag?
-                      "T#" + room.name
-                    elsif room.pvp? and room.match?
-                      "PM#" + room.name
-                    elsif room.pvp?
-                      "P#" + room.name
-                    elsif room.match?
-                      "M#" + room.name
-                    else
-                      room.name
-                    end
-        if room.password and !room.password.empty?
-          room_name += "$" + room.password
-        end
-        system_conf = {}
-        begin
-          IO.readlines('system.conf').each do |line|
-            line.force_encoding "UTF-8"
-            next if line[0, 1] == '#'
-            field, contents = line.chomp.split(' = ', 2)
-            system_conf[field] = contents
+        when Room
+          room = option
+          room_name = if room.ot != 0 or room.lp != 8000
+                        mode = case when room.match? then
+                                      1; when room.tag? then
+                                           2
+                                 else
+                                   0
+                               end
+                        room_name = "#{room.ot}#{mode}FFF#{room.lp},5,1,#{room.name}"
+                      elsif room.tag?
+                        "T#" + room.name
+                      elsif room.pvp? and room.match?
+                        "PM#" + room.name
+                      elsif room.pvp?
+                        "P#" + room.name
+                      elsif room.match?
+                        "M#" + room.name
+                      else
+                        room.name
+                      end
+          if room.password and !room.password.empty?
+            room_name += "$" + room.password
           end
-        rescue
-          system_conf['antialias'] = 2
-          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
-        end
-		if $game.user
-		  system_conf['nickname'] = $game.user.name
-		  system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
-		end
-        system_conf['lastip'] = room.server.ip
-        system_conf['lastport'] = room.server.port.to_s
-        system_conf['roompass'] = room_name if room_name and !room_name.empty?
-        open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
-        args = '-j'
-      when :replay
-        args = '-r'
-      when :deck
-        args = '-d'
-      when String
-        system_conf = {}
-        begin
-          IO.readlines('system.conf').each do |line|
-            line.force_encoding "UTF-8"
-            next if line[0, 1] == '#'
-            field, contents = line.chomp.split(' = ', 2)
-            system_conf[field] = contents
+          system_conf = {}
+          begin
+            IO.readlines('system.conf').each do |line|
+              line.force_encoding "UTF-8"
+              next if line[0, 1] == '#'
+              field, contents = line.chomp.split(' = ', 2)
+              system_conf[field] = contents
+            end
+          rescue
+            system_conf['antialias'] = 2
+            system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+            system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
           end
-        rescue
-          system_conf['antialias'] = 2
-          system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-          system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
-        end
-        system_conf['lastdeck'] = option
-        open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
-        args = '-d'
+          if $game.user
+            system_conf['nickname'] = $game.user.name
+            system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
+          end
+          system_conf['lastip'] = room.server.ip
+          system_conf['lastport'] = room.server.port.to_s
+          system_conf['roompass'] = room_name if room_name and !room_name.empty?
+          open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
+          args = '-j'
+        when :replay
+          args = '-r'
+        when :deck
+          args = '-d'
+        when String
+          system_conf = {}
+          begin
+            IO.readlines('system.conf').each do |line|
+              line.force_encoding "UTF-8"
+              next if line[0, 1] == '#'
+              field, contents = line.chomp.split(' = ', 2)
+              system_conf[field] = contents
+            end
+          rescue
+            system_conf['antialias'] = 2
+            system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
+            system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
+          end
+          system_conf['lastdeck'] = option
+          open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
+          args = '-d'
       end
       IO.popen("ygopro_vs.exe #{args}")
       WM.iconify rescue nil
@@ -503,12 +492,12 @@ module WebSocket
       def receive_data(data)
         # debug "Received raw: ", data
         case @state
-        when :connecting then
-          handle_connecting(data)
-        when :open then
-          handle_open(data)
-        when :closing then
-          handle_closing(data)
+          when :connecting then
+            handle_connecting(data)
+          when :open then
+            handle_open(data)
+          when :closing then
+            handle_closing(data)
         end
       end
 
@@ -563,19 +552,19 @@ module WebSocket
         @frame << data
         while frame = @frame.next
           case frame.type
-          when :close
-            @state = :closing
-            close
-            trigger_onclose(frame.to_s)
-          when :ping
-            pong(frame.to_s)
-            trigger_onping(frame.to_s)
-          when :pong
-            trigger_onpong(frame.to_s)
-          when :text
-            trigger_onmessage(frame.to_s, :text)
-          when :binary
-            trigger_onmessage(frame.to_s, :binary)
+            when :close
+              @state = :closing
+              close
+              trigger_onclose(frame.to_s)
+            when :ping
+              pong(frame.to_s)
+              trigger_onping(frame.to_s)
+            when :pong
+              trigger_onpong(frame.to_s)
+            when :text
+              trigger_onmessage(frame.to_s, :text)
+            when :binary
+              trigger_onmessage(frame.to_s, :binary)
           end
         end
         unbind if @frame.error?

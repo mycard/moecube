@@ -21,14 +21,21 @@ class User
     end
   end
   def avatar(size = :small)
-    cache = "graphics/avatars/mycard_#{@id}_#{size}.png"
+	id = (@id.respond_to?(:bare) ? @id.bare : @id).to_s
+    cache = "graphics/avatars/mycard_#{id}_#{size}.png"
     result = Surface.load(cache) rescue Surface.load("graphics/avatars/loading_#{size}.png")
     scene = $scene
     if block_given?
       yield result
       Thread.new do
         require 'cgi'
-        open("http://my-card.in/users/#{CGI.escape @id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} rescue cache = "graphics/avatars/error_#{size}.png"
+		$log.info('读取头像'){"http://my-card.in/users/#{CGI.escape id.to_s}.png"}
+		begin
+			open("http://my-card.in/users/#{CGI.escape id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} 
+		rescue Exception => exception
+			$log.error('下载头像'){[exception.inspect, *exception.backtrace].join("\n").force_encoding("UTF-8")}
+			cache = "graphics/avatars/error_#{size}.png"
+		end
         (yield Surface.load(cache) if scene == $scene) rescue nil
       end
     else
