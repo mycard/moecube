@@ -57,7 +57,7 @@ case file
 	require_relative 'server'
     $game.user = User.new($1.to_sym, $1) if $1
     $game.password = $2 if $2
-    room = Room.new(0, $5.to_s)
+    room = Room.new(nil, $5.to_s)
 	room.server = Server.new(nil, nil, $3, $4.to_i, !!$2)
     Ygocore.run_ygocore room, true
 end

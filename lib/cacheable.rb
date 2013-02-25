@@ -2,7 +2,7 @@ module Cacheable
 	@@all = {}
 	def new(id, *args)
     @@all[self] ||= {}
-    if result = @@all[self][id]
+    if id and result = @@all[self][id]
       result.set(id, *args)
       result
     else

@@ -56,7 +56,7 @@ class Window_LobbyButtons < Window_List
             open('http://mycard-server.my-card.in:9997/match.json') { |f|
               @waiting = false
               if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*)$/
-                room = Room.new(0, $3.to_s)
+                room = Room.new(nil, $3.to_s)
                 room.server = Server.new(nil, nil, $1, $2.to_i, false)
                 $game.join(room)
               else

@@ -200,7 +200,7 @@ class Ygocore < Game
   #end
 
   def host(room_name, room_config)
-    room = Room.new(0, room_name)
+    room = Room.new(nil, room_name)
     room.pvp = room_config[:pvp]
     room.match = room_config[:match]
     room.tag = room_config[:tag]
