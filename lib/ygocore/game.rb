@@ -368,7 +368,7 @@ class Ygocore < Game
           Config.save
         end
       rescue Exception => exception
-        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
+        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
       end
     end
   end

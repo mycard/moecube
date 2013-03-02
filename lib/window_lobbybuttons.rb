@@ -58,7 +58,7 @@ class Window_LobbyButtons < Window_List
               if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*)$/
                 room = Room.new(nil, $3.to_s)
                 room.server = Server.new(nil, nil, $1, $2.to_i, false)
-                $game.join(room)
+                $game.run_ygocore(room, true)
               else
                 $log.error('自动匹配非法回复'){f.read}
                 Widget_Msgbox.new("自动匹配", "错误: #{exception}", ok: "确定")
