@@ -14,7 +14,7 @@ Path=$(dirname "$0")
 URL=http://my-card.in/
 MimeType=x-scheme-handler/mycard;application/x-ygopro-deck;application/x-ygopro-replay" > ~/.local/share/applications/mycard.desktop
 
-echo "<?xml version="1.0" encoding="UTF-8"?>
+echo '<?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-ygopro-deck">
 		<comment>ygopro deck</comment>
@@ -22,9 +22,9 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 		<glob-deleteall/>
 		<glob pattern="*.ydk"/>
 	</mime-type>
-</mime-info>" > ~/.local/share/mime/packages/application-x-ygopro-deck.xml 
+</mime-info>' > ~/.local/share/mime/packages/application-x-ygopro-deck.xml 
 
-echo "<?xml version="1.0" encoding="UTF-8"?>
+echo '<?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
         <mime-type type="application/x-ygopro-replay">
                 <comment>ygopro replay</comment>
@@ -32,11 +32,12 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
                 <glob-deleteall/>
                 <glob pattern="*.yrp"/>
         </mime-type>
-</mime-info>" > ~/.local/share/mime/packages/application-x-ygopro-replay.xml 
+</mime-info>' > ~/.local/share/mime/packages/application-x-ygopro-replay.xml 
 
-xdg-mime default mycard.desktop application/x-ygopro-deck
-xdg-mime default mycard.desktop application/x-ygopro-replay
-xdg-mime default mycard.desktop x-scheme-handler/mycard
+xdg-mime default mycard.desktop application/x-ygopro-deck application/x-ygopro-replay x-scheme-handler/mycard
+
+xdg-icon-resource install --context mimetypes --size 256 $(dirname "$0")/graphics/system/icon.png application/x-ygopro-deck
+xdg-icon-resource install --context mimetypes --size 256 $(dirname "$0")/graphics/system/icon.png application/x-ygopro-replay
 
 update-mime-database ~/.local/share/mime
 update-desktop-database
