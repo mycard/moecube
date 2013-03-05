@@ -3,7 +3,7 @@ class Window_User < Window_List
 	def initialize(x, y, user)
     @background = Surface.load("graphics/lobby/user.png").display_format
     super(x,y,@background.w,@background.h, 300)
-    @font = TTF.open('fonts/wqy-microhei.ttc', 16)
+    @font = TTF.open(Font, 16)
     @user = user
     @contents = Surface.load("graphics/lobby/user.png").display_format #TODO:调用已经加载了的背景
     @close = Surface.load("graphics/lobby/userclose.png")

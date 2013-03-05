@@ -313,10 +313,10 @@ class Ygocore < Game
           end
           font, size = system_conf['textfont'].split(' ')
           if !File.file?(font) or size.to_i.to_s != size
-            system_conf['textfont'] = '../fonts/wqy_microhei.ttc 14'
+            system_conf['textfont'] = Font + ' 14'
           end
           if !File.file?(system_conf['numfont'])
-            system_conf['textfont'] = Windows ? '../fonts/wqy_microhei.ttc 14' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
+            system_conf['textfont'] = Windows ? 'c:/windows/fonts/arialbd.ttf' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
           end
           system_conf['lastip'] = room.server.ip
           system_conf['lastport'] = room.server.port.to_s

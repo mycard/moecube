@@ -3,7 +3,7 @@ class Window_BGM < Window
   WLH=20
   def initialize(bgm_name)
     @bgm_name = bgm_name
-    @font = TTF.open("fonts/wqy-microhei.ttc", 18)
+    @font = TTF.open(Font, 18)
     width = @font.text_size("♪#{@bgm_name}")[0]
     @count = 0
     @contents = @font.render_blended_utf8("♪#{@bgm_name}" , 255,255,255)

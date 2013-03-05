@@ -33,7 +33,7 @@ class Window_Chat < Window_Scrollable
       end
     end
     @chat_input.refresh
-    @font = TTF.open("fonts/wqy-microhei.ttc", 14)
+    @font = TTF.open(Font, 14)
     @scrollbar = Widget_ScrollBar.new(self,@x+@width-20-8,@y+31+3,@height-68)
     @page_size = (@height-68)/WLH
     @@list ||= {}

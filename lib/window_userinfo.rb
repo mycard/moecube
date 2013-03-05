@@ -9,7 +9,7 @@ class Window_UserInfo < Window
   def initialize(x, y, user)
     @avatar_boarder = Surface.load("graphics/lobby/avatar_boader.png")
     super(x,y,280,144)
-    @font = TTF.open('fonts/wqy-microhei.ttc', 16)
+    @font = TTF.open(Font, 16)
     @user = user
     @background = Surface.load("graphics/lobby/userinfo.png").display_format
     refresh

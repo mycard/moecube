@@ -2,7 +2,7 @@ class Window_CardInfo < Window
   WLH = 20
   def initialize(x,y)
     super(x,y,1024-x,524,300)
-    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    @font = TTF.open(Font, 16)
     tip = Card.new('name' => :mycard, 'number' => :"000000", 'lore' => "iDuel部分仅实现了观战，无法进行决斗\n\n提示：\n快捷键：\nF10 退出房间\nF12 返回主界面", 'card_type' => :"通常魔法", 'stats' => "", 'archettypes' => "", "mediums" => "", "tokens" => 0)
     tip.instance_eval { @image = Card::CardBack; @image_small = Card::CardBack_Small }
     self.card = Game_Card.new tip

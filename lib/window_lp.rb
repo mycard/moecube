@@ -3,7 +3,7 @@ class Window_LP < Window
   def initialize(x,y,player,position=true) #true:左 false:右
     super(x,y,355,48)
     @position = position
-    @font = TTF.open("fonts/wqy-microhei.ttc", 20)
+    @font = TTF.open(Font, 20)
     @color = [255,255,255]
     self.player = player
   end

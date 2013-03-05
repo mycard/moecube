@@ -109,7 +109,8 @@ EOF
     if need?
       if Windows
         request do
-          register rescue Dialog.uac("ruby/bin/rubyw.exe", "-KU lib/main.rb register_association")
+          require 'rbconfig'
+          register rescue Dialog.uac(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG["RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]), "-KU lib/main.rb register_association")
         end
       else
         register

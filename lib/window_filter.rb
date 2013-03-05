@@ -3,7 +3,7 @@ class Window_Filter < Window
   def initialize(x,y)
     @background = Surface.load('graphics/lobby/filter.png').display_format
     super(x,y, @background.w, @background.h)
-    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    @font = TTF.open(Font, 16)
     @color = [0x04, 0x47, 0x7c]
     @title_color = [0xFF, 0xFF, 0xFF]
 

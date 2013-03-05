@@ -5,10 +5,10 @@ class Window_Announcements < Window
     @count = 0
     @items = $config[$config['game']]['announcements']
     @last_item = @item = @items.first
-    @font = TTF.open("fonts/wqy-microhei.ttc", 18)
+    @font = TTF.open(Font, 18)
     @color = [44,64,78]
     @time_color = [0x66, 0x66, 0x66]
-    @time_font = TTF.open("fonts/wqy-microhei.ttc", 14)
+    @time_font = TTF.open(Font, 14)
     @transforming = nil
     refresh
   end

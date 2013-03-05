@@ -21,7 +21,7 @@ class Scene
     @background = nil
     @windows = []
     @active_window = nil
-    @font = TTF.open('fonts/wqy-microhei.ttc', 16)
+    @font = TTF.open(Font, 16)
   end
   def main
     start

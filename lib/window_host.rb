@@ -6,7 +6,7 @@ class Window_Host < Window
     @buttons = {:ok => "确定", :cancel => "取消"}
     @background = Surface.load('graphics/lobby/host.png').display_format
     super((1024-@background.w)/2, 230, @background.w, @background.h)
-    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    @font = TTF.open(Font, 16)
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
     @roomname_inputbox = Widget_InputBox.new(@x+96, @y+41, 165, WLH)

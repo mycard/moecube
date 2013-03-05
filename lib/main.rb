@@ -2,6 +2,7 @@
 begin
 
   Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+  Font = Windows ? File.expand_path('fonts/wqy-microhei.ttc') : '/usr/share/fonts/wqy-microhei/wqy-microhei.ttc'
   #System_Encoding = Windows ? "CP#{`chcp`.scan(/\d+$/)}" : `locale |grep LANG |awk -F '=' '{print $2}'`
   
   Dir.glob('post_update_*.rb').sort.each { |file| load file }
@@ -91,7 +92,6 @@ begin
     WM::icon = Surface.load("graphics/system/icon.gif")
     $screen  = Screen.open($config['screen']['width'], $config['screen']['height'], 0, HWSURFACE | ($config['screen']['fullscreen'] ? FULLSCREEN : 0))
     TTF.init
-
     #声音
     begin
       SDL.init(INIT_AUDIO)

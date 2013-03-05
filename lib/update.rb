@@ -28,7 +28,8 @@ module Update
         end
       end
       if @updated
-        IO.popen('./mycard')
+        require 'rbconfig'
+        IO.popen(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
         $scene = nil
       end
       @images = []
@@ -57,7 +58,11 @@ module Update
         end rescue $log.error('检查更新') { '检查更新失败' }
         if @updated
           require_relative 'widget_msgbox'
-          Widget_Msgbox.new('mycard', '下载更新完毕，点击确定重新运行mycard并安装更新', :ok => "确定") { IO.popen('./mycard'); $scene = nil }
+          Widget_Msgbox.new('mycard', '下载更新完毕，点击确定重新运行mycard并安装更新', :ok => "确定") {
+            require 'rbconfig'
+            IO.popen(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
+            $scene = nil
+          }
         end
         if File.file? "ygocore/cards.cdb"
           require 'sqlite3'

@@ -20,20 +20,21 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.9.3'
+  s.version = '0.9.8'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
-  s.summary = 'a card game'
+  s.summary = 'a card game platform'
   s.description = s.summary
   s.author = 'zh99998'
   s.email = 'zh99998@gmail.com'
-  s.homepage = 'http://my-card.in'
+  s.homepage = 'http://my-card.in/'
   # s.executables = ['your_executable_here']
-  s.files = %w(LICENSE.txt README.txt config.yml replay)
-  %w{lib audio data fonts locales graphics ygocore}.each{|dir|s.files.concat list(dir)}
+  s.files = %w(LICENSE.txt README.txt replay)
+  %w{lib audio data locales graphics ygocore}.each{|dir|s.files.concat list(dir)}
   if Windows
-    s.files += %w(mycard.exe) + list("ruby")
+    s.files += %w(fonts ruby mycard.exe)
   else
-    s.files += %w(install.sh)
+    s.files += %w(mycard.sh)
+    s.platform = Gem::Platform::CURRENT
   end
   s.require_path = "lib"
   #s.bindir = "bin"
@@ -48,7 +49,7 @@ Gem::PackageTask.new(spec) do |p|
       "#{package_name}-win32.7z"
     end
   else
-    p.need_tar = true
+    p.need_tar_gz = true
   end
 end
 

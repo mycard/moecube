@@ -4,7 +4,7 @@ class Window_LobbyButtons < Window_List
     @items = [I18n.t('lobby.faq'), I18n.t('lobby.filter'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom'), I18n.t('lobby.match')]
     @button = Surface.load("graphics/lobby/button.png")
     super(x, y, @items.size*@button.w/3+@items.size*4, 30)
-    @font = TTF.open("fonts/wqy-microhei.ttc", 15)
+    @font = TTF.open(Font, 15)
     refresh
   end
 

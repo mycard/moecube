@@ -19,7 +19,7 @@ class Window_Deck < Window
       @buttons_pos[button[0]] = [(space+@button.w/3)*index+space, button_y, @button.w/3, @button.h]
     end
 
-    @font = TTF.open("fonts/wqy-microhei.ttc", 16)
+    @font = TTF.open(Font, 16)
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
     refresh
