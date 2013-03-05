@@ -363,7 +363,7 @@ class Ygocore < Game
   def self.get_announcements
     #公告
     $config['ygocore'] ||= {}
-    $config['ygocore']['announcements'] ||= [Announcement.new("开放注册", nil, nil)]
+    $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin
         open('http://my-card.in/announcements.json') do |file|
@@ -373,7 +373,7 @@ class Ygocore < Game
           Config.save
         end
       rescue Exception => exception
-        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
+        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
       end
     end
   end
