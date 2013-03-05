@@ -1,7 +1,7 @@
 require_relative 'window_host'
 class Window_LobbyButtons < Window_List
   def initialize(x, y)
-    @items = [I18n.t('lobby.faq'), I18n.t('lobby.filter'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom'), "自动匹配"]
+    @items = [I18n.t('lobby.faq'), I18n.t('lobby.filter'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom'), I18n.t('lobby.match')]
     @button = Surface.load("graphics/lobby/button.png")
     super(x, y, @items.size*@button.w/3+@items.size*4, 30)
     @font = TTF.open("fonts/wqy-microhei.ttc", 15)

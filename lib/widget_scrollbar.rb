@@ -11,7 +11,7 @@ class Widget_ScrollBar < Window
     @scroll ||= 0
     @scroll_max ||= 0
     @scrolling = nil
-    Surface.transform_draw(@back,@contents,0,1,@contents.h.to_f/@back.h,0,0,0,0,0)
+    Surface.transform_draw(@back,@contents,0,1,@contents.h.to_f/@back.h,0,0,0,0,0) rescue nil
     refresh
   end
   def index=(index)

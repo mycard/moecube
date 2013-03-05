@@ -39,10 +39,10 @@ class Ygocore < Game
       jid = Jabber::JID::new @username, 'my-card.in', 'mycard'
     end
 
-    @@im               = Jabber::Client.new(jid)
-    @@im_room          = Jabber::MUC::MUCClient.new(@@im)
-    Jabber.logger       = $log
-    Jabber.debug        = true
+    @@im = Jabber::Client.new(jid)
+    @@im_room = Jabber::MUC::MUCClient.new(@@im)
+    Jabber.logger = $log
+    Jabber.debug = true
 
     @@im.on_exception do |exception, c, where|
       $log.error('聊天出错') { [exception, c, where] }
@@ -87,7 +87,7 @@ class Ygocore < Game
         http = EM::HttpRequest.new("http://my-card.in/servers.json").get
         http.callback {
           begin
-            self.servers.replace JSON.parse(http.response).collect {|data| Server.new(data['id'], data['name'], data['ip'], data['port'], data['auth'])}
+            self.servers.replace JSON.parse(http.response).collect { |data| Server.new(data['id'], data['name'], data['ip'], data['port'], data['auth']) }
             self.filter[:servers] = self.servers.clone
           rescue
             Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败.1', true)
@@ -96,7 +96,7 @@ class Ygocore < Game
           #EventMachine::connect "mycard-server.my-card.in", 9997, Client
           ws = WebSocket::EventMachine::Client.connect(:host => "mycard-server.my-card.in", :port => 9998);
           ws.onmessage do |msg, type|
-            $log.info('收到websocket消息'){msg.force_encoding("UTF-8")}
+            $log.info('收到websocket消息') { msg.force_encoding("UTF-8") }
             Game_Event.push Game_Event::RoomsUpdate.new JSON.parse(msg).collect { |room| Game_Event.parse_room(room) }
           end
           ws.onclose do
@@ -105,7 +105,7 @@ class Ygocore < Game
           end
 
         }
-        http.errback{
+        http.errback {
           Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败', true)
         }
       }
@@ -116,12 +116,16 @@ class Ygocore < Game
     Thread.new {
       begin
         @@im.allow_tls = false
-        @@im.use_ssl   = true
+        @@im.use_ssl = true
 
         connected = false
         if @@im.jid.domain == "my-card.in"
-          @@im.connect("ygopro-server.my-card.in", 5223) rescue Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
-          connected = true
+          begin
+            @@im.connect("ygopro-server.my-card.in", 5223)
+            connected = true
+          rescue
+            Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
+          end
         else
           srv = []
           Resolv::DNS.open { |dns|
@@ -131,10 +135,9 @@ class Ygocore < Game
 
           if srv.empty?
             Game_Event.push Game_Event::Error.new('登录', '解析服务器地址失败')
-            Thread.exit
           end
           # Sort SRV records: lowest priority first, highest weight first
-          srv.sort! { |a,b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
+          srv.sort! { |a, b| (a.priority != b.priority) ? (a.priority <=> b.priority) : (b.weight <=> a.weight) }
 
           srv.each { |record|
             begin
@@ -150,6 +153,7 @@ class Ygocore < Game
 
         if connected
           begin
+            @@im.fd.define_singleton_method(:external_encoding) { |*args| @@im.fd.io.external_encoding(*args) }
             @@im.auth(@password)
           rescue Jabber::ClientAuthenticationFailure
             Game_Event.push Game_Event::Error.new('登录', '用户名或密码错误')
@@ -168,9 +172,6 @@ class Ygocore < Game
             end
           end
           Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
-        else
-          $log.error('聊天连接出错.1') { exception }
-          Game_Event.push Game_Event::Error.new('登录', '连接服务器失败.1')
         end
       rescue StandardError => exception
         $log.error('聊天连接出错') { exception }
@@ -190,6 +191,7 @@ class Ygocore < Game
       #send(:chat, channel: chatmessage.channel.id, message: chatmessage.message, time: chatmessage.time)
     end
   end
+
   #def chat(chatmessage)
   #  case chatmessage.channel
   #  when :lobby
@@ -239,8 +241,8 @@ class Ygocore < Game
     @recv = nil
   end
 
-  def ygocore_path
-    "ygocore/ygopro_vs.exe"
+  def self.ygocore_path
+    Windows ? 'ygocore/ygopro_vs.exe' : 'ygocore/gframe'
   end
 
   def self.register
@@ -267,10 +269,9 @@ class Ygocore < Game
     if !image_downloading and !Update.images.empty?
       return Widget_Msgbox.new("加入房间", "卡图正在下载中，可能显示不出部分卡图", :ok => "确定") { run_ygocore(option, true) }
     end
-    path = 'ygocore/ygopro_vs.exe'
     Widget_Msgbox.new("ygocore", "正在启动ygocore") rescue nil
     #写入配置文件并运行ygocore
-    Dir.chdir(File.dirname(path)) do
+    Dir.chdir(File.dirname(ygocore_path)) do
       case option
         when Room
           room = option
@@ -305,13 +306,17 @@ class Ygocore < Game
               system_conf[field] = contents
             end
           rescue
-            system_conf['antialias'] = 2
-            system_conf['textfont'] = 'c:/windows/fonts/simsun.ttc 14'
-            system_conf['numfont'] = 'c:/windows/fonts/arialbd.ttf'
           end
           if $game.user
             system_conf['nickname'] = $game.user.name
             system_conf['nickname'] += '$' + $game.password if $game.password and !$game.password.empty? and room.server.auth
+          end
+          font, size = system_conf['textfont'].split(' ')
+          if !File.file?(font) or size.to_i.to_s != size
+            system_conf['textfont'] = '../fonts/wqy_microhei.ttc 14'
+          end
+          if !File.file?(system_conf['numfont'])
+            system_conf['textfont'] = Windows ? '../fonts/wqy_microhei.ttc 14' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
           end
           system_conf['lastip'] = room.server.ip
           system_conf['lastport'] = room.server.port.to_s
@@ -340,7 +345,7 @@ class Ygocore < Game
           open('system.conf', 'w') { |file| file.write system_conf.collect { |key, value| "#{key} = #{value}" }.join("\n") }
           args = '-d'
       end
-      IO.popen("ygopro_vs.exe #{args}")
+      IO.popen("./#{File.basename(ygocore_path)} #{args}")
       WM.iconify rescue nil
     end
     Widget_Msgbox.destroy rescue nil
@@ -368,7 +373,7 @@ class Ygocore < Game
           Config.save
         end
       rescue Exception => exception
-        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+        $log.error('公告读取失败') { [exception.inspect, *exception.backtrace].collect { |str| str.encode("UTF-8") }.join("\n") }
       end
     end
   end

@@ -1,4 +1,4 @@
-en:
+zh:
   lang: "中文"
   chat:
     room: "lobby.zh"
@@ -16,6 +16,7 @@ en:
     newroom: "建立房间"
     lobby: "大厅"
     filter: "房间筛选"
+    match: "自动匹配"
     waiting_only: "仅等待中"
     normal_only: "仅标准房"
 

@@ -12,7 +12,9 @@ en:
     replay: "Replay"
   lobby:
     faq: "FAQ"
+    filter: "Filter"
     editdeck: "Edit Deck"
     newroom: "NewRoom"
+    match: "QuickMatch"
     lobby: "Lobby"
 

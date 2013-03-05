@@ -1,137 +1,165 @@
 #输入法by夏娜
-require 'dl'
-require 'dl/import'
+
+
 module RM_IME
-  extend DL::Importer
-  Dir.chdir('ruby/bin'){dlload 'RMIME.dll'}
-  extern 'void _init(long, int, int)'
-  extern 'void _update(int, int)'
-  extern 'void _dispose()'
-  extern 'void _get_text(char*)'
-  extern 'void _back(char*)'  
-  
-  module RM_INPUT
+  if Windows
+    require 'dl'
+    require 'dl/import'
     extend DL::Importer
-    dlload 'user32.dll'
-    extern 'int GetAsyncKeyState(int)'
-    extern 'long FindWindow(char*, char*)'
-    ENTER             = 0x0D
-    ESC               = 0x1B
-    TAB               = 0x09
-    UP                = 0x26
-    DOWN              = 0x28
-    LEFT              = 0x25
-    RIGHT             = 0x27  
-    Key_Hash = {}
-    Key_Repeat = {}
-    
-    module_function
-    #----------------------------------------------------------------------
-    # ● 按下判断
-    #----------------------------------------------------------------------
-    def press?(rkey)
-      return GetAsyncKeyState(rkey) != 0
-    end
-    #----------------------------------------------------------------------
-    # ● 重复按下判断
-    #----------------------------------------------------------------------
-    def repeat?(rkey)
-      result = GetAsyncKeyState(rkey)
-      if result != 0
-        if Key_Repeat[rkey].nil?
+    Dir.chdir('ruby/bin') { dlload 'RMIME.dll' }
+    extern 'void _init(long, int, int)'
+    extern 'void _update(int, int)'
+    extern 'void _dispose()'
+    extern 'void _get_text(char*)'
+    extern 'void _back(char*)'
+
+    module RM_INPUT
+      extend DL::Importer
+      dlload 'user32.dll'
+      extern 'int GetAsyncKeyState(int)'
+      extern 'long FindWindow(char*, char*)'
+      ENTER = 0x0D
+      ESC = 0x1B
+      TAB = 0x09
+      UP = 0x26
+      DOWN = 0x28
+      LEFT = 0x25
+      RIGHT = 0x27
+      Key_Hash = {}
+      Key_Repeat = {}
+
+      module_function
+      #----------------------------------------------------------------------
+      # ● 按下判断
+      #----------------------------------------------------------------------
+      def press?(rkey)
+        return GetAsyncKeyState(rkey) != 0
+      end
+
+      #----------------------------------------------------------------------
+      # ● 重复按下判断
+      #----------------------------------------------------------------------
+      def repeat?(rkey)
+        result = GetAsyncKeyState(rkey)
+        if result != 0
+          if Key_Repeat[rkey].nil?
+            Key_Repeat[rkey] = 0
+            return true
+          end
+          Key_Repeat[rkey] += 1
+        else
+          Key_Repeat[rkey] = nil
+          Key_Hash[rkey] = 0
+        end
+        if !Key_Repeat[rkey].nil? and Key_Repeat[rkey] > 4
           Key_Repeat[rkey] = 0
           return true
+        else
+          return false
         end
-        Key_Repeat[rkey] += 1
-      else
-        Key_Repeat[rkey] = nil
-        Key_Hash[rkey] = 0
       end
-      if !Key_Repeat[rkey].nil? and Key_Repeat[rkey] > 4 
-        Key_Repeat[rkey] = 0
-        return true
-      else
-        return false
-      end
-    end
-    #----------------------------------------------------------------------
-    # ● 击键判断
-    #----------------------------------------------------------------------
-    def trigger?(rkey)
-      result = GetAsyncKeyState(rkey)
-      if Key_Hash[rkey] == 1 and result != 0
-        return false
-      end
-      if result != 0
-        Key_Hash[rkey] = 1
-        return true
-      else
-        Key_Hash[rkey] = 0
-        return false
-      end
-    end
-  end
-  HWND = RM_INPUT.FindWindow('SDL_app', WM.caption[0])
 
+      #----------------------------------------------------------------------
+      # ● 击键判断
+      #----------------------------------------------------------------------
+      def trigger?(rkey)
+        result = GetAsyncKeyState(rkey)
+        if Key_Hash[rkey] == 1 and result != 0
+          return false
+        end
+        if result != 0
+          Key_Hash[rkey] = 1
+          return true
+        else
+          Key_Hash[rkey] = 0
+          return false
+        end
+      end
+    end
+    HWND = RM_INPUT.FindWindow('SDL_app', WM.caption[0])
+  end
   module_function
+
   def init
+    return unless Windows
     return if @active
-    $log.info('输入法'){'开启'}
+    $log.info('输入法') { '开启' }
     _init(HWND, 0, 0)
     @x = 0
     @y = 0
     @active = true
   end
-  def set(x,y)
+
+  def set(x, y)
+    return unless Windows
     @x = x
     @y = y
   end
+
   def text
+    return "" unless Windows
     buf = 0.chr * 1024
     _get_text(buf)
     buf.force_encoding("UTF-8")
     buf.delete!("\0")
   end
+
   def update
-    _update(@x,@y)
-    buf = [0,0].pack("LL")
+    return unless Windows
+    _update(@x, @y)
+    buf = [0, 0].pack("LL")
     _back(buf)
     buf = buf.unpack("LL")
     @backspace = buf[0] == 1
     @delete = buf[1] == 1
   end
+
   def dispose
+    return unless Windows
     return if !@active
-    $log.info('输入法'){'关闭'}
+    $log.info('输入法') { '关闭' }
     _dispose
     @active = false
   end
+
   def active?
     @active
   end
+
   def backspace?
     @backspace
   end
+
   def delete?
     @delete
   end
+
   def left?
+    return unless Windows
     RM_INPUT.repeat?(RM_INPUT::LEFT)
   end
+
   def right?
+    return unless Windows
     RM_INPUT.repeat?(RM_INPUT::RIGHT)
   end
+
   def tab?
+    return unless Windows
     RM_INPUT.trigger?(RM_INPUT::TAB)
   end
+
   def enter?
+    return unless Windows
     RM_INPUT.trigger?(RM_INPUT::ENTER)
   end
+
+
   def esc?
+    return unless Windows
     RM_INPUT.trigger?(RM_INPUT::ESC)
   end
 end
-
 class Widget_InputBox < Window
   attr_accessor :type
   attr_reader :value
@@ -139,8 +167,9 @@ class Widget_InputBox < Window
   @@active = nil
   @@cursor = nil
   @@focus = true
-  def initialize(x,y,width,height,z=300, &proc)
-    super(x,y,width,height,z)
+
+  def initialize(x, y, width, height, z=300, &proc)
+    super(x, y, width, height, z)
     @font = TTF.open("fonts/wqy-microhei.ttc", 20)
     @proc = proc
     @value = ""
@@ -149,6 +178,7 @@ class Widget_InputBox < Window
     @count = 0
     @char_pos = [2]
   end
+
   def value=(value)
     return if @value == value
     @value = value
@@ -161,6 +191,7 @@ class Widget_InputBox < Window
     end
     refresh
   end
+
   def index=(index)
     if index > @value.size
       index = @value.size
@@ -174,17 +205,19 @@ class Widget_InputBox < Window
     @@cursor.x = @x + @char_pos[@index]
     RM_IME.set(@@cursor.x, @@cursor.y)
   end
+
   def refresh
     clear
     @font.draw_blended_utf8(@contents, @type == :password ? '*' * @value.size : @value, 2, 0, 0x00, 0x00, 0x00) unless @value.empty?
   end
+
   def clicked
     RM_IME.init
     @@active = self
     @@focus = true
     unless @@cursor and !@@cursor.destroyed?
-      @@cursor = Window.new(0,0,2,@height-4,301)
-      @@cursor.contents.fill_rect(0,0,@@cursor.width,@@cursor.height,0xFF000000)
+      @@cursor = Window.new(0, 0, 2, @height-4, 301)
+      @@cursor.contents.fill_rect(0, 0, @@cursor.width, @@cursor.height, 0xFF000000)
     end
     @@cursor.y = @y + 2
     mouse_x = Mouse.state[0] - @x
@@ -197,15 +230,17 @@ class Widget_InputBox < Window
           return self.index = index - 1
         end
       end
-      
+
       self.index = @value.size
     end
-    
+
   end
+
   def clear(x=0, y=0, width=@width, height=@height)
-    @contents.fill_rect(x,y,width,height,0x110000FF)
-    @contents.fill_rect(x+2,y+2,width-4,height-4,0xFFFFFFFF)
+    @contents.fill_rect(x, y, width, height, 0x110000FF)
+    @contents.fill_rect(x+2, y+2, width-4, height-4, 0xFFFFFFFF)
   end
+
   def update
     return unless self == @@active and @@focus
     if @count >= 40
@@ -214,7 +249,6 @@ class Widget_InputBox < Window
     else
       @count += 1
     end
-    
     RM_IME.update
     new_value = self.value.dup
     new_index = self.index
@@ -240,7 +274,7 @@ class Widget_InputBox < Window
     self.index = new_index
     if @proc
       if RM_IME.esc?
-        self.value = '' if @proc.call :ESC 
+        self.value = '' if @proc.call :ESC
       end
       if RM_IME.tab?
         self.value = '' if @proc.call :TAB
@@ -250,12 +284,14 @@ class Widget_InputBox < Window
       end
     end
   end
+
   def destroy
     if @@active == self
       Widget_InputBox.focus = false
     end
     super
   end
+
   def self.focus=(focus)
     @@focus = focus
     if !@@focus
