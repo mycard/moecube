@@ -2,7 +2,7 @@
 begin
 
   Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-  Font = Windows ? File.expand_path('fonts/wqy-microhei.ttc') : '/usr/share/fonts/wqy-microhei/wqy-microhei.ttc'
+  Font = Windows ? 'fonts/wqy-microhei.ttc' : '/usr/share/fonts/wqy-microhei/wqy-microhei.ttc'
   #System_Encoding = Windows ? "CP#{`chcp`.scan(/\d+$/)}" : `locale |grep LANG |awk -F '=' '{print $2}'`
   
   Dir.glob('post_update_*.rb').sort.each { |file| load file }
@@ -124,7 +124,7 @@ end
 #主循环
 begin
   $scene.main while $scene
-rescue Exception => exception
+rescue ScriptError, StandardError => exception
   exception.backtrace.each { |backtrace| break if backtrace =~ /^(.*)\.rb:\d+:in `.*'"$/ } #由于脚本是从main.rb开始执行的，总会有个能匹配成功的文件
   $log.fatal($1) { [exception.inspect, *exception.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
   $game.exit if $game

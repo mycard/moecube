@@ -12,16 +12,39 @@ module Association
       Win32::Registry::HKEY_CLASSES_ROOT.create('.yrp') { |reg| reg[nil] = 'mycard' }
       Win32::Registry::HKEY_CLASSES_ROOT.create('.deck') { |reg| reg[nil] = 'mycard' }
     else
+
+      desktop, x_ygopro_deck, x_ygopro_replay = paths
+
       require 'fileutils'
       FileUtils.mkdir_p("#{ENV['HOME']}/.local/share/applications") unless File.directory?("#{ENV['HOME']}/.local/share/applications")
-      open("#{ENV['HOME']}/.local/share/applications/mycard.desktop", 'w') { |f| f.write <<EOF
+      open("#{ENV['HOME']}/.local/share/applications/mycard.desktop", 'w') { |f| f.write desktop }
+      FileUtils.mkdir_p("#{ENV['HOME']}/.local/share/mime/packages") unless File.directory?("#{ENV['HOME']}/.local/share/mime/packages")
+      open("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-deck.xml", 'w') { |f| f.write x_ygopro_deck }
+      open("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-replay.xml", 'w') { |f| f.write x_ygopro_replay }
+      system("install -D #{Dir.pwd}/graphics/system/icon.png ~/.icons/application-x-ygopro-deck.png")
+      system("install -D #{Dir.pwd}/graphics/system/icon.png ~/.icons/application-x-ygopro-replay.png")
+      system("xdg-mime default mycard.desktop application/x-ygopro-deck application/x-ygopro-replay x-scheme-handler/mycard")
+      system("update-mime-database #{ENV['HOME']}/.local/share/mime")
+      system("update-desktop-database #{ENV['HOME']}/.local/share/applications")
+    end
+  end
+
+  def paths
+    if Windows
+      pwd = Dir.pwd.gsub('/', '\\')
+      path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
+      command = path + ' "%1"'
+      icon = '"' + pwd + '\mycard.exe", 0'
+      [path, command, icon]
+    else
+      desktop = <<EOF
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=Mycard
 Name[zh_CN]=Mycard - 萌卡
 Comment=a card game platform
 Comment[zh_CN]=卡片游戏对战客户端
-Exec=/usr/bin/env ruby -KU lib/main.rb %u
+Exec=ruby -KU lib/main.rb %u
 Terminal=false
 Icon=#{Dir.pwd}/graphics/system/icon.png
 Type=Application
@@ -30,9 +53,7 @@ Path=#{Dir.pwd}
 URL=http://my-card.in/
 MimeType=x-scheme-handler/mycard;application/x-ygopro-deck;application/x-ygopro-replay'
 EOF
-      }
-      FileUtils.mkdir_p("#{ENV['HOME']}/.local/share/mime/packages") unless File.directory?("#{ENV['HOME']}/.local/share/mime/packages")
-      open("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-deck.xml", 'w') { |f| f.write <<EOF
+      x_ygopro_deck = <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-ygopro-deck">
@@ -43,8 +64,7 @@ EOF
 	</mime-type>
 </mime-info>
 EOF
-      }
-      open("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-replay.xml", 'w') { |f| f.write <<EOF
+      x_ygopro_replay = <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
         <mime-type type="application/x-ygopro-replay">
@@ -55,21 +75,8 @@ EOF
         </mime-type>
 </mime-info>
 EOF
-      }
-      system("install -D #{Dir.pwd}/graphics/system/icon.png ~/.icons/application-x-ygopro-deck.png")
-      system("install -D #{Dir.pwd}/graphics/system/icon.png ~/.icons/application-x-ygopro-replay.png")
-      system("xdg-mime default mycard.desktop application/x-ygopro-deck application/x-ygopro-replay x-scheme-handler/mycard")
-      system("update-mime-database #{ENV['HOME']}/.local/share/mime")
-      system("update-desktop-database #{ENV['HOME']}/.local/share/applications")
+      [desktop, x_ygopro_deck, x_ygopro_replay]
     end
-  end
-
-  def paths
-    pwd = Dir.pwd.gsub('/', '\\')
-    path = '"' + pwd + '\ruby\bin\rubyw.exe" -C"' + pwd + '" -KU lib/main.rb'
-    command = path + ' "%1"'
-    icon = '"' + pwd + '\mycard.exe", 0'
-    [path, command, icon]
   end
 
   def need?
@@ -85,10 +92,18 @@ EOF
         Win32::Registry::HKEY_CLASSES_ROOT.open('.yrp') { |reg| return true unless reg[nil] == 'mycard' }
         Win32::Registry::HKEY_CLASSES_ROOT.open('.deck') { |reg| return true unless reg[nil] == 'mycard' }
       rescue
-        return true
+        true
       end
     else
-      true #how to detect?
+      begin
+        (([IO.read("#{ENV['HOME']}/.local/share/applications/mycard.desktop"),
+           IO.read("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-deck.xml"),
+           IO.read("#{ENV['HOME']}/.local/share/mime/packages/application-x-ygopro-replay.xml")] != paths) or !(
+        File.file?("#{ENV['HOME']}/.icons/application-x-ygopro-deck.png") and
+            File.file?("#{ENV['HOME']}/.icons/application-x-ygopro-replay.png")))
+      rescue
+        true
+      end
     end
   end
 
@@ -107,15 +122,14 @@ EOF
 
   def start
     if need?
-      if Windows
-        request do
+      request do
+        if Windows
           require 'rbconfig'
-          register rescue Dialog.uac(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG["RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]), "-KU lib/main.rb register_association")
+          register rescue Dialog.uac(File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]), "-KU lib/main.rb register_association")
+        else
+          register
         end
-      else
-        register
       end
     end
   end
-
 end

@@ -29,7 +29,7 @@ module Update
       end
       if @updated
         require 'rbconfig'
-        IO.popen(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
+        spawn(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
         $scene = nil
       end
       @images = []
@@ -60,7 +60,7 @@ module Update
           require_relative 'widget_msgbox'
           Widget_Msgbox.new('mycard', '下载更新完毕，点击确定重新运行mycard并安装更新', :ok => "确定") {
             require 'rbconfig'
-            IO.popen(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
+            spawn(File.join(RbConfig::CONFIG["bindir"],RbConfig::CONFIG[Windows ? "RUBYW_INSTALL_NAME" : "RUBY_INSTALL_NAME"] + RbConfig::CONFIG["EXEEXT"]) + " -KU lib/main.rb")
             $scene = nil
           }
         end
@@ -183,7 +183,7 @@ module Update
                       $log.error('卡图下载') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
                       list.concat ids
                     end
-                  end
+                  end rescue $log.error('卡图下载线程出错') { $!.inspect.force_encoding("UTF-8") }
                 end
                 thread.priority = -1
                 thread
