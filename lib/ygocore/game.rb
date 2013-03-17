@@ -94,7 +94,7 @@ class Ygocore < Game
           end
 
           #EventMachine::connect "mycard-server.my-card.in", 9997, Client
-          ws = WebSocket::EventMachine::Client.connect(:host => "mycard-server.my-card.in", :port => 9998);
+          ws = WebSocket::EventMachine::Client.connect(:uri => 'ws://my-card.in/rooms.json');
           ws.onmessage do |msg, type|
             $log.info('收到websocket消息') { msg.force_encoding("UTF-8") }
             Game_Event.push Game_Event::RoomsUpdate.new JSON.parse(msg).collect { |room| Game_Event.parse_room(room) }

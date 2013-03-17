@@ -53,7 +53,7 @@ class Window_LobbyButtons < Window_List
         require 'open-uri'
         Thread.new {
           begin
-            open('http://mycard-server.my-card.in:9997/match.json') { |f|
+            open('http://my-card.in/match') { |f|
               @waiting = false
               if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*)$/
                 room = Room.new(nil, $3.to_s)
