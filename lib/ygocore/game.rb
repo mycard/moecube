@@ -294,9 +294,6 @@ class Ygocore < Game
   end
 
   def self.run_ygocore(option, image_downloading=false)
-    if !image_downloading and !Update.images.empty?
-      return Widget_Msgbox.new("加入房间", "卡图正在下载中，可能显示不出部分卡图", :ok => "确定") { run_ygocore(option, true) }
-    end
     Widget_Msgbox.new("ygocore", "正在启动ygocore") rescue nil
     #写入配置文件并运行ygocore
     case option
