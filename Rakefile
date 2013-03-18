@@ -20,7 +20,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '0.9.8'
+  s.version = '0.9.9'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game platform'
   s.description = s.summary
@@ -31,7 +31,7 @@ spec = Gem::Specification.new do |s|
   s.files = %w(LICENSE.txt README.txt replay)
   %w{lib audio data locales graphics ygocore}.each{|dir|s.files.concat list(dir)}
   if Windows
-    s.files += %w(fonts ruby mycard.exe)
+    s.files += %w(mycard.exe) + list("ruby") + list("fonts")
   else
     s.files += %w(mycard.sh)
     s.platform = Gem::Platform::CURRENT

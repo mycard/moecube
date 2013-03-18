@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 ruby '1.9.3'
 
 gem 'rubysdl', :platform => :ruby
@@ -13,3 +13,8 @@ gem 'sqlite3'
 gem 'zip'
 gem 'websocket'
 gem 'net-http-pipeline'
+
+group :development do
+  gem 'rake'
+  gem 'bundler'
+end

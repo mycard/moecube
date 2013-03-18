@@ -121,7 +121,7 @@ class Ygocore < Game
         connected = false
         if @@im.jid.domain == "my-card.in"
           begin
-            @@im.connect("ygopro-server.my-card.in", 5223)
+            @@im.connect("chat.my-card.in", 5223)
             connected = true
           rescue
             Game_Event.push Game_Event::Error.new('登录', '连接服务器失败')
@@ -278,11 +278,11 @@ class Ygocore < Game
     end
 
     font, size = system_conf['textfont'].split(' ')
-    if !File.file?(font) or size.to_i.to_s != size
+    if !File.file?(File.expand_path(font, File.dirname(ygocore_path))) or size.to_i.to_s != size
       require 'pathname'
       font_path = Pathname.new(Font)
       font_path = font_path.relative_path_from(Pathname.new(File.dirname(ygocore_path))) if font_path.relative?
-      system_conf['textfont'] = font_path + ' 14'
+      system_conf['textfont'] = "#{font_path} 14"
     end
     if !File.file?(system_conf['numfont'])
       system_conf['textfont'] = Windows ? 'c:/windows/fonts/arialbd.ttf' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
