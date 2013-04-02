@@ -3,12 +3,11 @@ class Window_Deck < Window
 
   def initialize
     @items = Dir.glob("ygocore/deck/*.ydk")[0, 10]
-    p @items
     @background = Surface.load(@items.size > 4 ? 'graphics/lobby/host.png' : 'graphics/system/msgbox.png').display_format
     super((1024-@background.w)/2, 230, @background.w, @background.h, 300)
 
     @items_button = Surface.load("graphics/system/deck_buttons.png")
-    @items_buttons = {edit: "编辑", delete: "删除", export: "导出"}
+    @items_buttons = {edit: "编辑", delete: "删除", export: "导出", share: "分享"}
 
     button_y = @height - 36
     @button = Surface.load("graphics/system/button.png")
@@ -47,7 +46,7 @@ class Window_Deck < Window
   def draw_item(index, status=0)
     x, y=item_rect(index)
     if index.is_a? Array
-      Surface.blit(@items_button, status*@items_button.w/3, @items_buttons.keys.index(index[1])*@items_button.h/3, @items_button.w/3, @items_button.h/3, @contents, x, y)
+      Surface.blit(@items_button, status*@items_button.w/3, @items_buttons.keys.index(index[1])*@items_button.h/@items_buttons.size, @items_button.w/3, @items_button.h/@items_buttons.size, @contents, x, y)
     else
       Surface.blit(@button, @button.w/3*status, 0, @button.w/3, @button.h, @contents, x, y)
       text_size = @font.text_size(@buttons[index])
@@ -82,7 +81,7 @@ class Window_Deck < Window
           @width - (@items_button.w/3) * (@items_buttons.keys.reverse.index(index[1])+1),
           28+WLH*index[0],
           @items_button.w/3,
-          @items_button.h/3
+          @items_button.h/@items_buttons.size
       ]
     else
       @buttons_pos[index]
@@ -116,6 +115,43 @@ class Window_Deck < Window
         case index[1]
           when :edit
             Ygocore.run_ygocore(File.basename(@items[index[0]], ".ydk"))
+        when :share
+        	card_usages = []
+        	side = false
+        	last_id = nil
+        	count = 0
+        	IO.readlines(@items[index[0]]).each do |line|
+        		if line[0] == '#'
+        			next
+        		elsif line[0, 5] == '!side'
+        			card_usages.push({card_id: last_id, side: side, count: count}) if last_id
+					side = true
+        			last_id = nil
+        		else
+        			card_id = line.to_i
+        			if card_id.zero?
+        				next
+        			else
+        				if card_id == last_id
+            				count += 1
+        				else
+            				card_usages.push({card_id: last_id, side: side, count: count}) if last_id
+            				last_id = card_id
+            				count = 1
+            			end
+            		end
+            	end
+        	end
+        	result = ""
+        	key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
+        	card_usages.each do |card_usage|
+        		c = (card_usage[:side] ? 1 : 0) << 29 | card_usage[:count] << 27 | card_usage[:card_id]
+				4.downto(0) do |i|
+					result << key[(c >> i * 6) & 0x3F]
+				end
+			end
+        	Dialog.web "http://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
+        	
           when :delete
             require_relative 'widget_msgbox'
             Widget_Msgbox.new("删除卡组", "确定要删除卡组 #{File.basename(@items[index[0]], '.ydk')} 吗", buttons={ok: "确定", cancel: "取消"}) do |clicked|
