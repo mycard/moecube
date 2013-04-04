@@ -27,7 +27,7 @@ class Widget_Msgbox < Window
     @proc = proc
     
     @index = nil
-    
+
     @items = {}
     @space = (@width - @buttons.size * @button.w / 3) / (@buttons.size + 1)
     button_y = 100

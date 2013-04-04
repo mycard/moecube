@@ -1,8 +1,8 @@
-class Window_Deck < Window
+class Window_Deck < Window_Scrollable
   attr_reader :index
 
   def initialize
-    @items = Dir.glob("ygocore/deck/*.ydk")[0, 10]
+    @items = Dir.glob("ygocore/deck/*.ydk")
     @background = Surface.load(@items.size > 4 ? 'graphics/lobby/host.png' : 'graphics/system/msgbox.png').display_format
     super((1024-@background.w)/2, 230, @background.w, @background.h, 300)
 
@@ -21,19 +21,20 @@ class Window_Deck < Window
     @font = TTF.open(Font, 16)
     @title_color = [0xFF, 0xFF, 0xFF]
     @color = [0x04, 0x47, 0x7c]
+    @page_size = 10
     refresh
   end
 
   def refresh
     clear
     @font.draw_blended_utf8(@contents, "卡组编辑", (@width-@font.text_size("卡组编辑")[0])/2, 2, *@title_color)
-    @items = Dir.glob("ygocore/deck/*.ydk")[0, 10]
+    @items = Dir.glob("ygocore/deck/*.ydk")
     @background = Surface.load(@items.size > 4 ? 'graphics/lobby/host.png' : 'graphics/system/msgbox.png').display_format
     @height = @background.h
-    @items.each_with_index do |deck, index|
+    @items[@scroll...[(@scroll+@page_size), @items.size].min].each_with_index do |deck, index|
       @font.draw_blended_utf8(@contents, File.basename(deck, ".ydk"), 16, 28+WLH*index, *@color)
     end
-    @items.size.times do |index|
+    (@scroll...[(@scroll+@page_size), @items.size].min).each do |index|
       @items_buttons.each_key do |key|
         draw_item([index, key], self.index==[index, key] ? 1 : 0)
       end
@@ -56,8 +57,8 @@ class Window_Deck < Window
 
   def mousemoved(x, y)
     new_index = nil
-    line = (y-@y-28)/WLH
-    if line.between?(0, @items.size-1)
+    line = (y-@y-28)/WLH + @scroll
+    if line.between?(@scroll, [@scroll+@page_size-1, @items.size-1].min)
       i = (x - @x - (@width - @items_buttons.size * @items_button.w / 3)) / (@items_button.w/3)
       if i >= 0
         new_index = [line, @items_buttons.keys[i]]
@@ -74,12 +75,16 @@ class Window_Deck < Window
     end
     self.index = new_index
   end
+  def cursor_up(wrap=false)
+  end
+  def cursor_down(wrap=false)
+  end
 
   def item_rect(index)
     if index.is_a? Array
       [
           @width - (@items_button.w/3) * (@items_buttons.keys.reverse.index(index[1])+1),
-          28+WLH*index[0],
+          28+WLH*(index[0]-@scroll),
           @items_button.w/3,
           @items_button.h/@items_buttons.size
       ]
@@ -91,14 +96,22 @@ class Window_Deck < Window
   def index=(index)
     return if index == @index
 
-    if @index
+    if @index and index_legal?(@index)
       clear(*item_rect(@index))
       draw_item(@index, 0)
     end
     @index = index
-    if @index
+    if @index and index_legal?(@index)
       clear(*item_rect(@index))
       draw_item(@index, 1)
+    end
+  end
+
+  def index_legal?(index)
+    if index.is_a? Array
+      (@scroll...[(@scroll+@page_size), @items.size].min).include? index[0]
+    else
+      true
     end
   end
 
@@ -115,45 +128,46 @@ class Window_Deck < Window
         case index[1]
           when :edit
             Ygocore.run_ygocore(File.basename(@items[index[0]], ".ydk"))
-        when :share
-        	card_usages = []
-        	side = false
-        	last_id = nil
-        	count = 0
-        	IO.readlines(@items[index[0]]).each do |line|
-        		if line[0] == '#'
-        			next
-        		elsif line[0, 5] == '!side'
-        			card_usages.push({card_id: last_id, side: side, count: count}) if last_id
-					side = true
-        			last_id = nil
-        		else
-        			card_id = line.to_i
-        			if card_id.zero?
-        				next
-        			else
-        				if card_id == last_id
-            				count += 1
-        				else
-            				card_usages.push({card_id: last_id, side: side, count: count}) if last_id
-            				last_id = card_id
-            				count = 1
-            			end
-            		end
-            	end
-        	end
-        	result = ""
-        	key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
-        	card_usages.each do |card_usage|
-        		c = (card_usage[:side] ? 1 : 0) << 29 | card_usage[:count] << 27 | card_usage[:card_id]
-				4.downto(0) do |i|
-					result << key[(c >> i * 6) & 0x3F]
-				end
-			end
-        	Dialog.web "http://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
-        	
+          when :share
+            card_usages = []
+            side = false
+            last_id = nil
+            count = 0
+            IO.readlines(@items[index[0]]).each do |line|
+              if line[0] == '#'
+                next
+              elsif line[0, 5] == '!side'
+                card_usages.push({card_id: last_id, side: side, count: count}) if last_id
+                side = true
+                last_id = nil
+              else
+                card_id = line.to_i
+                if card_id.zero?
+                  next
+                else
+                  if card_id == last_id
+                    count += 1
+                  else
+                    card_usages.push({card_id: last_id, side: side, count: count}) if last_id
+                    last_id = card_id
+                    count = 1
+                  end
+                end
+              end
+            end
+            result = ""
+            key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
+            card_usages.each do |card_usage|
+              c = (card_usage[:side] ? 1 : 0) << 29 | card_usage[:count] << 27 | card_usage[:card_id]
+              4.downto(0) do |i|
+                result << key[(c >> i * 6) & 0x3F]
+              end
+            end
+            Dialog.web "http://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
+
           when :delete
             require_relative 'widget_msgbox'
+            index = @index
             Widget_Msgbox.new("删除卡组", "确定要删除卡组 #{File.basename(@items[index[0]], '.ydk')} 吗", buttons={ok: "确定", cancel: "取消"}) do |clicked|
               if clicked == :ok
                 File.delete @items[index[0]]

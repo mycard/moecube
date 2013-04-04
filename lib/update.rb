@@ -2,7 +2,7 @@
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '0.9.9'
+  Version = '1.0.1'
   URL = "http://my-card.in/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status

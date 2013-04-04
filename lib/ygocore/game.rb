@@ -336,6 +336,7 @@ class Ygocore < Game
     when :deck
       args = '-d'
     when String
+      File.rename(File.join(File.dirname(ygocore_path), 'deck', option + '.ydk'), File.join(File.dirname(ygocore_path), 'deck', option.gsub!(' ', '_') + '.ydk')) if option[' ']
       write_system_conf 'lastdeck' => option
       args = '-d'
     end
