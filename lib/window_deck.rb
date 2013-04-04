@@ -128,6 +128,7 @@ class Window_Deck < Window_Scrollable
         case index[1]
           when :edit
             Ygocore.run_ygocore(File.basename(@items[index[0]], ".ydk"))
+            refresh
           when :share
             card_usages = []
             side = false
