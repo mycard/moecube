@@ -49,6 +49,7 @@ begin
   unless $scene == false
     #加载文件
 	  require 'openssl'
+    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE #unsafe
 	  require 'digest/sha1'
 	  require 'digest/md5'
     require 'logger'
