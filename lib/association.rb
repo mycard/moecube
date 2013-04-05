@@ -50,7 +50,7 @@ Icon=#{Dir.pwd}/graphics/system/icon.png
 Type=Application
 Categories=Game
 Path=#{Dir.pwd}
-URL=http://my-card.in/
+URL=https://my-card.in/
 MimeType=x-scheme-handler/mycard;application/x-ygopro-deck;application/x-ygopro-replay'
 EOF
       x_ygopro_deck = <<EOF

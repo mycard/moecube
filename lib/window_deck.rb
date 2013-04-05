@@ -164,7 +164,7 @@ class Window_Deck < Window_Scrollable
                 result << key[(c >> i * 6) & 0x3F]
               end
             end
-            Dialog.web "http://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
+            Dialog.web "https://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
 
           when :delete
             require_relative 'widget_msgbox'

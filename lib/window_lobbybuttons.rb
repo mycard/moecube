@@ -34,7 +34,7 @@ class Window_LobbyButtons < Window_List
     case @index
       when 0 #常见问题
         require_relative 'dialog'
-        Dialog.web "http://my-card.in/login?user[name]=#{CGI.escape $game.user.name}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
+        Dialog.web "https://my-card.in/login?user[name]=#{CGI.escape $game.user.name}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
       when 1 #房间筛选
         if @filter_window and !@filter_window.destroyed?
           @filter_window.destroy
@@ -53,7 +53,7 @@ class Window_LobbyButtons < Window_List
         require 'open-uri'
         Thread.new {
           begin
-            open('http://my-card.in/match') { |f|
+            open('https://my-card.in/match') { |f|
               @waiting = false
               if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*)$/
                 room = Room.new(nil, $3.to_s)

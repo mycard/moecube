@@ -3,7 +3,7 @@ require "fileutils"
 require_relative 'card'
 module Update
   Version = '1.0.1'
-  URL = "http://my-card.in/mycard/update.json?version=#{Version}"
+  URL = "https://my-card.in/mycard/update.json?version=#{Version}"
   class <<self
     attr_reader :thumbnails, :images, :status
 
@@ -117,7 +117,7 @@ module Update
             $log.info('待下载的完整卡图') { @images.inspect }
             $log.info('待下载的缩略卡图') { @thumbnails.inspect }
 
-            open('http://my-card.in/cards/image.json') do |f|
+            open('https://my-card.in/cards/image.json') do |f|
               image_index = JSON.parse(f.read)
               $log.info('卡图路径'){image_index}
               url = image_index['url']

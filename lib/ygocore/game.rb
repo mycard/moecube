@@ -84,7 +84,7 @@ class Ygocore < Game
   def connect
     @recv = Thread.new do
       EventMachine::run {
-        http = EM::HttpRequest.new("http://my-card.in/servers.json").get
+        http = EM::HttpRequest.new("https://my-card.in/servers.json").get
         http.callback {
           begin
             self.servers.replace JSON.parse(http.response).collect { |data| Server.new(data['id'], data['name'], data['ip'], data['port'], data['auth']) }
@@ -94,7 +94,7 @@ class Ygocore < Game
           end
 
           #EventMachine::connect "mycard-server.my-card.in", 9997, Client
-          ws = WebSocket::EventMachine::Client.connect(:uri => 'ws://my-card.in/rooms.json');
+          ws = WebSocket::EventMachine::Client.connect(:uri => 'wss://my-card.in/rooms.json');
           ws.onmessage do |msg, type|
             $log.info('收到websocket消息') { msg.force_encoding("UTF-8") }
             Game_Event.push Game_Event::RoomsUpdate.new JSON.parse(msg).collect { |room| Game_Event.parse_room(room) }
@@ -360,7 +360,7 @@ class Ygocore < Game
     $config['ygocore']['announcements'] ||= [Announcement.new("正在读取公告...", nil, nil)]
     Thread.new do
       begin
-        open('http://my-card.in/announcements.json') do |file|
+        open('https://my-card.in/announcements.json') do |file|
           $config['ygocore']['announcements'].replace JSON.parse(file.read).collect { |announcement|
             Announcement.new(announcement['title'], announcement['url'], Date.parse(announcement['created_at']))
           }

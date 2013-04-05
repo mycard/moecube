@@ -15,7 +15,7 @@ class User
   end
   def space
     if @certified
-      Dialog.web "http://my-card.in/users/#{CGI.escape @id.to_s}"
+      Dialog.web "https://my-card.in/users/#{CGI.escape @id.to_s}"
     else
       Widget_Msgbox.new("查看资料", "用户#{@name}没有注册", :ok => "确定")
     end
@@ -29,9 +29,9 @@ class User
       yield result
       Thread.new do
         require 'cgi'
-		$log.info('读取头像'){"http://my-card.in/users/#{CGI.escape id.to_s}.png"}
+		$log.info('读取头像'){"https://my-card.in/users/#{CGI.escape id.to_s}.png"}
 		begin
-			open("http://my-card.in/users/#{CGI.escape id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}} 
+			open("https://my-card.in/users/#{CGI.escape id.to_s}.png", 'rb') {|io|open(cache, 'wb') {|c|c.write io.read}}
 		rescue Exception => exception
 			$log.error('下载头像'){[exception.inspect, *exception.backtrace].join("\n").force_encoding("UTF-8")}
 			cache = "graphics/avatars/error_#{size}.png"
