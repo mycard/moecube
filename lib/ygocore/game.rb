@@ -49,17 +49,21 @@ class Ygocore < Game
       Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断: ' + exception.to_s)))
     end
     @@im_room.add_message_callback do |m|
-      user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
-      Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
+      if m.from.resource and m.body
+        user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
+        Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
+      end
     end
     @@im_room.add_private_message_callback do |m|
-      if m.body #忽略无消息的正在输入等内容
+      if m.from.resource and m.body #忽略无消息的正在输入等内容
         user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
         Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, user) rescue $log.error('收到私聊消息') { $! }
       end
     end
     @@im_room.add_join_callback do |m|
-      Game_Event.push Game_Event::NewUser.new User.new m.from.resource.to_sym, m.from.resource
+      user = User.new m.from.resource.to_sym, m.from.resource
+      user.role = m.x.first_element('item').role rescue nil
+      Game_Event.push Game_Event::NewUser.new user
     end
     @@im_room.add_leave_callback do |m|
       Game_Event.push Game_Event::MissingUser.new User.new m.from.resource.to_sym, m.from.resource
@@ -171,7 +175,7 @@ class Ygocore < Game
               retry
             end
           end
-          Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
+          #Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
         end
       rescue StandardError => exception
         $log.error('聊天连接出错') { exception }
@@ -214,8 +218,10 @@ class Ygocore < Game
 
     if $game.rooms.any? { |game_room| game_room.name == room_name }
       Widget_Msgbox.new("建立房间", "房间名已存在", :ok => "确定")
+      false
     else
       Game_Event.push Game_Event::Join.new(room)
+      room
     end
   end
 
@@ -285,7 +291,7 @@ class Ygocore < Game
       system_conf['textfont'] = "#{font_path} 14"
     end
     if !File.file?(system_conf['numfont'])
-      system_conf['textfont'] = Windows ? 'c:/windows/fonts/arialbd.ttf' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
+      system_conf['numfont'] = Windows ? 'c:/windows/fonts/arialbd.ttf' : '/usr/share/fonts/gnu-free/FreeSansBold.ttf'
     end
     options.each do |key, value|
       system_conf[key] = value

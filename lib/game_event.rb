@@ -53,8 +53,10 @@ class Game_Event
     def initialize(user)
       @user = user
       unless $game.users.include? @user
-        if @user.friend?
+        if @user.friend? or @user.role == :moderator
           $game.users.unshift @user
+          #p $game.users
+          #$a = 2
         else
           $game.users << @user
         end

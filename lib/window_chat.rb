@@ -129,7 +129,7 @@ class Window_Chat < Window_Scrollable
     chatmessage, message = @items[index]
     if chatmessage.is_a? ChatMessage
       @font.draw_blended_utf8(@contents, chatmessage.user.name+':', x, y, *chatmessage.name_color) if chatmessage.name_visible?
-      @font.draw_blended_utf8(@contents, message, x+name_width(chatmessage), y, *chatmessage.message_color) unless chatmessage.message.empty?
+      @font.draw_blended_utf8(@contents, message, x+name_width(chatmessage), y, *chatmessage.message_color) unless chatmessage.message.lines.first.chomp.empty?
     else
       @font.draw_blended_utf8(@contents, message, x, y, *chatmessage) unless message.empty?
     end

@@ -38,48 +38,48 @@ class Scene_Lobby < Scene
 
   def handle(event)
     case event
-    when Event::KeyDown
-      case event.sym
-      when Key::UP
-        @active_window.cursor_up
-      when Key::DOWN
-        @active_window.cursor_down
-      when Key::F2
-        #@joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
-        #$game.host Room.new(0, $game.user.name)        
-      when Key::F3
-        #@joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
-        #$game.join 'localhost'
-      when Key::F5
-        $game.refresh
-      when Key::F12
-        $game.exit
-        $scene = Scene_Login.new
-      end
-    else
-      super
+      when Event::KeyDown
+        case event.sym
+          when Key::UP
+            @active_window.cursor_up
+          when Key::DOWN
+            @active_window.cursor_down
+          when Key::F2
+            #@joinroom_msgbox = Widget_Msgbox.new("创建房间", "正在等待对手")
+            #$game.host Room.new(0, $game.user.name)
+          when Key::F3
+            #@joinroom_msgbox = Widget_Msgbox.new("加入房间", "正在加入房间")
+            #$game.join 'localhost'
+          when Key::F5
+            $game.refresh
+          when Key::F12
+            $game.exit
+            $scene = Scene_Login.new
+        end
+      else
+        super
     end
   end
 
   def handle_game(event)
     case event
-    when Game_Event::AllUsers
-      @userlist.items = $game.users
-    when Game_Event::AllRooms, Game_Event::AllServers
-      @roomlist.items = $game.rooms.find_all { |room|
-        $game.filter[:servers].include?(room.server) and
-            $game.filter[:waiting_only] ? (room.status == :wait) : true and
-            $game.filter[:normal_only] ? (!room.tag? && (room.ot == 0) && (room.lp = 8000)) : true
-      }
-    when Game_Event::Join
-      join(event.room)
-    when Game_Event::Watch
-      require_relative 'scene_watch'
-      $scene = Scene_Watch.new(event.room)
-    when Game_Event::Chat
-      @chat_window.add event.chatmessage
-    else
-      super
+      when Game_Event::AllUsers
+        @userlist.items = $game.users
+      when Game_Event::AllRooms, Game_Event::AllServers
+        @roomlist.items = $game.rooms.find_all { |room|
+          $game.filter[:servers].include?(room.server) and
+              $game.filter[:waiting_only] ? (room.status == :wait) : true and
+              $game.filter[:normal_only] ? (!room.tag? && (room.ot == 0) && (room.lp = 8000)) : true
+        }
+      when Game_Event::Join
+        join(event.room)
+      when Game_Event::Watch
+        require_relative 'scene_watch'
+        $scene = Scene_Watch.new(event.room)
+      when Game_Event::Chat
+        @chat_window.add event.chatmessage
+      else
+        super
     end
   end
 

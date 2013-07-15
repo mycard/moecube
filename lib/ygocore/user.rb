@@ -11,7 +11,12 @@ class User
     @certified = certified unless certified == :keep
   end
   def color
-    @certified ? [0,0,0] : [128,128,128]
+    case @role
+      when :moderator
+        [148,43,226]
+      else
+        @certified ? [0,0,0] : [128,128,128]
+    end
   end
   def space
     if @certified

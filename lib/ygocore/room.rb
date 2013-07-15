@@ -47,8 +47,6 @@ class Room
 
     server = servers.min_by{|server|$game.rooms.select{|room|room.server == server}.size}
 
-    p server
-
     server ||= Server.new(nil, "", $game.server, $game.port, true)
     self.server = server
     server

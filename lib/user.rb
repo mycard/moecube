@@ -1,6 +1,6 @@
 require_relative 'cacheable'
 class User
-  attr_accessor :id, :name, :friend
+  attr_accessor :id, :name, :friend, :role
   alias friend? friend
   extend Cacheable
   def initialize(id, name="")

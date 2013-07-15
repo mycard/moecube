@@ -55,9 +55,10 @@ class Window_LobbyButtons < Window_List
           begin
             open('https://my-card.in/match') { |f|
               @waiting = false
-              if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*)$/
+
+              if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*?)(\?server_auth=true)?$/
                 room = Room.new(nil, $3.to_s)
-                room.server = Server.new(nil, nil, $1, $2.to_i, false)
+                room.server = Server.new(nil, nil, $1, $2.to_i, !!$4)
                 $game.join(room)
               else
                 $log.error('自动匹配非法回复'){f.read}

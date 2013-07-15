@@ -279,7 +279,7 @@ class Widget_InputBox < Window
       if RM_IME.tab?
         self.value = '' if @proc.call :TAB
       end
-      if RM_IME.enter?
+      if RM_IME.enter? and text.empty?
         self.value = '' if @proc.call :ENTER
       end
     end
