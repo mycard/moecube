@@ -33,11 +33,11 @@ class Window_Config < Window
       Surface.blit(@checkbox, 20*status, $config['bgm'] ? 20 : 0, 20, 20, @contents, @items[:bgm][0], @items[:bgm][1])
       case status
       when 0
-        @font.draw_blended_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF)
+        @font.draw_blended_utf8(@contents, "背景音乐", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF)
       when 1
-        @font.draw_shaded_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF, 0x11, 0x11, 0x11)
+        @font.draw_shaded_utf8(@contents, "背景音乐", @items[:bgm][0]+24, @items[:bgm][1], 0xFF,0xFF,0xFF, 0x11, 0x11, 0x11)
       when 2
-        @font.draw_shaded_utf8(@contents, "BGM", @items[:bgm][0]+24, @items[:bgm][1], 0x11,0x11,0x11, 0xFF, 0xFF, 0xFF)
+        @font.draw_shaded_utf8(@contents, "背景音乐", @items[:bgm][0]+24, @items[:bgm][1], 0x11,0x11,0x11, 0xFF, 0xFF, 0xFF)
       end
     when :avatar_cache
       size = 0
