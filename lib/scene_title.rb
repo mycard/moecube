@@ -1,4 +1,4 @@
-#encoding: UTF-8
+﻿#encoding: UTF-8
 #==============================================================================
 # Scene_Title
 #------------------------------------------------------------------------------
@@ -13,9 +13,10 @@ class Scene_Title < Scene
     WM::set_caption("MyCard v#{Update::Version}", "MyCard")
     title = Dir.glob("graphics/titles/title_*.*")
     title = title[rand(title.size)]
+    title = "graphics/titles/title_#{$config['screen']['height'] == 768 ? 'full' : 'resize'}_special.png" if title['special']
     @background = Surface.load(title).display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
-    @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : 400, $config['screen']['height']/2-100)
+    @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : title["special"] ? 42 : 400, title["special"] ? 321 : $config['screen']['height']/2-100)
     @decision_se = Mixer::Wave.load("audio/se/decision.ogg") if SDL.inited_system(INIT_AUDIO) != 0
     super
   end
