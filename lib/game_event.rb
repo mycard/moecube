@@ -19,7 +19,7 @@ class Game_Event
     attr_reader :user
 
     def initialize(user)
-      @user      = user
+      @user = user
       $game.user = @user
     end
   end
@@ -42,6 +42,7 @@ class Game_Event
 
   class AllServers < Game_Event
     attr_reader :servers
+
     def initialize(servers)
       $game.servers.replace servers
     end
@@ -52,14 +53,21 @@ class Game_Event
 
     def initialize(user)
       @user = user
-      unless $game.users.include? @user
-        if @user.friend? or @user.role == :moderator
-          $game.users.unshift @user
-          #p $game.users
-          #$a = 2
+      case @user.affiliation
+      when :owner
+        if index = $game.users.find_index { |user| user.affiliation != :owner }
+          $game.users.insert(index, @user)
         else
           $game.users << @user
         end
+      when :admin
+        if index = $game.users.find_index { |user| user.affiliation != :owner and user.affiliation != :admin }
+          $game.users.insert(index, @user)
+        else
+          $game.users << @user
+        end
+      else
+        $game.users << @user
       end
     end
   end
@@ -129,7 +137,7 @@ class Game_Event
     attr_reader :room
 
     def initialize(room)
-      @room      = room
+      @room = room
       $game.room = @room
     end
   end
@@ -139,7 +147,7 @@ class Game_Event
     attr_reader :room
 
     def initialize(room)
-      @room      = room
+      @room = room
       $game.room = @room
     end
   end
@@ -151,7 +159,7 @@ class Game_Event
     attr_reader :user
 
     def initialize(user)
-      @user              = user
+      @user = user
       $game.room.player2 = @user
     end
   end
@@ -166,7 +174,7 @@ class Game_Event
 
     def initialize(action, str=action.escape)
       @action = action
-      @str    = str
+      @str = str
     end
   end
 
@@ -175,9 +183,9 @@ class Game_Event
     attr_reader :title, :message, :fatal
 
     def initialize(title, message, fatal=true)
-      @title   = title
+      @title = title
       @message = message
-      @fatal   = fatal
+      @fatal = fatal
       $log.error(@fatal ? "致命错误" : "一般错误") { "#{@title}: #{@message} #{caller}" }
     end
   end

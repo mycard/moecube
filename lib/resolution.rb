@@ -14,7 +14,7 @@ module Resolution
       get_system_metrics = Win32API.new "User32.dll", "GetSystemMetrics", ["L"], "L"
       [get_system_metrics.call(0), get_system_metrics.call(1)]
     else
-      `xdpyinfo`.scan(/dimensions:    (\d+)x(\d+) pixels/).flatten.collect { |n| n.to_i }
+      `xdpyinfo`.scan(/dimensions:    (\d+)x(\d+) pixels/).flatten.collect { |n| n.to_i } rescue [1440, 900]
     end
   end
 

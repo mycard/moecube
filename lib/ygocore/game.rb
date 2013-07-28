@@ -49,6 +49,9 @@ class Ygocore < Game
       Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), '聊天服务连接中断: ' + exception.to_s)))
     end
     @@im_room.add_message_callback do |m|
+      if m.from.resource.nil? and m.subject
+        Game_Event.push Game_Event::Chat.new ChatMessage.new(User.new(:subject, '主题'), m.subject, :lobby) rescue $log.error('收到聊天消息') { $! }
+      end
       if m.from.resource and m.body
         user = m.from.resource == nickname ? @user : User.new(m.from.resource.to_sym, m.from.resource)
         Game_Event.push Game_Event::Chat.new ChatMessage.new(user, m.body, :lobby) rescue $log.error('收到聊天消息') { $! }
@@ -62,7 +65,7 @@ class Ygocore < Game
     end
     @@im_room.add_join_callback do |m|
       user = User.new m.from.resource.to_sym, m.from.resource
-      user.role = m.x.first_element('item').role rescue nil
+      user.affiliation = m.x('http://jabber.org/protocol/muc#user').first_element('item').affiliation rescue nil
       Game_Event.push Game_Event::NewUser.new user
     end
     @@im_room.add_leave_callback do |m|

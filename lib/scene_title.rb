@@ -17,7 +17,7 @@ class Scene_Title < Scene
     @background = Surface.load(title).display_format
     Surface.blit(@background,0,0,0,0,$screen,0,0)
     @command_window = Window_Title.new(title["left"] ? 200 : title["right"] ? 600 : title["special"] ? 42 : 400, title["special"] ? 321 : $config['screen']['height']/2-100)
-    @decision_se = Mixer::Wave.load("audio/se/decision.ogg") if SDL.inited_system(INIT_AUDIO) != 0
+    (@decision_se = Mixer::Wave.load("audio/se/decision.ogg") if SDL.inited_system(INIT_AUDIO) != 0) rescue nil
     super
   end
   def clear(x,y,width,height)
@@ -25,7 +25,7 @@ class Scene_Title < Scene
   end
   def determine
     return unless @command_window.index
-    Mixer.play_channel(-1,@decision_se,0) if SDL.inited_system(INIT_AUDIO) != 0
+    Mixer.play_channel(-1,@decision_se,0) if @decision_se
     case @command_window.index
     when 0
       require_relative 'scene_login'

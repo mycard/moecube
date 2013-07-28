@@ -7,7 +7,7 @@ class Card
   @diy = {}
 	@count = @db.get_first_value("select COUNT(*) from `yu-gi-oh`") rescue 0
 	@db.results_as_hash = true
-  PicPath = if RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
+  PicPath = if Windows
     require 'win32/registry'
     ospicpath = Win32::Registry::HKEY_CURRENT_USER.open('Software\OCGSOFT\Cards'){|reg|reg['Path']} rescue ''
     ospicpath.force_encoding "GBK"

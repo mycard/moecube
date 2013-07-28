@@ -20,16 +20,24 @@ class ChatMessage
   end
 
   def name_color
-    case user.role
-      when :moderator
+    case user.affiliation
+      when :owner
+        [220,20,60]
+      when :admin
         [148,43,226]
       else
-        user == $game.user ? [0, 128, 0] : [0, 0, 255]
+        if user.id == :subject
+          [128,128,128]
+        else
+          user == $game.user ? [0, 128, 0] : [0, 0, 255]
+        end
     end
   end
 
   def message_color
-    if name_visible?
+    if user.id == :subject
+      [128,128,128]
+    elsif name_visible?
       [0, 0, 0]
     elsif user == $game.user or ($game.room and !$game.room.include?($user) and user == $game.room.player1)
       [0, 128, 0]

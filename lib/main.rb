@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 begin
 
-  Windows = RUBY_PLATFORM["win"] || RUBY_PLATFORM["ming"]
-  Font = ['fonts/wqy-microhei.ttc', '/usr/share/fonts/wqy-microhei/wqy-microhei.ttc', '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'].find{|file|File.file? file}
+  Windows = RUBY_PLATFORM["mswin"] || RUBY_PLATFORM["ming"]
+  Font = ['fonts/wqy-microhei.ttc', '/usr/share/fonts/wqy-microhei/wqy-microhei.ttc', '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc', '/Library/Fonts/Hiragino Sans GB W3.otf'].find{|file|File.file? file}
   #System_Encoding = Windows ? "CP#{`chcp`.scan(/\d+$/)}" : `locale |grep LANG |awk -F '=' '{print $2}'`
   
   Dir.glob('post_update_*.rb').sort.each { |file| load file }
