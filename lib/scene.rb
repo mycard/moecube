@@ -58,7 +58,7 @@ class Scene
       title = OggInfo.new("audio/bgm/#{bgm}").tag["title"]
       @bgm_window = Window_BGM.new title if title and !title.empty?
       @@last_bgm = bgm
-    end
+    end rescue nil
   end
   def bgm
     "title.ogg"
