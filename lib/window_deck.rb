@@ -7,7 +7,7 @@ class Window_Deck < Window_Scrollable
     super((1024-@background.w)/2, 230, @background.w, @background.h, 300)
 
     @items_button = Surface.load("graphics/system/deck_buttons.png")
-    @items_buttons = {edit: "编辑", delete: "删除", export: "导出", share: "分享"}
+    @items_buttons = {edit: "编辑", delete: "删除", export: "导出", share: "分享", buy: "打印"}
 
     button_y = @height - 36
     @button = Surface.load("graphics/system/button.png")
@@ -129,7 +129,7 @@ class Window_Deck < Window_Scrollable
           when :edit
             Ygocore.run_ygocore(File.basename(@items[index[0]], ".ydk"))
             refresh
-          when :share
+          when :share, :buy
             card_usages = []
             side = false
             last_id = nil
@@ -164,7 +164,7 @@ class Window_Deck < Window_Scrollable
                 result << key[(c >> i * 6) & 0x3F]
               end
             end
-            Dialog.web "https://my-card.in/decks/new?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
+            Dialog.web "https://my-card.in/decks/new#{'.pdf' if index[1] == :buy}?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
 
           when :delete
             require_relative 'widget_msgbox'
