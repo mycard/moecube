@@ -156,6 +156,7 @@ class Window_Deck < Window_Scrollable
                 end
               end
             end
+            card_usages.push({card_id: last_id, side: side, count: count}) if last_id
             result = ""
             key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
             card_usages.each do |card_usage|
@@ -164,7 +165,7 @@ class Window_Deck < Window_Scrollable
                 result << key[(c >> i * 6) & 0x3F]
               end
             end
-            Dialog.web "https://my-card.in/decks/new#{'.pdf' if index[1] == :buy}?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#share"
+            Dialog.web "https://my-card.in/decks/new#{'.pdf' if index[1] == :buy}?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#{'#share' if index[1] == :share}"
 
           when :delete
             require_relative 'widget_msgbox'
