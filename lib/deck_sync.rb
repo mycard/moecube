@@ -10,7 +10,7 @@ module Deck_Sync
       require 'date'
       Thread.new {
         just_updated = []
-        $log.info('下载卡组'){"https://my-card.in/decks/?user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"}
+        $log.info('下载卡组') { "https://my-card.in/decks/?user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}" }
         open("https://my-card.in/decks/?user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}") { |list|
           JSON.parse(list.read).each { |deck|
             file = File.join(File.dirname(Ygocore.ygocore_path), 'deck', "#{deck['name']}.ydk")
@@ -38,7 +38,10 @@ module Deck_Sync
         } rescue $log.error('卡组下载') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
         Thread.new { watch } unless @watching
         @watching = true
-        Dir.glob(File.join(File.dirname(Ygocore.ygocore_path), 'deck', '*.ydk')) { |deck|
+        Dir.foreach(File.join(File.dirname(Ygocore.ygocore_path), 'deck')) { |deck|
+          deck.encode! 'UTF-8'
+          deck = File.join(File.dirname(Ygocore.ygocore_path), 'deck', deck)
+          next if File.extname(deck) != '.ydk'
           next if just_updated.include? deck
           update(deck)
         }
@@ -63,6 +66,7 @@ module Deck_Sync
       response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
       Update.status = nil
     end
+
     def delete(deck)
       Update.status = "正在同步卡组: #{File.basename(deck, ".ydk")}"
       path = "/decks/?name=#{URI.escape File.basename(deck, ".ydk"), Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"

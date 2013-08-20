@@ -47,7 +47,7 @@ module Update
           $log.info('下载更新-解析后') { reply.inspect }
           reply.each do |fil|
             name = File.basename fil
-            @status.replace "正在下载更新#{name}"
+            @status = "正在下载更新#{name}"
             open(fil, 'rb') do |fi|
               $log.info('下载完毕') { name }
               @updated = true
@@ -102,7 +102,7 @@ module Update
               dest = "ygocore/pics/#{number}.jpg"
               dest_thumb = "ygocore/pics/thumbnail/#{number}.jpg"
               if File.file?(src)
-                @status.replace "检测到存在iDuel卡图 正在导入 #{id}.jpg"
+                @status = "检测到存在iDuel卡图 正在导入 #{id}.jpg"
                 existed_images << number
                 if !File.exist?(dest)
                   FileUtils.copy_file(src, dest)
@@ -148,7 +148,7 @@ module Update
                         ids.replace @thumbnails.pop(100)
                         reqs = ids.reverse.collect { |id| Net::HTTP::Get.new thumbnail_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
+                          @status = "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
                           @thumbnails_left -= 1
                           id = ids.pop
                           if res.code[0] == '2' #http 2xx
@@ -167,7 +167,7 @@ module Update
                         ids.replace @images.pop(100)
                         reqs = ids.reverse.collect { |id| Net::HTTP::Get.new image_req.gsub(':id', id.to_s) }
                         http.pipeline reqs do |res|
-                          @status.replace "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
+                          @status = "正在下载卡图 (剩余: 缩略#{@thumbnails_left} / 完整#{@images_left} #{"错误: #{@error_count}" if @error_count > 0})"
                           @images_left -= 1
                           id = ids.pop
                           if res.code[0] == '2' #http 2xx
