@@ -57,7 +57,7 @@ module Deck_Sync
 
     def update(deck)
       Update.status = "正在同步卡组: #{File.basename(deck, ".ydk")}"
-      path = "/decks/?#{Deck.ygopro_deck_to_url_param(deck)}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&updated_at=#{URI.escape File.mtime(deck).to_datetime.iso8601, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
+      path = "/decks/?#{Deck.ygopro_deck_to_url_param(deck)}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&updated_at=#{URI.escape DateTime.now.iso8601, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
       $log.info("卡组上传") { path }
       req = Net::HTTP::Put.new path
       response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
