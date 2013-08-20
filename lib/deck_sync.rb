@@ -38,10 +38,7 @@ module Deck_Sync
         } rescue $log.error('卡组下载') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
         Thread.new { watch } unless @watching
         @watching = true
-        Dir.foreach(File.join(File.dirname(Ygocore.ygocore_path), 'deck')) { |deck|
-          deck.encode! 'UTF-8'
-          deck = File.join(File.dirname(Ygocore.ygocore_path), 'deck', deck)
-          next if File.extname(deck) != '.ydk'
+        Dir.glob("#{File.dirname(Ygocore.ygocore_path)}/deck/*.ydk").each { |deck|
           next if just_updated.include? deck
           update(deck)
         }
@@ -51,28 +48,36 @@ module Deck_Sync
 
     def watch
       require 'fssm'
-      FSSM.monitor(File.join(File.dirname(Ygocore.ygocore_path), 'deck'), '*.ydk') do
-        update { |base, relative| Deck_Sync.update File.join base, relative }
-        delete { |base, relative| Deck_Sync.delete File.join base, relative }
-        create { |base, relative| Deck_Sync.update File.join base, relative }
+      FSSM.monitor("#{File.dirname(Ygocore.ygocore_path)}/deck", '*.ydk') do
+        update { |base, relative| Deck_Sync.update "#{base}/#{relative}" }
+        delete { |base, relative| Deck_Sync.delete "#{base}/#{relative}" }
+        create { |base, relative| Deck_Sync.update "#{base}/#{relative}" }
       end
     end
 
     def update(deck)
       Update.status = "正在同步卡组: #{File.basename(deck, ".ydk")}"
-      path = "/decks/?#{Deck.ygopro_deck_to_url_param(deck)}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&updated_at=#{URI.escape DateTime.now.iso8601, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
-      $log.info("卡组上传") { path }
-      req = Net::HTTP::Put.new path
-      response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
+      begin
+        path = "/decks/?#{Deck.ygopro_deck_to_url_param(deck)}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&updated_at=#{URI.escape DateTime.now.iso8601, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
+        $log.info("卡组上传") { path }
+        req = Net::HTTP::Put.new path
+        response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
+      rescue
+        $log.error('卡组上传') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+      end
       Update.status = nil
     end
 
     def delete(deck)
       Update.status = "正在同步卡组: #{File.basename(deck, ".ydk")}"
-      path = "/decks/?name=#{URI.escape File.basename(deck, ".ydk"), Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
-      $log.info("卡组删除") { path }
-      req = Net::HTTP::Delete.new path
-      response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
+      begin
+        path = "/decks/?name=#{URI.escape File.basename(deck, ".ydk"), Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}&user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}"
+        $log.info("卡组删除") { path }
+        req = Net::HTTP::Delete.new path
+        response = Net::HTTP.start('my-card.in', 443, use_ssl: true) { |http| http.request(req) }
+      rescue
+        $log.error('卡组删除') { [$!.inspect, *$!.backtrace].collect { |str| str.force_encoding("UTF-8") }.join("\n") }
+      end
       Update.status = nil
     end
   end
