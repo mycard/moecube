@@ -2,10 +2,11 @@
 require "fileutils"
 require_relative 'card'
 module Update
-  Version = '1.1.7'
+  Version = '1.2.0'
   URL = "https://my-card.in/mycard/update.json?version=#{Version}"
   class <<self
-    attr_reader :thumbnails, :images, :status
+    attr_reader :thumbnails, :images
+    attr_accessor :status
 
     def start
       Dir.glob("mycard-update-*-*.zip") do |file|

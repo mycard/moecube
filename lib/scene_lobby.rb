@@ -15,6 +15,7 @@ class Scene_Lobby < Scene
   require_relative 'window_lobbybuttons'
   require_relative 'chatmessage'
   require_relative 'scene_duel'
+  require_relative 'deck_sync'
   attr_reader :chat_window
 
   def start
@@ -29,6 +30,7 @@ class Scene_Lobby < Scene
     @active_window = @roomlist
     @chat_window = Window_Chat.new(313, $config['screen']['height'] - 225, 698, 212)
     @count = 0
+    Deck_Sync.start
     super
   end
 

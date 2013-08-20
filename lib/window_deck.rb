@@ -165,7 +165,8 @@ class Window_Deck < Window_Scrollable
                 result << key[(c >> i * 6) & 0x3F]
               end
             end
-            Dialog.web "https://my-card.in/decks/new#{'.pdf' if index[1] == :buy}?name=#{File.basename(@items[index[0]], ".ydk")}&cards=#{result}#{'#share' if index[1] == :share}"
+            require 'uri'
+            Dialog.web "https://my-card.in/decks/new#{'.pdf' if index[1] == :buy}?name=#{URI.escape(File.basename(@items[index[0]], ".ydk"), Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))}&cards=#{result}#{'#share' if index[1] == :share}"
 
           when :delete
             require_relative 'widget_msgbox'
