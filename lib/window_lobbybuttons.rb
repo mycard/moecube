@@ -1,7 +1,7 @@
 require_relative 'window_host'
 class Window_LobbyButtons < Window_List
   def initialize(x, y)
-    @items = [I18n.t('lobby.faq'), I18n.t('lobby.filter'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom'), I18n.t('lobby.match')]
+    @items = [I18n.t('lobby.forum'), I18n.t('lobby.filter'), I18n.t('lobby.editdeck'), I18n.t('lobby.newroom'), I18n.t('lobby.match')]
     @button = Surface.load("graphics/lobby/button.png")
     super(x, y, @items.size*@button.w/3+@items.size*4, 30)
     @font = TTF.open(Font, 15)
@@ -34,7 +34,7 @@ class Window_LobbyButtons < Window_List
     case @index
       when 0 #常见问题
         require_relative 'dialog'
-        Dialog.web "https://my-card.in/login?user[name]=#{CGI.escape $game.user.name}&user[password]=#{CGI.escape $game.password}&continue=/topics/1453"
+        Dialog.web "http://forum.my-card.in/"
       when 1 #房间筛选
         if @filter_window and !@filter_window.destroyed?
           @filter_window.destroy
