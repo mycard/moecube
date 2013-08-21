@@ -38,11 +38,15 @@ class Ygocore < Game
     else
       jid = Jabber::JID::new @username, 'my-card.in', 'mycard'
     end
+    Jabber::Client.module_eval do |klass|
+      def start
+        super
+        send(generate_stream_start(@jid.domain, nil, nil, $config['i18n']['locale'])) { |e| e.name == 'stream' }
+      end
+    end
 
     @@im = Jabber::Client.new(jid)
     @@im_room = Jabber::MUC::MUCClient.new(@@im)
-    Jabber.logger = $log
-    Jabber.debug = true
 
     @@im.on_exception do |exception, c, where|
       $log.error('聊天出错') { [exception, c, where] }
@@ -100,10 +104,8 @@ class Ygocore < Game
             Game_Event.push Game_Event::Error.new('ygocore', '读取服务器列表失败.1', true)
           end
 
-          #EventMachine::connect "mycard-server.my-card.in", 9997, Client
           ws = WebSocket::EventMachine::Client.connect(:uri => 'wss://my-card.in/rooms.json');
           ws.onmessage do |msg, type|
-            $log.info('收到websocket消息') { msg.force_encoding("UTF-8") }
             Game_Event.push Game_Event::RoomsUpdate.new JSON.parse(msg).collect { |room| Game_Event.parse_room(room) }
           end
           ws.onclose do
@@ -173,12 +175,12 @@ class Ygocore < Game
             #@@im_room.join(Jabber::JID.new(I18n.t('lobby.room'), I18n.t('lobby.server'), nickname))
             @@im_room.join(Jabber::JID.new('mycard', 'conference.my-card.in', nickname))
           rescue Jabber::ServerError => exception
+            Game_Event.push(Game_Event::Chat.new(ChatMessage.new(User.new(:system, 'System'), exception.message)))
             if exception.error.error == 'conflict'
               @nickname_conflict << nickname
               retry
             end
           end
-          #Game_Event.push Game_Event::AllUsers.new @@im_room.roster.keys.collect { |nick| User.new(nick.to_sym, nick) } rescue p $!
         end
       rescue StandardError => exception
         $log.error('聊天连接出错') { exception }

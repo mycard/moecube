@@ -20,7 +20,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name = 'mycard'
-  s.version = '1.2.1'
+  s.version = '1.2.2'
   s.extra_rdoc_files = ['README.txt', 'LICENSE.txt']
   s.summary = 'a card game platform'
   s.description = s.summary
