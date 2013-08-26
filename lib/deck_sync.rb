@@ -12,6 +12,8 @@ module Deck_Sync
         just_updated = []
         $log.info('下载卡组') { "https://my-card.in/decks/?user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}" }
         open("https://my-card.in/decks/?user=#{URI.escape $game.user.id.bare.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")}") { |list|
+          Dir.mkdir File.dirname(Ygocore.ygocore_path) if !File.directory? File.dirname(Ygocore.ygocore_path)
+          Dir.mkdir File.join File.dirname(Ygocore.ygocore_path), 'deck' if !File.directory? File.join File.dirname(Ygocore.ygocore_path), 'deck'
           JSON.parse(list.read).each { |deck|
             file = File.join(File.dirname(Ygocore.ygocore_path), 'deck', "#{deck['name']}.ydk")
             if (!File.file?(file) || DateTime.parse(deck['updated_at']).to_time > File.mtime(file))

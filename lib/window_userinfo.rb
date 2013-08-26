@@ -15,7 +15,10 @@ class Window_UserInfo < Window
     refresh
     require 'open-uri'
     Thread.new{
-      open('https://my-card.in/match_count'){|f|self.match = f.read.to_i}
+      loop {
+        open('https://my-card.in/match_count'){|f|self.match = f.read.to_i} rescue self.match = "ERROR"
+        sleep 60
+      }
     }
   end
   

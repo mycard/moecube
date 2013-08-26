@@ -13,6 +13,7 @@ gem 'sqlite3'
 gem 'zip'
 gem 'websocket'
 gem 'net-http-pipeline'
+gem 'fssm'
 
 group :development do
   gem 'rake'
