@@ -8,3 +8,15 @@ resource:
       height: 256
       color: 32
       file : icon.ico
+    - width: 48
+      height: 48
+      color: 32
+      file : icon.ico
+    - width: 32
+      height: 32
+      color: 32
+      file : icon.ico
+    - width: 16
+      height: 16
+      color: 32
+      file : icon.ico
