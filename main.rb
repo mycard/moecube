@@ -1,3 +1,4 @@
+#encoding: UTF-8
 # = Building
 if defined?(Ocra) or defined?(Exerb)
   require 'json'
@@ -5,6 +6,7 @@ if defined?(Ocra) or defined?(Exerb)
   require 'fileutils'
   require 'uri'
   require 'open-uri'
+  require 'net/http'
   require 'win32api'
   require 'win32ole'
   require 'win32/registry'
@@ -89,7 +91,8 @@ begin
 
       result = szFile.delete("\0".encode(Encoding::UTF_16LE)).encode(Encoding::UTF_8)
       if !result.empty? and File.file? result
-        result = File.expand_path result
+        require 'pathname'
+        result = Pathname.new(result).cleanpath
         Config['ygopro']['path'] = result
       else
         exit
@@ -253,9 +256,10 @@ begin
 
   def replay(replay)
     require 'fileutils'
-    moved_replay_directory = File.expand_path(File.dirname(Config['ygopro']['path'])) == Dir.pwd ? 'replay_moved' : 'replay'
+    moved_replay_directory = File.join(File.dirname(Config['ygopro']['path']), 'replay', 'stashed')
     files = Dir.glob(File.join(File.dirname(Config['ygopro']['path']), 'replay', '*.yrp'))
     files.delete File.join(File.dirname(Config['ygopro']['path']), 'replay', replay+'.yrp')
+    FileUtils.mkdir_p moved_replay_directory unless File.directory? moved_replay_directory
     FileUtils.mv files, moved_replay_directory
     run_ygopro('-r')
   end
@@ -282,16 +286,19 @@ begin
 
   def parse_path(path)
     require 'fileutils'
+    require 'pathname'
+    path = Pathname.new(path).cleanpath
+
     case File.extname(path)
       when '.ydk'
-        deck_directory = File.join(File.dirname(Config['ygopro']['path']), 'deck')
-        if file.dirname(path) != deck_directory
+        deck_directory = File.expand_path('deck', File.dirname(Config['ygopro']['path']))
+        unless File.expand_path(File.dirname(path)) == deck_directory
           Dir.mkdir(deck_directory) unless File.directory?(deck_directory)
           FileUtils.copy(path, deck_directory)
         end
         deck(File.basename(path, '.ydk'))
       when '.yrp'
-        replay_directory = File.expand_path(File.dirname(Config['ygopro']['path']))
+        replay_directory = File.expand_path('replay', File.dirname(Config['ygopro']['path']))
         unless File.expand_path(File.dirname(path)) == replay_directory
           Dir.mkdir(replay_directory) unless File.directory?(replay_directory)
           FileUtils.copy(path, replay_directory)
@@ -360,6 +367,6 @@ an error occurs, please send your operation and message below to zh99998@gmail.c
 
 #{exception.inspect}
   #{exception.backtrace.join("\n")}"
-  open('error.txt', 'w') { |f| f.write error }
+  open('error.txt', 'w:utf-8') { |f| f.write error }
   spawn 'notepad', 'error.txt'
 end
