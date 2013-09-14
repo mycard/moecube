@@ -3,6 +3,11 @@
 #################
 /error.txt
 /main.exe
+/Gemfile.lock
+/main.exa
+/main.exy
+/main.upx
+/upx.exe
 
 #################
 ## Jetbrains

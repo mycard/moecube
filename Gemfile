@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+gem 'websocket-eventmachine-server'
+gem 'rb-notifu'
+gem 'i18n'
+gem 'locale'
+gem 'mail'
