@@ -41,7 +41,7 @@ begin
   Config['ygopro']['numfont'] = Config['ygopro']['numfont'].find { |path| File.file? path } if Config['ygopro']['numfont'].is_a? Enumerable
 
 
-  if !Config['ygopro']['path']
+  if !Config['ygopro']['path'] or !File.file? Config['ygopro']['path']
     require 'win32api'
     GetOpenFileName = Win32API.new("comdlg32.dll", "GetOpenFileNameW", "p", "i")
 
@@ -84,16 +84,16 @@ begin
             0, # lpfnHook          L
             0 # lpTemplateName    L
         ].pack("LLLPLLLPLPLPPLS2L4")
-    Dir.chdir('.') {
+    Dir.chdir('.') do
       GetOpenFileName.call(ofn)
-    }
-    szFile.delete!("\0".encode("UTF-16LE"))
-    result = szFile.encode("UTF-8")
-    result = File.expand_path result
-    if result
-      Config['ygopro']['path'] = result
-    else
-      exit
+
+      result = szFile.delete("\0".encode(Encoding::UTF_16LE)).encode(Encoding::UTF_8)
+      if !result.empty? and File.file? result
+        result = File.expand_path result
+        Config['ygopro']['path'] = result
+      else
+        exit
+      end
     end
   end
 
