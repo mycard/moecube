@@ -213,12 +213,12 @@ begin
 
   def batch_download(main_url, files, content_type=nil)
     connections = {}
-    retried = [0] #pass by reference
-    [1*100, files.size].min.times { do_download(main_url, files, content_type, retried, connections) }
+    count = {total: files.size, error: 0}
+    [10*100, files.size].min.times { do_download(main_url, files, content_type, count, connections) }
   end
 
-  def do_download(main_url, files, content_type, retried, connections)
-    if connections.size < 1
+  def do_download(main_url, files, content_type, count, connections)
+    if connections.size < 10
       connection = EventMachine::HttpRequest.new(main_url)
       connections[connection] = 0
     else
@@ -232,15 +232,13 @@ begin
     remote_path, local_path = files.shift
     connections[connection] += 1
     connection.get(path: remote_path, keepalive: connections[connection] != 100).callback { |http|
-      puts local_path
-      retried[0] = 0
+      puts File.basename local_path
+      count[:error] = 0
+      count[:total] -= 1
       if http.response_header['CONNECTION'] != 'keep-alive'
         connection.close
         connections.delete(connection)
-        do_download(main_url, files, content_type, retried, connections) while !files.empty? and (connections.size < 1 or connections.values.min < 100)
-      elsif files.empty?
-        connection.close
-        connections.delete(connection)
+        do_download(main_url, files, content_type, count, connections) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
       end
 
       if http.response_header.status == 200 and (!content_type or http.response_header['CONTENT_TYPE'] == content_type)
@@ -248,17 +246,30 @@ begin
       else
         puts http.response_header.http_status
       end
+
+      if count[:total].zero?
+        connections.each_key { |connection| connection.close }
+        connections.clear
+        puts 'all done'
+        EM.stop
+      end
     }.errback { |http|
       puts http.error
       connection.close
       connections.delete(connection)
       files[remote_path] = local_path
-      retried[0] += 1
-      if retried[0] <= 10*100
-        do_download(main_url, files, content_type, retried, connections) while !files.empty? and (connections.size < 1 or connections.values.min < 100)
+      count[:error] += 1
+      if count[:error] <= 10*100
+        do_download(main_url, files, content_type, count, connections) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
+      else
+        connections.each_key { |connection| connection.close }
+        connections.clear
+        puts 'network error'
+        EM.stop
       end
     }
   end
+
 
   def load_system_conf
     system_conf = {}
