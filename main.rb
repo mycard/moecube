@@ -6,16 +6,23 @@ if defined?(Ocra) or defined?(Exerb)
   require 'fileutils'
   require 'uri'
   require 'open-uri'
-  require 'net/http'
   require 'win32api'
   require 'win32ole'
   require 'win32/registry'
   require 'websocket-eventmachine-server'
+  require 'em-http'
+  require 'rb-notifu'
+  require 'sqlite3'
+  require 'socket'
+
+  require 'net/http'
+
   exit
 end
 # = Runtime
 begin
   # == initialize
+
   Version = "0.1.0"
   Platform = (RUBY_PLATFORM['mswin'] || RUBY_PLATFORM['mingw']) ? :win32 : :linux
   System_Encoding = Encoding.find("locale") rescue Encoding.find(Encoding.locale_charmap)
@@ -154,9 +161,10 @@ begin
 
 
   def service
+    require 'socket'
+    TCPServer.new('0.0.0.0', Config['port']).close rescue return #check port in use, seems eventmachine enabled IP_REUSEADDR.
     require 'websocket-eventmachine-server'
     EventMachine.run do
-
       WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => Config['port']) do |ws|
         ws.onopen do
           ws.send({'version' => Version}.to_json)
@@ -170,7 +178,86 @@ begin
           puts "Client disconnected"
         end
       end
+      if File.file? File.join(File.dirname(Config['ygopro']['path']), 'cards.cdb')
+        require 'sqlite3'
+        db = SQLite3::Database.new File.join(File.dirname(Config['ygopro']['path']), 'cards.cdb')
+        cards = db.execute('select id from datas').flatten
+        images_to_download = cards - Dir.glob(File.join(File.dirname(Config['ygopro']['path']), 'pics', '*.jpg')).collect { |file| File.basename(file, '.jpg').to_i }
+        thumbnails_to_download = cards - Dir.glob(File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail', '*.jpg')).collect { |file| File.basename(file, '.jpg').to_i }
+      end
+      unless images_to_download.empty? and thumbnails_to_download.empty?
+        require 'em-http'
+        require 'uri'
+        http = EM::HttpRequest.new('https://my-card.in/cards/image.json').get
+        http.callback {
+          response = JSON.parse http.response
+          p response
+          image_url = URI(response['url'])
+          thumbnail_url = URI(response['thumbnail_url'])
+          Dir.mkdir File.join(File.dirname(Config['ygopro']['path']), 'pics') unless File.directory? File.join(File.dirname(Config['ygopro']['path']), 'pics')
+          Dir.mkdir File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail') unless File.directory? File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail')
+          files = {}
+          thumbnails_to_download.each { |card_id| files[thumbnail_url.path.gsub(':id', card_id.to_s)] = File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail', card_id.to_s + '.jpg') }
+          images_to_download.each { |card_id| files[image_url.path.gsub(':id', card_id.to_s)] = File.join(File.dirname(Config['ygopro']['path']), 'pics', card_id.to_s + '.jpg') }
+          batch_download(image_url.to_s, files, 'image/jpeg')
+        }
+        require 'rb-notifu'
+        Notifu::show :message => "缩略: #{thumbnails_to_download.size}, 完整: #{images_to_download.size}".encode(System_Encoding), :baloon => false, :type => :info, :title => "正在下载卡图".encode(System_Encoding) do |status|
+          if status == 3
+            System.web 'http://my-card.in/rooms/'
+          end
+        end
+      end
     end
+  end
+
+  def batch_download(main_url, files, content_type=nil)
+    connections = {}
+    retried = [0] #pass by reference
+    [1*100, files.size].min.times { do_download(main_url, files, content_type, retried, connections) }
+  end
+
+  def do_download(main_url, files, content_type, retried, connections)
+    if connections.size < 1
+      connection = EventMachine::HttpRequest.new(main_url)
+      connections[connection] = 0
+    else
+      connection = connections.min_by { |key, value| value }
+      if connection[1] >= 100
+        return
+      else
+        connection = connection[0]
+      end
+    end
+    remote_path, local_path = files.shift
+    connections[connection] += 1
+    connection.get(path: remote_path, keepalive: connections[connection] != 100).callback { |http|
+      puts local_path
+      retried[0] = 0
+      if http.response_header['CONNECTION'] != 'keep-alive'
+        connection.close
+        connections.delete(connection)
+        do_download(main_url, files, content_type, retried, connections) while !files.empty? and (connections.size < 1 or connections.values.min < 100)
+      elsif files.empty?
+        connection.close
+        connections.delete(connection)
+      end
+
+      if http.response_header.status == 200 and (!content_type or http.response_header['CONTENT_TYPE'] == content_type)
+        IO.binwrite local_path, http.response
+      else
+        puts http.response_header.http_status
+      end
+    }.errback { |http|
+      puts http.error
+      connection.close
+      connections.delete(connection)
+      files[remote_path] = local_path
+      retried[0] += 1
+      if retried[0] <= 10*100
+        do_download(main_url, files, content_type, retried, connections) while !files.empty? and (connections.size < 1 or connections.values.min < 100)
+      end
+    }
   end
 
   def load_system_conf
@@ -276,7 +363,7 @@ begin
       when 'registed'
         registed?
       when 'mycard:///'
-        #service
+        service
       when /mycard:\/\/(.*)/
         parse_uri(command)
       when /.*\.(?:ydk|yrp)$/
@@ -349,7 +436,36 @@ begin
     end
   end
 
+  #monkey patch for exerb & addressable
+  if defined? ExerbRuntime
+    module Addressable
+      module IDNA
+        module File
+          class <<self
+            def join(*args)
+            end
+            def expand_path(*args)
+            end
+            def dirname(*args)
+            end
+            def open(*args)
+              result = ExerbRuntime.open('unicode.data')
+              if block_given?
+                begin
+                  yield result
+                ensure
+                  result.close
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
   save_config
+
   if ARGV.first
     parse ARGV.first.dup.force_encoding(System_Encoding).encode!(Encoding::UTF_8)
   else
@@ -359,7 +475,7 @@ begin
     else
       System.web(Config['url'])
     end
-    #service
+    service
   end
 rescue => exception
   error = "程序出现了错误，请把你的操作及以下信息发送至zh99998@gmail.com来帮助我们完善程序

@@ -1,7 +1,11 @@
-mkexy --encoding=utf-8 main.rb
+mkexy main.rb
 exerb -c gui -k utf8 main.exy
 upx main.exe
 
+
+
+  unicode.data:
+    file: E:/Ruby200/lib/ruby/gems/2.0.0/gems/addressable-2.3.5/data/unicode.data
 resource:
   icon:
     - width: 256
