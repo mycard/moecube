@@ -14,8 +14,40 @@ if defined?(Ocra) or defined?(Exerb)
   require 'rb-notifu'
   require 'sqlite3'
   require 'socket'
+  require 'digest/md5'
 
+  #open-uri protocol
   require 'net/http'
+
+  #websocket autoload
+  WebSocket::Error
+  WebSocket::ExceptionHandler
+  WebSocket::Frame::Base
+  WebSocket::Frame::Data
+  WebSocket::Frame::Handler::Base
+  WebSocket::Frame::Handler::Handler03
+  WebSocket::Frame::Handler::Handler04
+  WebSocket::Frame::Handler::Handler05
+  WebSocket::Frame::Handler::Handler07
+  WebSocket::Frame::Handler::Handler75
+  WebSocket::Frame::Incoming::Client
+  WebSocket::Frame::Incoming::Server
+  WebSocket::Frame::Outgoing::Client
+  WebSocket::Frame::Outgoing::Server
+  WebSocket::Handshake::Base
+  WebSocket::Handshake::Client
+  WebSocket::Handshake::Handler::Base
+  WebSocket::Handshake::Handler::Client
+  WebSocket::Handshake::Handler::Client01
+  WebSocket::Handshake::Handler::Client04
+  WebSocket::Handshake::Handler::Client75
+  WebSocket::Handshake::Handler::Client76
+  WebSocket::Handshake::Handler::Server
+  WebSocket::Handshake::Handler::Server04
+  WebSocket::Handshake::Handler::Server75
+  WebSocket::Handshake::Handler::Server76
+  WebSocket::Handshake::Server
+
 
   exit
 end
@@ -23,7 +55,7 @@ end
 begin
   # == initialize
 
-  Version = "0.1.0"
+  Version = "2.0.0"
   Platform = (RUBY_PLATFORM['mswin'] || RUBY_PLATFORM['mingw']) ? :win32 : :linux
   System_Encoding = Encoding.find("locale") rescue Encoding.find(Encoding.locale_charmap)
   Dir.chdir File.dirname(defined?(ExerbRuntime) ? ExerbRuntime.filepath.dup.force_encoding(System_Encoding).encode!(Encoding::UTF_8) : ENV["OCRA_EXECUTABLE"] || __FILE__)
@@ -165,9 +197,14 @@ begin
     TCPServer.new('0.0.0.0', Config['port']).close rescue return #check port in use, seems eventmachine enabled IP_REUSEADDR.
     require 'websocket-eventmachine-server'
     EventMachine.run do
+      ygopro_version = nil
+      connections = []
       WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => Config['port']) do |ws|
         ws.onopen do
-          ws.send({'version' => Version}.to_json)
+          connections.push ws
+          msg = {'version' => Version}
+          msg['ygopro_version'] = ygopro_version if ygopro_version
+          ws.send(msg.to_json)
         end
 
         ws.onmessage do |msg, type|
@@ -175,9 +212,18 @@ begin
         end
 
         ws.onclose do
-          puts "Client disconnected"
+          connections.delete ws
+          exit if connections.empty?
         end
       end
+
+      require 'em-http'
+      http = EM::HttpRequest.new('https://my-card.in/ygopro_version.json').get
+      http.callback { |http|
+        md5 = Digest::MD5.file(Config['ygopro']['path']).hexdigest
+        ygopro_version = JSON.parse(http.response)[md5] || md5
+        connections.each { |ws| ws.send ({'ygopro_version' => ygopro_version}).to_json }
+      }
       if File.file? File.join(File.dirname(Config['ygopro']['path']), 'cards.cdb')
         require 'sqlite3'
         db = SQLite3::Database.new File.join(File.dirname(Config['ygopro']['path']), 'cards.cdb')
@@ -186,12 +232,10 @@ begin
         thumbnails_to_download = cards - Dir.glob(File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail', '*.jpg')).collect { |file| File.basename(file, '.jpg').to_i }
       end
       unless images_to_download.empty? and thumbnails_to_download.empty?
-        require 'em-http'
         require 'uri'
         http = EM::HttpRequest.new('https://my-card.in/cards/image.json').get
         http.callback {
           response = JSON.parse http.response
-          p response
           image_url = URI(response['url'])
           thumbnail_url = URI(response['thumbnail_url'])
           Dir.mkdir File.join(File.dirname(Config['ygopro']['path']), 'pics') unless File.directory? File.join(File.dirname(Config['ygopro']['path']), 'pics')
@@ -199,7 +243,20 @@ begin
           files = {}
           thumbnails_to_download.each { |card_id| files[thumbnail_url.path.gsub(':id', card_id.to_s)] = File.join(File.dirname(Config['ygopro']['path']), 'pics', 'thumbnail', card_id.to_s + '.jpg') }
           images_to_download.each { |card_id| files[image_url.path.gsub(':id', card_id.to_s)] = File.join(File.dirname(Config['ygopro']['path']), 'pics', card_id.to_s + '.jpg') }
-          batch_download(image_url.to_s, files, 'image/jpeg')
+          thumbnails_count = thumbnails_to_download.size
+          images_count = images_to_download.size
+          errors_count = 0
+          batch_download(image_url.to_s, files, 'image/jpeg') { |http|
+            if http.req.path["thumbnail"]
+              thumbnails_count -= 1
+            else
+              images_count -= 1
+            end
+            unless http.response_header.status == 200 and http.response_header['CONTENT_TYPE'] == 'image/jpeg'
+              errors_count += 1
+            end
+            connections.each { |ws| ws.send ({'images_download_images' => images_count, 'images_download_thumbnails' => thumbnails_count, 'images_download_errors' => errors_count}).to_json }
+          }
         }
         require 'rb-notifu'
         Notifu::show :message => "缩略: #{thumbnails_to_download.size}, 完整: #{images_to_download.size}".encode(System_Encoding), :baloon => false, :type => :info, :title => "正在下载卡图".encode(System_Encoding) do |status|
@@ -211,13 +268,13 @@ begin
     end
   end
 
-  def batch_download(main_url, files, content_type=nil)
+  def batch_download(main_url, files, content_type=nil, &block)
     connections = {}
     count = {total: files.size, error: 0}
-    [10*100, files.size].min.times { do_download(main_url, files, content_type, count, connections) }
+    [10*100, files.size].min.times { do_download(main_url, files, content_type, count, connections, &block) }
   end
 
-  def do_download(main_url, files, content_type, count, connections)
+  def do_download(main_url, files, content_type, count, connections, &block)
     if connections.size < 10
       connection = EventMachine::HttpRequest.new(main_url)
       connections[connection] = 0
@@ -232,13 +289,13 @@ begin
     remote_path, local_path = files.shift
     connections[connection] += 1
     connection.get(path: remote_path, keepalive: connections[connection] != 100).callback { |http|
-      puts File.basename local_path
+      #puts File.basename local_path
       count[:error] = 0
       count[:total] -= 1
       if http.response_header['CONNECTION'] != 'keep-alive'
         connection.close
         connections.delete(connection)
-        do_download(main_url, files, content_type, count, connections) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
+        do_download(main_url, files, content_type, count, connections, &block) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
       end
 
       if http.response_header.status == 200 and (!content_type or http.response_header['CONTENT_TYPE'] == content_type)
@@ -247,12 +304,13 @@ begin
         puts http.response_header.http_status
       end
 
+      yield http
+
       if count[:total].zero?
         connections.each_key { |connection| connection.close }
         connections.clear
-        puts 'all done'
-        EM.stop
       end
+
     }.errback { |http|
       puts http.error
       connection.close
@@ -260,12 +318,11 @@ begin
       files[remote_path] = local_path
       count[:error] += 1
       if count[:error] <= 10*100
-        do_download(main_url, files, content_type, count, connections) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
+        do_download(main_url, files, content_type, count, connections, &block) while !files.empty? and (connections.size < 10 or connections.values.min < 100)
       else
         connections.each_key { |connection| connection.close }
         connections.clear
         puts 'network error'
-        EM.stop
       end
     }
   end
@@ -455,10 +512,13 @@ begin
           class <<self
             def join(*args)
             end
+
             def expand_path(*args)
             end
+
             def dirname(*args)
             end
+
             def open(*args)
               result = ExerbRuntime.open('unicode.data')
               if block_given?
@@ -481,7 +541,9 @@ begin
     parse ARGV.first.dup.force_encoding(System_Encoding).encode!(Encoding::UTF_8)
   else
     register if !registed?
-    if File.file? 'ruby\bin\rubyw.exe'
+    if File.file? 'nw.exe'
+      spawn 'nw.exe'
+    elsif File.file? 'ruby\bin\rubyw.exe'
       spawn 'ruby\bin\rubyw.exe', '-KU', 'lib/main.rb'
     else
       System.web(Config['url'])
