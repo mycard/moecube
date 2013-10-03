@@ -1,27 +1,30 @@
 #encoding: UTF-8
 # = Building
 if defined?(Ocra) or defined?(Exerb)
+  #stdlib
   require 'json'
   require 'pathname'
   require 'fileutils'
   require 'uri'
   require 'open-uri'
   require 'win32api'
+  require 'fiddle'
   require 'win32ole'
   require 'win32/registry'
+  require 'socket'
+  require 'digest/md5'
+
+  #gems
   require 'websocket-eventmachine-server'
   require 'em-http'
   require 'rb-notifu'
   require 'sqlite3'
-  require 'socket'
-  require 'digest/md5'
+  require 'data-uri'
 
   #open-uri protocol
   require 'net/http'
 
   #websocket autoload
-  WebSocket::Error
-  WebSocket::ExceptionHandler
   WebSocket::Frame::Base
   WebSocket::Frame::Data
   WebSocket::Frame::Handler::Base
@@ -58,8 +61,8 @@ begin
   Version = "2.0.0"
   Platform = (RUBY_PLATFORM['mswin'] || RUBY_PLATFORM['mingw']) ? :win32 : :linux
   System_Encoding = Encoding.find("locale") rescue Encoding.find(Encoding.locale_charmap)
-  Dir.chdir File.dirname(defined?(ExerbRuntime) ? ExerbRuntime.filepath.dup.force_encoding(System_Encoding).encode!(Encoding::UTF_8) : ENV["OCRA_EXECUTABLE"] || __FILE__)
-
+  pwd = File.dirname(defined?(ExerbRuntime) ? ExerbRuntime.filepath.dup.force_encoding(System_Encoding).encode!(Encoding::UTF_8) : ENV["OCRA_EXECUTABLE"] || __FILE__)
+  Dir.chdir pwd
   # == config
 
   Config = {
@@ -125,17 +128,17 @@ begin
             0, # lpfnHook          L
             0 # lpTemplateName    L
         ].pack("LLLPLLLPLPLPPLS2L4")
-    Dir.chdir('.') do
-      GetOpenFileName.call(ofn)
 
-      result = szFile.delete("\0".encode(Encoding::UTF_16LE)).encode(Encoding::UTF_8)
-      if !result.empty? and File.file? result
-        require 'pathname'
-        result = Pathname.new(result).cleanpath
-        Config['ygopro']['path'] = result
-      else
-        exit
-      end
+    GetOpenFileName.call(ofn)
+    Dir.chdir pwd
+
+    result = szFile.delete("\0".encode(Encoding::UTF_16LE)).encode(Encoding::UTF_8)
+    if !result.empty? and File.file? result
+      require 'pathname'
+      result = Pathname.new(result).cleanpath
+      Config['ygopro']['path'] = result
+    else
+      exit
     end
   end
 
@@ -194,11 +197,26 @@ begin
 
   def service
     require 'socket'
-    TCPServer.new('0.0.0.0', Config['port']).close rescue return #check port in use, seems eventmachine enabled IP_REUSEADDR.
+    begin
+      TCPServer.new('0.0.0.0', Config['port']).close
+    rescue Errno::EADDRINUSE
+      return #check port in use, seems eventmachine enabled IP_REUSEADDR.
+    end
     require 'websocket-eventmachine-server'
     EventMachine.run do
       ygopro_version = nil
       connections = []
+
+      EventMachine.error_handler { |exception|
+        error = "程序出现了错误，请把你的操作及以下信息发送至zh99998@gmail.com来帮助我们完善程序
+an error occurs, please send your operation and message below to zh99998@gmail.com
+
+#{exception.inspect.encode(Encoding::UTF_8)}
+        #{exception.backtrace.join("\n").encode(Encoding::UTF_8)}"
+        open('error.txt', 'w:utf-8') { |f| f.write error }
+        spawn 'notepad', 'error.txt'
+      }
+
       WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => Config['port']) do |ws|
         ws.onopen do
           connections.push ws
@@ -208,7 +226,7 @@ begin
         end
 
         ws.onmessage do |msg, type|
-          ws.send parse(msg).to_json
+          ws.send parse(msg.encode!(Encoding::UTF_8)).to_json
         end
 
         ws.onclose do
@@ -378,12 +396,32 @@ begin
     end
 
     def elevate(path, args, pwd = Dir.pwd)
-      web path, args.join(' '), Dir.pwd, 'runas'
+      web path, args.collect { |arg| arg.inspect }.join(' '), Dir.pwd, 'runas'
     end
   end
 
   def run_ygopro(parameter)
-    spawn File.basename(Config['ygopro']['path']), parameter, chdir: File.dirname(Config['ygopro']['path'])
+    spawn File.basename(Config['ygopro']['path']), *parameter, chdir: File.dirname(Config['ygopro']['path']).encode(System_Encoding)
+    require 'fiddle'
+    user32 = Fiddle.dlopen('user32')
+    findWindow = Fiddle::Function.new(
+        user32['FindWindow'],
+        [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+        Fiddle::TYPE_INT
+    )
+    setForegroundWindow = Fiddle::Function.new(
+        user32['SetForegroundWindow'],
+        [Fiddle::TYPE_INT],
+        Fiddle::TYPE_CHAR
+    )
+    100.times do
+      if (hwnd = findWindow.call('CIrrDeviceWin32', nil)) != 0
+        setForegroundWindow.call(hwnd)
+        break
+      else
+        sleep 0.1
+      end
+    end
   end
 
   def join(room)
@@ -399,6 +437,113 @@ begin
     options['roompass'] = room['name']
     save_system_conf(options)
     run_ygopro('-j')
+  end
+
+  def rich_join(room)
+    if room['players'] && ((room['players']['0'] && room['players']['0']['avatar']) || ((room['players']['1'] && room['players']['1']['avatar'])))
+      require 'rmagick'
+      require "base64"
+      bg_path = File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+      bg = Magick::ImageList.new.from_blob IO.binread bg_path
+      finished = 0
+      if room['players']['0'] && room['players']['0']['avatar']
+        if room['players']['0']['avatar'][0, 5] == 'data:'
+          require 'data-uri'
+          avatar_player = Magick::ImageList.new.from_blob DataURI.decode(room['players']['0']['avatar'])
+          avatar_player.crop_resized!(96, 96, Magick::NorthGravity)
+          bg.composite!(avatar_player, 330, 60, Magick::CopyCompositeOp)
+          finished += 1
+        elsif File.file? avatar_player_path = File.join('avatars', File.basename(room['players']['0']['avatar']))
+          avatar_player = Magick::ImageList.new.from_blob IO.binread avatar_player_path
+          avatar_player.crop_resized!(96, 96, Magick::NorthGravity)
+          bg.composite!(avatar_player, 330, 60, Magick::CopyCompositeOp)
+          finished += 1
+        else
+          http = EventMachine::HttpRequest.new(room['players']['0']['avatar'], connect_timeout: 5, inactivity_timeout: 10).get redirects: 5
+          http.callback {
+            if http.response_header.status == 200
+              avatar_player = Magick::ImageList.new.from_blob http.response
+              avatar_player.crop_resized!(96, 96, Magick::NorthGravity)
+              bg.composite!(avatar_player, 330, 60, Magick::CopyCompositeOp)
+              Dir.mkdir 'avatars' unless File.directory? 'avatars'
+              IO.binwrite avatar_player_path, http.response
+            end
+            finished += 1
+            if finished == 2
+              File.rename bg_path, File.join(File.dirname(bg_path), 'bg_origin.jpg')
+              bg.write File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+              parse_uri(room['url_mycard'])
+              EventMachine::Timer.new(3) { File.rename File.join(File.dirname(bg_path), 'bg_origin.jpg'), bg_path }
+            end
+          }
+          http.errback { |http|
+            puts http
+            finished += 1
+            if finished == 2
+              File.rename bg_path, File.join(File.dirname(bg_path), 'bg_origin.jpg')
+              bg.write File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+              parse_uri(room['url_mycard'])
+              EventMachine::Timer.new(3) { File.rename File.join(File.dirname(bg_path), 'bg_origin.jpg'), bg_path }
+            end
+          }
+        end
+      else
+        finished += 1
+      end
+
+      if room['players']['1'] && room['players']['1']['avatar']
+        if room['players']['1']['avatar'][0, 5] == 'data:'
+          require 'data-uri'
+          avatar_opponent = Magick::ImageList.new.from_blob DataURI.decode(room['players']['1']['avatar'])
+          avatar_opponent.crop_resized!(96, 96, Magick::NorthGravity)
+          bg.composite!(avatar_opponent, 989-96, 60, Magick::CopyCompositeOp)
+          finished += 1
+        elsif File.file? avatar_opponent_path = File.join('avatars', File.basename(room['players']['1']['avatar']))
+          avatar_opponent = Magick::ImageList.new.from_blob IO.binread avatar_opponent_path
+          avatar_opponent.crop_resized!(96, 96, Magick::NorthGravity)
+          bg.composite!(avatar_opponent, 989-96, 60, Magick::CopyCompositeOp)
+          finished += 1
+        else
+          http = EventMachine::HttpRequest.new(room['players']['1']['avatar'], connect_timeout: 5, inactivity_timeout: 10).get redirects: 5
+          http.callback {
+            if http.response_header.status == 200
+              avatar_opponent = Magick::ImageList.new.from_blob http.response
+              avatar_opponent.crop_resized!(96, 96, Magick::NorthGravity)
+              bg.composite!(avatar_opponent, 989-120, 60, Magick::CopyCompositeOp)
+              Dir.mkdir 'avatars' unless File.directory? 'avatars'
+              IO.binwrite avatar_opponent_path, http.response
+            end
+            finished += 1
+            if finished == 2
+              File.rename bg_path, File.join(File.dirname(bg_path), 'bg_origin.jpg')
+              bg.write File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+              parse_uri(room['url_mycard'])
+              EventMachine::Timer.new(3) { File.rename File.join(File.dirname(bg_path), 'bg_origin.jpg'), bg_path }
+            end
+          }
+          http.errback { |http|
+            finished += 1
+            if finished == 2
+              File.rename bg_path, File.join(File.dirname(bg_path), 'bg_origin.jpg')
+              bg.write File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+              parse_uri(room['url_mycard'])
+              EventMachine::Timer.new(3) { File.rename File.join(File.dirname(bg_path), 'bg_origin.jpg'), bg_path }
+            end
+          }
+        end
+      else
+        finished += 1
+      end
+
+      if finished == 2
+        File.rename bg_path, File.join(File.dirname(bg_path), 'bg_origin.jpg')
+        bg.write File.join(File.dirname(Config['ygopro']['path']), 'textures', 'bg.jpg')
+        parse_uri(room['url_mycard'])
+        EventMachine::Timer.new(3) { File.rename File.join(File.dirname(bg_path), 'bg_origin.jpg'), bg_path }
+      end
+    else
+      parse_uri(room['url_mycard'])
+    end
   end
 
   def deck(deck)
@@ -432,10 +577,13 @@ begin
         registed?
       when 'mycard:///'
         service
-      when /mycard:\/\/(.*)/
+      when /^mycard:\/\/(.*)$/
         parse_uri(command)
-      when /.*\.(?:ydk|yrp)$/
+      when /^.*\.(?:ydk|yrp)$/
         parse_path(command) #解析函数可以分开
+      when /^join:(.*)$/
+        room = JSON.parse $1
+        rich_join(room)
     end
   end
 
@@ -542,7 +690,9 @@ begin
   else
     register if !registed?
     if File.file? 'nw.exe'
-      spawn 'nw.exe'
+      spawn 'nw.exe', '.'
+    elsif File.file? 'node-webkit/nw.exe'
+      spawn 'node-webkit/nw.exe', '.'
     elsif File.file? 'ruby\bin\rubyw.exe'
       spawn 'ruby\bin\rubyw.exe', '-KU', 'lib/main.rb'
     else
@@ -550,12 +700,13 @@ begin
     end
     service
   end
-rescue => exception
+rescue SystemExit
+rescue Exception => exception
   error = "程序出现了错误，请把你的操作及以下信息发送至zh99998@gmail.com来帮助我们完善程序
 an error occurs, please send your operation and message below to zh99998@gmail.com
 
-#{exception.inspect}
-  #{exception.backtrace.join("\n")}"
+#{exception.inspect.encode(Encoding::UTF_8)}
+  #{exception.backtrace.join("\n").encode(Encoding::UTF_8)}"
   open('error.txt', 'w:utf-8') { |f| f.write error }
   spawn 'notepad', 'error.txt'
 end

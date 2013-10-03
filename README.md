@@ -24,3 +24,18 @@ resource:
       height: 16
       color: 32
       file : icon.ico
+  version:
+    file_version_number   : 2.0.0
+    product_version_number: 5.6.7.8
+    comments              : コメント
+    company_name          : MyCard
+    legal_copyright       : 著作権情報
+    legal_trademarks      : 商標情報
+    file_version          : 2.0.0
+    product_version       : 製品バージョン（文字列）
+    product_name          : Mycard Lite
+    file_description      : Mycard的核心
+    internal_name         : mycard-lite
+    original_filename     : mycard.exe
+    private_build         : プライベートビルド情報
+    special_build         : スペシャルビルド情報
