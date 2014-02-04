@@ -135,13 +135,15 @@ begin
     result = szFile.delete("\0".encode(Encoding::UTF_16LE)).encode(Encoding::UTF_8)
     if !result.empty? and File.file? result
       require 'pathname'
-      result = Pathname.new(result).cleanpath
+      result = Pathname.new(result).cleanpath.to_s.gsub('\\', '/')
       Config['ygopro']['path'] = result
     else
       exit
     end
+  else
+    require 'pathname'
+    Config['ygopro']['path'] = Pathname.new(Config['ygopro']['path']).cleanpath.to_s.gsub('\\', '/')
   end
-
 
   def save_config(config=Config)
     require 'json'
@@ -264,6 +266,7 @@ an error occurs, please send your operation and message below to zh99998@gmail.c
           thumbnails_count = thumbnails_to_download.size
           images_count = images_to_download.size
           errors_count = 0
+          puts files.keys.join("\n")
           batch_download(image_url.to_s, files, 'image/jpeg') { |http|
             if http.req.path["thumbnail"]
               thumbnails_count -= 1
@@ -590,7 +593,7 @@ an error occurs, please send your operation and message below to zh99998@gmail.c
   def parse_path(path)
     require 'fileutils'
     require 'pathname'
-    path = Pathname.new(path).cleanpath
+    path = Pathname.new(path).cleanpath.to_s.gsub('\\', '/')
 
     case File.extname(path)
       when '.ydk'
@@ -638,21 +641,21 @@ an error occurs, please send your operation and message below to zh99998@gmail.c
         deck($2)
       when /^(?:(.+?)(?:\:(.+?))?\@)?([\d\.]+)\:(\d+)(?:\/(.*))$/
         join({
-            'name' => $5.to_s,
-            'user' => {
-                'nickname' => $1,
-                'password' => $2
-            },
-            'server' => {
-                'ip' => $3,
-                'port' => $4.to_i,
-                'auth' => !!$2
-            }
-        })
+                 'name' => $5.to_s,
+                 'user' => {
+                     'nickname' => $1,
+                     'password' => $2
+                 },
+                 'server' => {
+                     'ip' => $3,
+                     'port' => $4.to_i,
+                     'auth' => !!$2
+                 }
+             })
     end
   end
 
-  #monkey patch for exerb & addressable
+#monkey patch for exerb & addressable
   if defined? ExerbRuntime
     module Addressable
       module IDNA
