@@ -85,7 +85,7 @@ XMPP聊天室 conference.my-card.in
 以下全都为临时，开发用
 用户认证 https://my-card.in/users/me.json?name=用户名&password=密码
 反重力场 ws://122.0.65.69:10800/
-资源列表 https://github.com/mycard/maotama/raw/master/apps.json
+资源列表 https://github.com/mycard/maotama/raw/master/apps.json  
 资源下载 http://test2.my-card.in/downloads/maotama/
 
 ## 相关技术
