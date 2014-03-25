@@ -4,9 +4,10 @@
 毛玉只是开发代号，不作为最终名称，可能会并入mycard
 
 ## 功能列表 (发布之前)
-用户登录 ( 除xmpp外还有个http api http://my-card.in/users/me.json?name=用户名&password=密码 )
+用户登录
 聊天
 自动更新
+进程单实例
 
 以下功能至少支持东方绯想天、非想天则、心绮楼
 下载
@@ -75,6 +76,14 @@ replay管理
 
     apps.json       --> 调试用数据库，生产时应当在服务器上
     loop_start.bat  --> 调试用循环启动，叉掉之后自动开启一个新实例
+
+## API
+XMPP my-card.in
+XMPP聊天室 conference.my-card.in
+用户认证 https://my-card.in/users/me.json?name=用户名&password=密码
+反重力场 ws://122.0.65.69:10800/ (临时)
+资源列表 apps.json
+资源下载 http://test2.my-card.in/downloads/maotama/
 
 ## 相关技术
 
