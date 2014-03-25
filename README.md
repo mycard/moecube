@@ -32,7 +32,7 @@ replay管理
 存档同步
 自动更新
 一定程度的跨平台，例如能wine起来的游戏就直接标记为支持linux、mac。下载的时候一起调教好。
-依赖 (黑历史的PC98模拟器之类，还有FXTZ->FXT的建议性依赖)
+依赖 (dx, c++runtime, linux系统源, 黑历史的PC98模拟器之类，还有FXTZ->FXT的建议性依赖)
 
 游戏和其他资源
 好友玩过/好友正在玩
@@ -77,12 +77,15 @@ replay管理
     apps.json       --> 调试用数据库，生产时应当在服务器上
     loop_start.bat  --> 调试用循环启动，叉掉之后自动开启一个新实例
 
+二进制文件可以在 http://test2.my-card.in/downloads/maotama/maotama_win32_binaries.7z 下载
+
 ## API
 XMPP my-card.in
 XMPP聊天室 conference.my-card.in
+以下全都为临时，开发用
 用户认证 https://my-card.in/users/me.json?name=用户名&password=密码
-反重力场 ws://122.0.65.69:10800/ (临时)
-资源列表 apps.json
+反重力场 ws://122.0.65.69:10800/
+资源列表 https://github.com/mycard/maotama/raw/master/apps.json
 资源下载 http://test2.my-card.in/downloads/maotama/
 
 ## 相关技术
@@ -91,6 +94,7 @@ nodejs
 node-webkit
 HTML5
 AngularJS
+XMPP
 
 
 ## 制作组

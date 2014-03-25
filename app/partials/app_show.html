@@ -51,14 +51,26 @@
                             <label>
                                 <input type="checkbox" checked> 桌面
                             </label>
-                            <label>
-                                <input type="checkbox" checked> “开始”屏幕 <!--if windows >= 8-->
-                            </label>
-                            <!--if gnome-->
-                            <!--<label>
-                                <input type="checkbox" checked> “应用程序”菜单
-                            </label>-->
                         </div>
+
+                        <div class="checkbox">
+                            <label>
+                                <label>
+                                    <input type="checkbox" checked> “开始”屏幕 <!--if windows >= 8-->
+                                </label>
+                            </label>
+                        </div>
+
+                        <!--if gnome-->
+                        <!--
+                        <div class="checkbox">
+                            <label>
+                                <label>
+                                    <input type="checkbox" checked> “应用程序”菜单
+                                </label>
+                            </label>
+                        </div>-->
+
                     </div>
 
                     <label ng-if="app.has_extra_languages">语言包</label>
