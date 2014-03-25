@@ -417,6 +417,5 @@ Strophe.Connection.prototype._connect_cb = function(req, _callback, raw) {
         this._proto._no_auth_received(_callback);
         return;
     }
-    console.log(matched)
     if (this.do_authentication !== false) this.authenticate(matched);
 }
