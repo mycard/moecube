@@ -1,0 +1,33 @@
+{
+  "main": "app/index.html",
+  "name": "maotama",
+  "description": "maotama",
+  "version": "0.1.0",
+  "keywords": [
+    "maotama",
+    "doujin"
+  ],
+  "window": {
+    "title": "毛玉",
+    "icon": "app/img/logo.jpg",
+    "toolbar": false,
+    "frame": false,
+    "width": 1024,
+    "height": 640,
+    "position": "center",
+    "min_width": 1024,
+    "min_height": 640
+  },
+  "single-instance": true,
+  "author": "zh99998 <zh99998@gmail.com>",
+  "license": "GPLv3",
+  "dependencies": {
+    "nedb": "^0.10.4",
+    "websocket": "^1.0.8",
+    "node-xmpp-bosh": "^0.7.10",
+    "node-windows": "^0.1.5",
+    "raw-socket": "^1.2.2",
+    "humanize": "0.0.9",
+    "mkdirp": "^0.3.5"
+  }
+}

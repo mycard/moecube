@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="maotama">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="img/logo.jpg">
+
+    <title>毛玉</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="lib/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/css/bootstrap-switch.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="lib/css/dashboard.css" rel="stylesheet">
+
+    <link href="css/app.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">毛玉</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="#">首页</a></li>
+                <li class="active"><a href="#">游戏</a></li>
+                <li class="disabled"><a href="#">漫画</a></li>
+                <li class="disabled"><a href="#">音乐</a></li>
+                <li class="disabled"><a href="#">图书</a></li>
+            </ul>
+            <div class="navbar-form navbar-right">
+                <img id="avatar"
+                     src="https://lh6.googleusercontent.com/-eRxRGjDvkvY/AAAAAAAAAAI/AAAAAAAAeGg/HetZCuangp8/s46-c-k-no/photo.jpg">
+                <a id="username">zh99998</a>
+            </div>
+            <form class="navbar-form navbar-left">
+                <input type="text" class="form-control" placeholder="搜索...">
+            </form>
+        </div>
+    </div>
+    <div id="window_controls">
+        <a id="window_control_minimize" class="window-control"><img src="img/minimize.png"></a>
+        <a id="window_control_maximize" class="window-control"><img src="img/maximize.png"></a>
+        <a id="window_control_unmaximize" hidden class="window-control"><img src="img/unmaximize.png"></a>
+        <a id="window_control_close" class="window-control"><img src="img/close.png"></a>
+    </div>
+</div>
+<div id="wrapper">
+    <div class="col-sm-3 col-md-2 sidebar" ng-controller="AppsListController">
+        <ul class="nav nav-sidebar">
+            <li ng-repeat="app in apps">
+                <a href="#/apps/{{app.id}}">{{app.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <div id="right_wrapper" class="col-md-10">
+        <div id="right_top_wrapper" class="row">
+            <div class="main_wrapper">
+                <div class="main" ng-view></div>
+            </div>
+            <div id="roster_aside">
+                <div id="roster_title">
+                    <form id="roster_search_wrapper">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                            <input id="roster_search" type="text" name="name" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <ul id="roster" class="list-unstyled"></ul>
+                <ul id="roster_search_result" class="list-unstyled" hidden></ul>
+            </div>
+        </div>
+        <div class="row">
+            <iframe id="candy" src="candy/index.html?bosh=http://localhost:5280/http-bind&jid=zh99998@my-card.in&password=zh112998" nwdisable></iframe>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="lib/js/jquery-2.1.0.min.js"></script>
+<script src="lib/js/bootstrap.min.js"></script>
+<script src="lib/js/bootstrap-switch.min.js"></script>
+
+<script src="lib/js/nw-desktop-notifications.js"></script>
+<script src="lib/js/md5.js"></script>
+
+<script src="lib/angular/angular.min.js"></script>
+<script src="lib/angular/angular-route.min.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/services.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/controllers.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/maotama.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Candy - Chats are not dead yet</title>
+<link rel="shortcut icon" href="res/img/favicon.png" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="res/default.css"/>
+
+<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
+<script type="text/javascript" src="purl.js"></script>
+<script type="text/javascript" src="libs.min.js"></script>
+<script type="text/javascript" src="candy.min.js"></script>
+<script type="text/javascript" src="candy.fix.js"></script>
+
+<script type="text/javascript" src="candy-plugins/inline-images/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/inline-images/candy.css" />
+
+<script type="text/javascript" src="candy-plugins/gs-notifyme/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/gs-notifyme/candy.css" />
+
+<script type="text/javascript" src="candy-plugins/gs-namecomplete/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/gs-namecomplete/candy.css" />
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    var url = $.url();
+
+    Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
+
+    Candy.init(url.param('bosh'), {
+        core: { debug: false, autojoin: ['shinkirou@conference.my-card.in'], disableWindowUnload: true },
+        view: { resources: 'res/', language: 'cn' }
+    });
+
+    CandyShop.InlineImages.init();
+    CandyShop.NotifyMe.init();
+    CandyShop.NameComplete.init();
+
+    Candy.Core.connect(url.param('jid'), url.param('password'));
+
+    $(Candy).on('candy:core.chat.connection', function(event, args){
+        if(args.status == Strophe.Status.CONNECTED){
+            Candy.Core.Action.Jabber.Roster()
+            //Candy.Core.getConnection().send($iq({type: 'get'}).c('vCard', {xmlns: 'vcard-temp'}).tree());
+        }
+    });
+
+    Candy.Core.addHandler(function (msg) {
+        parent.postMessage({type: 'roster', stanza: $('<div />').append(msg).html()}, '*')
+        return true
+    }, 'jabber:iq:roster', 'iq', 'result', null, null)
+
+    Candy.Core.addHandler(function (msg) {
+        Candy.Core.getConnection().send($iq({ type: 'result', id: msg.getAttribute('id') }));
+        parent.postMessage({type: 'roster_set', stanza: $('<div />').append(msg).html()}, '*')
+        return true
+    }, 'jabber:iq:roster', 'iq', 'set', null, null)
+
+    Candy.Core.addHandler(function (msg) {
+        parent.postMessage({type: 'vcard', stanza: $('<div />').append(msg).html()}, '*')
+        return true
+    }, 'vcard-temp', 'iq', 'result', null, null)
+
+    $(Candy).on('candy:core.presence', function(event, args){
+        parent.postMessage({type: 'presence', from: args.from, stanza: $('<div />').append(args.stanza).html()}, '*')
+    });
+
+});
+</script>
+</head>
+
+<body>
+<div id="candy"></div>
+<script type="text/javascript">
+    window.addEventListener('message', function (event) {
+        var msg = event.data
+        switch (msg.type) {
+            case 'chat':
+                Candy.View.Pane.PrivateRoom.open(msg.jid, msg.jid.split('@')[0], true, true);
+                break;
+            case 'subscribe':
+                Candy.Core.getConnection().send($iq({type: 'set', to: msg.jid}).c('query', {xmlns: 'jabber:iq:roster'}).c('item', {jid: msg.jid}).tree());
+                Candy.Core.getConnection().send($pres({ to: msg.jid, type: "subscribe" }));
+                break;
+            case 'subscribed':
+                Candy.Core.getConnection().send($pres({ to: msg.jid, type: "subscribed" }));
+                break;
+            case 'unsubscribe':
+                Candy.Core.getConnection().send($pres({ to: msg.jid, type: "unsubscribed" }));
+                break;
+            case 'vcard':
+                Candy.Core.getConnection().send($iq({type: 'get', to: msg.jid}).c('vCard', {xmlns: 'vcard-temp'}).tree());
+                break;
+        }
+    }, false);
+</script>
+</body>
+</html>

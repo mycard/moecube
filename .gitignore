@@ -1,0 +1,12 @@
+logs/*
+!.gitkeep
+node_modules/
+tmp
+.DS_Store
+.idea
+
+cache
+apps
+bin
+*.exe
+*.bat
