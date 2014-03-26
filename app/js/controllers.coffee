@@ -43,7 +43,6 @@ angular.module('maotama.controllers', [])
         }
       }, (err, numReplaced, newDoc)->
         throw err if err
-
         $scope.$digest();
 
     $scope.install = ()->
@@ -69,7 +68,7 @@ angular.module('maotama.controllers', [])
           console.log 'err: ', data
         aria2c.on 'close', (code)->
           if code != 0
-            window.LOCAL_NW.desktopNotifications.notify "TODO://icon", '下载失败', "错误: #{code}"
+            window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, "下载失败, 错误: #{code}"
             delete $scope.installing[$scope.app.id]
             $scope.$digest();
           else
@@ -87,7 +86,7 @@ angular.module('maotama.controllers', [])
 
             file.on 'end', ()->
               if checksum.digest('hex') != $scope.app.download.checksum
-                window.LOCAL_NW.desktopNotifications.notify "TODO://icon", '下载失败', "校验错误"
+                window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, "校验错误"
                 delete $scope.installing[$scope.app.id]
                 $scope.$digest();
               else
@@ -104,13 +103,13 @@ angular.module('maotama.controllers', [])
                     console.log 'err: ', data
                   p7zip.on 'close', (code)->
                     if code != 0
-                      window.LOCAL_NW.desktopNotifications.notify "TODO://icon", '安装失败', "错误: #{code}"
+                      window.LOCAL_NW.desktopNotifications.notify "TODO://icon",  $scope.app.name, "安装失败, 错误: #{code}"
                       delete $scope.installing[$scope.app.id]
                       $scope.$digest();
                     else
-                      $scope.add path.join(p, $scope.app.main)
                       delete $scope.installing[$scope.app.id]
-                      $scope.$digest();
+                      window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, '安装完成'
+                      $scope.add path.join(p, $scope.app.main)
 
 
 

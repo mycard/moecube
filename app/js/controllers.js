@@ -101,7 +101,7 @@
           return aria2c.on('close', function(code) {
             var checksum, downloaded, file;
             if (code !== 0) {
-              window.LOCAL_NW.desktopNotifications.notify("TODO://icon", '下载失败', "错误: " + code);
+              window.LOCAL_NW.desktopNotifications.notify("TODO://icon", $scope.app.name, "下载失败, 错误: " + code);
               delete $scope.installing[$scope.app.id];
               return $scope.$digest();
             } else {
@@ -117,7 +117,7 @@
               return file.on('end', function() {
                 var p;
                 if (checksum.digest('hex') !== $scope.app.download.checksum) {
-                  window.LOCAL_NW.desktopNotifications.notify("TODO://icon", '下载失败', "校验错误");
+                  window.LOCAL_NW.desktopNotifications.notify("TODO://icon", $scope.app.name, "校验错误");
                   delete $scope.installing[$scope.app.id];
                   return $scope.$digest();
                 } else {
@@ -139,13 +139,13 @@
                     });
                     return p7zip.on('close', function(code) {
                       if (code !== 0) {
-                        window.LOCAL_NW.desktopNotifications.notify("TODO://icon", '安装失败', "错误: " + code);
+                        window.LOCAL_NW.desktopNotifications.notify("TODO://icon", $scope.app.name, "安装失败, 错误: " + code);
                         delete $scope.installing[$scope.app.id];
                         return $scope.$digest();
                       } else {
-                        $scope.add(path.join(p, $scope.app.main));
                         delete $scope.installing[$scope.app.id];
-                        return $scope.$digest();
+                        window.LOCAL_NW.desktopNotifications.notify("TODO://icon", $scope.app.name, '安装完成');
+                        return $scope.add(path.join(p, $scope.app.main));
                       }
                     });
                   });
