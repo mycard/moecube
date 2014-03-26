@@ -11,14 +11,15 @@
         "summary": "喵喵喵喵喵帕斯\nnyanpass nyanpass",
         "download": {
             "url": "http://test2.my-card.in/downloads/maotama/th135_1.33.7z",
-            "size": 313177239
+            "size": 313177031,
+            "checksum": "ab3c7f4646e080fb88959978865ebf24"
         },
-        "main": "th135.exe",
         "languages": {
             "ja-JP": true,
             "zh-CN": {
                 "url": "http://test2.my-card.in/downloads/maotama/th135_lang_zh-CN_1.33.7z",
-                "size": 74751963
+                "size": 74749190,
+                "checksum": "49111c67d941e30384251a2026ba67ba"
             }
         }
     },
@@ -33,12 +34,12 @@
         "summary": "",
         "download": {
             "url": "http://test2.my-card.in/downloads/maotama/th123_1.10a.7z",
-            "size": 313177239
+            "size": 250272482,
+            "checksum": "027a358a7ac014f725ebb8659f1caa6f"
         },
         "main": "th123.exe",
         "languages": {
             "ja-JP": true
         }
-
     }
 ]
