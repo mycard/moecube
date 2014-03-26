@@ -1,4 +1,5 @@
 path = require 'path'
+crypto = require 'crypto'
 
 gui = require 'nw.gui'
 
@@ -51,12 +52,12 @@ pre_load_photo = (jid, name, domain)->
     when 'public.talk.google.com'
       'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
     else
-      hash = CryptoJS.MD5(jid);
+      hash = crypto.createHash('md5').update(jid).digest('hex')
       "http://en.gravatar.com/avatar/#{hash}?s=48&d=404"
 
 #聊天
 require("nw_node-xmpp-bosh").start_bosh
-  host: "127.0.0.1"
+ host: "127.0.0.1"
 
 window.addEventListener 'message', (event)->
   msg = event.data

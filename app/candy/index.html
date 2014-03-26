@@ -43,7 +43,7 @@ $(document).ready(function () {
     $(Candy).on('candy:core.chat.connection', function(event, args){
         if(args.status == Strophe.Status.CONNECTED){
             Candy.Core.Action.Jabber.Roster()
-            //Candy.Core.getConnection().send($iq({type: 'get'}).c('vCard', {xmlns: 'vcard-temp'}).tree());
+            Candy.Core.getConnection().send($iq({type: 'get'}).c('vCard', {xmlns: 'vcard-temp'}).tree());
         }
     });
 

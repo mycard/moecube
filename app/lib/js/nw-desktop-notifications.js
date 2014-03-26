@@ -14,7 +14,7 @@
 
 	function makeNewNotifyWindow(){
 		var win = gui.Window.open(
-			'nw-desktop-notifications.html', {
+			'file:///'+process.cwd()+'/app/nw-desktop-notifications.html', { //modified by zh. 不知道为什么，默认的不能用
 			frame: false,
 			toolbar: false,
 			width: WINDOW_WIDTH,
@@ -28,7 +28,7 @@
 		win.on('loaded', function(){
 			window.LOCAL_NW.DesktopNotificationsWindowIsLoaded = true;
 			$(win.window.document.body).find('#closer').click(function(){
-				slideOutNotificationWindow();
+				slideOutNotificationWindow(closeAnyOpenNotificationWindows);
 			});
 		});
 	}
