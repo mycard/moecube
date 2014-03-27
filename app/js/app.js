@@ -2,15 +2,13 @@
 (function() {
   var maotama;
 
-  maotama = angular.module('maotama', ['ngRoute', 'maotama.filters', 'maotama.services', 'maotama.directives', 'maotama.controllers']);
+  maotama = angular.module('maotama', ['ngRoute', 'ngSanitize', 'maotama.filters', 'maotama.services', 'maotama.directives', 'maotama.controllers']);
 
   maotama.config([
     '$routeProvider', function($routeProvider) {
       return $routeProvider.when('/apps/:app_id', {
         templateUrl: 'partials/app_show.html',
         controller: 'AppsShowController'
-      }).otherwise({
-        redirectTo: '/apps/th123'
       });
     }
   ]);

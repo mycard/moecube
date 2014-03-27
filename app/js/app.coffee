@@ -1,5 +1,6 @@
 maotama = angular.module 'maotama', [
   'ngRoute',
+  'ngSanitize',
   'maotama.filters',
   'maotama.services',
   'maotama.directives',
@@ -11,6 +12,6 @@ maotama.config ['$routeProvider',($routeProvider)->
   .when '/apps/:app_id',
       templateUrl: 'partials/app_show.html',
       controller: 'AppsShowController'
-  .otherwise
-      redirectTo:'/apps/th123'
+  #.otherwise
+  #    redirectTo:'/apps/th123'
 ]

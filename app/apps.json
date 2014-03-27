@@ -1,0 +1,162 @@
+[
+    {
+        "id": "th135",
+        "category": "game",
+        "name": "东方心绮楼",
+        "network": {
+            "protocol": "udp",
+            "port": 10800
+        },
+        "main": "th135.exe",
+        "summary": "喵喵喵喵喵帕斯  \nnyanpass nyanpass",
+        "download": {
+            "url": "http://test2.my-card.in/downloads/maotama/th135_1.33.7z",
+            "size": 313177031,
+            "checksum": "ab3c7f4646e080fb88959978865ebf24"
+        },
+        "languages": ["ja-JP"],
+        "mods": [
+            {
+                "override_main": "th135c.exe",
+                "type": "language",
+                "languages": ["zh-CN"],
+                "download": {
+                    "url": "http://test2.my-card.in/downloads/maotama/th135_lang_zh-CN_1.33.7z",
+                    "size": 74749190,
+                    "checksum": "49111c67d941e30384251a2026ba67ba"
+                }
+            }
+        ]
+    },
+    {
+        "id": "th123",
+        "category": "game",
+        "name": "东方非想天则",
+        "network": {
+            "protocol": "udp",
+            "port": 10800
+        },
+        "summary": "",
+        "download": {
+            "url": "http://test2.my-card.in/downloads/maotama/th123_1.10a.7z",
+            "size": 250272482,
+            "checksum": "027a358a7ac014f725ebb8659f1caa6f"
+        },
+        "main": "th123.exe",
+        "languages": ["ja-JP"],
+        "mods": [
+            {
+                "type": "language",
+                "languages": ["zh-CN"],
+                "override_main": "th123_beta.exe",
+                "download": {
+                    "url": "http://test2.my-card.in/downloads/maotama/th123_lang_zh-CN_1.10a.7z",
+                    "size": 7711357,
+                    "checksum": "4e947e2cded2ed21cf691d6ad3bdd04b"
+                }
+            }
+        ],
+        "dependencies": [
+            {
+                "id": "th105",
+                "type": "optional"
+            }
+        ]
+    },
+    {
+        "id": "th105",
+        "category": "game",
+        "name": "东方绯想天",
+        "network": {
+            "protocol": "udp",
+            "port": 10800
+        },
+        "summary": "0 0",
+        "download": {
+            "url": "http://test2.my-card.in/downloads/maotama/th105_1.06a.7z",
+            "size": 274941544,
+            "checksum": "4cd0360e11847ddd7645017769cad73e"
+        },
+        "main": "th105.exe",
+        "languages": ["ja-JP"],
+        "mods": [
+            {
+                "type": "language",
+                "languages": ["zh-CN"],
+                "download": {
+                    "url": "http://test2.my-card.in/downloads/maotama/th105_lang_zh-CN_1.06a.7z",
+                    "size": 8809810,
+                    "checksum": "26fb9f83fe957e266377e70fe91aee3b"
+                }
+            }
+        ],
+        "related": [
+            {
+                "id": "th105",
+                "type": "recommended"
+            }
+        ]
+    },
+    {
+        "id": "leq",
+        "category": "game",
+        "name": "萝莉的远征Q：偷菜大战",
+        "summary": "六一，送大家一个好礼物！  \n也是华音的生日！",
+        "download": {
+            "url": "http://test2.my-card.in/downloads/maotama/leq.7z",
+            "size": 2210749,
+            "checksum": "8550d57175cd1e0a66fae2c406981121"
+        },
+        "icon": "meta/leq/icon.png",
+        "main": "game.exe",
+        "languages": ["zh-CN"],
+        "achievements": [
+            {
+                "name": "成就",
+                "type": "unlock",
+                "items": [
+                    {
+                        "icon": "meta/leq/1.png",
+                        "name": "第一关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/2.png",
+                        "name": "第二关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/3.png",
+                        "name": "第三关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/4.png",
+                        "name": "第四关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/5.png",
+                        "name": "第五关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/6.png",
+                        "name": "第六关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/7.png",
+                        "name": "第七关",
+                        "description": "喵喵喵喵喵帕斯"
+                    },
+                    {
+                        "icon": "meta/leq/8.png",
+                        "name": "第八关",
+                        "description": "Game Over"
+                    }
+                ]
+            }
+        ]
+    }
+]

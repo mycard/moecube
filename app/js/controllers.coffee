@@ -1,52 +1,58 @@
 path = require 'path'
 fs = require 'fs'
 child_process = require 'child_process'
-crypto = require('crypto');
+crypto = require 'crypto'
 
 mkdirp = require 'mkdirp'
+rmdir = require 'rmdir'
 gui = require 'nw.gui'
-Datastore = require('nw_nedb')
-db = new Datastore({ filename: path.join(gui.App.dataPath, 'apps.db'), autoload: true });
+Datastore = require 'nw_nedb'
+db =
+  apps: new Datastore({ filename: path.join(gui.App.dataPath, 'apps.db'), autoload: true })
+  local: new Datastore({ filename: path.join(gui.App.dataPath, 'local.db'), autoload: true })
 
 angular.module('maotama.controllers', [])
 
-.controller 'AppsListController', ($scope)->
-    db.find {}, (err, docs)=>
-      throw err if err
-      $scope.apps = docs
-      $scope.$digest();
+.controller 'AppsListController', ($scope, $http)->
+    $scope.orderProp = 'id';
+    $http.get('apps.json').success (data)->
+      console.log data
+      db.apps.remove {}, { multi: true }, (err, numRemoved)->
+        throw err if err
+        db.apps.insert data, (err, newDocs)->
+          throw err if err
+          $scope.apps = data
+          $scope.$digest()
 
 .controller 'AppsShowController', ['$scope', '$routeParams', ($scope, $routeParams)->
-    db.findOne {id: $routeParams.app_id}, (err, doc)->
+    db.apps.findOne {id: $routeParams.app_id}, (err, doc)->
       throw err if err
-      $scope.app = doc;
-      console.log $scope.app
-      $scope.app.default_installation_path = path.join process.cwd(), 'apps', $scope.app.id
-      $scope.app.extra_languages = {}
-      for lang, download of $scope.app.languages
-        console.assert $scope.app.download.url
-        console.assert $scope.app.download.size
-        if download != true
-          $scope.app.has_extra_languages = true
-          $scope.app.extra_languages[lang] = download
+      $scope.app = doc
+      $scope.runtime =
+        running: false
+        installing: {}
+      $scope.default_installation_path = path.join process.cwd(), 'apps', $scope.app.id
 
-      $scope.installing = {};
-      $scope.$digest();
+      db.local.findOne {id: $routeParams.app_id}, (err, doc)->
+        $scope.local = doc ? {}
+        $scope.$digest();
 
     $scope.add = (installation)->
-      $scope.app.installation = path.dirname installation
-      db.update {
+      $scope.local.installation = path.dirname installation
+      db.local.update {
         id: $scope.app.id
       }, {
         $set: {
-          installation: $scope.app.installation
+          installation: $scope.local.installation
         }
+      }, {
+        upsert: true
       }, (err, numReplaced, newDoc)->
         throw err if err
         $scope.$digest();
-
     $scope.install = ()->
-      $scope.installing[$scope.app.id] =
+
+      $scope.runtime.installing[$scope.app.id] =
         process: 0
         label: '正在连接'
       mkdirp path.join(process.cwd(), 'cache'), (err)->
@@ -58,22 +64,23 @@ angular.module('maotama.controllers', [])
           console.log data
           #[#06c774 35MiB/298MiB(11%) CN:1 DL:62MiB ETA:4s]
           #[#d1b179 752KiB/298MiB(0%) CN:1 DL:109KiB ETA:46m17s]
+          #[#4dd4a5 592KiB/298MiB(0%) CN:1 DL:43KiB ETA:1h57m19s]
           if matches = data.match(/\[(?:#\w+ )?([\w\.]+)\/([\w\.]+)\((\d+)%\) CN:(\d+) DL:([\w\.]+) ETA:(\w+)\]/)
             [d, downloaded, total, progress, connections, speed, eta] = matches
-            $scope.installing[$scope.app.id].progress = progress
-            $scope.installing[$scope.app.id].label = "#{progress}% #{speed}/s"
+            $scope.runtime.installing[$scope.app.id].progress = progress
+            $scope.runtime.installing[$scope.app.id].label = "#{progress}% #{speed}/s"
             $scope.$digest();
 
         aria2c.stderr.on 'data', (data)->
           console.log 'err: ', data
         aria2c.on 'close', (code)->
           if code != 0
-            window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, "下载失败, 错误: #{code}"
-            delete $scope.installing[$scope.app.id]
+            window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, $scope.app.name, "下载失败, 错误: #{code}"
+            delete $scope.runtime.installing[$scope.app.id]
             $scope.$digest();
           else
-            $scope.installing[$scope.app.id].progress = 100
-            $scope.installing[$scope.app.id].label = '正在安装'
+            $scope.runtime.installing[$scope.app.id].progress = 100
+            $scope.runtime.installing[$scope.app.id].label = '正在安装'
             $scope.$digest();
 
             downloaded = "cache/#{path.basename($scope.app.download.url)}";
@@ -86,8 +93,8 @@ angular.module('maotama.controllers', [])
 
             file.on 'end', ()->
               if checksum.digest('hex') != $scope.app.download.checksum
-                window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, "校验错误"
-                delete $scope.installing[$scope.app.id]
+                window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, $scope.app.name, "校验错误"
+                delete $scope.runtime.installing[$scope.app.id]
                 $scope.$digest();
               else
                 p = path.join "apps/#{$scope.app.id}"
@@ -103,76 +110,44 @@ angular.module('maotama.controllers', [])
                     console.log 'err: ', data
                   p7zip.on 'close', (code)->
                     if code != 0
-                      window.LOCAL_NW.desktopNotifications.notify "TODO://icon",  $scope.app.name, "安装失败, 错误: #{code}"
-                      delete $scope.installing[$scope.app.id]
+                      window.LOCAL_NW.desktopNotifications.notify $scope.app.icon,  $scope.app.name, "安装失败, 错误: #{code}"
+                      delete $scope.runtime.installing[$scope.app.id]
                       $scope.$digest();
                     else
-                      delete $scope.installing[$scope.app.id]
-                      window.LOCAL_NW.desktopNotifications.notify "TODO://icon", $scope.app.name, '安装完成'
+                      delete $scope.runtime.installing[$scope.app.id]
+                      window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, $scope.app.name, '安装完成'
                       $scope.add path.join(p, $scope.app.main)
-
-
-
+    $scope.uninstall = ()->
+      $scope.runtime.uninstalling = true
+      db.local.remove {
+        id: $scope.app.id
+      }, (err, numRemoved)->
+        throw err if err
+        rmdir $scope.local.installation, ( err, dirs, files )->
+          console.log dirs
+          console.log files
+          console.log 'all files are removed'
+          $scope.local = {}
+          $scope.$digest()
 
     $scope.run = ()->
-      console.log $scope.app
-      $scope.app.running = true
-      child_process.execFile $scope.app.main,
-        cwd: $scope.app.installation
-      , (error, stdout, stderr)->
-        throw error if error
-        $scope.app.running = false
+      $scope.runtime.running = true
+      game = child_process.spawn $scope.app.main, [],
+        cwd: $scope.local.installation
+      game.stdout.setEncoding('utf8');
+      game.stdout.on 'data', (data)->
+        console.log data
+        if matches = data.match /<maotama>(.+)<\/maotama>/
+          for command in $(matches[1])
+            switch command.tagName
+              when 'ACHIEVEMENT'
+                achievement = $scope.app.achievements[$(command).attr('type')]
+                achievement_item = achievement.items[$(command).attr('id')]
+                window.LOCAL_NW.desktopNotifications.notify achievement_item.icon, "获得#{achievement.name}: #{achievement_item.name}", achievement_item.description
+              else
+                window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "unknown command", matches[1]
+      game.on 'close', (code)->
+        $scope.runtime.running = false
         $scope.$digest();
 ]
 
-
-if false #for debug
-  db.remove {}, { multi: true }, (err, numRemoved)->
-    throw err if err
-    db.insert [{
-      "id":"th135",
-      "category":"game",
-      "name":"东方心绮楼",
-      "network":{
-        "proto":"udp",
-        "port":10800
-      },
-      "main":"th135.exe",
-      "summary":"喵喵喵喵喵帕斯
-      nyanpass nyanpass"
-      "download": {
-        "url": "http://test2.my-card.in/downloads/maotama/th135_1.33.7z"
-        "size": 313177031
-        "checksum":"ab3c7f4646e080fb88959978865ebf24"
-      }
-      "main": 'th135.exe'
-      "languages": {
-        "ja-JP": true
-        "zh-CN": {
-          url: "http://test2.my-card.in/downloads/maotama/th135_lang_zh-CN_1.33.7z"
-          size: 74749190
-          checksum: "49111c67d941e30384251a2026ba67ba"
-        }
-      }
-    },{
-      "id":"th123",
-      "category":"game",
-      "name":"东方非想天则",
-      "network":{
-        "proto":"udp",
-        "port":10800
-      },
-      "summary":"",
-      "download": {
-        url: "http://test2.my-card.in/downloads/maotama/th123_1.10a.7z"
-        "size": 250272482
-        "checksum": "027a358a7ac014f725ebb8659f1caa6f"
-      },
-      "main": 'th123.exe'
-      "languages": {
-        "ja-JP": true
-      }
-
-    }], (err, newDocs)->
-      throw err if err
-      console.log newDocs

@@ -1,19 +1,19 @@
 <h1 class="page-header">{{app.name}}
-    <button id="app_play" type="button" class="btn btn-default" ng-if="app.installation" ng-click="run()" ng-disabled="app.running">
+    <button id="app_play" type="button" class="btn btn-default" ng-if="local.installation" ng-click="run()" ng-disabled="runtime.running">
         <span class="glyphicon glyphicon-play"></span> 开始
     </button>
-    <button id="app_install" type="button" class="btn btn-default" ng-if="!app.installation" data-toggle="modal" data-target="#app_install_modal">
+    <button id="app_install" type="button" class="btn btn-default" ng-if="!local.installation" data-toggle="modal" data-target="#app_install_modal">
         <span class="glyphicon glyphicon-save"></span> 安装
     </button>
-    <button id="app_add" type="button" class="btn btn-default" ng-if="!app.installation">
+    <button id="app_add" type="button" class="btn btn-default" ng-if="!local.installation">
         <span class="glyphicon glyphicon-plus"></span> 添加
     </button>
 
-    <div id="cloud_wrapper" class="cloud input-group pull-right hide" ng-if="app.installation">
+    <div id="cloud_wrapper" class="cloud input-group pull-right hide" ng-if="local.installation">
         <span class="input-group-addon"><span class="glyphicon glyphicon-cloud"></span></span>
         <input id="cloud_address" type="text" class="form-control" value="255.255.255.255:65535">
     </div>
-    <button id="cloud_button" type="button" class="cloud btn btn-default pull-right" ng-if="app.installation">
+    <button id="cloud_button" type="button" class="cloud btn btn-default pull-right" ng-if="local.installation && app.network">
         <span class="glyphicon glyphicon-cloud"></span> 反重力场
     </button>
 </h1>
@@ -37,7 +37,7 @@
                         <label for="app_install_installation">安装位置</label>
 
                         <div class="input-group">
-                            <input id="app_install_installation" type="text" class="form-control" value="{{app.default_installation_path}}">
+                            <input id="app_install_installation" type="text" class="form-control" value="{{default_installation_path}}">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">浏览</button>
                             </span>
@@ -73,12 +73,12 @@
 
                     </div>
 
-                    <label ng-if="app.has_extra_languages">语言包</label>
-                    <div class="checkbox" ng-repeat="(lang, download) in app.extra_languages">
+                    <!--<label ng-if="app.mods | filter: {type: 'language'}">语言包</label>
+                    <div class="checkbox" ng-repeat="(mod) in app.mods | filter: {type: 'language'}">
                         <label>
-                            <input type="checkbox" checked> {{lang | language_translate}}
+                            <input type="checkbox" checked> {{mod.languages[0] | language_translate}}
                         </label>
-                    </div>
+                    </div>-->
                 </form>
             </div>
             <div class="modal-footer">
@@ -89,12 +89,12 @@
     </div>
 </div>
 <input id="app_add_file" class="hide" type="file" accept="application/octet-stream"/>
-<div class="progress progress-striped active" ng-repeat="item in installing">
+<div class="progress progress-striped active" ng-repeat="item in runtime.installing">
     <div class="progress-bar"  role="progressbar" aria-valuenow="{{item.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{item.progress}}%">
         {{item.label}}
     </div>
 </div>
-{{app.summary}}
+<div ng-bind-html="app.summary | markdown"></div>
 <h2 class="sub-header">好友</h2>
 
 <p>您有 8 位好友玩过 {{app.name}}，有 2 位正在玩</p>
@@ -120,5 +120,29 @@
 <div class="progress">
     <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
         <span class="sr-only">60% Complete</span>
+    </div>
+</div>
+
+<div ng-show="local.installation">
+    <h2 class="sub-header">设置</h2>
+    <button id="app_uninstall" type="button" class="btn btn-default" data-toggle="modal" data-target="#app_uninstall_modal" ng-disable="runtime.running || runtime.uninstalling">
+        <span class="glyphicon glyphicon-trash"></span> 卸载
+    </button>
+    <div class="modal fade" id="app_uninstall_modal" tabindex="-1" role="dialog" aria-labelledby="app_uninstall_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="app_uninstall_modal_label">卸载 {{app.name}}</h4>
+                </div>
+                <div class="modal-body">
+                    确认卸载?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="uninstall()">卸载</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
