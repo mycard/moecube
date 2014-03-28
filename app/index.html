@@ -61,7 +61,7 @@
 <div id="wrapper">
     <div class="col-sm-3 col-md-2 sidebar" ng-controller="AppsListController">
         <ul class="nav nav-sidebar">
-            <li ng-repeat="app in apps">
+            <li ng-repeat="app in apps" ng-class="active(app.id)">
                 <a href="#/apps/{{app.id}}">{{app.name}}</a>
             </li>
         </ul>
@@ -93,8 +93,6 @@
         </div>
     </div>
 </div>
-
-
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

@@ -7,23 +7,39 @@ mkdirp = require 'mkdirp'
 rmdir = require 'rmdir'
 gui = require 'nw.gui'
 Datastore = require 'nw_nedb'
+
 db =
   apps: new Datastore({ filename: path.join(gui.App.dataPath, 'apps.db'), autoload: true })
   local: new Datastore({ filename: path.join(gui.App.dataPath, 'local.db'), autoload: true })
+  profile: new Datastore({ filename: path.join(gui.App.dataPath, 'profile.db'), autoload: true })
 
 angular.module('maotama.controllers', [])
-
-.controller 'AppsListController', ($scope, $http)->
+.controller 'AppsListController', ['$scope', '$routeParams', '$http', '$location', ($scope, $routeParams, $http, $location)->
     $scope.orderProp = 'id';
     $http.get('apps.json').success (data)->
-      console.log data
       db.apps.remove {}, { multi: true }, (err, numRemoved)->
         throw err if err
         db.apps.insert data, (err, newDocs)->
           throw err if err
           $scope.apps = data
-          $scope.$digest()
+          if !$routeParams.app_id
+            $location.path("/apps/#{data[0].id}");
+            $scope.$apply()
+          else
+            $scope.$digest()
 
+    $scope.active = (app_id)->
+      "active" if $routeParams.app_id == app_id
+    $scope.category_active = (category)->
+      if $scope.apps
+        app = null
+        for a in $scope.apps
+          if a.id == $routeParams.app_id
+            app = a
+        if app
+          if app.category == category
+            "active"
+]
 .controller 'AppsShowController', ['$scope', '$routeParams', ($scope, $routeParams)->
     db.apps.findOne {id: $routeParams.app_id}, (err, doc)->
       throw err if err
@@ -35,7 +51,17 @@ angular.module('maotama.controllers', [])
 
       db.local.findOne {id: $routeParams.app_id}, (err, doc)->
         $scope.local = doc ? {}
-        $scope.$digest();
+        db.profile.findOne {id: $routeParams.app_id}, (err, doc)->
+          if doc #and doc.achievements.length == $scope.app.achievements.length
+            $scope.profile = doc
+            $scope.$digest();
+          else
+            $scope.profile =
+              id: $routeParams.app_id
+              achievements: ([] for achievement in $scope.app.achievements) if $scope.app.achievements
+            db.profile.insert $scope.profile, (err, newDoc)->
+              throw err if err
+              $scope.$digest();
 
     $scope.add = (installation)->
       $scope.local.installation = path.dirname installation
@@ -51,7 +77,6 @@ angular.module('maotama.controllers', [])
         throw err if err
         $scope.$digest();
     $scope.install = ()->
-
       $scope.runtime.installing[$scope.app.id] =
         process: 0
         label: '正在连接'
@@ -143,11 +168,45 @@ angular.module('maotama.controllers', [])
               when 'ACHIEVEMENT'
                 achievement = $scope.app.achievements[$(command).attr('type')]
                 achievement_item = achievement.items[$(command).attr('id')]
+
+                $scope.profile.achievements[$(command).attr('type')] ?= {}
+                return if $scope.profile.achievements[$(command).attr('type')][$(command).attr('id')]
+
                 window.LOCAL_NW.desktopNotifications.notify achievement_item.icon, "获得#{achievement.name}: #{achievement_item.name}", achievement_item.description
+                $scope.profile.achievements[$(command).attr('type')][$(command).attr('id')] =
+                  created_at: new Date()
+                  updated_at: new Date()
+                  count: 1
+                db.profile.update {
+                  id: $scope.app.id
+                }, $scope.profile, (err, numReplaced, newDoc)->
+                  throw err if err
+                  $scope.$digest();
               else
                 window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "unknown command", matches[1]
       game.on 'close', (code)->
         $scope.runtime.running = false
         $scope.$digest();
+
+    $scope.achievement_unlocked_count = (category)->
+      $scope.profile.achievements[category].length
+    $scope.achievement_total_count = (category)->
+      $scope.app.achievements[category].items.length
+    $scope.achievement_last_unlocked = (category)->
+      last = null
+      last_index = null
+      for index, achievement of $scope.profile.achievements[category]
+        if !last or result.created_at < last.created_at
+          last = achievement
+          last_index = index
+      $scope.app.achievements[category].items[index]
+
+    $scope.achievement_locked = (category, index)->
+      if $scope.profile.achievements[category][index]
+        ''
+      else
+        'locked'
+
+
 ]
 

@@ -26,29 +26,62 @@
     local: new Datastore({
       filename: path.join(gui.App.dataPath, 'local.db'),
       autoload: true
+    }),
+    profile: new Datastore({
+      filename: path.join(gui.App.dataPath, 'profile.db'),
+      autoload: true
     })
   };
 
-  angular.module('maotama.controllers', []).controller('AppsListController', function($scope, $http) {
-    $scope.orderProp = 'id';
-    return $http.get('apps.json').success(function(data) {
-      console.log(data);
-      return db.apps.remove({}, {
-        multi: true
-      }, function(err, numRemoved) {
-        if (err) {
-          throw err;
-        }
-        return db.apps.insert(data, function(err, newDocs) {
+  angular.module('maotama.controllers', []).controller('AppsListController', [
+    '$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+      $scope.orderProp = 'id';
+      $http.get('apps.json').success(function(data) {
+        return db.apps.remove({}, {
+          multi: true
+        }, function(err, numRemoved) {
           if (err) {
             throw err;
           }
-          $scope.apps = data;
-          return $scope.$digest();
+          return db.apps.insert(data, function(err, newDocs) {
+            if (err) {
+              throw err;
+            }
+            $scope.apps = data;
+            if (!$routeParams.app_id) {
+              $location.path("/apps/" + data[0].id);
+              return $scope.$apply();
+            } else {
+              return $scope.$digest();
+            }
+          });
         });
       });
-    });
-  }).controller('AppsShowController', [
+      $scope.active = function(app_id) {
+        if ($routeParams.app_id === app_id) {
+          return "active";
+        }
+      };
+      return $scope.category_active = function(category) {
+        var a, app, _i, _len, _ref;
+        if ($scope.apps) {
+          app = null;
+          _ref = $scope.apps;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            a = _ref[_i];
+            if (a.id === $routeParams.app_id) {
+              app = a;
+            }
+          }
+          if (app) {
+            if (app.category === category) {
+              return "active";
+            }
+          }
+        }
+      };
+    }
+  ]).controller('AppsShowController', [
     '$scope', '$routeParams', function($scope, $routeParams) {
       db.apps.findOne({
         id: $routeParams.app_id
@@ -66,7 +99,35 @@
           id: $routeParams.app_id
         }, function(err, doc) {
           $scope.local = doc != null ? doc : {};
-          return $scope.$digest();
+          return db.profile.findOne({
+            id: $routeParams.app_id
+          }, function(err, doc) {
+            var achievement;
+            if (doc) {
+              $scope.profile = doc;
+              return $scope.$digest();
+            } else {
+              $scope.profile = {
+                id: $routeParams.app_id,
+                achievements: $scope.app.achievements ? (function() {
+                  var _i, _len, _ref, _results;
+                  _ref = $scope.app.achievements;
+                  _results = [];
+                  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    achievement = _ref[_i];
+                    _results.push([]);
+                  }
+                  return _results;
+                })() : void 0
+              };
+              return db.profile.insert($scope.profile, function(err, newDoc) {
+                if (err) {
+                  throw err;
+                }
+                return $scope.$digest();
+              });
+            }
+          });
         });
       });
       $scope.add = function(installation) {
@@ -186,7 +247,7 @@
           });
         });
       };
-      return $scope.run = function() {
+      $scope.run = function() {
         var game;
         $scope.runtime.running = true;
         game = child_process.spawn($scope.app.main, [], {
@@ -194,30 +255,74 @@
         });
         game.stdout.setEncoding('utf8');
         game.stdout.on('data', function(data) {
-          var achievement, achievement_item, command, matches, _i, _len, _ref, _results;
+          var achievement, achievement_item, command, matches, _base, _i, _len, _name, _ref;
           console.log(data);
           if (matches = data.match(/<maotama>(.+)<\/maotama>/)) {
             _ref = $(matches[1]);
-            _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               command = _ref[_i];
               switch (command.tagName) {
                 case 'ACHIEVEMENT':
                   achievement = $scope.app.achievements[$(command).attr('type')];
                   achievement_item = achievement.items[$(command).attr('id')];
-                  _results.push(window.LOCAL_NW.desktopNotifications.notify(achievement_item.icon, "获得" + achievement.name + ": " + achievement_item.name, achievement_item.description));
+                  if ((_base = $scope.profile.achievements)[_name = $(command).attr('type')] == null) {
+                    _base[_name] = {};
+                  }
+                  if ($scope.profile.achievements[$(command).attr('type')][$(command).attr('id')]) {
+                    return;
+                  }
+                  window.LOCAL_NW.desktopNotifications.notify(achievement_item.icon, "获得" + achievement.name + ": " + achievement_item.name, achievement_item.description);
+                  $scope.profile.achievements[$(command).attr('type')][$(command).attr('id')] = {
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    count: 1
+                  };
+                  db.profile.update({
+                    id: $scope.app.id
+                  }, $scope.profile, function(err, numReplaced, newDoc) {
+                    if (err) {
+                      throw err;
+                    }
+                    return $scope.$digest();
+                  });
                   break;
                 default:
-                  _results.push(window.LOCAL_NW.desktopNotifications.notify($scope.app.icon, "unknown command", matches[1]));
+                  window.LOCAL_NW.desktopNotifications.notify($scope.app.icon, "unknown command", matches[1]);
               }
             }
-            return _results;
           }
         });
         return game.on('close', function(code) {
           $scope.runtime.running = false;
           return $scope.$digest();
         });
+      };
+      $scope.achievement_unlocked_count = function(category) {
+        return $scope.profile.achievements[category].length;
+      };
+      $scope.achievement_total_count = function(category) {
+        return $scope.app.achievements[category].items.length;
+      };
+      $scope.achievement_last_unlocked = function(category) {
+        var achievement, index, last, last_index, _ref;
+        last = null;
+        last_index = null;
+        _ref = $scope.profile.achievements[category];
+        for (index in _ref) {
+          achievement = _ref[index];
+          if (!last || result.created_at < last.created_at) {
+            last = achievement;
+            last_index = index;
+          }
+        }
+        return $scope.app.achievements[category].items[index];
+      };
+      return $scope.achievement_locked = function(category, index) {
+        if ($scope.profile.achievements[category][index]) {
+          return '';
+        } else {
+          return 'locked';
+        }
       };
     }
   ]);

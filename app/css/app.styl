@@ -50,6 +50,12 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 .navbar > .container
   padding-right: 85px;
 
+//应用列表
+.nav-sidebar > .active > a:hover {
+  background-color: royalblue;
+}
+
+
 //游戏内容区域
 .main_wrapper
   //background linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.2), rgba(255,255,255,0.2), rgba(255,255,255,0.2), rgba(255,255,255,0.9)), url(../apps/th135/readme/images/th13.5_XQL_OP.jpg)
@@ -75,6 +81,12 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 .achievement_image
   width: 72px;
   margin-right 12px
+
+.achievement
+  margin-right:4px;
+  margin-bottom:8px;
+.achievement.locked
+  -webkit-filter:grayscale(100%)
 
 //聊天室
 #candy {
@@ -160,3 +172,7 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 #roster_title .btn {
   border-right: none;
 }
+
+//modal
+.modal
+  overflow-y: auto;

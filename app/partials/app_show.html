@@ -90,7 +90,7 @@
 </div>
 <input id="app_add_file" class="hide" type="file" accept="application/octet-stream"/>
 <div class="progress progress-striped active" ng-repeat="item in runtime.installing">
-    <div class="progress-bar"  role="progressbar" aria-valuenow="{{item.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{item.progress}}%">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{item.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{item.progress}}%">
         {{item.label}}
     </div>
 </div>
@@ -107,20 +107,26 @@
 <img class="friend img-thumbnail" src="https://lh5.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAZE/OVA-78yQjU8/s46-c-k-no/photo.jpg">
 <img class="friend img-thumbnail" src="https://lh5.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAZE/OVA-78yQjU8/s46-c-k-no/photo.jpg">
 
-<h2 class="sub-header">收集</h2>
+<h2 class="sub-header" ng-repeat-start="achievement in app.achievements">{{achievement.name}}</h2>
 
-<div class="clearfix">
-    <img class="achievement_image img-thumbnail pull-left" src="https://lh5.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAZE/OVA-78yQjU8/s46-c-k-no/photo.jpg">
+<div class="clearfix" ng-if="achievement_unlocked_count($index) > 0">
+    <img class="achievement_image img-thumbnail pull-left" ng-src="{{achievement_last_unlocked($index).icon}}">
 
     <div class="pull-left achievement_text">
-        <p>最近获得的新符卡 <br> HJ的BUG</p>
-        <span class="help-block">你已获得 120 / 200 的符卡 (60%)</span>
+        <p>最近获得的新{{achievement.name}} <br>{{achievement_last_unlocked($index).name}}</p>
+        <span class="help-block">你已获得 {{achievement_unlocked_count($index)}} / {{achievement_total_count($index)}} 的{{achievement.name}} ({{100*achievement_unlocked_count($index)/achievement_total_count($index)}}%)</span>
     </div>
 </div>
-<div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+<div class="progress" ng-if="achievement_unlocked_count($index) > 0">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{achievement_unlocked_count($index)}}" aria-valuemin="0" aria-valuemax="{{achievement_total_count($index)}}" style="width: {{100*achievement_unlocked_count($index)/achievement_total_count($index)}}%;">
         <span class="sr-only">60% Complete</span>
     </div>
+</div>
+
+<div ng-repeat-end>
+    <a href="#" data-toggle="tooltip" data-container="body" title="Some tooltip text!" ng-repeat="item in achievement.items">
+        <img class="achievement img-thumbnail" ng-class="achievement_locked($parent.$index, $index)" src="{{item.icon}}">
+    </a>
 </div>
 
 <div ng-show="local.installation">

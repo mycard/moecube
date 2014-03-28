@@ -147,7 +147,7 @@
 * XMPP聊天室 conference.my-card.in
 * 以下全都为临时，开发用
 * 用户认证 https://my-card.in/users/me.json?name=用户名&password=密码
-* 反重力场 ws://122.0.65.69:10800/
+* 反重力场 ws://115.29.191.63:10800/
 * 应用列表 (本地app目录) apps.json
 * 应用元文件 (本地app目录) meta
 

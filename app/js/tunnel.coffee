@@ -41,7 +41,7 @@ listen = (port, address='127.0.0.1', callback)->
           else
             throw 'unknown message'
   console.log "正在连接服务器"
-  client.connect "ws://122.0.65.69:10800/", "shinkirou"
+  client.connect "ws://115.29.191.63:10800/", "shinkirou"
 
 exports.listen = (port, address='127.0.0.1', callback)->
 
@@ -54,6 +54,7 @@ exports.listen = (port, address='127.0.0.1', callback)->
         protocol: raw.Protocol.UDP
       #success
       puncher = require './puncher'
+      listen(port, address, callback)
     catch e
       #failed, need elevate
       #FUCK UAC.

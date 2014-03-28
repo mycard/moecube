@@ -57,7 +57,7 @@
       });
     });
     console.log("正在连接服务器");
-    return client.connect("ws://122.0.65.69:10800/", "shinkirou");
+    return client.connect("ws://115.29.191.63:10800/", "shinkirou");
   };
 
   exports.listen = function(port, address, callback) {
@@ -72,7 +72,8 @@
         socket = raw.createSocket({
           protocol: raw.Protocol.UDP
         });
-        return puncher = require('./puncher');
+        puncher = require('./puncher');
+        return listen(port, address, callback);
       } catch (_error) {
         e = _error;
         WebSocketServer = require('nw_websocket').server;
