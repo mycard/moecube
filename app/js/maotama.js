@@ -10,8 +10,6 @@
 
   win = gui.Window.get();
 
-  win.showDevTools();
-
   $('#window_control_minimize').click(function() {
     return win.minimize();
   });

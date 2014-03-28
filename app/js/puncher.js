@@ -17,7 +17,11 @@
     buffer.writeUInt16BE(local_port, 0);
     buffer.writeUInt16BE(remote_port, 2);
     buffer.writeUInt16BE(buffer.length, 4);
-    return socket.send(buffer, 0, buffer.length, remote_address);
+    return socket.send(buffer, 0, buffer.length, remote_address, function(error, bytes) {
+      if (error) {
+        throw error;
+      }
+    });
   };
 
   if (require.main === module) {

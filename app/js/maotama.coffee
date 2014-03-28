@@ -4,7 +4,7 @@ crypto = require 'crypto'
 gui = require 'nw.gui'
 
 win = gui.Window.get();
-win.showDevTools() #debug
+#win.showDevTools() #debug
 
 $('#window_control_minimize').click ->
   win.minimize()

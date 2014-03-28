@@ -8,7 +8,8 @@ punch = (local_port, remote_port, remote_address, _socket)->
   buffer.writeUInt16BE(local_port, 0)
   buffer.writeUInt16BE(remote_port, 2)
   buffer.writeUInt16BE(buffer.length, 4)
-  socket.send buffer, 0, buffer.length, remote_address
+  socket.send buffer, 0, buffer.length, remote_address, (error, bytes)->
+    throw error if error
 
 if require.main is module
   raw = require('raw-socket')
