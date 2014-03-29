@@ -1,6 +1,6 @@
 html,
 body,
-#wrapper,
+.wrapper,
 .sidebar,
 #right_wrapper,
 #right_top_wrapper {
@@ -52,6 +52,7 @@ iframe,
 }
 #avatar {
   max-height: 34px;
+  margin: -7px 8px -7px 0;
 }
 #username {
   margin: 0 5px 0 5px;
@@ -83,7 +84,7 @@ iframe,
   margin-top: 6px;
 }
 #cloud_wrapper {
-  width: 220px;
+  width: 240px;
 }
 .bootstrap-switch {
   float: right;
@@ -171,4 +172,79 @@ iframe,
 }
 .modal {
   overflow-y: auto;
+}
+#signin {
+  background-color: #eee;
+}
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  height: 35px;
+  width: 100%;
+  border-top: 1px solid #e5e5e5;
+  overflow: hidden;
+  background-color: #fff;
+}
+.footer {
+  padding: 0 44px;
+  padding-top: 7px;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.footer ul {
+  float: left;
+  max-width: 80%;
+  padding: 0;
+}
+.footer ul li {
+  color: #737373;
+  display: inline;
+  padding: 0;
+  padding-right: 1.5em;
+}
+.footer .lang-chooser {
+  font-size: 13px;
+  height: 24px;
+  line-height: 24px;
+}
+.footer a {
+  color: #737373;
+}
+.footer .lang-chooser-wrap {
+  float: right;
+  display: inline;
 }

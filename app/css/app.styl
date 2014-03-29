@@ -1,5 +1,5 @@
 //布局
-html, body, #wrapper, .sidebar, #right_wrapper, #right_top_wrapper
+html, body, .wrapper, .sidebar, #right_wrapper, #right_top_wrapper
   height 100%
 #right_top_wrapper
   padding-bottom 207px
@@ -32,6 +32,7 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 //导航栏
 #avatar
   max-height 34px
+  margin: -7px 8px -7px 0
 
 #username
   margin 0 5px 0 5px
@@ -68,7 +69,7 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 .cloud
   margin-top 6px
 #cloud_wrapper
-  width 220px
+  width 240px
 .bootstrap-switch
   float right
   margin 10px 20px 0 0
@@ -176,3 +177,76 @@ a, button, input, span, p, li, td, th, h1, h2, h3, h4, h5, h6, iframe, .bootstra
 //modal
 .modal
   overflow-y: auto;
+
+
+//登录
+#signin {
+  background-color: #eee;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+#footer
+  position: absolute;
+  bottom: 0;
+  height: 35px;
+  width: 100%;
+  border-top: 1px solid #e5e5e5;
+  overflow: hidden;
+  background-color white
+ .footer
+    padding: 0 44px;
+    padding-top: 7px;
+    font-size: .85em;
+    white-space: nowrap;
+    ul
+      float: left;
+      max-width: 80%;
+      padding: 0;
+      li
+        color: #737373;
+        display: inline;
+        padding: 0;
+        padding-right: 1.5em;
+    .lang-chooser
+      font-size: 13px;
+      height: 24px;
+      line-height: 24px;
+    a
+     color: #737373;
+    .lang-chooser-wrap
+      float: right;
+      display: inline;
+

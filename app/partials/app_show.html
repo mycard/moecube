@@ -9,11 +9,16 @@
         <span class="glyphicon glyphicon-plus"></span> 添加
     </button>
 
-    <div id="cloud_wrapper" class="cloud input-group pull-right hide" ng-if="local.installation">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-cloud"></span></span>
-        <input id="cloud_address" type="text" class="form-control" value="255.255.255.255:65535">
+    <div id="cloud_wrapper" class="cloud input-group pull-right" ng-if="runtime.tunnel">
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="tunnel_server_name">{{runtime.tunnel_server.name}}</span> <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="server in tunnel_servers"><a href="#" ng-click="tunnel(server);$event.preventDefault()">{{server.name}}</a></li>
+            </ul>
+        </div>
+        <input id="cloud_address" type="text" class="form-control" ng-value="runtime.tunnel">
     </div>
-    <button id="cloud_button" type="button" class="cloud btn btn-default pull-right" ng-if="local.installation && app.network">
+    <button id="cloud_button" type="button" class="cloud btn btn-default pull-right" ng-if="local.installation && app.network && !runtime.tunnel" ng-disabled="runtime.tunneling" ng-click="tunnel()">
         <span class="glyphicon glyphicon-cloud"></span> 反重力场
     </button>
 </h1>
@@ -142,7 +147,7 @@
                     <h4 class="modal-title" id="app_uninstall_modal_label">卸载 {{app.name}}</h4>
                 </div>
                 <div class="modal-body">
-                    确认卸载?
+                    继续将会删除你的 {{app.name}}，以及同一目录内的所有文件，确认卸载?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

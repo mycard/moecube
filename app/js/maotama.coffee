@@ -4,7 +4,7 @@ crypto = require 'crypto'
 gui = require 'nw.gui'
 
 win = gui.Window.get();
-#win.showDevTools() #debug
+win.showDevTools() if "--dev" in gui.App.argv
 
 $('#window_control_minimize').click ->
   win.minimize()
@@ -24,15 +24,6 @@ win.on 'unmaximize', ->
 $('.switch').bootstrapSwitch();
 $('#cloud_popover').popover()
 
-tunnel = require './js/tunnel'
-$('.main_wrapper').on 'click', '#cloud_button', ->
-  this.disabled = true
-  tunnel.listen 10800, "127.0.0.1", (address)->
-    $('#cloud_address').attr 'value', address
-    $('#cloud_button').hide()
-    $('#cloud_wrapper').removeClass('hide')
-    $('#cloud_address').focus();
-    $('#cloud_address').select();
 $('.main_wrapper').on 'click', '#cloud_address', ->
   $('#cloud_address').select();
 $('.main_wrapper').on 'click','#app_add', ->
@@ -44,6 +35,9 @@ $('.main_wrapper').on 'click','#app_add', ->
     angular.element(this).scope().add(chooser.val())
   chooser.trigger('click');
 
+win.on 'new-win-policy', (frame, url, policy)->
+  gui.Shell.openExternal( url );
+  policy.ignore()
 #用户
 pre_load_photo = (jid, name, domain)->
   switch domain

@@ -8,11 +8,13 @@ rmdir = require 'rmdir'
 gui = require 'nw.gui'
 Datastore = require 'nw_nedb'
 
+tunnel = require './js/tunnel'
+
 db =
   apps: new Datastore({ filename: path.join(gui.App.dataPath, 'apps.db'), autoload: true })
   local: new Datastore({ filename: path.join(gui.App.dataPath, 'local.db'), autoload: true })
   profile: new Datastore({ filename: path.join(gui.App.dataPath, 'profile.db'), autoload: true })
-
+  user: new Datastore({ filename: path.join(gui.App.dataPath, 'user.db'), autoload: true })
 angular.module('maotama.controllers', [])
 .controller 'AppsListController', ['$scope', '$routeParams', '$http', '$location', ($scope, $routeParams, $http, $location)->
     $scope.orderProp = 'id';
@@ -41,6 +43,7 @@ angular.module('maotama.controllers', [])
             "active"
 ]
 .controller 'AppsShowController', ['$scope', '$routeParams', ($scope, $routeParams)->
+    $scope.tunnel_servers = require './tunnel_servers.json'
     db.apps.findOne {id: $routeParams.app_id}, (err, doc)->
       throw err if err
       $scope.app = doc
@@ -207,6 +210,46 @@ angular.module('maotama.controllers', [])
       else
         'locked'
 
+    $scope.tunnel = (server = $scope.tunnel_servers[0])->
+      $scope.runtime.tunnel_server = server
+      $scope.runtime.tunneling = true
+      $scope.runtime.tunnel = null
+
+      tunnel.listen 10800, server.url, (address)->
+        $scope.runtime.tunneling = false
+        $scope.runtime.tunnel = address
+        $scope.$digest()
+
 
 ]
 
+.controller 'UserController', ['$scope','$rootScope', '$http', ($scope, $rootScope, $http)->
+    db.user.findOne {}, (err, doc)->
+      $rootScope.current_user = doc
+      $scope.$digest()
+
+    $scope.sign_in = (user)->
+      $scope.signing = true
+      $http.get 'http://my-card.in/users/me.json',
+        params: user
+      .success (data)->
+        $scope.signing = false
+        if data == 'true'
+          $rootScope.current_user = {
+            name: user.name
+            password: user.password
+          }
+          if user.remember_me
+            db.user.update {}, user, {upsert: true}, (err)->
+              throw err if err
+
+        else
+          alert '登录失败'
+    $scope.sign_out = ()->
+      $rootScope.current_user = null
+      db.user.remove {}, (err)->
+        throw err if err
+
+    $scope.candy_url = ()->
+      "candy/index.html?bosh=http://localhost:5280/http-bind&jid=#{encodeURIComponent $rootScope.current_user.name}@my-card.in&password=#{encodeURIComponent $rootScope.current_user.password}" if $rootScope.current_user
+]

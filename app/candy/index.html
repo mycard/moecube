@@ -67,6 +67,8 @@ $(document).ready(function () {
         parent.postMessage({type: 'presence', from: args.from, stanza: $('<div />').append(args.stanza).html()}, '*')
     });
 
+    Candy.View.Template.Login.form = '<form method="post" id="login-form" class="login-form">' + '<input type="hidden" id="username" name="username" value="' + url.param('jid') + '"/>' +  '<input type="hidden" id="password" name="password" value="' + url.param('password')+ '"/>' + '<input type="submit" class="button" value="重新连接" /></form>'
+
 });
 </script>
 </head>

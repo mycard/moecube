@@ -5,14 +5,17 @@ WebSocketClient = require("nw_websocket").client
 puncher = null
 socket = null
 punching = {}
+_connection = null
 
-listen = (port, address='127.0.0.1', callback)->
+listen = (port, url, callback)->
+  _connection.close() if _connection
   client = new WebSocketClient()
   client.on "connectFailed", (error) ->
     console.log "Connect Error: " + error.toString()
     return
 
   client.on "connect", (connection) ->
+    _connection = connection
     console.log "正在分配端口"
     connection.on "error", (error) ->
       console.log error
@@ -41,12 +44,12 @@ listen = (port, address='127.0.0.1', callback)->
           else
             throw 'unknown message'
   console.log "正在连接服务器"
-  client.connect "ws://115.29.191.63:10800/", "shinkirou"
+  client.connect url, "shinkirou"
 
-exports.listen = (port, address='127.0.0.1', callback)->
+exports.listen = (port, url, callback)->
 
   if puncher
-    listen(port, address, callback)
+    listen(port, url, callback)
   else
     try
       #test if i can create raw socket
@@ -54,7 +57,7 @@ exports.listen = (port, address='127.0.0.1', callback)->
         protocol: raw.Protocol.UDP
       #success
       puncher = require './puncher'
-      listen(port, address, callback)
+      listen(port, url, callback)
     catch e
       #failed, need elevate
       #FUCK UAC.
@@ -72,7 +75,7 @@ exports.listen = (port, address='127.0.0.1', callback)->
         autoAcceptConnections: true
 
       wsServer.on 'connect', (connection)->
-        listen(port, address, callback)
+        listen(port, url, callback)
         puncher = (local_port, remote_port, remote_address)->
           connection.sendUTF "#{local_port} #{remote_port} #{remote_address}"
 

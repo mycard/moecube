@@ -31,24 +31,37 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">毛玉</a>
+            <a class="navbar-brand" href="javascript:;">毛玉</a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="#">首页</a></li>
-                <li class="active"><a href="#">游戏</a></li>
-                <li class="disabled"><a href="#">漫画</a></li>
-                <li class="disabled"><a href="#">音乐</a></li>
-                <li class="disabled"><a href="#">图书</a></li>
+            <ul class="nav navbar-nav navbar-left" ng-if="current_user">
+                <li><a href="javascript:;">首页</a></li>
+                <li class="active"><a href="javascript:;">游戏</a></li>
+                <li class="disabled"><a href="javascript:;">漫画</a></li>
+                <li class="disabled"><a href="javascript:;">音乐</a></li>
+                <li class="disabled"><a href="javascript:;">图书</a></li>
             </ul>
-            <div class="navbar-form navbar-right">
-                <img id="avatar"
-                     src="https://lh6.googleusercontent.com/-eRxRGjDvkvY/AAAAAAAAAAI/AAAAAAAAeGg/HetZCuangp8/s46-c-k-no/photo.jpg">
-                <a id="username">zh99998</a>
+            <ul class="nav navbar-nav navbar-left" ng-if="!current_user">
+                <li class="active"><a href="javascript:;">登录</a></li>
+                <li><a href="https://moeid.my-card.in/users/sign_up?app=moeid" target="_blank">注册</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-if="current_user">
+                <li class="dropdown">
+                    <a id="username" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                        <img id="avatar" src="https://lh6.googleusercontent.com/-eRxRGjDvkvY/AAAAAAAAAAI/AAAAAAAAeGg/HetZCuangp8/s46-c-k-no/photo.jpg">
+                        {{current_user.name}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:;" ng-click="sign_out()" ng-controller="UserController">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="navbar-form navbar-right" ng-if="!current_user">
+                <a href="https://moeid.my-card.in/users/sign_up?app=moeid" target="_blank" type="button" class="btn btn-success">注册</a>
             </div>
-            <form class="navbar-form navbar-left">
+            <!--<form class="navbar-form navbar-left">
                 <input type="text" class="form-control" placeholder="搜索...">
-            </form>
+            </form>-->
         </div>
     </div>
     <div id="window_controls">
@@ -58,7 +71,8 @@
         <a id="window_control_close" class="window-control"><img src="img/close.png"></a>
     </div>
 </div>
-<div id="wrapper">
+
+<div class="wrapper" id="wrapper" ng-show="current_user">
     <div class="col-sm-3 col-md-2 sidebar" ng-controller="AppsListController">
         <ul class="nav nav-sidebar">
             <li ng-repeat="app in apps" ng-class="active(app.id)">
@@ -66,7 +80,7 @@
             </li>
         </ul>
     </div>
-    <div id="right_wrapper" class="col-md-10">
+    <div id="right_wrapper" class="col-md-10" ng-controller="UserController">
         <div id="right_top_wrapper" class="row">
             <div class="main_wrapper">
                 <div class="main" ng-view></div>
@@ -89,8 +103,52 @@
             </div>
         </div>
         <div class="row">
-            <iframe id="candy" src="candy/index.html?bosh=http://localhost:5280/http-bind&jid=毛玉测试@my-card.in&password=123456" nwdisable></iframe>
+            <iframe id="candy" ng-src="{{candy_url()}}" nwdisable></iframe>
         </div>
+    </div>
+</div>
+
+<div class="wrapper" id="signin" ng-show="!current_user" ng-controller="UserController">
+    <div class="container">
+        <form class="form-signin" role="form" ng-init="user.remember_me=true">
+            <h2 class="form-signin-heading">登录</h2>
+            <input type="text" class="form-control" ng-model="user.name" placeholder="用户名" required autofocus>
+            <input type="password" class="form-control" ng-model="user.password" placeholder="密码" required>
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me" ng-model="user.remember_me"> 记住密码
+            </label>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="sign_in(user)" ng-disabled="signing">登录</button>
+        </form>
+
+    </div> <!-- /container -->
+    <div id="footer">
+    <div class="footer content clearfix">
+    <ul id="footer-list">
+        <li>
+            毛玉
+        </li>
+        <li>
+            <a href="javascript:;">
+                隐私权和服务条款
+            </a>
+        </li>
+        <li>
+            <a href="javascript:;">
+                帮助
+            </a>
+        </li>
+    </ul>
+    <div id="lang-vis-control" style="display: inline;">
+    <span id="lang-chooser-wrap" class="lang-chooser-wrap">
+  <label for="lang-chooser"><img src="https://ssl.gstatic.com/images/icons/ui/common/universal_language_settings-21.png" alt="更改语言"></label>
+  <select id="lang-chooser" class="lang-chooser" name="lang-chooser">
+  <option value="zh-CN" selected="selected">
+      ‪简体中文‬
+  </option>
+  </select>
+  </span>
+    </div>
+    </div>
     </div>
 </div>
 
