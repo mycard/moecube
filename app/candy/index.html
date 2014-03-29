@@ -13,14 +13,39 @@
 <script type="text/javascript" src="candy.fix.js"></script>
 <script type="text/javascript" src="base64.js"></script>
 
+<!-- available_rooms插件不能用 看不到任何效果 -->
+
+<script type="text/javascript" src="candy-plugins/chatrecall/candy.js"></script>
+
+<script type="text/javascript" src="candy-plugins/clearchat/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/clearchat/candy.css" />
+
+<!-- colors 没有i18n并且 由于不是标准颜色协议，会导致pidgen等三方客户端上直接显示代码，不启用-->
+
 <script type="text/javascript" src="candy-plugins/inline-images/candy.js"></script>
 <link rel="stylesheet" type="text/css" href="candy-plugins/inline-images/candy.css" />
 
-<script type="text/javascript" src="candy-plugins/gs-notifyme/candy.js"></script>
-<link rel="stylesheet" type="text/css" href="candy-plugins/gs-notifyme/candy.css" />
+<!-- inline-videos插件不能用 看不到任何效果 -->
+<!-- join插件不能用 看不到任何效果 -->
+<!-- jquery-ui 不需要 -->
 
-<script type="text/javascript" src="candy-plugins/gs-namecomplete/candy.js"></script>
-<link rel="stylesheet" type="text/css" href="candy-plugins/gs-namecomplete/candy.css" />
+<script type="text/javascript" src="candy-plugins/namecomplete/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/namecomplete/candy.css" />
+
+<!-- nickchange 没有i18n并且 不需要 -->
+
+<!--node-webkit需要调教-->
+<!--<script type="text/javascript" src="candy-plugins/notifications/candy.js"></script>-->
+
+<script type="text/javascript" src="candy-plugins/notifyme/candy.js"></script>
+<link rel="stylesheet" type="text/css" href="candy-plugins/notifyme/candy.css" />
+
+<!-- refocus 不需要(?) -->
+<!-- removeignore 不需要 -->
+<!-- replies 目测跟notifyme一样 -->
+<!-- roompanel  没有i18n 并且 有bug -->
+<!-- stickysubject 不需要 -->
+<!-- timeago 没有i18n -->
 
 <script type="text/javascript">
 $(document).ready(function () {
@@ -34,9 +59,12 @@ $(document).ready(function () {
         view: { resources: 'res/', language: 'cn' }
     });
 
+    CandyShop.ChatRecall.init();
+    CandyShop.ClearChat.init(false);
     CandyShop.InlineImages.init();
-    CandyShop.NotifyMe.init();
     CandyShop.NameComplete.init();
+    <!--CandyShop.Notifications.init();-->
+    CandyShop.NotifyMe.init();
 
     Candy.Core.connect(url.param('jid'), url.param('password'));
 

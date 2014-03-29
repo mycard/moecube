@@ -10,14 +10,14 @@ CandyShop.Colors = (function(self, Candy, $) {
 
 		self.applyTranslations();
 
-		$(Candy.View.Pane).on('candy:view.message.before-send', function(e, args) {
+		$(Candy).on('candy:view.message.before-send', function(e, args) {
 			if(_currentColor > 0 && $.trim(args.message) !== '') {
 				args.message = '|c:'+ _currentColor +'|' + args.message;
 			}
 		});
 
-		$(Candy.View.Pane).on('candy:view.message.before-show', function(e, args) {
-			args.message = args.message.replace(/^\|c:([0-9]{1,2})\|(.*)/gm, '<span class="colored color-$1">$2</span>');
+		$(Candy).on('candy:view.message.before-render', function(e, args) {
+			args.templateData.message = args.templateData.message.replace(/^\|c:([0-9]{1,2})\|(.*)/gm, '<span class="colored color-$1">$2</span>');
 		});
 
 		if(Candy.Util.cookieExists('candyshop-colors-current')) {
@@ -65,12 +65,20 @@ CandyShop.Colors = (function(self, Candy, $) {
 	};
 
 	self.applyTranslations = function() {
-		Candy.View.Translation.en.candyshopColorsMessagecolor = 'Message color';
-		Candy.View.Translation.ru.candyshopColorsMessagecolor = 'Цвет сообщения';
-		Candy.View.Translation.de.candyshopColorsMessagecolor = 'Farbe für Nachrichten';
-		Candy.View.Translation.fr.candyshopColorsMessagecolor = 'Couleur des messages';
-		Candy.View.Translation.nl.candyshopColorsMessagecolor = 'Berichtkleur';
-		Candy.View.Translation.es.candyshopColorsMessagecolor = 'Color de los mensajes';
+		var translations = {
+		  'en' : 'Message Color',
+		  'ru' : 'Цвет сообщения',
+		  'de' : 'Farbe für Nachrichten',
+		  'fr' : 'Couleur des messages',
+		  'nl' : 'Berichtkleur',
+		  'es' : 'Color de los mensajes'
+		};
+		$.each(translations, function(k, v) {
+			if(Candy.View.Translation[k]) {
+				Candy.View.Translation[k].candyshopColorsMessagecolor = v;
+			}
+
+		});
 	};
 
 	return self;
