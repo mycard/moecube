@@ -247,6 +247,7 @@ angular.module('maotama.controllers', [])
           alert '登录失败'
     $scope.sign_out = ()->
       $rootScope.current_user = null
+      $scope.$apply()
       db.user.remove {}, (err)->
         throw err if err
 

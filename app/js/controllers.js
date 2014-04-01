@@ -378,6 +378,7 @@
       };
       $scope.sign_out = function() {
         $rootScope.current_user = null;
+        $scope.$apply();
         return db.user.remove({}, function(err) {
           if (err) {
             throw err;

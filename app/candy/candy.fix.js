@@ -143,29 +143,6 @@
     }
 })(Candy.View.Pane, jQuery);
 
-(function (self, $) {
-    //修正同一个用户不同resource对话
-    self.Message = function(event, args) {
-        if (args.message.type === "subject") {
-            if (!Candy.View.Pane.Chat.rooms[args.roomJid]) {
-                Candy.View.Pane.Room.init(args.roomJid, args.message.name);
-                Candy.View.Pane.Room.show(args.roomJid);
-            }
-            Candy.View.Pane.Room.setSubject(args.roomJid, args.message.body);
-        } else if (args.message.type === "info") {
-            Candy.View.Pane.Chat.infoMessage(args.roomJid, args.message.body);
-        } else {
-            // Initialize room if it's a message for a new private user chat
-            if (args.message.type === "chat" && !Candy.View.Pane.Chat.rooms[args.roomJid]) {
-                args.roomJid = Strophe.getBareJidFromJid(args.roomJid);
-                Candy.View.Pane.PrivateRoom.open(args.roomJid, args.message.name, false, args.message.isNoConferenceRoomJid);
-            }
-            Candy.View.Pane.Message.show(args.roomJid, args.message.name, args.message.body, args.timestamp);
-        }
-    };
-})(Candy.View.Observer, jQuery);
-
-
 (function (self, Strophe, $) {
     //将candy:core.chat.connection的触发提前，用于在获取vcard之前获取roster
     self.Strophe.Connect = function(status) {

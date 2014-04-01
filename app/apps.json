@@ -17,6 +17,7 @@
         "languages": ["ja-JP"],
         "mods": [
             {
+                "id":"lang_zh_cn",
                 "override_main": "th135c.exe",
                 "type": "language",
                 "languages": ["zh-CN"],
@@ -36,7 +37,7 @@
             "protocol": "udp",
             "port": 10800
         },
-        "summary": "",
+        "summary": "诶嘿★~",
         "download": {
             "url": "http://test2.my-card.in/downloads/maotama/th123_1.10a.7z",
             "size": 250272482,
@@ -46,6 +47,7 @@
         "languages": ["ja-JP"],
         "mods": [
             {
+                "id": "lang_zh_cn",
                 "type": "language",
                 "languages": ["zh-CN"],
                 "override_main": "th123_beta.exe",
@@ -81,6 +83,7 @@
         "languages": ["ja-JP"],
         "mods": [
             {
+                "id": "lang_zh_cn",
                 "type": "language",
                 "languages": ["zh-CN"],
                 "download": {

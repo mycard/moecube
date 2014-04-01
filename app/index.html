@@ -20,7 +20,7 @@
     <link href="css/app.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="show_candy show_roster">
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -45,17 +45,10 @@
                 <li class="active"><a href="javascript:;">登录</a></li>
                 <li><a href="https://moeid.my-card.in/users/sign_up?app=moeid" target="_blank">注册</a></li>
             </ul>
-            <ul class="nav navbar-nav navbar-right" ng-if="current_user">
-                <li class="dropdown">
-                    <a id="username" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-                        <img id="avatar" src="https://lh6.googleusercontent.com/-eRxRGjDvkvY/AAAAAAAAAAI/AAAAAAAAeGg/HetZCuangp8/s46-c-k-no/photo.jpg">
-                        {{current_user.name}} <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:;" ng-click="sign_out()" ng-controller="UserController">退出登录</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <div id="user_info" class="nav navbar-nav navbar-right" ng-if="current_user">
+                <img id="avatar" src="https://lh6.googleusercontent.com/-eRxRGjDvkvY/AAAAAAAAAAI/AAAAAAAAeGg/HetZCuangp8/s46-c-k-no/photo.jpg">
+                <!--<span id="notification" class="label label-danger">9</span>-->
+            </div>
             <div class="navbar-form navbar-right" ng-if="!current_user">
                 <a href="https://moeid.my-card.in/users/sign_up?app=moeid" target="_blank" type="button" class="btn btn-success">注册</a>
             </div>
@@ -80,7 +73,7 @@
             </li>
         </ul>
     </div>
-    <div id="right_wrapper" class="col-md-10" ng-controller="UserController">
+    <div id="right_wrapper" class="col-md-10">
         <div id="right_top_wrapper" class="row">
             <div class="main_wrapper">
                 <div class="main" ng-view></div>
@@ -100,13 +93,24 @@
                 </div>
                 <ul id="roster" class="list-unstyled"></ul>
                 <ul id="roster_search_result" class="list-unstyled" hidden></ul>
+                <div id="show_candy_wrapper">
+                    <button type="button" class="btn btn-link btn-sm" id="show_candy">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <iframe id="candy" ng-src="{{candy_url()}}" nwdisable></iframe>
         </div>
     </div>
 </div>
+<div id="candy_wrapper">
+    <!--font-size: 12px;
+    line-height: 1.5;-->
+    <button type="button" class="btn btn-link btn-sm" id="hide_candy">
+        <span class="glyphicon glyphicon-chevron-down"></span>
+    </button>
+    <iframe id="candy" ng-src="{{candy_url()}}" nwdisable ng-controller="UserController"></iframe>
+</div>
+
 
 <div class="wrapper" id="signin" ng-show="!current_user" ng-controller="UserController">
     <div class="container">

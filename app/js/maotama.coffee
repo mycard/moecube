@@ -6,6 +6,22 @@ gui = require 'nw.gui'
 win = gui.Window.get();
 win.showDevTools() if "--dev" in gui.App.argv
 
+menu = new gui.Menu();
+menu.append new gui.MenuItem
+  label: '更换用户'
+  click: ()->
+    angular.element("#signin").scope().sign_out()
+menu.append new gui.MenuItem
+  label: '退出'
+  click: ()->
+    win.close()
+
+window.tray = new gui.Tray
+  title: '毛玉'
+  tooltip: "test"
+  icon: 'app/img/logo.jpg'
+  menu: menu
+
 $('#window_control_minimize').click ->
   win.minimize()
 $('#window_control_maximize').click ->
@@ -24,6 +40,15 @@ win.on 'unmaximize', ->
 $('.switch').bootstrapSwitch();
 $('#cloud_popover').popover()
 
+$('#hide_candy').click ->
+  $('body').removeClass('show_candy')
+$('#show_candy').click ->
+  $('body').addClass('show_candy')
+
+
+$('body').on 'click', '#user_info', ->
+  $('body').toggleClass('show_roster')
+
 $('.main_wrapper').on 'click', '#cloud_address', ->
   $('#cloud_address').select();
 $('.main_wrapper').on 'click','#app_add', ->
@@ -38,6 +63,9 @@ $('.main_wrapper').on 'click','#app_add', ->
 win.on 'new-win-policy', (frame, url, policy)->
   gui.Shell.openExternal( url );
   policy.ignore()
+
+
+
 #用户
 pre_load_photo = (jid, name, domain)->
   switch domain

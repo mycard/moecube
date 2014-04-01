@@ -6,26 +6,68 @@ body,
 #right_top_wrapper {
   height: 100%;
 }
-#right_top_wrapper {
+#candy {
+  height: 0;
+  width: 100%;
+  border: none;
+  display: block;
+}
+.show_candy #wrapper {
   padding-bottom: 207px;
 }
-#candy {
+.show_candy #candy {
   margin-top: -207px;
+  height: 207px;
 }
-.main_wrapper {
+#candy_wrapper {
+  position: relative;
+}
+.show_candy #hide_candy {
+  position: absolute;
+  color: #d3d3d3;
+  right: 0;
+  top: 0;
+  display: block;
+}
+#hide_candy {
+  display: none;
+}
+.show_roster .main_wrapper {
   padding-right: 200px;
+}
+#roster_wrapper {
+  padding-bottom: 30px;
+}
+#show_candy_wrapper {
+  background: #444;
+  height: 30px;
+  display: block;
+}
+.show_candy #show_candy_wrapper {
+  display: none;
+}
+#show_candy {
+  color: #d3d3d3;
+  float: right;
 }
 .main {
   height: 100%;
   overflow-y: auto;
 }
 #roster_aside {
-  margin-left: -200px;
-  float: right;
-  width: 200px;
+  width: 0;
   height: 100%;
-/*border: 1px solid #dddddd;*/
+  float: right;
+  margin-left: -200px;
   border-right: none;
+  padding-bottom: 64px;
+  display: none;
+}
+.show_roster #roster_aside {
+  width: 200px;
+  display: block;
+}
+.show_candy #roster_aside {
   padding-bottom: 34px;
 }
 body {
@@ -47,12 +89,24 @@ h5,
 h6,
 iframe,
 .bootstrap-switch,
-.main {
+.main,
+#user_info,
+#user_info * {
   -webkit-app-region: no-drag;
+}
+#user_info {
+  position: relative;
 }
 #avatar {
   max-height: 34px;
-  margin: -7px 8px -7px 0;
+  position: absolute;
+  right: 20px;
+  top: 8px;
+}
+#notification {
+  position: absolute;
+  right: 15px;
+  top: 4px;
 }
 #username {
   margin: 0 5px 0 5px;
@@ -107,19 +161,13 @@ iframe,
 .achievement.locked {
   -webkit-filter: grayscale(100%);
 }
-#candy {
-  height: 207px;
-  width: 100%;
-  border: none;
-  display: block;
-}
 #roster_aside {
   float: right;
   width: 200px;
   height: 100%;
 /*border: 1px solid #dddddd;*/
   border-right: none;
-  padding-bottom: 34px;
+  padding-bottom: 64px;
 }
 #roster_aside ul {
   background: #fff;
