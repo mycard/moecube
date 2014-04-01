@@ -18,8 +18,8 @@ menu.append new gui.MenuItem
 
 window.tray = new gui.Tray
   title: '毛玉'
-  tooltip: "test"
-  icon: 'app/img/logo.jpg'
+  tooltip: '毛玉'
+  icon: 'app/img/logo.png'
   menu: menu
 
 $('#window_control_minimize').click ->
