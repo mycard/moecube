@@ -64,7 +64,9 @@ win.on 'new-win-policy', (frame, url, policy)->
   gui.Shell.openExternal( url );
   policy.ignore()
 
-
+$('body').on 'click', 'a[data-toggle="tab"]', (e)->
+  e.preventDefault()
+  $(this).tab('show')
 
 #用户
 pre_load_photo = (jid, name, domain)->

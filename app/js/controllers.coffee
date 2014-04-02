@@ -163,16 +163,16 @@ angular.module('maotama.controllers', [])
       $scope.runtime.running = true
       $scope.candy.contentWindow.postMessage(type: 'status', status: "正在玩 #{$scope.app.name}", show: "dnd" , $scope.candy.src)
       game = child_process.spawn $scope.app.main, ["--maotama-username=#{$rootScope.current_user.name}",
-        "--maotama-ranking-0=0",
-          "--maotama-ranking-1=1",
-          "--maotama-ranking-2=2",
-          "--maotama-ranking-3=3",
-          "--maotama-ranking-4=4",
-          "--maotama-ranking-5=5",
-          "--maotama-ranking-6=6",
-          "--maotama-ranking-7=7",
-          "--maotama-ranking-8=8",
-          "--maotama-ranking-HJ=9",
+        "--maotama-ranking-#{$rootScope.current_user.name}=#{$scope.profile.score}",
+          "--maotama-ranking-博丽灵梦=6500",
+          "--maotama-ranking-♂Van♂=5800",
+          "--maotama-ranking-比利♂海灵顿=5600",
+          "--maotama-ranking-德国Boy=5430",
+          "--maotama-ranking-麦当劳叔叔=5400",
+          "--maotama-ranking-村口王师傅=5200",
+          "--maotama-ranking-帝国元首=4800",
+          "--maotama-ranking-葛老师=3600",
+          "--maotama-ranking-五道杠大队长=3300",
         ],
         cwd: $scope.local.installation
       game.stdout.setEncoding('utf8');
@@ -200,10 +200,16 @@ angular.module('maotama.controllers', [])
                   $scope.$digest();
               when 'SCORE'
                 score = parseInt $(command).text()
-                window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "得分", score
-
-              else
-                window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "unknown command", matches[1]
+                if !$scope.profile.score or score > $scope.profile.score
+                  window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "最高得分", score
+                  $scope.profile.score = score
+                  db.profile.update {
+                    id: $scope.app.id
+                  }, $scope.profile, (err, numReplaced, newDoc)->
+                    throw err if err
+                    $scope.$digest();
+                else
+                  window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "unknown command", matches[1]
       game.on 'close', (code)->
         $scope.runtime.running = false
         $scope.candy.contentWindow.postMessage(type: 'status', $scope.candy.src)

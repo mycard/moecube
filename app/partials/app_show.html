@@ -112,6 +112,96 @@
 <img class="friend img-thumbnail" src="https://lh5.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAZE/OVA-78yQjU8/s46-c-k-no/photo.jpg">
 <img class="friend img-thumbnail" src="https://lh5.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAZE/OVA-78yQjU8/s46-c-k-no/photo.jpg">
 
+<h2 class="sub-header" ng-if="profile.score">排行榜</h2>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" ng-if="profile.score">
+    <li><a href="#ranking_global" data-toggle="tab">所有人</a></li>
+    <li class="active"><a href="#ranking_friends" data-toggle="tab">好友</a></li>
+</ul>
+<div class="tab-content" ng-if="profile.score">
+    <div class="tab-pane fade" id="ranking_global">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>昵称</th>
+                <th>得分</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>博丽灵梦</td>
+                <td>6500</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>♂Van♂</td>
+                <td>5800</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>比利♂海灵顿</td>
+                <td>5430</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>麦当劳叔叔</td>
+                <td>5600</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>德国Boy</td>
+                <td>5400</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>村口王师傅</td>
+                <td>5200</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>帝国元首</td>
+                <td>4800</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>葛老师</td>
+                <td>3600</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>五道杠大队长</td>
+                <td>3300</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>游泳教练</td>
+                <td>0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade in active" id="ranking_friends">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>昵称</th>
+                <th>得分</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>{{current_user.name}}</td>
+                <td>{{profile.score}}</td>
+            </tr>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <h2 class="sub-header" ng-repeat-start="achievement in app.achievements">{{achievement.name}}</h2>
 
 <div class="clearfix" ng-if="achievement_unlocked_count($index) > 0">

@@ -101,6 +101,11 @@
     return policy.ignore();
   });
 
+  $('body').on('click', 'a[data-toggle="tab"]', function(e) {
+    e.preventDefault();
+    return $(this).tab('show');
+  });
+
   pre_load_photo = function(jid, name, domain) {
     var hash;
     switch (domain) {
