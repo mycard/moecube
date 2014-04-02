@@ -107,6 +107,17 @@ $(document).ready(function () {
     window.addEventListener('message', function (event) {
         var msg = event.data
         switch (msg.type) {
+            case 'status':
+                if (msg.status && msg.show){
+                    Candy.Core.Action.Jabber.Presence(null,$build('show').t(msg.show), $build('status').t(msg.status));
+                }else if(msg.status){
+                    Candy.Core.Action.Jabber.Presence(null,$build('status').t(msg.status));
+                }else if(msg.show){
+                    Candy.Core.Action.Jabber.Presence(null,$build('show').t(msg.show));
+                }else{
+                    Candy.Core.Action.Jabber.Presence();
+                }
+                break;
             case 'chat':
                 Candy.View.Pane.PrivateRoom.open(msg.jid, msg.jid.split('@')[0], true, true);
                 break;

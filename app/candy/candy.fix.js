@@ -202,7 +202,7 @@
 })(Candy.Core.Event || {}, Strophe, jQuery);
 
 //父窗口焦點
-Candy.View = function(self, $) {
+(function(self, $) {
     /** PrivateObject: _current
      * Object containing current container & roomJid which the client sees.
      */
@@ -335,7 +335,23 @@ Candy.View = function(self, $) {
         return _options;
     };
     return self;
-}(Candy.View || {}, jQuery);
+})(Candy.View || {}, jQuery);
+
+//presence 接受多个el参数
+(function(self, Strophe, $) {
+    /** Class: Candy.Core.Action.Jabber
+     * Jabber actions
+     */
+    self.Jabber.Presence = function (attr, el) {
+        var pres = $pres(attr).c("priority").t(Candy.Core.getOptions().presencePriority.toString()).up().c("c", Candy.Core.getConnection().caps.generateCapsAttrs()).up();
+
+        for(var i=1; i<arguments.length; i++){
+            el = arguments[i];
+            pres.node.appendChild(el.node);
+        }
+        Candy.Core.getConnection().send(pres.tree());
+    }
+})(Candy.Core.Action || {}, Strophe, jQuery);
 
 //中文验证，看起来SHA1、MD5、PLAIN都对中文支持有问题。通过更换base64库可以修复PLAIN，然后在这里只允许PLAIN认证
 Strophe.Connection.prototype._connect_cb = function(req, _callback, raw) {

@@ -8,7 +8,7 @@
             "port": 10800
         },
         "main": "th135.exe",
-        "summary": "喵喵喵喵喵帕斯  \nnyanpass nyanpass",
+        "summary": "使用说明：  \n- 点 [添加] 选择自己游戏路径  \n- 点 [开始] 运行游戏，并在10800端口建主  \n- 点 [反重力场] 获取公网IP和端口  \n- 把那个通过QQ等即时通讯工具告诉你的对手",
         "download": {
             "url": "http://test2.my-card.in/downloads/maotama/th135_1.33.7z",
             "size": 313177031,
@@ -37,7 +37,7 @@
             "protocol": "udp",
             "port": 10800
         },
-        "summary": "诶嘿★~",
+        "summary": "使用说明：  \n- 点 [添加] 选择自己游戏路径  \n- 点 [开始] 运行游戏，并在10800端口建主  \n- 点 [反重力场] 获取公网IP和端口  \n- 把那个通过QQ等即时通讯工具告诉你的对手",
         "download": {
             "url": "http://test2.my-card.in/downloads/maotama/th123_1.10a.7z",
             "size": 250272482,
@@ -161,5 +161,24 @@
                 ]
             }
         ]
+    },
+    {
+        "id": "ygopro",
+        "category": "game",
+        "name": "游戏王 YGOPro",
+        "summary": "现在放这只是摆看的，还没支持。  \n**不要**在这里尝试安装，会崩。  \n想玩的请去下萌卡 https://my-card.in/ "
+    },
+    {
+        "id": "thbh",
+        "category": "game",
+        "name": "东方暴打油库里",
+        "summary": "大家好我们是学了十二年3D技术的MyACG制作组，我们制作了最近大热的《东方project》同人游戏，希望大家能够喜欢，多多交流经验。",
+        "download": {
+            "url": "http://test2.my-card.in/downloads/maotama/thbh.7z",
+            "size": 17548549,
+            "checksum": "6364783f2a50d36f01355727a343f184"
+        },
+        "main": "THBH.exe",
+        "languages": ["zh-CN"]
     }
 ]

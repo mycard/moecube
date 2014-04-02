@@ -42,8 +42,9 @@ angular.module('maotama.controllers', [])
           if app.category == category
             "active"
 ]
-.controller 'AppsShowController', ['$scope', '$routeParams', ($scope, $routeParams)->
+.controller 'AppsShowController', ['$scope', '$routeParams','$rootScope', ($scope, $routeParams, $rootScope)->
     $scope.tunnel_servers = require './tunnel_servers.json'
+    $scope.candy = document.getElementById('candy')
     db.apps.findOne {id: $routeParams.app_id}, (err, doc)->
       throw err if err
       $scope.app = doc
@@ -160,7 +161,19 @@ angular.module('maotama.controllers', [])
 
     $scope.run = ()->
       $scope.runtime.running = true
-      game = child_process.spawn $scope.app.main, [],
+      $scope.candy.contentWindow.postMessage(type: 'status', status: "正在玩 #{$scope.app.name}", show: "dnd" , $scope.candy.src)
+      game = child_process.spawn $scope.app.main, ["--maotama-username=#{$rootScope.current_user.name}",
+        "--maotama-ranking-0=0",
+          "--maotama-ranking-1=1",
+          "--maotama-ranking-2=2",
+          "--maotama-ranking-3=3",
+          "--maotama-ranking-4=4",
+          "--maotama-ranking-5=5",
+          "--maotama-ranking-6=6",
+          "--maotama-ranking-7=7",
+          "--maotama-ranking-8=8",
+          "--maotama-ranking-HJ=9",
+        ],
         cwd: $scope.local.installation
       game.stdout.setEncoding('utf8');
       game.stdout.on 'data', (data)->
@@ -185,10 +198,15 @@ angular.module('maotama.controllers', [])
                 }, $scope.profile, (err, numReplaced, newDoc)->
                   throw err if err
                   $scope.$digest();
+              when 'SCORE'
+                score = parseInt $(command).text()
+                window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "得分", score
+
               else
                 window.LOCAL_NW.desktopNotifications.notify $scope.app.icon, "unknown command", matches[1]
       game.on 'close', (code)->
         $scope.runtime.running = false
+        $scope.candy.contentWindow.postMessage(type: 'status', $scope.candy.src)
         $scope.$digest();
 
     $scope.achievement_unlocked_count = (category)->
@@ -219,7 +237,6 @@ angular.module('maotama.controllers', [])
         $scope.runtime.tunneling = false
         $scope.runtime.tunnel = address
         $scope.$digest()
-
 
 ]
 
