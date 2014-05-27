@@ -1,4 +1,4 @@
-<h1 class="page-header">{{app.name}}
+﻿<h1 class="page-header">{{app.name}}
     <button id="app_play" type="button" class="btn btn-default" ng-if="local.installation" ng-click="run()" ng-disabled="runtime.running">
         <span class="glyphicon glyphicon-play"></span> 开始
     </button>
@@ -224,7 +224,7 @@
     </a>
 </div>
 
-<div ng-show="local.installation">
+<div ng-show="local.installation && app.id!='efz'"> <!-- 暂时禁用EFZ的设置/卸载功能。 -->
     <h2 class="sub-header">设置</h2>
     <button id="app_uninstall" type="button" class="btn btn-default" data-toggle="modal" data-target="#app_uninstall_modal" ng-disable="runtime.running || runtime.uninstalling">
         <span class="glyphicon glyphicon-trash"></span> 卸载
