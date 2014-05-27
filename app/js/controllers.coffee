@@ -162,19 +162,23 @@ angular.module('maotama.controllers', [])
     $scope.run = ()->
       $scope.runtime.running = true
       $scope.candy.contentWindow.postMessage(type: 'status', status: "正在玩 #{$scope.app.name}", show: "dnd" , $scope.candy.src)
-      game = child_process.spawn $scope.app.main, ["--maotama-username=#{$rootScope.current_user.name}",
-        "--maotama-ranking-#{$rootScope.current_user.name}=#{$scope.profile.score}",
-          "--maotama-ranking-博丽灵梦=6500",
-          "--maotama-ranking-♂Van♂=5800",
-          "--maotama-ranking-比利♂海灵顿=5600",
-          "--maotama-ranking-德国Boy=5430",
-          "--maotama-ranking-麦当劳叔叔=5400",
-          "--maotama-ranking-村口王师傅=5200",
-          "--maotama-ranking-帝国元首=4800",
-          "--maotama-ranking-葛老师=3600",
-          "--maotama-ranking-五道杠大队长=3300",
-        ],
-        cwd: $scope.local.installation
+      if $scope.app.id is "efz"
+        game = child_process.spawn "cmd.exe", ["/c", $scope.app.main],
+          cwd: $scope.local.installation
+      else
+        game = child_process.spawn $scope.app.main, ["--maotama-username=#{$rootScope.current_user.name}",
+          "--maotama-ranking-#{$rootScope.current_user.name}=#{$scope.profile.score}",
+            "--maotama-ranking-博丽灵梦=6500",
+            "--maotama-ranking-♂Van♂=5800",
+            "--maotama-ranking-比利♂海灵顿=5600",
+            "--maotama-ranking-德国Boy=5430",
+            "--maotama-ranking-麦当劳叔叔=5400",
+            "--maotama-ranking-村口王师傅=5200",
+            "--maotama-ranking-帝国元首=4800",
+            "--maotama-ranking-葛老师=3600",
+            "--maotama-ranking-五道杠大队长=3300",
+          ],
+          cwd: $scope.local.installation
       game.stdout.setEncoding('utf8');
       game.stdout.on 'data', (data)->
         console.log data
@@ -239,7 +243,7 @@ angular.module('maotama.controllers', [])
       $scope.runtime.tunneling = true
       $scope.runtime.tunnel = null
 
-      tunnel.listen 10800, server.url, (address)->
+      tunnel.listen $scope.app.network.port, server.url, (address)->
         $scope.runtime.tunneling = false
         $scope.runtime.tunnel = address
         $scope.$digest()

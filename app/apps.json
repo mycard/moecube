@@ -1,5 +1,17 @@
 [
     {
+        "id": "efz",
+        "category": "game",
+        "name": "零之永恒",
+        "network": {
+            "protocol": "udp",
+            "port": 88
+        },
+        "main": "战网服务器EX防鬼版.exe",
+        "summary": "使用说明：  \n- 点 [添加] 选择游戏路径 [战网服务器EX防鬼版.exe]  \n- 点 [开始] 运行联网器，并在88端口建主 (直接按Enter,注意配置文件里端口号应该是88)  \n- 点 [反重力场] 获取公网IP和端口  \n- 把那个通过QQ等即时通讯工具告诉你的对手  \n- 对方要手动更改配置文件 [lang_2052.txt] 第22行, 106= 后面改上端口号, 然后运行 [战网服务器EX防鬼版.exe] 填IP",
+        "languages": ["ja-JP"]
+    },
+    {
         "id": "th135",
         "category": "game",
         "name": "东方心绮楼",
