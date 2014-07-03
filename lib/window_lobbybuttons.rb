@@ -34,7 +34,7 @@ class Window_LobbyButtons < Window_List
     case @index
       when 0 #常见问题
         require_relative 'dialog'
-        Dialog.web "http://forum.my-card.in/"
+        Dialog.web "https://forum.my-card.in/"
       when 1 #房间筛选
         if @filter_window and !@filter_window.destroyed?
           @filter_window.destroy
@@ -50,25 +50,31 @@ class Window_LobbyButtons < Window_List
         return if @waiting
         @waiting = true
         waiting_window = Widget_Msgbox.new("自动匹配", "正在等待对手")
-        require 'open-uri'
+        require 'uri'
+        require 'net/http'
+        require 'net/https'
         Thread.new {
           begin
-            open('https://my-card.in/match') { |f|
-              @waiting = false
-
-              if f.read =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*?)(\?server_auth=true)?$/
-                room = Room.new(nil, $3.to_s)
-                room.server = Server.new(nil, nil, $1, $2.to_i, !!$4)
-                $game.join(room)
-              else
-                $log.error('自动匹配非法回复'){f.read}
-                Widget_Msgbox.new("自动匹配", "错误: #{exception}", ok: "确定")
-              end
-            }
+            uri = URI.parse("https://my-card.in/match")
+            http = Net::HTTP.new(uri.host,uri.port)
+            http.use_ssl = true
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            req = Net::HTTP::Post.new(uri.path)
+            req.basic_auth $game.username, $game.password
+            res = http.request(req)
+            @waiting = false
+            if res.body =~ /^mycard:\/\/([\d\.]+):(\d+)\/(.*?)(\?server_auth=true)?$/
+              room = Room.new(nil, $3.to_s)
+              room.server = Server.new(nil, nil, $1, $2.to_i, !!$4)
+              $game.join(room)
+            else
+              $log.error('自动匹配非法回复'){res.body}
+              Widget_Msgbox.new("自动匹配", "错误: #{res.body}", ok: "确定")
+            end
           rescue Exception => exception
             @waiting = false
-            $log.error('自动匹配出错'){exception}
-            Widget_Msgbox.new("自动匹配", "匹配失败: #{exception}", ok: "确定")
+            $log.error('自动匹配出错'){exception.to_s.encode('UTF-8')}
+            Widget_Msgbox.new("自动匹配", "匹配失败: #{exception.to_s.encode('UTF-8')}", ok: "确定")
           end
         }
     end
