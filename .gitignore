@@ -1,4 +1,4 @@
-/ygopro/
+*.tar.xz
 /node_modules/
 
 /nbproject/

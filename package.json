@@ -1,11 +1,14 @@
 {
   "name": "mycard",
-  "description":"a game platform",
+  "description": "a game platform",
   "version": "2.0.0",
   "main": "main.js",
   "license": "AGPL-3.0",
   "repository": "github:mycard/mycard",
   "dependencies": {
+    "glob": "^6.0.4",
+    "ini": "^1.3.4",
+    "mkdirp": "^0.5.1",
     "ws": "^1.0.1"
   },
   "optionalDependencies": {

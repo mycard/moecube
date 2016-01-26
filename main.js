@@ -133,7 +133,7 @@ app.on('ready', function () {
 });
 
 //const ipcMain = require('electron').ipcMain;
-const ygopro = require('./ygopro');
+const ygopro = require('./apps');
 /*ipcMain.on('join', (event, args) => {
  ygopro.emit('run', args);
  });

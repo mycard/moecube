@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ygopro",
+    "version": "1",
+    "locales": {
+      "zh-CN": {
+        "name": "YGOPro"
+      }
+    },
+    "files": {
+      "system.conf": {
+        "content": "ini"
+      },
+      "deck/*.ydk": {
+        "sync": true
+      },
+      "replay/*.yrp": {
+      },
+      "backup/replay/*.yrp": {
+      }
+    },
+    "actions": {
+      "darwin": {
+        "join": {
+          "execuate": "ygopro.app/Contents/MacOS/ygopro",
+          "args": [
+            "-j"
+          ]
+        },
+        "deck": {
+          "execuate": "ygopro.app/Contents/MacOS/ygopro",
+          "args": [
+            "-d"
+          ]
+        },
+        "replay": {
+          "execuate": "ygopro.app/Contents/MacOS/ygopro",
+          "args": [
+            "-r"
+          ]
+        },
+        "single": {
+          "execuate": "ygopro.app/Contents/MacOS/ygopro",
+          "args": [
+            "-s"
+          ]
+        }
+      }
+    },
+    "association": {
+      ".ydk": "deck",
+      ".deck": "deck",
+      ".ydp": "replay"
+    }
+  }
+]

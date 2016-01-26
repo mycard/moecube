@@ -56,7 +56,6 @@ module.exports = function (grunt) {
                 outputDirectory: 'release',
                 authors: 'MyCard',
                 exe: 'electron.exe',
-                description: 'nyanya'
             }/*,
             ia32: {
                 appDirectory: 'build/32',
