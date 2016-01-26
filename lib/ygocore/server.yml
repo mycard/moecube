@@ -1,5 +1,0 @@
-register: https://my-card.in/register
-api: http://master.smdcn.net:7922/
-index: https://my-card.in/
-server: 122.0.65.70
-port: 7911
