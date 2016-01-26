@@ -1,3 +1,6 @@
+/ygopro/
+/node_modules/
+
 /nbproject/
 /.idea/
 .DS_Store
