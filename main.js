@@ -99,9 +99,9 @@ var mainWindow = null;
 app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform != 'darwin') {
-        app.quit();
-    }
+    //if (process.platform != 'darwin') {
+    app.quit();
+    //}
 });
 
 // This method will be called when Electron has finished
@@ -120,17 +120,36 @@ app.on('ready', function () {
     mainWindow.loadURL('file://' + __dirname + '/index.html#ygopro');
 
     //debug
-    if (process.execPath.indexOf('electron') != -1) {
+    let dev = false;
+    let local = false;
+    for (let arg of process.argv) {
+        switch (arg) {
+            case '--dev':
+                dev = true;
+                break;
+            case '--local':
+                local = true;
+                break;
+        }
+    }
+    if (local || dev) {
         // Open the DevTools.
-        mainWindow.webContents.openDevTools();
         mainWindow.webContents.on('dom-ready', ()=> {
-            mainWindow.webContents.executeJavaScript(`
-                var webview = document.getElementById('ygopro')
-                webview.src = 'http://local.mycard.moe:3000/'
-                webview.addEventListener("dom-ready", function () {
-                    webview.openDevTools();
-                });
-            `)
+            if (local) {
+                mainWindow.webContents.executeJavaScript(`
+                    var webview = document.getElementById('ygopro');
+                    webview.src = 'http://local.mycard.moe:3000/'
+                `)
+            }
+            if (dev) {
+                mainWindow.webContents.openDevTools();
+                mainWindow.webContents.executeJavaScript(`
+                    var webview = document.getElementById('ygopro');
+                    webview.addEventListener("dom-ready", function() {
+                        webview.openDevTools();
+                    })
+                `)
+            }
         })
     }
 

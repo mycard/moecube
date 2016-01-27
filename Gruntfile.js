@@ -6,11 +6,11 @@ module.exports = (grunt) => {
     switch (process.platform) {
         case 'darwin':
             grunt.loadNpmTasks('grunt-appdmg');
-            release_task = 'appdmg';
+            release_task = ['electron:darwin', 'appdmg'];
             break;
         case 'win32':
             grunt.loadNpmTasks('grunt-electron-installer');
-            release_task = 'create-windows-installer';
+            release_task = ['electron:win32', 'create-windows-installer'];
             break;
     }
 
@@ -37,14 +37,24 @@ module.exports = (grunt) => {
         },
 
         electron: {
-            win32build: {
+            darwin: {
+                options: {
+                    name: 'mycard',
+                    dir: 'build2',
+                    out: 'build3',
+                    platform: 'darwin',
+                    arch: 'all',
+                    icon: 'resources/darwin/icon.icns'
+                }
+            },
+            win32: {
                 options: {
                     name: 'mycard',
                     dir: 'build2',
                     out: 'build3',
                     platform: 'win32',
                     arch: 'all',
-                    icon: 'resources/win/icon.ico'
+                    icon: 'resources/win32/icon.ico'
                 }
             }
         },
@@ -58,13 +68,37 @@ module.exports = (grunt) => {
                 setupIcon: 'resources/win/icon.ico',
                 noMsi: true
             }
+        },
+        appdmg: {
+            options: {
+                title: 'MyCard',
+                icon: 'resources/darwin/icon.icns',
+                background: 'resources/darwin/TestBkg.png',
+                'icon-size': 80,
+                contents: [
+                    {
+                        x: 448,
+                        y: 344,
+                        type: 'link',
+                        path: '/Applications'
+                    }, {
+                        x: 192,
+                        y: 344,
+                        type: 'file',
+                        path: 'build3/mycard-darwin-x64/mycard.app'
+                    }
+                ]
+            },
+            target: {
+                dest: 'build4/darwin/mycard.dmg'
+            }
         }
     });
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-electron');
 
-    grunt.registerTask('build', ['clean', 'copy', 'electron']);
-    grunt.registerTask('release', ['build', release_task]);
+    grunt.registerTask('build', ['clean', 'copy']);
+    grunt.registerTask('release', ['build'].concat(release_task));
     grunt.registerTask('default', ['release']);
 };

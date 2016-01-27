@@ -133,11 +133,11 @@ eventemitter.on('write', (app_id, file, data, merge) => {
 
 let pending = 1;
 for (let app_id in db.local) {
-    if(db.local[app_id].status == 'installing'){
+    if (db.local[app_id].status == 'installing') {
         let options = db.local[app_id];
         delete db.local[app_id];
         eventemitter.emit('install', db.apps[app_id], options);
-    }else{
+    } else {
         pending++;
         load(db.apps[app_id], db.local[app_id], done);
     }
@@ -187,6 +187,7 @@ function load(app, local, callback) {
     let pending = 1;
     let done = ()=> {
         pending--;
+        //console.log(pending);
         if (pending == 0) {
             callback();
         }
@@ -199,19 +200,71 @@ function load(app, local, callback) {
                 if (error)return done();
                 for (let file of files) {
                     if (app.files[pattern].content == 'ini') {
+                        pending++;
+                        //console.log('ini pending');
                         fs.readFile(path.join(local.path, file), 'utf8', (error, content)=> {
                             if (error)return done();
                             local.files[file] = {content: ini.parse(content)};
+                            if (file == 'system.conf') {
+                                pending += 2;
+                                //console.log('fonts pending + 2');
+                                let textfonts;
+                                switch (process.platform) {
+                                    case 'darwin':
+                                        textfonts = ['/System/Library/Fonts/PingFang.ttc'];
+                                        break;
+                                    case 'win32':
+                                        textfonts = [path.join(process.env.SystemRoot, 'fonts/msyh.ttc'), path.join(process.env.SystemRoot, 'fonts/msyh.ttf'), path.join(process.env.SystemRoot, 'fonts/simsun.ttc')]
+                                        break;
+                                }
+                                first_exists([path.resolve(local.path, local.files[file].content.textfont.split(' ')[0])].concat(textfonts), (textfont)=> {
+                                    if (textfont) {
+                                        local.files[file].content.textfont = path.relative(local.path, textfont) + ' 14';
+                                    }
+                                    //console.log('textfonts done');
+                                    done()
+                                });
+                                let numfonts;
+                                switch (process.platform) {
+                                    case 'darwin':
+                                        numfonts = ['/System/Library/Fonts/HelveticaNeue.dfont'];
+                                        break;
+                                    case 'win32':
+                                        numfonts = [path.join(process.env.SystemRoot, 'fonts/arialbd.ttf')];
+                                        break;
+                                }
+                                first_exists([path.resolve(local.path, local.files[file].content.numfont)].concat(numfonts), (numfont)=> {
+                                    if (numfont) {
+                                        local.files[file].content.numfont = path.relative(local.path, numfont);
+                                    }
+                                    //console.log('numfonts done');
+                                    done()
+                                });
+                            }
                             done()
                         })
-                    } else {
+                    }
+                    else {
                         local.files[file] = {};
-                        done()
                     }
 
                 }
+                done()
             })
         }
     }
     done()
+}
+
+function first_exists(files, callback, index) {
+    if (!index) index = 0;
+    if (index >= files.length) return callback();
+    let file = files[index];
+    fs.access(file, (error)=> {
+        if (error) {
+            first_exists(files, callback, index + 1);
+        } else {
+            callback(file)
+        }
+    })
 }

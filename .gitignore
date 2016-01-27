@@ -1,6 +1,11 @@
 *.tar.xz
 /node_modules/
 
+/build1/
+/build2/
+/build3/
+/build4/
+
 /nbproject/
 /.idea/
 .DS_Store
