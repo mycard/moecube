@@ -59,11 +59,11 @@ eventemitter.on('install', (app, options) => {
 
         let tar;
         if (db.platform == 'win32') {
-            let xz = child_process.spawn(path.join(__dirname, 'bin', 'xz.exe'), ['-d', '-c', path.join(__dirname, app.id + '.tar.xz')], {stdio: ['inherit', 'pipe', 'inherit']});
             tar = child_process.spawn(path.join(__dirname, 'bin', 'tar.exe'), ['fx', '-'], {
                 cwd: local.path,
-                stdio: [xz.stdout, 'inherit', 'inherit']
+                stdio: ['pipe', 'inherit', 'inherit']
             });
+            child_process.spawn(path.join(__dirname, 'bin', 'xz.exe'), ['-d', '-c', path.join(__dirname, app.id + '.tar.xz')], {stdio: ['inherit', tar.stdin, 'inherit']});
         } else {
             tar = child_process.spawn('tar', ['fx', path.join(__dirname, app.id + '.tar.xz'), '-C', local.path], {stdio: 'inherit'});
         }
