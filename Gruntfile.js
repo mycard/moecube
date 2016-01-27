@@ -60,9 +60,17 @@ module.exports = (grunt) => {
         },
 
         'create-windows-installer': {
+            ia32: {
+                appDirectory: 'build3/mycard-win32-ia32',
+                outputDirectory: 'build4/win32-ia32',
+                authors: 'MyCard',
+                exe: 'mycard.exe',
+                setupIcon: 'resources/win/icon.ico',
+                noMsi: true
+            },
             x64: {
                 appDirectory: 'build3/mycard-win32-x64',
-                outputDirectory: 'build4',
+                outputDirectory: 'build4/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win/icon.ico',
@@ -90,7 +98,7 @@ module.exports = (grunt) => {
                 ]
             },
             target: {
-                dest: 'build4/darwin/mycard.dmg'
+                dest: 'build4/darwin/mycard-2.0.0-darwin-with-ygopro.dmg'
             }
         }
     });
