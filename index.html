@@ -2,143 +2,42 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        html {
-            font-size: 16px;
-        }
-
-        body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #373a3c;
-            background-color: #fff;
-            margin: 0;
-        }
-
-        webview {
-            position: absolute;
-            top: 54px;
-            bottom: 0;
-            width: 100%;
-            display: none;
-        }
-
-        nav {
-            color: #eceeef;
-            background-color: #373a3c;
-            padding: .5rem 1rem;
-
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-
-            -webkit-user-select: none;
-            -webkit-app-region: drag;
-        }
-
-        #brand {
-            float: left;
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            margin-right: 1rem;
-            font-size: 1.25rem;
-            color: #fff;
-            touch-action: manipulation;
-        }
-
-        ul {
-            padding-left: 0;
-            margin-bottom: 0;
-            margin-top: 0;
-            list-style: none;
-        }
-
-        li {
-            float: left;
-
-        }
-
-        li + li {
-            margin-left: 1rem;
-        }
-
-        li > a {
-            display: block;
-            padding-top: .425rem;
-            padding-bottom: .425rem;
-            text-decoration: none;
-            color: rgba(255, 255, 255, .75);
-        }
-
-        li > a:hover {
-            color: #fff;
-            outline: 0;
-        }
-
-        li.active > a {
-            color: #fff;
-        }
-
-        .navbar-right {
-            float: right
-        }
-
-        .container {
-            margin-left: 100px;
-            margin-right: 100px;
-        }
-    </style>
+    <title>MyCard</title>
+    <link href="css/fontello.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 <nav>
-    <div class="container">
-        <span id="brand">萌卡</span>
-        <ul>
-            <li id="nav-store">
-                <a href="#store">商店</a>
-            </li>
-            <li id="nav-ygopro" class="active">
-                <a href="#ygopro">游戏</a>
-            </li>
-            <li id="nav-forum">
-                <a href="#forum">社区</a>
-            </li>
-        </ul>
-        <div class="navbar-right">zh99998</div>
+    <span id="brand">MyCard</span>
+    <ul>
+        <li id="nav-store">
+            <a href="#store">商店</a>
+        </li>
+        <li id="nav-ygopro" class="active">
+            <a href="#ygopro">游戏</a>
+        </li>
+        <li id="nav-forum">
+            <a href="#forum">社区</a>
+        </li>
+    </ul>
+    <div class="navbar-right">
+        <div id="user">
+            <img id="avatar" src="https://forum-cdn.touhou.cc/user_avatar/forum.touhou.cc/zh99998/36/167_1.png">
+            <div id="name">zh99998</div>
+        </div>
+        <div id="window-buttons" hidden>
+            <i id="minimize" class="icon-minimize"></i>
+            <i id="maximize" class="icon-maximize"></i>
+            <i id="restore" class="icon-restore" hidden></i>
+            <i id="close" class="icon-close"></i>
+        </div>
     </div>
+
 </nav>
 <webview id="store" src="http://mycard.moe/"></webview>
-<webview id="ygopro" src="http://local.mycard.moe:3000/"></webview>
-<!--<webview id="ygopro" src="http://mycard.moe/lobby/"></webview>--> <!-- fuck https https://plus.google.com/u/0/+%E7%A5%9E%E6%A5%BD%E5%9D%82%E7%8E%B2%E5%A5%88/posts/79g2y5JRB1Z -->
+<webview id="ygopro" src="http://mycard.moe/lobby/"></webview>
+<!-- fuck https https://plus.google.com/u/0/+%E7%A5%9E%E6%A5%BD%E5%9D%82%E7%8E%B2%E5%A5%88/posts/79g2y5JRB1Z -->
 <webview id="forum" src="https://forum.touhou.cc"></webview>
-
-<script>
-    window.onhashchange = function (event) {
-        var hash = event.newURL.split('#', 2)[1];
-        document.getElementsByClassName('active')[0].className = "";
-        document.getElementById('nav-' + hash).className = "active";
-        document.getElementById(event.oldURL.split('#', 2)[1]).style.display = 'none';
-        document.getElementById(hash).style.display = 'block';
-    };
-    var hash = location.href.split('#', 2)[1];
-    document.getElementById('nav-' + hash).className = "active";
-    document.getElementById(hash).style.display = 'block';
-
-    var webviews = document.getElementsByTagName('webview');
-    for (var i = 0; i < webviews.length; i++) {
-        webviews.item(i).addEventListener('new-window', function (event) {
-            require('electron').shell.openExternal(event.url);
-        });
-    }
-
-    //debug
-    var webview = document.getElementById(hash);
-    webview.addEventListener("dom-ready", function () {
-        webview.openDevTools();
-    });
-</script>
+<script src="js/app.js"></script>
 </body>
 </html>

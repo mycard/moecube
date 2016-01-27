@@ -111,17 +111,29 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 640,
-        //frame: false,
-        'title-bar-style': 'hidden'
+        frame: process.platform == 'darwin',
+        'title-bar-style': process.platform == 'darwin' ? 'hidden-inset' : null,
     });
 
     // and load the index.html of the app.
     //mainWindow.loadURL('http://local.mycard.moe:3000');
     mainWindow.loadURL('file://' + __dirname + '/index.html#ygopro');
 
+    //debug
+    if (process.execPath.indexOf('electron') != -1) {
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+        mainWindow.webContents.on('dom-ready', ()=> {
+            mainWindow.webContents.executeJavaScript(`
+                var webview = document.getElementById('ygopro')
+                webview.src = 'http://local.mycard.moe:3000/'
+                webview.addEventListener("dom-ready", function () {
+                    webview.openDevTools();
+                });
+            `)
+        })
+    }
 
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -130,6 +142,13 @@ app.on('ready', function () {
         // when you should delete the corresponding element.
         mainWindow = null;
     });
+
+    //debug
+    /*<webview id="ygopro" src="http://local.mycard.moe:3000/"></webview>
+     var webview = document.getElementById(hash);
+     webview.addEventListener("dom-ready", function () {
+     webview.openDevTools();
+     });*/
 });
 
 //const ipcMain = require('electron').ipcMain;
@@ -142,18 +161,18 @@ const ygopro = require('./apps');
 
  });*/
 /*
-autoUpdater.setFeedUrl('http://localhost:4001?version=' + app.getVersion());
-autoUpdater.checkForUpdates();
-autoUpdater
-    .on('checking-for-update', function () {
-        console.log('Checking for update');
-    })
-    .on('update-available', function () {
-        console.log('Update available');
-    })
-    .on('update-not-available', function () {
-        console.log('Update not available');
-    })
-    .on('update-downloaded', function () {
-        console.log('Update downloaded');
-    });*/
+ autoUpdater.setFeedUrl('http://localhost:4001?version=' + app.getVersion());
+ autoUpdater.checkForUpdates();
+ autoUpdater
+ .on('checking-for-update', function () {
+ console.log('Checking for update');
+ })
+ .on('update-available', function () {
+ console.log('Update available');
+ })
+ .on('update-not-available', function () {
+ console.log('Update not available');
+ })
+ .on('update-downloaded', function () {
+ console.log('Update downloaded');
+ });*/

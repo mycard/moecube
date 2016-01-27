@@ -1,76 +1,70 @@
+'use strict';
+
 const path = require('path');
-module.exports = function (grunt) {
+module.exports = (grunt) => {
+    let release_task;
     switch (process.platform) {
         case 'darwin':
-            build_prefix = 'Electron.app/Contents/Resources';
             grunt.loadNpmTasks('grunt-appdmg');
-            var release_task = 'appdmg';
+            release_task = 'appdmg';
             break;
         case 'win32':
-            build_prefix = 'resources';
             grunt.loadNpmTasks('grunt-electron-installer');
             release_task = 'create-windows-installer';
             break;
-
     }
 
     grunt.initConfig({
-        clean: ["build"],
+        clean: ["build2", "build3", "build4"],
         copy: {
-            electron: {
-                expand: true,
-                options: {
-                    mode: true,
-                    timestamp: true
-                },
-                cwd: 'node_modules/electron-prebuilt/dist',
-                src: '**',
-                dest: 'build'
-            },
             app: {
                 expand: true,
                 options: {
                     timestamp: true
                 },
-                src: ['package.json', 'README.txt', 'LICENSE.txt', 'index.html', 'main.js', 'ygopro.js', 'ygopro/**', 'node_modules/ws/**'],
-                dest: path.join('build', build_prefix, 'app')
+                src: ['package.json', 'README.txt', 'LICENSE.txt', 'main.js', 'apps.js', 'bundle.json', '*.tar.xz', 'index.html', 'css/**', 'font/**', 'js/**'],
+                dest: 'build2'
+            },
+            node_modules: {
+                expand: true,
+                options: {
+                    timestamp: true
+                },
+                cwd: 'build1',
+                src: ['node_modules/**', 'bin/**'],
+                dest: 'build2'
             }
         },
 
         electron: {
-            osxBuild: {
+            win32build: {
                 options: {
-                    name: 'Fixture',
-                    dir: 'app',
-                    out: 'dist',
-                    version: '0.25.3',
-                    platform: 'darwin',
-                    arch: 'x64'
+                    name: 'mycard',
+                    dir: 'build2',
+                    out: 'build3',
+                    platform: 'win32',
+                    arch: 'all',
+                    icon: 'resources/win/icon.ico'
                 }
             }
         },
 
         'create-windows-installer': {
             x64: {
-                appDirectory: 'build',
-                outputDirectory: 'release',
+                appDirectory: 'build3/mycard-win32-x64',
+                outputDirectory: 'build4',
                 authors: 'MyCard',
-                exe: 'electron.exe',
-            }/*,
-            ia32: {
-                appDirectory: 'build/32',
-                outputDirectory: 'release/32',
-                authors: 'MyCard',
-                exe: 'mycard.exe'
-            }*/
+                exe: 'mycard.exe',
+                setupIcon: 'resources/win/icon.ico',
+                noMsi: true
+            }
         }
     });
-
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-electron');
 
-    grunt.registerTask('build', ['clean', 'copy:electron','copy:app']);
+    grunt.registerTask('build', ['clean', 'copy', 'electron']);
     grunt.registerTask('release', ['build', release_task]);
     grunt.registerTask('default', ['release']);
 };
-

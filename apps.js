@@ -1,6 +1,5 @@
 'use strict';
 
-const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const child_process = require('child_process');
@@ -26,7 +25,7 @@ try {
 }
 
 db.version = app.getVersion();
-db.platform = os.platform();
+db.platform = process.platform;
 db.default_apps_path = path.join(data_path, 'apps');
 
 var bundle;
@@ -57,9 +56,19 @@ eventemitter.on('install', (app, options) => {
 
     eventemitter.emit('update', app, local, 'install-started');
     mkdirp(local.path, ()=> {
-        let extract = child_process.spawn('tar', ['fx', app.id + '.tar.xz', '-C', local.path], {stdio: 'inherit'});
-        extract.on('exit', (code) => {
-            console.log(code);
+
+        let tar;
+        if (db.platform == 'win32') {
+            let xz = child_process.spawn(path.join(__dirname, 'bin', 'xz.exe'), ['-d', '-c', path.join(__dirname, app.id + '.tar.xz')], {stdio: ['inherit', 'pipe', 'inherit']});
+            tar = child_process.spawn(path.join(__dirname, 'bin', 'tar.exe'), ['fx', '-'], {
+                cwd: local.path,
+                stdio: [xz.stdout, 'inherit', 'inherit']
+            });
+        } else {
+            tar = child_process.spawn('tar', ['fx', path.join(__dirname, app.id + '.tar.xz'), '-C', local.path], {stdio: 'inherit'});
+        }
+
+        tar.on('exit', (code) => {
             if (code == 0) {
 
                 load(app, local, ()=> {
@@ -86,7 +95,7 @@ eventemitter.on('action', function (app_id, action, options) {
         }
         let args = {'join': '-j', 'deck': '-d'}[action];
         let main;
-        if (os.platform() == 'darwin') {
+        if (process.platform == 'darwin') {
             main = 'ygopro.app/Contents/MacOS/ygopro'
         } else {
             main = 'ygopro_vs.exe'
@@ -124,8 +133,14 @@ eventemitter.on('write', (app_id, file, data, merge) => {
 
 let pending = 1;
 for (let app_id in db.local) {
-    pending++;
-    load(db.apps[app_id], db.local[app_id], done);
+    if(db.local[app_id].status == 'installing'){
+        let options = db.local[app_id];
+        delete db.local[app_id];
+        eventemitter.emit('install', db.apps[app_id], options);
+    }else{
+        pending++;
+        load(db.apps[app_id], db.local[app_id], done);
+    }
 }
 done();
 
@@ -146,7 +161,7 @@ function start_server() {
             data: [db]
         }));
 
-        if (bundle && Object.keys(db.apps).length == 0) {
+        if (bundle && Object.keys(db.local).length == 0) {
             connection.send(JSON.stringify({
                 event: 'bundle',
                 data: [bundle]

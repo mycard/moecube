@@ -1,0 +1,126 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #373a3c;
+    background-color: #fff;
+    margin: 0;
+}
+
+webview {
+    position: absolute;
+    top: 54px;
+    bottom: 0;
+    width: 100%;
+    display: none;
+}
+
+nav {
+    color: #eceeef;
+    background-color: #373a3c;
+    padding: .5rem 0 0.5rem 1rem;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+nav i, nav a {
+    -webkit-app-region: no-drag;
+}
+
+#brand {
+    float: left;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    color: #fff;
+    touch-action: manipulation;
+}
+
+ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    list-style: none;
+}
+
+li {
+    float: left;
+
+}
+
+li + li {
+    margin-left: 1rem;
+}
+
+li > a {
+    display: block;
+    padding-top: .425rem;
+    padding-bottom: .425rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, .75);
+    outline: none;
+}
+
+#window-buttons > i {
+    color: rgba(255, 255, 255, .75);
+}
+
+li > a:hover, #window-buttons > i:hover {
+    color: #fff;
+    cursor: pointer;
+}
+
+li.active > a {
+    color: #fff;
+}
+
+.navbar-right {
+    float: right
+}
+
+.navbar-right div {
+    float: left;
+    margin: 0 0.5rem
+}
+
+body.darwin nav {
+    padding-left: 80px;
+}
+
+body.win32 #window-buttons {
+    display: initial;
+}
+
+body.maximized #restore {
+    display: initial;
+}
+
+body.maximized #maximize {
+    display: none;
+}
+
+#avatar {
+    display: block;
+    float: left;
+    border-radius: 50%;
+    height: 2rem;
+    padding: 0.175rem;
+}
+
+#name {
+    float: left;
+    padding-top: .425rem;
+    padding-bottom: .425rem;
+    margin-left: 4px;
+}
