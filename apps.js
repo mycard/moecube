@@ -12,6 +12,7 @@ const EventEmitter = require('events');
 const eventemitter = new EventEmitter();
 
 const electron = require('electron');
+const ipcMain = electron.ipcMain;
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
@@ -169,19 +170,31 @@ function start_server() {
         }
         connection.on('message', (message) => {
             message = JSON.parse(message);
-            eventemitter.emit(message.event, ...message.data);
+            if (message.event == 'login') {
+                let user = message.data[0];
+                for (let window of BrowserWindow.getAllWindows()) {
+                    window.webContents.send('login', user);
+                }
+                message = JSON.stringify({event: 'login', data: [user]});
+                for (let client of server.clients) {
+                    if (client != connection) {
+                        client.send(message);
+                    }
+                }
+            } else {
+                eventemitter.emit(message.event, ...message.data);
+            }
+
         });
     });
-
-    eventemitter.on('update', (app, local, resson)=> {
-        let message = JSON.stringify({event: 'update', data: [app, local, resson]});
-        for (let connection of server.clients) {
-            connection.send(message);
-        }
-        save_db();
-    })
 }
-
+eventemitter.on('update', (app, local, resson)=> {
+    let message = JSON.stringify({event: 'update', data: [app, local, resson]});
+    for (let connection of server.clients) {
+        connection.send(message);
+    }
+    save_db();
+});
 
 function load(app, local, callback) {
     let pending = 1;

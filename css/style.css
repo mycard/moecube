@@ -118,7 +118,7 @@ body.maximized #maximize {
     padding: 0.175rem;
 }
 
-#name {
+#username, #logout {
     float: left;
     padding-top: .425rem;
     padding-bottom: .425rem;
