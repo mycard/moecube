@@ -1,7 +1,7 @@
 {
   "name": "mycard",
   "description": "a game platform",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "main.js",
   "license": "AGPL-3.0",
   "repository": "github:mycard/mycard",

@@ -98,7 +98,7 @@ module.exports = (grunt) => {
                 ]
             },
             target: {
-                dest: 'build4/darwin/mycard-2.0.0-darwin-with-ygopro.dmg'
+                dest: 'build4/darwin/mycard.dmg'
             }
         }
     });
