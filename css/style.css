@@ -33,7 +33,7 @@ nav {
     -webkit-app-region: drag;
 }
 
-nav i, nav a {
+i, a {
     -webkit-app-region: no-drag;
 }
 
@@ -78,7 +78,6 @@ li > a {
 
 li > a:hover, #window-buttons > i:hover {
     color: #fff;
-    cursor: pointer;
 }
 
 li.active > a {
@@ -89,7 +88,7 @@ li.active > a {
     float: right
 }
 
-.navbar-right div {
+.navbar-right > div, #user > .item {
     float: left;
     margin: 0 0.5rem
 }
@@ -118,9 +117,20 @@ body.maximized #maximize {
     padding: 0.175rem;
 }
 
-#username, #logout {
+.item {
+    display: block;
     float: left;
     padding-top: .425rem;
     padding-bottom: .425rem;
     margin-left: 4px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.item:hover {
+    color: #fff;
+}
+
+a {
+    cursor: default;
 }

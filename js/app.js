@@ -41,7 +41,7 @@ document.getElementById('nav-' + hash).className = "active";
 document.getElementById(hash).style.display = 'block';
 
 let webviews = document.getElementsByTagName('webview');
-for (var i = 0; i < webviews.length; i++) {
+for (let i = 0; i < webviews.length; i++) {
     webviews.item(i).addEventListener('new-window', (event) => {
         require('electron').shell.openExternal(event.url);
     });
@@ -52,6 +52,18 @@ document.getElementById("logout").onclick = ()=> {
         location.reload();
     })
 };
+
+let elements = document.getElementsByClassName('profile');
+for (let i = 0; i < elements.length; i++) {
+    let element = elements.item(i);
+    element.onclick = function () {
+        let user_url = 'https://forum.touhou.cc/users/' + document.getElementById('username').innerHTML;
+        let user_webview = document.getElementById('forum');
+        if (user_webview.src.indexOf(user_url) != 0) { // begin with
+            user_webview.src = user_url;
+        }
+    }
+}
 
 ipcRenderer.on('login', (event, user)=> {
     console.log(event, user);
