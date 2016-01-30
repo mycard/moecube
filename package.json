@@ -1,9 +1,9 @@
 {
   "name": "mycard",
   "description": "a game platform",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "main.js",
-  "license": "AGPL-3.0",
+  "license": "UNLICENSED",
   "repository": "github:mycard/mycard",
   "dependencies": {
     "glob": "latest",
