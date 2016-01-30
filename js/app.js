@@ -45,10 +45,19 @@ for (let i = 0; i < webviews.length; i++) {
     webviews.item(i).addEventListener('new-window', (event) => {
         require('electron').shell.openExternal(event.url);
     });
+
+    /*webviews.item(i).addEventListener('will-navigate', (event) => {
+        event.preventDefault()
+    });*/
 }
 
 document.getElementById("logout").onclick = ()=> {
     current_window.webContents.session.clearStorageData(()=> {
+        location.reload();
+    })
+};
+document.getElementById("refresh").onclick = ()=> {
+    current_window.webContents.session.clearCache(()=> {
         location.reload();
     })
 };

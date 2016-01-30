@@ -178,7 +178,10 @@ function start_server() {
                 message = JSON.stringify({event: 'login', data: [user]});
                 for (let client of server.clients) {
                     if (client != connection) {
-                        client.send(message);
+                        try {
+                            client.send(message);
+                        } catch (error) {
+                        }
                     }
                 }
             } else {
@@ -187,14 +190,14 @@ function start_server() {
 
         });
     });
+    eventemitter.on('update', (app, local, resson)=> {
+        let message = JSON.stringify({event: 'update', data: [app, local, resson]});
+        for (let connection of server.clients) {
+            connection.send(message);
+        }
+        save_db();
+    });
 }
-eventemitter.on('update', (app, local, resson)=> {
-    let message = JSON.stringify({event: 'update', data: [app, local, resson]});
-    for (let connection of server.clients) {
-        connection.send(message);
-    }
-    save_db();
-});
 
 function load(app, local, callback) {
     let pending = 1;
