@@ -95,7 +95,7 @@ module.exports = (grunt) => {
                 noMsi: true
             },
             'bundle-ia32': {
-                appDirectory: 'build3-bundle/mycard-win32-ia32',
+                appDirectory: 'build3/mycard-win32-ia32',
                 outputDirectory: 'build4-bundle/win32-ia32',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
@@ -103,7 +103,7 @@ module.exports = (grunt) => {
                 noMsi: true
             },
             'bundle-x64':{
-                appDirectory: 'build3-bundle/mycard-win32-x64',
+                appDirectory: 'build3/mycard-win32-x64',
                 outputDirectory: 'build4-bundle/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
