@@ -202,7 +202,10 @@ function start_server() {
 
     autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {ia32: '32', x64: '64'}[process.arch]);
     autoUpdater.checkForUpdates();
-    /*autoUpdater.on('checking-for-update', ()=>{
+    /*autoUpdater.on('error', (error)=>{
+        console.log('update error', error)
+    });
+    autoUpdater.on('checking-for-update', ()=>{
         console.log('checking-for-update')
     });
     autoUpdater.on('update-available', ()=>{
