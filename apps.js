@@ -200,7 +200,7 @@ function start_server() {
         save_db();
     });
 
-    autoUpdater.setFeedURL('https://mycard.moe/update');
+    autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {ia32: '32', x64: '64'}[process.arch]);
     autoUpdater.checkForUpdates();
     /*autoUpdater.on('checking-for-update', ()=>{
         console.log('checking-for-update')
