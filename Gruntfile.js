@@ -73,7 +73,7 @@ module.exports = (grunt) => {
                 outputDirectory: 'build4/win32-ia32',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
-                setupIcon: 'resources/win/icon.ico',
+                setupIcon: 'resources/win32/icon.ico',
                 noMsi: true
             },
             x64: {
@@ -81,7 +81,7 @@ module.exports = (grunt) => {
                 outputDirectory: 'build4/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
-                setupIcon: 'resources/win/icon.ico',
+                setupIcon: 'resources/win32/icon.ico',
                 noMsi: true
             },
             'bundle-ia32': {
@@ -89,7 +89,7 @@ module.exports = (grunt) => {
                 outputDirectory: 'build4-bundle/win32-ia32',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
-                setupIcon: 'resources/win/icon.ico',
+                setupIcon: 'resources/win32/icon.ico',
                 noMsi: true
             },
             'bundle-x64':{
@@ -97,7 +97,7 @@ module.exports = (grunt) => {
                 outputDirectory: 'build4-bundle/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
-                setupIcon: 'resources/win/icon.ico',
+                setupIcon: 'resources/win32/icon.ico',
                 noMsi: true
             }
         },
