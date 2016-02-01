@@ -41,7 +41,7 @@ module.exports = (grunt) => {
                 },
                 cwd: 'bundle',
                 src: '**',
-                dest: 'build3/mycard-win32-ia32'
+                dest: 'build3/mycard-win32-ia32/resources/app'
             },
             'bundle-x64': {
                 expand: true,
@@ -50,7 +50,7 @@ module.exports = (grunt) => {
                 },
                 cwd: 'bundle',
                 src: '**',
-                dest: 'build3/mycard-win32-x64'
+                dest: 'build3/mycard-win32-x64/resources/app'
             }
         },
 
