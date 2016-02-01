@@ -15,7 +15,7 @@ module.exports = (grunt) => {
     }
 
     grunt.initConfig({
-        clean: ["build2", "build3"],
+        clean: ["build2", "build3", "build4-bundle"],
         copy: {
             app: {
                 expand: true,
@@ -87,7 +87,7 @@ module.exports = (grunt) => {
                 noMsi: true
             },
             x64: {
-                appDirectory: 'build3-bundle/mycard-win32-x64',
+                appDirectory: 'build3/mycard-win32-x64',
                 outputDirectory: 'build4/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
