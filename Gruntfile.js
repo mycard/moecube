@@ -15,14 +15,14 @@ module.exports = (grunt) => {
     }
 
     grunt.initConfig({
-        clean: ["build2", "build3"],
+        clean: ["build2", "build3", "build3-bundle", "build4-bundle"],
         copy: {
             app: {
                 expand: true,
                 options: {
                     timestamp: true
                 },
-                src: ['package.json', 'README.txt', 'LICENSE.txt', 'main.js', 'apps.js', 'bundle.json', '*.tar.xz', 'index.html', 'css/**', 'font/**', 'js/**'],
+                src: ['package.json', 'README.txt', 'LICENSE.txt', 'main.js', 'apps.js', 'index.html', 'css/**', 'font/**', 'js/**'],
                 dest: 'build2'
             },
             node_modules: {
@@ -34,7 +34,7 @@ module.exports = (grunt) => {
                 src: ['node_modules/**', 'bin/**'],
                 dest: 'build2'
             },
-            'bundle': {
+            bundle: {
                 expand: true,
                 options: {
                     timestamp: true
@@ -130,7 +130,7 @@ module.exports = (grunt) => {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-electron');
 
-    grunt.registerTask('build', ['clean', 'copy']);
+    grunt.registerTask('build', ['clean', 'copy:app', 'copy:node_modules']);
     grunt.registerTask('release', ['build'].concat(release_task));
     grunt.registerTask('default', ['release']);
 };
