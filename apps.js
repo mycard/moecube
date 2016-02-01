@@ -11,6 +11,7 @@ const mkdirp = require('mkdirp');
 const EventEmitter = require('events');
 const eventemitter = new EventEmitter();
 
+const autoUpdater = require('auto-updater');
 const electron = require('electron');
 const ipcMain = electron.ipcMain;
 const app = electron.app;
@@ -29,7 +30,7 @@ db.version = app.getVersion();
 db.platform = process.platform;
 db.default_apps_path = path.join(data_path, 'apps');
 
-var bundle;
+let bundle;
 try {
     bundle = require('./bundle.json')
 } catch (error) {
@@ -87,7 +88,7 @@ eventemitter.on('install', (app, options) => {
 });
 
 eventemitter.on('action', function (app_id, action, options) {
-    var local = db.local[app_id];
+    let local = db.local[app_id];
     Object.assign(local.files['system.conf'].content, options);
     fs.writeFile(path.join(local.path, 'system.conf'), ini.stringify(local.files['system.conf'].content, {whitespace: true}), (error)=> {
         if (error) return console.log(error);
@@ -109,6 +110,7 @@ eventemitter.on('action', function (app_id, action, options) {
                 window.restore()
             }
         })
+
     })
 });
 
@@ -197,6 +199,22 @@ function start_server() {
         }
         save_db();
     });
+
+    autoUpdater.setFeedURL('https://mycard.moe/update');
+    autoUpdater.checkForUpdates();
+    /*autoUpdater.on('checking-for-update', ()=>{
+        console.log('checking-for-update')
+    });
+    autoUpdater.on('update-available', ()=>{
+        console.log('update-available')
+    });
+    autoUpdater.on('update-not-available', ()=>{
+        console.log('update-not-available')
+    });*/
+    autoUpdater.on('update-downloaded', ()=>{
+        autoUpdater.quitAndInstall()
+    })
+
 }
 
 function load(app, local, callback) {

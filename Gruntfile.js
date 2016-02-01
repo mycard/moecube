@@ -10,12 +10,12 @@ module.exports = (grunt) => {
             break;
         case 'win32':
             grunt.loadNpmTasks('grunt-electron-installer');
-            release_task = ['electron:win32', 'create-windows-installer'];
+            release_task = ['electron:win32', 'copy:bundle', 'create-windows-installer'];
             break;
     }
 
     grunt.initConfig({
-        clean: ["build2", "build3", "build4"],
+        clean: ["build2", "build3"],
         copy: {
             app: {
                 expand: true,
@@ -33,6 +33,14 @@ module.exports = (grunt) => {
                 cwd: 'build1',
                 src: ['node_modules/**', 'bin/**'],
                 dest: 'build2'
+            },
+            'bundle': {
+                expand: true,
+                options: {
+                    timestamp: true
+                },
+                src: ['build3/**', 'bundle/**'],
+                dest: 'build3-bundle'
             }
         },
 
@@ -69,8 +77,24 @@ module.exports = (grunt) => {
                 noMsi: true
             },
             x64: {
-                appDirectory: 'build3/mycard-win32-x64',
+                appDirectory: 'build3-bundle/mycard-win32-x64',
                 outputDirectory: 'build4/win32-x64',
+                authors: 'MyCard',
+                exe: 'mycard.exe',
+                setupIcon: 'resources/win/icon.ico',
+                noMsi: true
+            },
+            'bundle-ia32': {
+                appDirectory: 'build3-bundle/mycard-win32-ia32',
+                outputDirectory: 'build4-bundle/win32-ia32',
+                authors: 'MyCard',
+                exe: 'mycard.exe',
+                setupIcon: 'resources/win/icon.ico',
+                noMsi: true
+            },
+            'bundle-x64':{
+                appDirectory: 'build3-bundle/mycard-win32-x64',
+                outputDirectory: 'build4-bundle/win32-x64',
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win/icon.ico',

@@ -4,12 +4,12 @@ const electron = require('electron');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 
-var handleStartupEvent = function () {
+let handleStartupEvent = function () {
     if (process.platform !== 'win32') {
         return false;
     }
 
-    var squirrelCommand = process.argv[1];
+    let squirrelCommand = process.argv[1];
     switch (squirrelCommand) {
         case '--squirrel-install':
         case '--squirrel-updated':
@@ -35,14 +35,8 @@ var handleStartupEvent = function () {
                 }
             };
 
-            let key = new reg({
-                hive: reg.HKCU,
-                key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders'
-            });
-            key.get('Desktop', (error, item)=> {
-                shortcuts.create(path.join(item.value, 'mycard.lnk'), process.execPath, done)
-            });
-            key = new reg({hive: reg.HKCU, key: '\\Software\\Classes\\mycard'});
+            shortcuts.create(path.join(app.getPath('desktop'), 'MyCard.lnk'), process.execPath, done);
+            let key = new reg({hive: reg.HKCU, key: '\\Software\\Classes\\mycard'});
             key.set('URL Protocol', reg.REG_SZ, '"' + process.execPath + '"', done);
             key = new reg({hive: reg.HKCU, key: '\\Software\\Classes\\mycard\\shell\\open\\command'});
             key.set('', reg.REG_SZ, '"' + process.execPath + '" "%i"', done);
@@ -77,7 +71,7 @@ if (handleStartupEvent()) {
     return;
 }
 
-var shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
+let shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
@@ -93,7 +87,7 @@ if (shouldQuit) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-var mainWindow = null;
+let mainWindow = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -137,14 +131,14 @@ app.on('ready', function () {
         mainWindow.webContents.on('dom-ready', ()=> {
             if (local) {
                 mainWindow.webContents.executeJavaScript(`
-                    var webview = document.getElementById('ygopro');
+                    let webview = document.getElementById('ygopro');
                     webview.src = 'http://local.mycard.moe:3000/'
                 `)
             }
             if (dev) {
                 mainWindow.webContents.openDevTools();
                 mainWindow.webContents.executeJavaScript(`
-                    var webview = document.getElementById('ygopro');
+                    let webview = document.getElementById('ygopro');
                     webview.addEventListener("dom-ready", function() {
                         webview.openDevTools();
                     })
@@ -164,7 +158,7 @@ app.on('ready', function () {
 
     //debug
     /*<webview id="ygopro" src="http://local.mycard.moe:3000/"></webview>
-     var webview = document.getElementById(hash);
+     let webview = document.getElementById(hash);
      webview.addEventListener("dom-ready", function () {
      webview.openDevTools();
      });*/
