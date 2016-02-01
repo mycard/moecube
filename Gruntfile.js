@@ -10,12 +10,12 @@ module.exports = (grunt) => {
             break;
         case 'win32':
             grunt.loadNpmTasks('grunt-electron-installer');
-            release_task = ['electron:win32', 'copy:bundle', 'create-windows-installer'];
+            release_task = ['electron:win32', 'create-windows-installer:ia32', 'create-windows-installer:x64', 'copy:bundle-ia32', 'copy:bundle-x64', 'create-windows-installer:bundle-ia32', 'create-windows-installer:bundle-x64'];
             break;
     }
 
     grunt.initConfig({
-        clean: ["build2", "build3", "build3-bundle", "build4-bundle"],
+        clean: ["build2", "build3"],
         copy: {
             app: {
                 expand: true,
@@ -34,13 +34,23 @@ module.exports = (grunt) => {
                 src: ['node_modules/**', 'bin/**'],
                 dest: 'build2'
             },
-            bundle: {
+            'bundle-ia32': {
                 expand: true,
                 options: {
                     timestamp: true
                 },
-                src: ['build3/**', 'bundle/**'],
-                dest: 'build3-bundle'
+                cwd: 'bundle',
+                src: '**',
+                dest: 'build3/mycard-win32-ia32'
+            },
+            'bundle-x64': {
+                expand: true,
+                options: {
+                    timestamp: true
+                },
+                cwd: 'bundle',
+                src: '**',
+                dest: 'build3/mycard-win32-x64'
             }
         },
 
