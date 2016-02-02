@@ -200,21 +200,31 @@ function start_server() {
         save_db();
     });
 
-    autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {ia32: '32', x64: '64'}[process.arch]);
-    autoUpdater.checkForUpdates();
+    autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {
+            ia32: '32',
+            x64: '64'
+        }[process.arch]);
+    if (process.argv[1] == '--squirrel-firstrun') {
+        setTimeout(()=> {
+            autoUpdater.checkForUpdates();
+        }, 3000)
+    } else {
+        autoUpdater.checkForUpdates();
+    }
+
     /*autoUpdater.on('error', (error)=>{
-        console.log('update error', error)
-    });
-    autoUpdater.on('checking-for-update', ()=>{
-        console.log('checking-for-update')
-    });
-    autoUpdater.on('update-available', ()=>{
-        console.log('update-available')
-    });
-    autoUpdater.on('update-not-available', ()=>{
-        console.log('update-not-available')
-    });*/
-    autoUpdater.on('update-downloaded', ()=>{
+     console.log('update error', error)
+     });
+     autoUpdater.on('checking-for-update', ()=>{
+     console.log('checking-for-update')
+     });
+     autoUpdater.on('update-available', ()=>{
+     console.log('update-available')
+     });
+     autoUpdater.on('update-not-available', ()=>{
+     console.log('update-not-available')
+     });*/
+    autoUpdater.on('update-downloaded', ()=> {
         autoUpdater.quitAndInstall()
     })
 
