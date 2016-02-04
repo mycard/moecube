@@ -47,8 +47,8 @@ for (let i = 0; i < webviews.length; i++) {
     });
 
     /*webviews.item(i).addEventListener('will-navigate', (event) => {
-        event.preventDefault()
-    });*/
+     event.preventDefault()
+     });*/
 }
 
 document.getElementById("logout").onclick = ()=> {
@@ -66,7 +66,7 @@ let elements = document.getElementsByClassName('profile');
 for (let i = 0; i < elements.length; i++) {
     let element = elements.item(i);
     element.onclick = function () {
-        let user_url = 'https://forum.touhou.cc/users/' + document.getElementById('username').innerHTML;
+        let user_url = 'https://ygobbs.com/users/' + document.getElementById('username').innerHTML;
         let user_webview = document.getElementById('forum');
         if (user_webview.src.indexOf(user_url) != 0) { // begin with
             user_webview.src = user_url;

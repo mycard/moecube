@@ -131,14 +131,14 @@ app.on('ready', function () {
         mainWindow.webContents.on('dom-ready', ()=> {
             if (local) {
                 mainWindow.webContents.executeJavaScript(`
-                    let webview = document.getElementById('ygopro');
+                    var webview = document.getElementById('ygopro');
                     webview.src = 'http://local.mycard.moe:3000/'
                 `)
             }
             if (dev) {
                 mainWindow.webContents.openDevTools();
                 mainWindow.webContents.executeJavaScript(`
-                    let webview = document.getElementById('ygopro');
+                    var webview = document.getElementById('ygopro');
                     webview.addEventListener("dom-ready", function() {
                         webview.openDevTools();
                     })
