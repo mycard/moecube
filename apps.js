@@ -208,7 +208,7 @@ function start_server() {
         save_db();
     });
 
-    if (process.platform == 'win32') {
+    if (process.platform == 'win32' && db.local['ygopro'].status == 'ready') {
         autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {
                 ia32: '32',
                 x64: '64'
