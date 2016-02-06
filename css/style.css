@@ -92,7 +92,9 @@ li.active > a {
     float: left;
     margin: 0 0.5rem
 }
-
+/*body.win32 {
+    border: 1px solid black;
+}*/
 body.darwin nav {
     padding-left: 80px;
 }
