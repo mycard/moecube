@@ -15,7 +15,10 @@ const autoUpdater = require('auto-updater');
 const electron = require('electron');
 const ipcMain = electron.ipcMain;
 const app = electron.app;
+const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
+
+const watcher = {};
 
 const data_path = app.getPath('userData');
 const db_path = path.join(data_path, 'db.json');
@@ -119,6 +122,10 @@ eventemitter.on('delete', (app_id, file) => {
     delete db.local[app_id].files[file];
 });
 
+eventemitter.on('explore', (app_id) => {
+    electron.shell.showItemInFolder(path.join(db.local[app_id].path, 'deck'))
+});
+
 eventemitter.on('write', (app_id, file, data, merge) => {
     let local = db.local[app_id];
     if (file == 'system.conf') {
@@ -145,6 +152,7 @@ for (let app_id in db.local) {
         load(db.apps[app_id], db.local[app_id], done);
     }
 }
+
 done();
 
 function done() {
@@ -208,7 +216,7 @@ function start_server() {
         if (process.argv[1] == '--squirrel-firstrun') {
             setTimeout(()=> {
                 autoUpdater.checkForUpdates();
-            }, 3000)
+            }, 10000)
         } else {
             autoUpdater.checkForUpdates();
         }
@@ -300,6 +308,16 @@ function load(app, local, callback) {
                 done()
             })
         }
+    }
+
+    if (!watcher[app.id]) {
+        fs.watch(db.local[app.id].path, {recursive: true}, (event, filename)=> {
+            console.log(event, filename)
+            load(db.apps[app.id], db.local[app.id], ()=> {
+                eventemitter.emit('update', app, local, event)
+            });
+        });
+        watcher[app.id] = true;
     }
     done()
 }

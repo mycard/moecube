@@ -84,7 +84,8 @@ module.exports = (grunt) => {
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win32/icon.ico',
-                noMsi: true
+                noMsi: true,
+                loadingGif: 'resources/win32/setup.gif'
             },
             x64: {
                 appDirectory: 'build3/mycard-win32-x64',
@@ -92,7 +93,8 @@ module.exports = (grunt) => {
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win32/icon.ico',
-                noMsi: true
+                noMsi: true,
+                loadingGif: 'resources/win32/setup.gif'
             },
             'bundle-ia32': {
                 appDirectory: 'build3/mycard-win32-ia32',
@@ -100,7 +102,8 @@ module.exports = (grunt) => {
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win32/icon.ico',
-                noMsi: true
+                noMsi: true,
+                loadingGif: 'resources/win32/setup.gif'
             },
             'bundle-x64':{
                 appDirectory: 'build3/mycard-win32-x64',
@@ -108,7 +111,8 @@ module.exports = (grunt) => {
                 authors: 'MyCard',
                 exe: 'mycard.exe',
                 setupIcon: 'resources/win32/icon.ico',
-                noMsi: true
+                noMsi: true,
+                loadingGif: 'resources/win32/setup.gif'
             }
         },
         appdmg: {

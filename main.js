@@ -36,6 +36,7 @@ let handleStartupEvent = function () {
             };
 
             shortcuts.create(path.join(app.getPath('desktop'), 'MyCard.lnk'), process.execPath, done);
+            shortcuts.create('%APPDATA%/Microsoft/Windows/Start Menu/Programs/MyCard.lnk', process.execPath, done);
             let key = new reg({hive: reg.HKCU, key: '\\Software\\Classes\\mycard'});
             key.set('URL Protocol', reg.REG_SZ, '"' + process.execPath + '"', done);
             key = new reg({hive: reg.HKCU, key: '\\Software\\Classes\\mycard\\shell\\open\\command'});

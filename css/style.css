@@ -134,3 +134,7 @@ body.maximized #maximize {
 a {
     cursor: default;
 }
+
+:not(.logged-in) > .require-login {
+    display: none;
+}

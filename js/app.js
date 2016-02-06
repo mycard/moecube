@@ -62,7 +62,7 @@ document.getElementById("refresh").onclick = ()=> {
     })
 };
 
-let elements = document.getElementsByClassName('profile');
+/*let elements = document.getElementsByClassName('profile');
 for (let i = 0; i < elements.length; i++) {
     let element = elements.item(i);
     element.onclick = function () {
@@ -72,11 +72,11 @@ for (let i = 0; i < elements.length; i++) {
             user_webview.src = user_url;
         }
     }
-}
+}*/
 
 ipcRenderer.on('login', (event, user)=> {
     console.log(event, user);
     document.getElementById('avatar').src = user.avatar_url;
     document.getElementById('username').innerHTML = user.username;
-    document.getElementById('user').removeAttribute('hidden');
+    document.getElementById('user').className = 'logged-in'
 });
