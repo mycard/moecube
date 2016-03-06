@@ -1,13 +1,18 @@
 ## Build
 ### Windows
 ```bash
-npm install --prefix build1 --production glob ini mkdirp ws winreg windows-shortcuts
-robocopy resources\win32 build1\bin\ *.exe *.dll
+del /s /q build1
+npm install --prefix build1\win32-ia32 --production glob ini mkdirp ws aria2 winreg windows-shortcuts
+xcopy /S /Y /I build1\win32-ia32 build1\win32-x64
+robocopy resources\win build1\win32-ia32\bin\ *.exe *.dll
+robocopy resources\win build1\win32-x64\bin\ *.exe *.dll
+robocopy resources\win32 build1\win32-ia32\bin\ *.exe *.dll
+robocopy resources\win64 build1\win32-x64\bin\ *.exe *.dll
 grunt
 ```
 
 ### OSX
 ```bash
-npm install --prefix build1 --production glob ini mkdirp ws
+npm install --prefix build1 --production glob ini mkdirp ws aria2
 grunt
 ```

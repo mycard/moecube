@@ -3,10 +3,13 @@
 const fs = require('fs');
 const path = require('path');
 const child_process = require('child_process');
+const querystring = require('querystring');
 
 const ini = require('ini');
 const glob = require("glob");
 const mkdirp = require('mkdirp');
+
+const Aria2 = require('aria2');
 
 const EventEmitter = require('events');
 const eventemitter = new EventEmitter();
@@ -44,7 +47,6 @@ function save_db() {
 }
 
 eventemitter.on('install', (app, options) => {
-    console.log(app, options);
     if (db.local[app.id]) return;
 
     db.apps[app.id] = app;
@@ -61,19 +63,18 @@ eventemitter.on('install', (app, options) => {
 
     eventemitter.emit('update', app, local, 'install-started');
     mkdirp(local.path, ()=> {
-
-        let tar;
+        let options = {
+            stdio: 'inherit',
+            cwd: __dirname
+        };
         if (db.platform == 'win32') {
-            tar = child_process.spawn(path.join(__dirname, 'bin', 'tar.exe'), ['fx', '-'], {
-                cwd: local.path,
-                stdio: ['pipe', 'inherit', 'inherit']
-            });
-            child_process.spawn(path.join(__dirname, 'bin', 'xz.exe'), ['-d', '-c', path.join(__dirname, app.id + '.tar.xz')], {stdio: ['inherit', tar.stdin, 'inherit']});
-        } else {
-            tar = child_process.spawn('tar', ['fx', path.join(__dirname, app.id + '.tar.xz'), '-C', local.path], {stdio: 'inherit'});
+            options.env = {PATH: path.join(__dirname, 'bin')}
         }
-
+        console.log(options);
+        let tar = child_process.spawn('tar', ['fx', app.id + '.tar.xz', '-C', local.path], options);
+        console.log(tar);
         tar.on('exit', (code) => {
+            console.log(code)
             if (code == 0) {
 
                 load(app, local, ()=> {
@@ -90,6 +91,7 @@ eventemitter.on('install', (app, options) => {
     })
 });
 
+let running = [];
 eventemitter.on('action', function (app_id, action, options) {
     let local = db.local[app_id];
     Object.assign(local.files['system.conf'].content, options);
@@ -105,15 +107,17 @@ eventemitter.on('action', function (app_id, action, options) {
         } else {
             main = 'ygopro_vs.exe'
         }
-        console.log(main, [args], {cwd: local.path});
 
         let child = child_process.spawn(main, [args], {cwd: local.path, stdio: 'inherit'});
+        running.push(child);
         child.on('exit', ()=> {
-            for (let window of BrowserWindow.getAllWindows()) {
-                window.restore()
+            running.splice(running.indexOf(child), 1);
+            if (running.length == 0) {
+                for (let window of BrowserWindow.getAllWindows()) {
+                    window.restore()
+                }
             }
         })
-
     })
 });
 
@@ -148,10 +152,13 @@ for (let app_id in db.local) {
         delete db.local[app_id];
         eventemitter.emit('install', db.apps[app_id], options);
     } else {
+        db.local[app_id].status = 'ready';
         pending++;
         load(db.apps[app_id], db.local[app_id], done);
     }
 }
+
+child_process.spawn(path.join(__dirname, 'bin', 'aria2c'), ['--enable-rpc', '--rpc-allow-origin-all']);
 
 done();
 
@@ -208,11 +215,13 @@ function start_server() {
         save_db();
     });
 
+    const platform = {win32: 'win'}[process.platform] + {
+            ia32: '32',
+            x64: '64'
+        }[process.arch];
+
     if (process.platform == 'win32' && db.local['ygopro'] && db.local['ygopro'].status == 'ready') {
-        autoUpdater.setFeedURL('https://mycard.moe/update/' + {win32: 'win'}[process.platform] + {
-                ia32: '32',
-                x64: '64'
-            }[process.arch]);
+        autoUpdater.setFeedURL('https://mycard.moe/update/' + platform);
         if (process.argv[1] == '--squirrel-firstrun') {
             setTimeout(()=> {
                 autoUpdater.checkForUpdates();
@@ -229,10 +238,104 @@ function start_server() {
          });
          autoUpdater.on('update-available', ()=>{
          console.log('update-available')
-         });
-         autoUpdater.on('update-not-available', ()=>{
-         console.log('update-not-available')
          });*/
+        autoUpdater.on('update-not-available', ()=> {
+            // check for ygopro update
+            const aria2 = new Aria2();
+            //debug
+            aria2.onsend = function (m) {
+                console.log('aria2 OUT', m);
+            };
+            aria2.onmessage = function (m) {
+                console.log('aria2 IN', m);
+            };
+            let params = {platform: platform};
+            params.ygopro = db.apps.ygopro.version;
+            let meta = {};
+            let update_count = 0;
+            let pending_install = [];
+            let download_dir = app.getPath('temp');
+            aria2.open(()=> {
+                console.log('checking apps update');
+                aria2.addUri(['https://mycard.moe/apps.meta4?' + querystring.stringify(params)], {'dir': download_dir}, (error, gid)=> {
+                    meta = gid
+                })
+            });
+            /*aria2.onDownloadStart = function (response) {
+             aria2.getFiles(response.gid, (error, response)=> {
+             console.log('start', error, JSON.stringify(response))
+             })
+             };*/
+            aria2.onDownloadComplete = function (response) {
+                aria2.tellStatus(response.gid, (error, response)=> {
+                    if (meta == response.gid) {
+                        if (response.followedBy) {
+                            update_count = response.followedBy.length;
+                        }
+                    } else {
+                        console.log('download complete', response.files);
+                        pending_install.push(path.basename(response.files[0].path));
+                        if (pending_install.length == update_count) {
+                            for (let child of running) {
+                                child.kill()
+                            }
+                            let app = db.apps.ygopro; //hacky
+                            let local = db.local.ygopro;
+
+                            local.status = 'updating';
+                            eventemitter.emit('update', app, local, 'update');
+
+                            pending_install.sort();
+                            (function extract() {
+                                let file = pending_install.shift();
+                                console.log(file);
+                                if (file) {
+                                    let options = {
+                                        stdio: 'inherit',
+                                        cwd: download_dir
+                                    };
+                                    if (db.platform == 'win32') {
+                                        options.env = {PATH: path.join(__dirname, 'bin')}
+                                    }
+                                    console.log(options);
+                                    let tar = child_process.spawn('tar', ['fx', file, '-C', local.path], options);
+                                    tar.on('exit', (code) => {
+                                        if (code == 0) {
+                                            let matched = file.match(/ygopro-update-win32-(.+)\.tar\.xz/);
+                                            if (matched) {
+                                                app.version = matched[1];
+                                                save_db();
+                                            }
+                                            extract()
+                                        } else {
+                                            load(app, local, ()=> {
+                                                local.status = 'ready';
+                                                eventemitter.emit('update', app, local, 'update-failed');
+                                            });
+                                        }
+                                    });
+
+                                } else {
+                                    load(app, local, ()=> {
+                                        local.status = 'ready';
+                                        eventemitter.emit('update', app, local, 'update-successful');
+                                    });
+                                }
+                            })();
+                        }
+                    }
+                })
+            };
+            aria2.onDownloadError = function (response) {
+                let app = db.apps.ygopro; //hacky
+                let local = db.local.ygopro;
+                eventemitter.emit('update', app, local, 'update-failed');
+                /*aria2.tellStatus(response.gid, (error, response)=> {
+                 console.log('onDownloadComplete', error, JSON.stringify(response))
+                 })*/
+            };
+
+        });
         autoUpdater.on('update-downloaded', ()=> {
             autoUpdater.quitAndInstall()
         })
@@ -260,7 +363,7 @@ function load(app, local, callback) {
                         //console.log('ini pending');
                         fs.readFile(path.join(local.path, file), 'utf8', (error, content)=> {
                             if (error)return done();
-                            local.files[file] = {content: ini.parse(content)};
+                            local.files[file] = {content: ini.parse(content)} || {};
                             if (file == 'system.conf') {
                                 pending += 2;
                                 //console.log('fonts pending + 2');
@@ -273,7 +376,11 @@ function load(app, local, callback) {
                                         textfonts = [path.join(process.env.SystemRoot, 'fonts/msyh.ttc'), path.join(process.env.SystemRoot, 'fonts/msyh.ttf'), path.join(process.env.SystemRoot, 'fonts/simsun.ttc')]
                                         break;
                                 }
-                                first_exists([path.resolve(local.path, local.files[file].content.textfont.split(' ')[0])].concat(textfonts), (textfont)=> {
+                                let origin = [];
+                                if (local.files[file] && local.files[file].content && local.files[file].content.textfont) {
+                                    origin.push(path.resolve(local.path, local.files[file].content.textfont.split(' ')[0]))
+                                }
+                                first_exists(origin.concat(textfonts), (textfont)=> {
                                     if (textfont) {
                                         local.files[file].content.textfont = path.relative(local.path, textfont) + ' 14';
                                     }
@@ -312,7 +419,6 @@ function load(app, local, callback) {
 
     if (!watcher[app.id]) {
         fs.watch(db.local[app.id].path, {recursive: true}, (event, filename)=> {
-            console.log(event, filename)
             load(db.apps[app.id], db.local[app.id], ()=> {
                 eventemitter.emit('update', app, local, event)
             });
