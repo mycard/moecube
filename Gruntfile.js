@@ -12,6 +12,10 @@ module.exports = (grunt) => {
             grunt.loadNpmTasks('grunt-electron-installer');
             release_task = ['electron:win32-ia32', 'electron:win32-x64', 'create-windows-installer:ia32', 'create-windows-installer:x64', 'copy:bundle-ia32', 'copy:bundle-x64', 'create-windows-installer:bundle-ia32', 'create-windows-installer:bundle-x64'];
             break;
+        // FIXME: case 'ubuntu or debain'
+        case 'linux':
+           grunt.loadNpmTasks('grunt-electron-installer-debian');
+           release_task = ['electron:linux-ia32', 'electron:linux-x64', 'electron-installer-debian'];
     }
 
     grunt.initConfig({
@@ -32,6 +36,14 @@ module.exports = (grunt) => {
                 },
                 src: ['package.json', 'README.txt', 'LICENSE.txt', 'main.js', 'apps.js', 'index.html', 'css/**', 'font/**', 'js/**'],
                 dest: 'build2/win32-x64'
+            },
+            'app-linux': {
+                expand: true,
+                options: {
+                    timestamp: true
+                },
+                src: ['package.json', 'README.txt', 'LICENSE.txt', 'main.js', 'apps.js', 'index.html', 'css/**', 'font/**', 'js/**'],
+                dest: 'build2'
             },
             'node_modules-ia32': {
                 expand: true,
@@ -101,6 +113,25 @@ module.exports = (grunt) => {
                     arch: 'x64',
                     icon: 'resources/win/icon.ico'
                 }
+            },
+            'linux-ia32': {
+                options: {
+                  name: 'mycard',
+                  dir: 'build2',
+                  out: 'build3',
+                  platform: 'linux',
+                  arch: 'ia32'
+                }
+            },
+            'linux-x64': {
+                options: {
+                  name: 'mycard',
+                  dir: 'build2',
+                  out: 'build3',
+                  platform: 'linux',
+                  arch: 'x64',
+                  icon: 'resources/linux/icon.icns'
+                }
             }
         },
 
@@ -142,6 +173,31 @@ module.exports = (grunt) => {
                 loadingGif: 'resources/win/setup.gif'
             }
         },
+
+        'electron-installer-debian': {
+          options: {
+            productName: 'Mycard',
+            section: 'games',
+            priority: 'optional'
+          },
+
+          linux32: {
+            options: {
+              arch: 'i386'
+            },
+            src: 'build3/mycard-linux-ia32',
+            dest: 'build4/mycard-debian-x32/resources/app'
+          },
+
+          linux64: {
+            options: {
+              arch: 'amd64'
+            },
+            src: 'build3/mycard-linux-x64',
+            dest: 'build4/mycard-debian-x64/resources/app'
+          }
+        },
+
         appdmg: {
             options: {
                 title: 'MyCard',
@@ -171,7 +227,7 @@ module.exports = (grunt) => {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-electron');
 
-    grunt.registerTask('build', ['clean', 'copy:app-ia32', 'copy:app-x64','copy:node_modules-ia32','copy:node_modules-x64']);
+    grunt.registerTask('build', ['clean', 'copy:app-ia32', 'copy:app-x64', 'copy:app-linux', 'copy:node_modules-ia32','copy:node_modules-x64']);
     grunt.registerTask('release', ['build'].concat(release_task));
     grunt.registerTask('default', ['release']);
 };

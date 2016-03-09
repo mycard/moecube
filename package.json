@@ -18,11 +18,12 @@
     "grunt-electron-installer": "latest"
   },
   "devDependencies": {
+    "electron-prebuilt": "latest",
     "grunt": "latest",
     "grunt-appdmg": "latest",
     "grunt-contrib-clean": "latest",
     "grunt-contrib-copy": "latest",
     "grunt-electron": "latest",
-    "electron-prebuilt": "latest"
+    "grunt-electron-installer-debian": "^0.2.0"
   }
 }
