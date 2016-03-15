@@ -1,5 +1,6 @@
 ## Build
 ### Windows
+
 ```bash
 del /s /q build1
 npm install --prefix build1\win32-ia32 --production glob ini mkdirp ws aria2 winreg windows-shortcuts
@@ -12,7 +13,18 @@ grunt
 ```
 
 ### OSX
+
 ```bash
 npm install --prefix build1 --production glob ini mkdirp ws aria2
+grunt
+```
+
+### LINUX (DEBIAN&UBUNTU)
+
+```bash
+npm install grunt-cli -g
+npm install --prefix build1 --production glob ini mkdirp ws aria2
+npm install
+
 grunt
 ```
