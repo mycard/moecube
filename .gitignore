@@ -6,6 +6,8 @@
 /build3/
 /build4/
 /dist/
+/typings/
+/npm-dubug.log
 
 /nbproject/
 /.idea/
