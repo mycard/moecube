@@ -29,13 +29,14 @@
     "@angular/router": "latest",
     "@angular/router-deprecated": "latest",
     "@angular/upgrade": "latest",
-    "systemjs": "latest",
+    "angular2-in-memory-web-api": "latest",
+    "bootstrap": "next",
     "core-js": "latest",
+    "font-awesome": "^4.6.3",
     "reflect-metadata": "latest",
     "rxjs": "latest",
-    "zone.js": "latest",
-    "angular2-in-memory-web-api": "latest",
-    "bootstrap": "next"
+    "systemjs": "latest",
+    "zone.js": "latest"
   },
   "devDependencies": {
     "concurrently": "latest",
