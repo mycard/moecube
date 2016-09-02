@@ -4,6 +4,7 @@
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
   "version": "3.0.0-dev.3",
+  "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "./node_modules/.bin/build --dir",
     "dist": "./node_modules/.bin/build",
