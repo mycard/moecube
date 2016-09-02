@@ -82,7 +82,7 @@ function createWindow () {
         width: 1024,
         height: 640,
         frame: process.platform == 'darwin',
-        'title-bar-style': process.platform == 'darwin' ? 'hidden-inset' : null})
+        titleBarStyle: process.platform == 'darwin' ? 'hidden' : null})
 
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/index.html`)
