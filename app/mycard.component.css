@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
 }
@@ -16,6 +17,12 @@ nav.darwin {
 .navbar-right > div, #user > .item {
     float: left;
     margin: 0 0.5rem
+#wrapper {
+    padding-top: 60px;
+    /*margin-bottom: 60px;*/
+}
+.nav-right {
+    float: right;
 }
 
 #avatar {

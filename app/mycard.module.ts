@@ -6,10 +6,13 @@ import { StoreComponent } from './store.component';
 import { LobbyComponent } from './lobby.component';
 import { CommunityComponent } from './community.component';
 
+import { RoutingService } from './routing.service';
+
 
 @NgModule({
   imports:      [ BrowserModule ],
   declarations: [ MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent ],
-  bootstrap:    [ MyCardComponent ]
+  bootstrap:    [ MyCardComponent ],
+  providers:    [ RoutingService ],
 })
 export class MyCard { }

@@ -63,8 +63,9 @@
         </div>
     </nav>
 </div>-->
-
-<login></login>
-<store></store>
-<lobby></lobby>
-<community></community>
+<div id="wrapper">
+<login [hidden]="routingService.component != 'login'"></login>
+<store [hidden]="routingService.component != 'store'"></store>
+<lobby [hidden]="routingService.component != 'lobby'"></lobby>
+<community [hidden]="routingService.component != 'community'"></community>
+</div>

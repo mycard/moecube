@@ -3,10 +3,13 @@
   "description": "mycard",
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
-  "version": "3.0.0",
+  "version": "3.0.0-dev.3",
+  "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "./node_modules/.bin/build --dir",
     "dist": "./node_modules/.bin/build",
+    "release": "build",
+    "electron": "electron",
     "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "postinstall": "typings install",
@@ -45,7 +48,7 @@
   "build": {
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
-    "category": "public.app-category.entertainment",
+    "category": "public.app-category.social-networking",
     "win": {
       "iconUrl": "http://mycard.moe/logo.png"
     },
