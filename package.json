@@ -3,7 +3,7 @@
   "description": "mycard",
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
-  "version": "3.0.0-dev.3",
+  "version": "3.0.0-dev.4",
   "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "./node_modules/.bin/build --dir",
@@ -51,7 +51,8 @@
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
     "win": {
-      "iconUrl": "http://mycard.moe/logo.png"
+      "iconUrl": "http://mycard.moe/logo.png",
+      "remoteReleases": true
     },
     "mac": {
       "target": "dmg"
