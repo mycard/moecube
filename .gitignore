@@ -3,7 +3,7 @@
 /node_modules/
 /dist/
 /typings/
-/npm-dubug.log
+/npm-debug.log
 /.idea/
 .DS_Store
 Thumbs.db

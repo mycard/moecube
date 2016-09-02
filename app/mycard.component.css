@@ -1,5 +1,21 @@
-.nav-right {
-    float: right;
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+}
+
+nav {
+    -webkit-app-region: drag;
+}
+nav.darwin {
+    padding-left: 80px;
+}
+
+.navbar-right {
+    float: right
+}
+
+.navbar-right > div, #user > .item {
+    float: left;
+    margin: 0 0.5rem
 }
 
 #avatar {
@@ -7,5 +23,24 @@
     float: left;
     border-radius: 50%;
     height: 2rem;
-    padding: 0.175rem;
+    margin-top: 0.175rem;
 }
+
+.item {
+    display: block;
+    float: left;
+    padding-top: .425rem;
+    padding-bottom: .425rem;
+    margin-left: 4px;
+    color: #eceeef;
+    text-decoration: none;
+}
+
+.item:hover {
+    color: #fff;
+}
+
+a {
+    cursor: default;
+}
+
