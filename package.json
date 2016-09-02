@@ -45,7 +45,7 @@
   "build": {
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
-    "category": "public.app-category.entertainment",
+    "category": "public.app-category.social-networking",
     "win": {
       "iconUrl": "http://mycard.moe/logo.png"
     },
