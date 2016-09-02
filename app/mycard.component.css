@@ -1,4 +1,15 @@
-#wrapper{
+#wrapper {
     padding-top: 60px;
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
+}
+.nav-right {
+    float: right;
+}
+
+#avatar {
+    display: block;
+    float: left;
+    border-radius: 50%;
+    height: 2rem;
+    padding: 0.175rem;
 }
