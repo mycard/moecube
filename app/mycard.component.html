@@ -1,10 +1,12 @@
 <nav class="navbar navbar-fixed-top navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
-        <li class="nav-item active">
+        <!--
+        <li class="nav-item">
             <a class="nav-link" href="#">商店</a>
         </li>
-        <li class="nav-item">
+        -->
+        <li class="nav-item active">
             <a class="nav-link" href="#">游戏<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
@@ -20,11 +22,11 @@
             <a href="#ygopro" id="logout" class="require-login item">切换账号</a>
             <a href="#ygopro" id="refresh" class="item">刷新</a>
         </div>
-        <div id="window-buttons" hidden>
-            <i id="minimize" class="icon-minimize"></i>
-            <i id="maximize" class="icon-maximize"></i>
-            <i id="restore" class="icon-restore" hidden></i>
-            <i id="close" class="icon-close"></i>
+        <div id="window-buttons" [class.darwin]="platform == 'darwin'">
+            <i id="minimize"  class="fa fa-minus" aria-hidden="true"></i>
+            <i id="maximize" class="fa fa-expand" aria-hidden="true"></i>
+            <i id="restore" class="fa fa-clone" hidden aria-hidden="true"></i>
+            <i id="close" class="fa fa-times" aria-hidden="true"></i>
         </div>
     </div>
 </nav>

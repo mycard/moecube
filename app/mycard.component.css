@@ -4,6 +4,7 @@ body {
 
 nav {
     -webkit-app-region: drag;
+    padding-right: 0;
 }
 
 nav.darwin {
@@ -20,7 +21,7 @@ nav.darwin {
 }
 
 #wrapper {
-    padding-top: 60px;
+    padding-top: 54px;
     /*margin-bottom: 60px;*/
 }
 
@@ -52,5 +53,17 @@ nav.darwin {
 
 a {
     cursor: default;
+}
+#window-buttons.darwin {
+    display: none;
+}
+
+#window-buttons > i {
+    color: rgba(255, 255, 255, .75);
+    margin: .5rem;
+}
+
+li > a:hover, #window-buttons > i:hover {
+    color: #fff;
 }
 

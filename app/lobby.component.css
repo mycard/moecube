@@ -1,0 +1,16 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+
+}
+
+#main {
+    display: flex;
+    flex-grow: 1;
+}
+
+app {
+    display: flex;
+    flex-grow: 1;
+}
