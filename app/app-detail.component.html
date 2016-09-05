@@ -1,11 +1,11 @@
-<h1>东方绯想天则</h1>
+<h1>{{name()}}</h1>
 
-<div>
+<div *ngIf="!isInstalled()">
     <button type="button" class="btn btn-primary">安装</button>
     <button type="button" class="btn btn-secondary">导入</button>
     <button type="button" class="btn btn-secondary">正版代购</button>
 </div>
-<div>
+<div *ngIf="isInstalled()">
     <button type="button" class="btn btn-primary">运行</button>
     <button type="button" class="btn btn-secondary">设置</button>
     <button type="button" class="btn btn-secondary">游览本地文件</button>

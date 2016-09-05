@@ -4,17 +4,24 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class AppsService {
+    data;
+
+    detail = {
+        "default": {
+            "id": "id",
+            "name": "name",
+            "isInstalled": false
+        },
+    }
+
     constructor(private http: Http) {
     }
 
-    data = '';
-
-
     getApps() {
-        console.log(123);
         this.http.get('./apps.json')
             .map(response => response.json())
-            .subscribe(data => this.data = data);
+            .subscribe(data => {console.log(data);this.data = data});
+
     }
 
 }

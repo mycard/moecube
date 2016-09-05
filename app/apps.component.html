@@ -1,8 +1,15 @@
 <div class="list-group">
-    <a href="#" class="list-group-item active">
-        游戏王
-    </a>
+    <!--
+    <a href="#" class="list-group-item active">游戏王</a>
     <a href="#" class="list-group-item list-group-item-action">绯想天</a>
     <a href="#" class="list-group-item list-group-item-action disabled">永远消失的幻想乡</a>
-    <a href="#" class="list-group-item list-group-item-action disabled"></a>
+    -->
+    <a *ngFor="let app of appsService.data" (click)="selectApp(app.id)"
+       href="#"
+       class="list-group-item list-group-item-action"
+       [ngClass]="{active: app.id==routingService.app}"
+    >
+        {{app.name}}
+    </a>
+    <a href="#" class="list-group-item list-group-item-action disabled">{{routingService.app}}</a>
 </div>
