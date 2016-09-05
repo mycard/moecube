@@ -9,6 +9,8 @@ addons:
   apt:
     packages:
       - icnsutils
+      - graphicsmagick
+      - xz-utils
 
 cache:
   directories:
