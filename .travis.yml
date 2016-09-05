@@ -8,6 +8,11 @@ os:
   - linux
   - osx
 
+addons:
+  apt:
+    packages:
+      - icnsutils
+
 cache:
   directories:
   - node_modules
