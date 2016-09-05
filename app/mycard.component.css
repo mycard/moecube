@@ -2,6 +2,12 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
 }
 
+:host {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 nav {
     -webkit-app-region: drag;
     padding-right: 0;
@@ -20,8 +26,8 @@ nav.darwin {
     margin: 0 0.5rem;
 }
 
-#wrapper {
-    padding-top: 54px;
+.page {
+    flex-grow: 1;
     /*margin-bottom: 60px;*/
 }
 

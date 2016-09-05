@@ -1,4 +1,4 @@
-<nav class="navbar navbar-fixed-top navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
+<nav class="navbar navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
         <!--
@@ -65,9 +65,7 @@
         </div>
     </nav>
 </div>-->
-<div id="wrapper">
-<login [hidden]="routingService.component != 'login'"></login>
-<store [hidden]="routingService.component != 'store'"></store>
-<lobby [hidden]="routingService.component != 'lobby'"></lobby>
-<community [hidden]="routingService.component != 'community'"></community>
-</div>
+<login class="page" [hidden]="routingService.component != 'login'"></login>
+<store class="page" [hidden]="routingService.component != 'store'"></store>
+<lobby class="page" [hidden]="routingService.component != 'lobby'"></lobby>
+<community class="page" [hidden]="routingService.component != 'community'"></community>
