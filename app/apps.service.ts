@@ -17,10 +17,15 @@ export class AppsService {
     constructor(private http: Http) {
     }
 
-    getApps() {
+    getApps(callback) {
         this.http.get('./apps.json')
             .map(response => response.json())
-            .subscribe(data => {console.log(data);this.data = data});
+            .subscribe(data => {
+                this.data = data
+                if(typeof(callback) === 'function') {
+                    callback();
+                }
+            });
 
     }
 

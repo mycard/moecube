@@ -10,7 +10,12 @@ import { RoutingService } from './routing.service'
 export class AppsComponent {
 
     constructor(private appsService: AppsService, private routingService: RoutingService ) {
-        appsService.getApps();
+        appsService.getApps(()=>{
+            console.log(appsService.data)
+            if(appsService.data.length > 0) {
+                this.selectApp(appsService.data[0].id);
+            }
+        });
     }
 
     selectApp(id) {
