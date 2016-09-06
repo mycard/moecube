@@ -15,16 +15,26 @@ enum App_Category {
 
 export class App {
     id: string;
-    name: Set<string>;          // i18n
-    description: Set<string>;   //i18n
+    name: {[locale: string]: string};          // i18n
+    description: {[locale: string]: string};   //i18n
     author: string;             // English Only
     homepage: string;
     category: string;
-    actions: Set<Set<{execute: string, args: string[], env: {}, open: string}>>;
+    actions: {[platform: string]: {[action: string]: {execute: string, args: string[], env: {}, open: string}}};
     references: {id: string, type: Reference_Type}[];
     locales: string[];
     download: string;           // meta4 url
     news: {title: string, url: string, image: string}[];
     tags: string[];
+    version: string;
     local: AppLocal;
 }
+
+/*export interface TestInterface {
+ id: string;
+ name: {[locale: string]: string};
+ }
+
+ let test: TestInterface = <TestInterface>{id: '1', name: {"x": "Guy"}};
+
+ console.log(test)*/
