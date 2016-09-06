@@ -1,3 +1,4 @@
+import {AppLocal} from "./app-local";
 enum Reference_Type {
     runtime, // directx
     emulator, // wine, np2
@@ -24,5 +25,6 @@ export class App {
     locales: string[];
     download: string;           // meta4 url
     news: {title: string, url: string, image: string}[];
-    tags: string[]
+    tags: string[];
+    local: AppLocal;
 }
