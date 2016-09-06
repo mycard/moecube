@@ -1,17 +1,82 @@
 [
   {
     "id": "th105",
-    "name": "东方绯想天",
-    "isInstalled": true
+    "name":
+    {
+      "zh-CN": "东方绯想天"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "category": "ACT",
+    "actions": {
+      "darwin": {
+        "main": {
+          "execute": "",
+          "args": [],
+          "env": "",
+          "open": ""
+        }
+      }
+    },
+    "references": {
+      "id": "",
+      "type": "runtime"
+    },
+    "locales": ["zh-CN"],
+    "download": "",
+    "news": [{
+      "title": "title",
+      "url": "",
+      "image": ""
+      }
+    ],
+    "tags": ["ACT"],
+    "local": {
+      "path": "",
+      "version": ""
+    }
   },
   {
     "id": "th12",
-    "name": "东方地灵殿",
-    "isInstalled": false
-  },
-  {
-    "id": "th13",
-    "name": "东方UFO",
-    "isInstalled": false
+    "name":
+    {
+      "zh-CN": "地灵殿"
+    },
+    "description": {
+      "zh-CN": "th12 desc"
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "category": "ACT",
+    "actions": {
+      "darwin": {
+        "main": {
+          "execute": "",
+          "args": [],
+          "env": "",
+          "open": ""
+        }
+      }
+    },
+    "references": {
+      "id": "",
+      "type": "runtime"
+    },
+    "locales": ["zh-CN"],
+    "download": "",
+    "news": [{
+      "title": "title",
+      "url": "",
+      "image": ""
+    }
+    ],
+    "tags": ["ACT"],
+    "local": {
+      "path": "/foo/bar",
+      "version": "10.3"
+    }
   }
 ]

@@ -10,7 +10,7 @@
        class="list-group-item list-group-item-action"
        [ngClass]="{active: app.id==routingService.app}"
     >
-        {{app.name}}
+        {{app.name[app.locales[0]]}}
     </a>
     <a href="#" class="list-group-item list-group-item-action disabled">{{routingService.app}}</a>
 </div>

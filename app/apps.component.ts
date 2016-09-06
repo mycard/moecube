@@ -14,22 +14,14 @@ export class AppsComponent {
             console.log(appsService.data)
             if(appsService.data.length > 0) {
                 this.selectApp(appsService.data[0].id);
+                let tmp = this.appsService.data.filter((v)=>v.id === this.routingService.app);
+                console.log(tmp);
             }
         });
     }
 
     selectApp(id) {
         this.routingService.app = id;
-        this.getDetail();
     }
 
-    getDetail() {
-        for(let i = 0; i < this.appsService.data.length; i++){
-            let x = this.appsService.data[i];
-            if(x.id == this.routingService.app) {
-                this.appsService.detail[this.routingService.app] = x;
-            }
-        }
-        console.log(this.appsService.detail);
-    }
 }

@@ -28,8 +28,26 @@ export class App {
     tags: string[];
     version: string;
     local: AppLocal;
+    constructor(app: AppInterface) {
+        this.id = app.id;
+        this.name = app.name;
+        this.description = app.description;
+        this.author = app.author;
+        this.homepage = app.homepage;
+        this.category = app.category;
+        this.actions = app.actions;
+        this.references = app.references;
+        this.locales = app.locales;
+        this.download = app.download;
+        this.news = app.news;
+        this.tags = app.tags;
+        this.version = app.version;
+        this.local = app.local;
+    }
 }
 
+export interface AppInterface extends App {
+}
 /*export interface TestInterface {
  id: string;
  name: {[locale: string]: string};
