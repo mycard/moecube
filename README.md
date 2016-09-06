@@ -1,12 +1,17 @@
-## install dependencies
-npm install
+# MyCard [![Build Status](https://travis-ci.org/mycard/mycard.svg?branch=v3)](https://travis-ci.org/mycard/mycard) [![Build status](https://ci.appveyor.com/api/projects/status/t4jyh0rkwh0nep7w?svg=true)](https://ci.appveyor.com/project/zh99998/mycard)
 
-## build
-codesign -f -s 'Developer ID Application: XIAOCHI CHEN (ZNVDEVDRX3)' --deep /Users/zh99998/Perforce/TH-TDOG/TH-TDOG-Game/TH-TDOG.app
-mv /Users/zh99998/Perforce/TH-TDOG/TH-TDOG-Game/TH-TDOG.app ./
+## Install Dependencies
+```
+npm install
+```
+
+## Build
+```
 npm run tsc
 npm run dist
+```
 
-## debug
-electron .
-
+## Debug
+```
+./node_modules/.bin/electron .
+```

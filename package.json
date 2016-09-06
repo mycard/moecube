@@ -32,7 +32,7 @@
     "angular2-in-memory-web-api": "latest",
     "bootstrap": "next",
     "core-js": "latest",
-    "font-awesome": "^4.6.3",
+    "font-awesome": "latest",
     "reflect-metadata": "latest",
     "rxjs": "latest",
     "systemjs": "latest",
