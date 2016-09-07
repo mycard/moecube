@@ -2,6 +2,7 @@
     background-color: #c3d9ff;
     flex-grow: 1;
     overflow-y: auto;
+    padding: 1rem;
 }
 
 
