@@ -19,7 +19,7 @@ export class AppsService {
             })
             .subscribe(data => {
                 this.data = data;
-                console.log(this.data);
+                //console.log(this.data);
                 if(typeof(callback) === 'function') {
                     callback();
                 }

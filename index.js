@@ -4,6 +4,35 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
+function createAria2c() {
+    "use strict";
+    const ChildProcess = require('child_process');
+    const path = require('path');
+
+    const appFolder = path.resolve(process.execPath, '..');
+    const rootAtomFolder = path.resolve(appFolder, '..');
+    const aria2Bin = path.resolve(path.join(rootAtomFolder, 'aria2c.exe'));
+
+    const aria2Name = 'arai2';
+
+    const spawn = function(command, args) {
+        let spawnedProcess, error;
+
+        try {
+            spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
+        } catch (error) {}
+
+        return spawnedProcess;
+    };
+
+    const aria2c = spawn('aria2c', ['--enable-rpc', '--rpc-allow-origin-all']);
+    aria2c.on('data', (data)=>{
+        console.log(`${data}`);
+    })
+}
+
+createAria2c();
+
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
     // squirrel event handled and app will exit in 1000ms, so don't do anything else

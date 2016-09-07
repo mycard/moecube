@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AppsService } from './apps.service'
+import { AppService } from './app.service'
 import { RoutingService } from './routing.service'
 import {App} from "./app";
 
@@ -12,6 +13,8 @@ declare var process;
 })
 export class AppDetailComponent {
 
+    constructor(private appsService: AppsService, private appService: AppService, private routingService: RoutingService ) {
+    }
     _currentApp;
     get currentApp(): App {
         return this.searchApp(this.routingService.app);
@@ -55,7 +58,6 @@ export class AppDetailComponent {
 
         if(this.currentApp) {
             if(this.currentApp.references[process.platform] && this.currentApp.references[process.platform].length > 0) {
-                console.log(this.currentApp.references[process.platform]);
                 let refs = this.currentApp.references[process.platform];
                 refs = refs.filter((ref)=>{
                     return contains.includes(ref.type);
@@ -72,7 +74,7 @@ export class AppDetailComponent {
                         default:
                             break;
                     }
-                    console.log(tmp.type);
+                    //console.log(tmp.type);
                     return tmp;
                 });
                 return refs;
@@ -82,8 +84,6 @@ export class AppDetailComponent {
         }
     }
 
-    constructor(private appsService: AppsService, private routingService: RoutingService ) {
-    }
 
     searchApp(id): App {
         let data = this.appsService.data;
@@ -101,6 +101,12 @@ export class AppDetailComponent {
             }
         }
         return false;
+    }
+
+    install() {
+        this.appService.download();
+
+
     }
 
 }

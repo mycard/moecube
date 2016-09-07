@@ -12,11 +12,11 @@ export class AppsComponent {
 
     constructor(private appsService: AppsService, private routingService: RoutingService ) {
         appsService.getApps(()=>{
-            console.log(appsService.data)
+            //console.log(appsService.data)
             if(appsService.data.length > 0) {
                 this.selectApp(appsService.data[0].id);
                 let tmp = this.appsService.data.filter((v)=>v.id === this.routingService.app);
-                console.log(tmp);
+                //console.log(tmp);
             }
         });
     }
