@@ -1,17 +1,24 @@
 import {AppLocal} from "./app-local";
-enum Reference_Type {
+
+/*
+export enum Reference_Type {
     runtime, // directx
     emulator, // wine, np2
     dependency, //
     optional, // fxtz
     language
 }
-
-enum App_Category {
+*/
+/*
+export enum App_Category {
     game,
     music,
     book,
+    runtime, // directx
+    emulator, // wine, np2
+    language
 }
+*/
 
 export class App {
     id: string;
@@ -21,7 +28,7 @@ export class App {
     homepage: string;
     category: string;
     actions: {[platform: string]: {[action: string]: {execute: string, args: string[], env: {}, open: string}}};
-    references: {id: string, type: Reference_Type}[];
+    references: {[platform: string]: {id: string, type: string}[]};
     locales: string[];
     download: string;           // meta4 url
     news: {title: string, url: string, image: string}[];
@@ -34,7 +41,7 @@ export class App {
         this.description = app.description;
         this.author = app.author;
         this.homepage = app.homepage;
-        this.category = app.category;
+        this.category =app.category;
         this.actions = app.actions;
         this.references = app.references;
         this.locales = app.locales;

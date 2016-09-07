@@ -10,7 +10,7 @@
     },
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
-    "category": "ACT",
+    "category": "game",
     "actions": {
       "darwin": {
         "main": {
@@ -28,12 +28,17 @@
     "locales": ["zh-CN"],
     "download": "",
     "news": [{
-      "title": "title",
-      "url": "",
-      "image": ""
+      "title": "News Title",
+      "url": "#",
+      "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+      },
+      {
+      "title": "News Title",
+      "url": "#",
+      "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
       }
     ],
-    "tags": ["ACT"],
+    "tags": ["game"],
     "local": {
       "path": "",
       "version": ""
@@ -50,7 +55,43 @@
     },
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
-    "category": "ACT",
+    "category": "game",
+    "actions": {
+      "darwin": {
+        "main": {
+          "execute": "",
+          "args": [],
+          "env": "",
+          "open": ""
+        }
+      }
+    },
+    "references": {
+      "id": "th12_mod1",
+      "type": "language"
+    },
+    "locales": ["zh-CN"],
+    "download": "",
+    "news": [],
+    "tags": ["STG"],
+    "local": {
+      "path": "/foo/bar",
+      "version": "10.3"
+    }
+  },
+
+  {
+    "id": "th12_mod1",
+    "name":
+    {
+      "zh-CN": "th12_mod1"
+    },
+    "description": {
+      "zh-CN": "th12 desc"
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "category": "language",
     "actions": {
       "darwin": {
         "main": {
@@ -67,13 +108,8 @@
     },
     "locales": ["zh-CN"],
     "download": "",
-    "news": [{
-      "title": "title",
-      "url": "",
-      "image": ""
-    }
-    ],
-    "tags": ["ACT"],
+    "news": [],
+    "tags": ["STG"],
     "local": {
       "path": "/foo/bar",
       "version": "10.3"
