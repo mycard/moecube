@@ -21,10 +21,7 @@
         }
       }
     },
-    "references": {
-      "id": "",
-      "type": "runtime"
-    },
+    "references": {},
     "locales": ["zh-CN"],
     "download": "",
     "news": [{
@@ -67,8 +64,20 @@
       }
     },
     "references": {
-      "id": "th12_mod1",
-      "type": "language"
+      "darwin": [
+        {
+        "id": "th105",
+        "type": "optional"
+        },
+        {
+          "id": "th12_mod1",
+          "type": "language"
+        },
+        {
+          "id": "th12_mod2",
+          "type": "runtime"
+        }
+      ]
     },
     "locales": ["zh-CN"],
     "download": "",
@@ -102,10 +111,40 @@
         }
       }
     },
-    "references": {
-      "id": "",
-      "type": "runtime"
+    "references": {},
+    "locales": ["zh-CN"],
+    "download": "",
+    "news": [],
+    "tags": ["STG"],
+    "local": {
+      "path": "/foo/bar",
+      "version": "10.3"
+    }
+  },
+
+  {
+    "id": "th12_mod2",
+    "name":
+    {
+      "zh-CN": "th12_mod2"
     },
+    "description": {
+      "zh-CN": "th12 desc"
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "category": "runtime",
+    "actions": {
+      "darwin": {
+        "main": {
+          "execute": "",
+          "args": [],
+          "env": "",
+          "open": ""
+        }
+      }
+    },
+    "references": {},
     "locales": ["zh-CN"],
     "download": "",
     "news": [],

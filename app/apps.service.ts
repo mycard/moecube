@@ -8,6 +8,7 @@ import {AppLocal} from "./app-local";
 export class AppsService {
     data : App[];
 
+
     constructor(private http: Http) {
     }
 

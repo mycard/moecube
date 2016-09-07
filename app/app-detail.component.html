@@ -15,49 +15,48 @@
 <br>
 
 <h2>新闻</h2>
-<p>这里是新闻</p>
+
+<p *ngIf="!news">没有新闻</p>
+<div *ngIf="news">
+    <div class="list-group">
+        <a *ngFor="let item of news" href="{{item.url}}" class="list-group-item">{{item.title}}</a>
+    </div>
+
+</div>
 
 <br>
 
-<h2>好友</h2>
-<p>好友信息</p>
+<div *ngIf="friends">
+    <h2>好友</h2>
+    <p>好友信息</p>
+    <br>
+</div>
 
-<br>
+<div *ngIf="achievement">
+    <h2>成就</h2>
+    <p>成就信息</p>
+    <br>
+</div>
 
-<h2>成就</h2>
-<p>成就信息</p>
-
-<br>
-
-<h2>Mods</h2>
-
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>名称</th>
-        <th>类型</th>
-        <th>启用</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>东方绯想天</td>
-        <td>依赖</td>
-        <td>√</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>简体中文包</td>
-        <td>语言</td>
-        <td>√</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td>东方绯想天则OST</td>
-        <td>OST</td>
-        <td>√</td>
-    </tr>
-    </tbody>
-</table>
+<div *ngIf="mods">
+    <h2>Mods</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>名称</th>
+            <th>类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let mod of mods; let i = index">
+            <th scope="row">{{i + 1}}</th>
+            <td>{{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}</td>
+            <td>{{mod.type}}</td>
+            <td *ngIf="checkInstall(mod.id)"><button type="button" class="btn btn-danger btn-sm">卸载</button></td>
+            <td *ngIf="!checkInstall(mod.id)"><button type="button" class="btn btn-primary btn-sm">安装</button></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -4,6 +4,13 @@
     overflow-y: auto;
 }
 
-.hidden {
-    display: none;
+
+.list-group {
+    width: 20rem;
 }
+
+
+.news-block {
+    padding: 0;
+}
+

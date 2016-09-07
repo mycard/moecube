@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AppsService } from './apps.service'
 import { RoutingService } from './routing.service'
+import {App} from "./app";
 
 @Component({
     selector: 'apps',
@@ -18,6 +19,22 @@ export class AppsComponent {
                 console.log(tmp);
             }
         });
+    }
+
+    _apps;
+    get apps() {
+        let contains = ["game", "music", "book"];
+
+        let data = this.appsService.data;
+        let apps;
+
+        if(data) {
+            apps = this.appsService.data.filter((app)=>{
+                return contains.includes(app.category);
+            });
+        }
+
+        return apps;
     }
 
     selectApp(id) {
