@@ -2,6 +2,7 @@
 /app/*.js.map
 /node_modules/
 /dist/
+/cache/
 /typings/
 /npm-debug.log
 /.idea/

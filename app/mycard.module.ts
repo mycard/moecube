@@ -14,13 +14,12 @@ import {CommunityComponent} from './community.component';
 
 import {RoutingService} from './routing.service';
 import {AppsService} from './apps.service';
-import {AppService} from './app.service';
 
 @NgModule({
     imports: [BrowserModule, HttpModule],
     declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, CandyComponent],
     bootstrap: [MyCardComponent],
-    providers: [RoutingService, AppsService, AppService],
+    providers: [RoutingService, AppsService],
     schemas: [NO_ERRORS_SCHEMA]
 })
 export class MyCard {

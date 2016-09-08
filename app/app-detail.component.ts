@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AppsService } from './apps.service'
-import { AppService } from './app.service'
 import { RoutingService } from './routing.service'
 import {App} from "./app";
 
@@ -13,7 +12,7 @@ declare var process;
 })
 export class AppDetailComponent {
 
-    constructor(private appsService: AppsService, private appService: AppService, private routingService: RoutingService ) {
+    constructor(private appsService: AppsService, private routingService: RoutingService ) {
     }
     _currentApp;
     get currentApp(): App {
@@ -103,8 +102,11 @@ export class AppDetailComponent {
         return false;
     }
 
-    install() {
-        this.appService.download();
+    install(id) {
+        let uri = this.searchApp(id).download;
+        if(uri) {
+            this.appsService.download(id, uri);
+        }
 
 
     }
