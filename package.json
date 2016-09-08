@@ -34,6 +34,7 @@
     "bootstrap": "next",
     "core-js": "latest",
     "font-awesome": "latest",
+    "ng2-translate": "latest",
     "reflect-metadata": "latest",
     "rxjs": "latest",
     "systemjs": "latest",

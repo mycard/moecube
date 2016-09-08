@@ -15,8 +15,10 @@ import {CommunityComponent} from './community.component';
 import {RoutingService} from './routing.service';
 import {AppsService} from './apps.service';
 
+import {TranslateModule} from 'ng2-translate/ng2-translate';
+
 @NgModule({
-    imports: [BrowserModule, HttpModule],
+    imports: [BrowserModule, HttpModule, TranslateModule.forRoot()],
     declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, CandyComponent],
     bootstrap: [MyCardComponent],
     providers: [RoutingService, AppsService],

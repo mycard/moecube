@@ -7,10 +7,10 @@
         </li>
         -->
         <li [ngClass]="{active: routingService.component == 'lobby'}" class="nav-item">
-            <a (click)="changeFouce('lobby')" class="nav-link" href="#">游戏<span class="sr-only">(current)</span></a>
+            <a (click)="changeFouce('lobby')" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
         </li>
         <li [ngClass]="{active: routingService.component == 'community'}" class="nav-item">
-            <a (click)="changeFouce('community')" class="nav-link" href="#">社区</a>
+            <a (click)="changeFouce('community')" class="nav-link" href="#">{{'community'| translate}}</a>
         </li>
     </ul>
     <div class="navbar-right">
