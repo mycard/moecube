@@ -37,6 +37,7 @@
     "reflect-metadata": "latest",
     "rxjs": "latest",
     "systemjs": "latest",
+    "tether": "latest",
     "zone.js": "latest"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 <h1>{{name}}</h1>
 
 <div *ngIf="!isInstalled">
-    <button type="button" class="btn btn-primary">安装</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
     <button type="button" class="btn btn-secondary">导入</button>
     <button type="button" class="btn btn-secondary">正版代购</button>
 </div>
@@ -59,4 +59,25 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">安装 {{name}}</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">安装</button>
+            </div>
+        </div>
+    </div>
 </div>
