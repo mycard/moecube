@@ -23,7 +23,7 @@
             <a (click)="refresh()" href="#ygopro" id="refresh" class="item">刷新</a>
         </div>
         <div id="window-buttons" [class.darwin]="platform == 'darwin'">
-            <i id="minimize"  class="fa fa-minus" aria-hidden="true"></i>
+            <i id="minimize" class="fa fa-minus" aria-hidden="true"></i>
             <i id="maximize" class="fa fa-expand" aria-hidden="true"></i>
             <i id="restore" class="fa fa-clone" hidden aria-hidden="true"></i>
             <i id="close" class="fa fa-times" aria-hidden="true"></i>
@@ -68,4 +68,5 @@
 <login class="page" [hidden]="routingService.component != 'login'"></login>
 <store class="page" [hidden]="routingService.component != 'store'"></store>
 <lobby class="page" [hidden]="routingService.component != 'lobby'"></lobby>
-<community class="page" [hidden]="routingService.component != 'community'"></community>
+<webview id="community" class="page" [hidden]="routingService.component != 'community'"
+         src="https://ygobbs.com"></webview>
