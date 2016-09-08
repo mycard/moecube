@@ -1,12 +1,21 @@
 :host {
     /*background-color: darkslategray;*/
-
     width: 280px;
-
     flex-shrink: 0;
     overflow-y: auto;
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
 }
 
-.list-group-item {
-    border-radius: initial;
+a {
+    display: block;
+    padding: 10px 20px 10px 20px;
+}
+
+.active {
+    background-color: #428bca;
+}
+
+.active > a {
+    color: #fff;
 }
