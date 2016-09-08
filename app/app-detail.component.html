@@ -1,7 +1,7 @@
 <h1>{{name}}</h1>
 
 <div *ngIf="!isInstalled">
-    <button type="button" class="btn btn-primary">安装</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
     <button type="button" class="btn btn-secondary">导入</button>
     <button type="button" class="btn btn-secondary">正版代购</button>
 </div>
@@ -54,7 +54,8 @@
             <th scope="row">{{i + 1}}</th>
             <td>{{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}</td>
             <td>{{mod.type}}</td>
-            <td *ngIf="checkInstall(mod.id)"><button type="button" class="btn btn-danger btn-sm">卸载</button></td>
+            <td *ngIf="checkInstall(mod.id)">
+                <button type="button" class="btn btn-danger btn-sm">卸载</button></td>
             <td *ngIf="!checkInstall(mod.id)">
                 <button (click)="install(mod.id)" type="button" class="btn btn-primary btn-sm">安装</button>
                 <progress class="progress progress-striped progress-animated" value="25" max="100"></progress>
@@ -64,4 +65,57 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" (ngSubmit)="install()">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">安装 {{name}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>即将开始安装 {{name}}</p>
+                <!-- 安装位置选择只在 windows 下存在, 为了方便调试暂时不加ngif -->
+                <h4>安装位置</h4>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="安装位置">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="button">浏览</button>
+                        </span>
+                    </div>
+                </div>
+                <h4>快捷方式</h4>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" (ngModel)="shortcut.application">
+                        创建应用程序快捷方式
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" (ngModel)="shortcut.desktop">
+                        创建桌面快捷方式
+                    </label>
+                </div>
+                <h4>附加内容</h4>
+                <div *ngFor="let mod of currentApp.references[platform]">
+                    <label>
+                        <input type="checkbox" (ngModel)="__todo__"
+                               [disabled]="['dependency', 'runtime'].includes(mod.type)">
+                        {{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">安装</button>
+            </div>
+        </form>
+    </div>
 </div>

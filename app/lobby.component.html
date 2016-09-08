@@ -1,7 +1,7 @@
 <!-- Begin page content -->
 <div id="main">
     <apps></apps>
-    <app-detail></app-detail>
+    <app-detail *ngIf="routingService.app"></app-detail>
     <roster></roster>
 </div>
 <webview id="candy" src="https://dev.openflex.net/candy"></webview>
