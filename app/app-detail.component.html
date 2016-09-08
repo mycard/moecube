@@ -78,10 +78,16 @@
             </div>
             <div class="modal-body">
                 <p>即将开始安装 {{name}}</p>
-                <!-- 安装位置只在 windows 下可选 -->
+                <!-- 安装位置选择只在 windows 下存在, 为了方便调试暂时不加ngif -->
                 <h4>安装位置</h4>
-
-
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="安装位置">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="button">浏览</button>
+                        </span>
+                    </div>
+                </div>
                 <h4>快捷方式</h4>
                 <div class="checkbox">
                     <label>
@@ -96,12 +102,13 @@
                     </label>
                 </div>
                 <h4>附加内容</h4>
-                <!--<div ng-repeat="(id, ref) in references" class="checkbox">
+                <div *ngFor="let mod of currentApp.references[platform]">
                     <label>
-                        <input type="checkbox" (ngModel)="ref.install" (ngModel)="ref.disabled">
-                        {{apps[id].name}}
+                        <input type="checkbox" (ngModel)="__todo__"
+                               [disabled]="['dependency', 'runtime'].includes(mod.type)">
+                        {{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}
                     </label>
-                </div>-->
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>

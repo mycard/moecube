@@ -20,7 +20,22 @@
         }
       }
     },
-    "references": {},
+    "references": {
+      "darwin": [
+        {
+          "id": "th105",
+          "type": "optional"
+        },
+        {
+          "id": "th12_mod1",
+          "type": "language"
+        },
+        {
+          "id": "th12_mod2",
+          "type": "runtime"
+        }
+      ]
+    },
     "locales": [
       "zh-CN"
     ],

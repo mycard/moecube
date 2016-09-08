@@ -12,6 +12,7 @@ declare var process;
     styleUrls: ['app/app-detail.component.css'],
 })
 export class AppDetailComponent {
+    platform = process.platform;
 
     constructor(private appsService: AppsService, private appService: AppService, private routingService: RoutingService ) {
     }
