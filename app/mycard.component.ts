@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Renderer} from '@angular/core';
 declare var process;
 declare var System;
 import {RoutingService} from './routing.service';
@@ -15,7 +15,11 @@ const electron = System._nodeRequire('electron');
 export class MyCardComponent {
     platform = process.platform;
 
-    constructor(private routingService: RoutingService) {
+    constructor(private routingService: RoutingService, private renderer: Renderer) {
+        renderer.listenGlobal('window', 'message', (event) => {
+            console.log(event);
+            // Do something with 'event'
+        });
     }
 
     changeFouce(component) {
