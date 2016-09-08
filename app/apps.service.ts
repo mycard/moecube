@@ -8,8 +8,13 @@ import {AppLocal} from "./app-local";
 export class AppsService {
 
     constructor(private http: Http) {
-        let cc = "abdas19238d";
-        this.downloads_info[cc] = 1;
+        let loop = setInterval(()=>{
+            this.aria2.tellActive().then((res)=>{
+                console.log('res:', res);
+                this.downloadsInfo = res;
+            })
+        }, 1000);
+
     }
 
     fs = window['System']._nodeRequire('fs');
@@ -19,8 +24,50 @@ export class AppsService {
     Aria2 = window['System']._nodeRequire('aria2');
 
     data : App[];
-    downloads_info = {};
+    downloadsInfo = {};
 
+
+    aria2IsOpen = false;
+
+
+    _aria2;
+    get aria2() {
+        if(!this._aria2) {
+            this._aria2 = new this.Aria2();
+            console.log("new aria2");
+            this._aria2.onopen = ()=>{
+                console.log('aria2 open');
+            };
+            this._aria2.onclose = ()=>{
+                console.log('aria2 close');
+                this.aria2IsOpen = false;
+            };
+            this._aria2.onDownloadComplete = (response)=>{
+                console.log(response);
+                //aria2.tellStatus(tmp_gid, (err, res)=>{
+                //    if(res.followedBy) {
+                //        this.downloadsInfo[id] = res.followedBy[0];
+                //    }
+                //    console.log(res);
+                //});
+            };
+            this._aria2.onmessage = (m)=>{
+                console.log('IN:', m);
+                console.log('download infoi:', this.downloadsInfo);
+
+            }
+        }
+
+        if(!this.aria2IsOpen) {
+            this._aria2.open().then(()=>{
+                console.log('aria2 websocket open')
+                this.aria2IsOpen = true;
+            });
+        }
+
+        return this._aria2;
+
+    }
 
     _download_dir;
     get download_dir() {
@@ -55,44 +102,22 @@ export class AppsService {
     }
 
     download(id, uri) {
-        const aria2 = new this.Aria2();
         console.log(id);
         console.log(uri);
         let tmp_gid;
-        aria2.open().then(()=>{
-            aria2.addUri([uri], {'dir': this.download_dir}, (error, gid)=> {
-                if(error) {
-                    console.error(error);
-                }
-                console.log(gid);
-                tmp_gid = gid;
-            });
+        this.aria2.addUri([uri], {'dir': this.download_dir}, (error, gid)=> {
+            if(error) {
+                console.error(error);
+            }
+            console.log(gid);
+            tmp_gid = gid;
         });
-
-        aria2.onDownloadComplete = (response)=>{
-            console.log(response);
-            aria2.tellStatus(tmp_gid, (err, res)=>{
-                if(res.followedBy) {
-                    this.downloads_info[id] = res.followedBy[0];
-                }
-                console.log(res);
-            });
-
-        };
 
     }
 
     getDownloadStatus(id) {
-        let gid = this.downloads_info[id];
-        console.log(this.downloads_info);
 
         let info = {};
-
-        const aria2 = new this.Aria2();
-        aria2.tellStatus(gid, (err, res)=>{
-            console.log(res);
-            info = res;
-        });
 
 
         return info;
