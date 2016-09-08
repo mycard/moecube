@@ -5,3 +5,7 @@
 
     flex-shrink: 0;
 }
+
+.list-group-item {
+    border-radius: initial;
+}

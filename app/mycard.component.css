@@ -74,3 +74,6 @@ li > a:hover, #window-buttons > i:hover {
     color: #fff;
 }
 
+.navbar {
+    border-radius: initial;
+}
