@@ -54,17 +54,22 @@
             <th scope="row">{{i + 1}}</th>
             <td>{{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}</td>
             <td>{{mod.type}}</td>
-            <td *ngIf="checkInstall(mod.id)"><button type="button" class="btn btn-danger btn-sm">卸载</button></td>
-            <td *ngIf="!checkInstall(mod.id)"><button (click)="install()" type="button" class="btn btn-primary btn-sm">安装</button></td>
+            <td *ngIf="checkInstall(mod.id)">
+                <button type="button" class="btn btn-danger btn-sm">卸载</button>
+            </td>
+            <td *ngIf="!checkInstall(mod.id)">
+                <button (click)="install()" type="button" class="btn btn-primary btn-sm">安装</button>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <form class="modal-content" (ngSubmit)="install()">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -72,12 +77,36 @@
                 <h4 class="modal-title" id="myModalLabel">安装 {{name}}</h4>
             </div>
             <div class="modal-body">
-                ...
+                <p>即将开始安装 {{name}}</p>
+                <!-- 安装位置只在 windows 下可选 -->
+                <h4>安装位置</h4>
+
+
+                <h4>快捷方式</h4>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" (ngModel)="shortcut.application">
+                        创建应用程序快捷方式
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" (ngModel)="shortcut.desktop">
+                        创建桌面快捷方式
+                    </label>
+                </div>
+                <h4>附加内容</h4>
+                <!--<div ng-repeat="(id, ref) in references" class="checkbox">
+                    <label>
+                        <input type="checkbox" (ngModel)="ref.install" (ngModel)="ref.disabled">
+                        {{apps[id].name}}
+                    </label>
+                </div>-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary">安装</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
