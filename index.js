@@ -1,37 +1,13 @@
+'use strict';
+
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-function createAria2c() {
-    "use strict";
-    const ChildProcess = require('child_process');
-    const path = require('path');
-
-    const appFolder = path.resolve(process.execPath, '..');
-    const rootAtomFolder = path.resolve(appFolder, '..');
-    const aria2Bin = path.resolve(path.join(rootAtomFolder, 'aria2c.exe'));
-
-    const aria2Name = 'arai2';
-
-    const spawn = function(command, args) {
-        let spawnedProcess, error;
-
-        try {
-            spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-        } catch (error) {}
-
-        return spawnedProcess;
-    };
-
-    const aria2c = spawn('aria2c', ['--enable-rpc', '--rpc-allow-origin-all']);
-    aria2c.on('data', (data)=>{
-        console.log(`${data}`);
-    })
-}
-
-createAria2c();
+const child_process = require('child_process');
+const path = require('path');
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
@@ -52,17 +28,18 @@ function handleSquirrelEvent() {
     const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
     const exeName = path.basename(process.execPath);
 
-    const spawn = function(command, args) {
+    const spawn = function (command, args) {
         let spawnedProcess, error;
 
         try {
             spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-        } catch (error) {}
+        } catch (error) {
+        }
 
         return spawnedProcess;
     };
 
-    const spawnUpdate = function(args) {
+    const spawnUpdate = function (args) {
         return spawn(updateDotExe, args);
     };
 
@@ -101,17 +78,38 @@ function handleSquirrelEvent() {
     }
 };
 
+function createAria2c() {
+    let aria2c_path;
+    switch (process.platform) {
+        case 'win32':
+            aria2c_path = path.join(process.execPath, '..', '..', 'aria2c.exe');
+            break;
+        case 'darwin':
+            aria2c_path = 'aria2c'; // for debug
+            break;
+        default:
+            throw 'unsupported platform';
+    }
+    const aria2c = child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all'], {detached: true});
+    aria2c.on('data', (data)=> {
+        console.log(data);
+    })
+}
+
+createAria2c();
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 640,
         frame: process.platform == 'darwin',
-        titleBarStyle: process.platform == 'darwin' ? 'hidden' : null})
+        titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
+    })
 
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/index.html`)
