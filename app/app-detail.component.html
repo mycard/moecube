@@ -1,9 +1,14 @@
 <h1>{{'app.' + currentApp.id + '.name' | translate}}</h1>
 <h2>{{appsService._aa}}</h2>
 <div *ngIf="!isInstalled">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
-    <button type="button" class="btn btn-secondary">导入</button>
-    <button type="button" class="btn btn-secondary">正版代购</button>
+    <div *ngIf="!appsService.getDownloadInfo(routingService.app)">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
+        <button type="button" class="btn btn-secondary">导入</button>
+        <button type="button" class="btn btn-secondary">正版代购</button>
+    </div>
+    <div *ngIf="appsService.getDownloadInfo(routingService.app)">
+        <progress *ngIf="appsService.getDownloadInfo(routingService.app).status === 'active'" class="progress progress-striped progress-animated" value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
+    </div>
 </div>
 <div *ngIf="isInstalled">
     <button type="button" class="btn btn-primary">运行</button>
@@ -57,15 +62,18 @@
             <td *ngIf="checkInstall(mod.id)">
                 <button type="button" class="btn btn-danger btn-sm">卸载</button></td>
             <td *ngIf="!checkInstall(mod.id)">
-                <button (click)="install(mod.id)" type="button" class="btn btn-primary btn-sm">安装</button>
-                <progress class="progress progress-striped progress-animated" value="25" max="100"></progress>
-                {{appsService.getDownloadStatus(mod.id) | json}}
-                {{appsService.downloads_info | json}}
+                <button *ngIf="!appsService.getDownloadInfo(mod.id)" (click)="install(mod.id)" type="button" class="btn btn-primary btn-sm">安装</button>
+                <progress *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'active'" class="progress progress-striped progress-animated" value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<!== DEBUG -->
+<pre class="debug">
+{{appsService.downloadsInfo | json}}
+</pre>
 
 <!-- Modal -->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -106,7 +114,7 @@
                 <h4>附加内容</h4>
                 <div *ngFor="let mod of currentApp.references[platform]">
                     <label>
-                        <input type="checkbox" (ngModel)="__todo__"
+                        <input type="checkbox" [(ngModel)]="model" name="{{mod.id}}"
                                [disabled]="['dependency', 'runtime'].includes(mod.type)">
                         {{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}
                     </label>
@@ -116,6 +124,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary">安装</button>
             </div>
+            <pre>{{model}}</pre>
         </form>
     </div>
 </div>

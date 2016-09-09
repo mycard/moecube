@@ -12,7 +12,18 @@ export class AppsService {
         let loop = setInterval(()=> {
             this.aria2.tellActive().then((res)=> {
                 console.log('res:', res);
-                this.downloadsInfo = res;
+                if(res) {
+                    res.map((v)=>{
+                        let index = this.downloadsInfo.findIndex((info)=>{
+                            return info.gid == v.gid;
+                        });
+                        this.downloadsInfo[index].progress = (v.completedLength / v.totalLength) * 100;
+
+                    });
+
+                }
+
+                //this.downloadsInfo = res;
             })
         }, 1000);
 
@@ -25,7 +36,9 @@ export class AppsService {
     Aria2 = window['System']._nodeRequire('aria2');
 
     data: App[];
-    downloadsInfo = {};
+
+    //[{"id": "th01", "gid": "aria2gid", "status": "active/install/complete/wait", "progress": "0-100"}]
+    downloadsInfo = [];
 
 
     aria2IsOpen = false;
@@ -45,12 +58,21 @@ export class AppsService {
             };
             this._aria2.onDownloadComplete = (response)=> {
                 console.log(response);
-                //aria2.tellStatus(tmp_gid, (err, res)=>{
-                //    if(res.followedBy) {
-                //        this.downloadsInfo[id] = res.followedBy[0];
-                //    }
-                //    console.log(res);
-                //});
+                this.aria2.tellStatus(response.gid, (err, res)=>{
+                    console.log(res);
+                    let index = this.downloadsInfo.findIndex((v)=>{return v.gid == res.gid});
+                    if(index !== -1) {
+                        if(res.followedBy) {
+                            this.downloadsInfo[index].gid = res.followedBy[0];
+                            this.downloadsInfo[index].progress = 0;
+
+                        } else {
+                            this.downloadsInfo[index].status = "wait";
+                        }
+                    } else {
+                        console.log("cannot found download info!");
+                    }
+                });
             };
             this._aria2.onmessage = (m)=> {
                 console.log('IN:', m);
@@ -117,20 +139,30 @@ export class AppsService {
         console.log(id);
         console.log(uri);
         let tmp_gid;
-        this.aria2.addUri([uri], {'dir': this.download_dir}, (error, gid)=> {
-            if (error) {
-                console.error(error);
-            }
-            console.log(gid);
-            tmp_gid = gid;
-        });
+        let i = this.downloadsInfo.findIndex((v)=>{return v.id == id});
+        console.log(i);
+        if(this.downloadsInfo.findIndex((v)=>{return v.id == id}) !== -1) {
+            console.log("this app downloading")
+
+        } else {
+            this.aria2.addUri([uri], {'dir': this.download_dir}, (error, gid)=> {
+                if (error) {
+                    console.error(error);
+                }
+                console.log(gid);
+                this.downloadsInfo.push({"id": id, "gid": gid, "status": "active", "progress": 0});
+            });
+        }
+
+
 
     }
 
-    getDownloadStatus(id) {
-
-        let info = {};
-
+    getDownloadInfo(id) {
+        let info;
+        info = this.downloadsInfo.find((v)=>{
+            return v.id == id;
+        });
 
         return info;
 

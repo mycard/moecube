@@ -1,5 +1,6 @@
 import {NgModule, NO_ERRORS_SCHEMA}      from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
 import {HttpModule}    from '@angular/http';
 
 import {MyCardComponent}  from './mycard.component';
@@ -18,7 +19,7 @@ import {AppsService} from './apps.service';
 import {TranslateModule} from 'ng2-translate/ng2-translate';
 
 @NgModule({
-    imports: [BrowserModule, HttpModule, TranslateModule.forRoot()],
+    imports: [BrowserModule, FormsModule, HttpModule, TranslateModule.forRoot()],
     declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, CandyComponent],
     bootstrap: [MyCardComponent],
     providers: [RoutingService, AppsService],

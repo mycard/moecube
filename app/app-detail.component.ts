@@ -33,6 +33,7 @@ export class AppDetailComponent {
         return this.checkInstall(this.routingService.app);
     }
 
+
     _news;
     get news() {
         if(this.currentApp) {
@@ -111,5 +112,7 @@ export class AppDetailComponent {
 
 
     }
+
+    model;
 
 }
