@@ -5,13 +5,15 @@ import {App} from "./app";
 import {AppLocal} from "./app-local";
 import {TranslateService} from "ng2-translate";
 
+declare var process;
+
 @Injectable()
 export class AppsService {
 
     constructor(private http: Http, private translate: TranslateService) {
         let loop = setInterval(()=> {
             this.aria2.tellActive().then((res)=> {
-                console.log('res:', res);
+                //console.log('res:', res);
                 if(res) {
                     res.map((v)=>{
                         let index = this.downloadsInfo.findIndex((info)=>{
@@ -75,8 +77,8 @@ export class AppsService {
                 });
             };
             this._aria2.onmessage = (m)=> {
-                console.log('IN:', m);
-                console.log('download infoi:', this.downloadsInfo);
+                //console.log('IN:', m);
+                //console.log('download infoi:', this.downloadsInfo);
 
             }
         }
@@ -136,11 +138,11 @@ export class AppsService {
     }
 
     download(id, uri) {
-        console.log(id);
-        console.log(uri);
+        //console.log(id);
+        //console.log(uri);
         let tmp_gid;
         let i = this.downloadsInfo.findIndex((v)=>{return v.id == id});
-        console.log(i);
+        //console.log(i);
         if(this.downloadsInfo.findIndex((v)=>{return v.id == id}) !== -1) {
             console.log("this app downloading")
 
@@ -149,7 +151,7 @@ export class AppsService {
                 if (error) {
                     console.error(error);
                 }
-                console.log(gid);
+                //console.log(gid);
                 this.downloadsInfo.push({"id": id, "gid": gid, "status": "active", "progress": 0});
             });
         }
@@ -165,7 +167,33 @@ export class AppsService {
         });
 
         return info;
+    }
 
+    installConfig;
+    createInstllConfig(id) {
+        let app = this.data.find((app)=>{return app.id == id;});
+        let platform = process.platform;
+        let mods = {};
+        if(app.references[platform]) {
+            app.references[platform].map((mod)=>{
+                mods[mod.id] = false;
+            });
+
+        }
+
+        let tmp = {
+            installDir: __dirname,
+            shortcut: {
+                desktop: false,
+                application: false
+            },
+            mods: mods
+        };
+        //console.log(tmp);
+
+        this.installConfig = tmp;
+
+        return tmp;
 
     }
 

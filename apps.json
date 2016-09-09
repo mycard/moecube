@@ -23,7 +23,7 @@
     "references": {
       "darwin": [
         {
-          "id": "th105",
+          "id": "th06",
           "type": "optional"
         },
         {
@@ -135,13 +135,13 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": "http://thief.mycard.moe/metalinks/th12.meta4",
     "news": [],
     "tags": [
       "STG"
     ],
     "local": {
-      "path": "/foo/bar",
+      "path": "",
       "version": "10.3"
     }
   },
@@ -170,7 +170,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": "http://thief.mycard.moe/metalinks/th11.meta4",
     "news": [],
     "tags": [
       "STG"
@@ -205,7 +205,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": "http://thief.mycard.moe/metalinks/th10.meta4",
     "news": [
       {
         "title": "News Title",

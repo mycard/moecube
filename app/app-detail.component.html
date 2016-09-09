@@ -7,7 +7,10 @@
         <button type="button" class="btn btn-secondary">正版代购</button>
     </div>
     <div *ngIf="appsService.getDownloadInfo(routingService.app)">
-        <progress *ngIf="appsService.getDownloadInfo(routingService.app).status === 'active'" class="progress progress-striped progress-animated" value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
+        <progress *ngIf="appsService.getDownloadInfo(routingService.app).status === 'active'"
+                  class="progress progress-striped progress-animated"
+                  value="{{appsService.getDownloadInfo(routingService.app).progress}}" max="100">
+        </progress>
     </div>
 </div>
 <div *ngIf="isInstalled">
@@ -73,13 +76,14 @@
 <!== DEBUG -->
 <pre class="debug">
 {{appsService.downloadsInfo | json}}
+{{appsService.installConfig | json}}
 </pre>
 
 <!-- Modal -->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form class="modal-content" (ngSubmit)="install()">
+        <form class="modal-content" (ngSubmit)="installSubmit(theForm)" #theForm="ngForm">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -92,7 +96,7 @@
                 <h4>安装位置</h4>
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="安装位置">
+                        <input type="text" [(ngModel)]="appsService.installConfig.installDir" name="installDir" class="form-control" placeholder="安装位置">
                         <span class="input-group-btn">
                             <button class="btn btn-secondary" type="button">浏览</button>
                         </span>
@@ -101,20 +105,20 @@
                 <h4>快捷方式</h4>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" (ngModel)="shortcut.application">
+                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.application" name="application">
                         创建应用程序快捷方式
                     </label>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" (ngModel)="shortcut.desktop">
+                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.desktop" name="desktop">
                         创建桌面快捷方式
                     </label>
                 </div>
                 <h4>附加内容</h4>
                 <div *ngFor="let mod of currentApp.references[platform]">
                     <label>
-                        <input type="checkbox" [(ngModel)]="model" name="{{mod.id}}"
+                        <input type="checkbox" [(ngModel)]="appsService.installConfig.mods[mod.id]" name="{{mod.id}}"
                                [disabled]="['dependency', 'runtime'].includes(mod.type)">
                         {{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}
                     </label>
@@ -122,9 +126,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">安装</button>
+                <button type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
             </div>
-            <pre>{{model}}</pre>
+            <!--
+            -->
         </form>
     </div>
 </div>

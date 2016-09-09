@@ -108,11 +108,26 @@ export class AppDetailComponent {
         let uri = this.searchApp(id).download;
         if(uri) {
             this.appsService.download(id, uri);
+        } else {
+            console.log("lost download uri!");
+
         }
+    }
+
+
+    installSubmit(theForm) {
+        console.log(theForm);
+        this.install(this.routingService.app);
+        for(let mod in this.appsService.installConfig.mods) {
+            if(this.appsService.installConfig.mods[mod]) {
+                this.install(mod);
+            }
+        }
+
+        //TODO tar file
+
 
 
     }
-
-    model;
 
 }
