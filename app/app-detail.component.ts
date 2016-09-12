@@ -4,6 +4,7 @@ import { RoutingService } from './routing.service'
 import {App} from "./app";
 
 declare var process;
+declare var $;
 
 @Component({
     selector: 'app-detail',
@@ -124,8 +125,7 @@ export class AppDetailComponent {
             }
         }
 
-        //TODO tar file
-
+        $("#install-modal").modal("hide");
 
 
     }

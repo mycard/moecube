@@ -31,11 +31,16 @@ export class AppsService {
 
     }
 
+    os = window['System']._nodeRequire('os');
     fs = window['System']._nodeRequire('fs');
     path = window['System']._nodeRequire('path');
     mkdirp = window['System']._nodeRequire('mkdirp');
     electron = window['System']._nodeRequire('electron');
     Aria2 = window['System']._nodeRequire('aria2');
+    spawn = window['System']._nodeRequire('child_process');
+    execFile = window['System']._nodeRequire('child_process').execFile;
+    //localStorage = window['localStorage'];
+
 
     data: App[];
 
@@ -70,6 +75,12 @@ export class AppsService {
 
                         } else {
                             this.downloadsInfo[index].status = "wait";
+                            let tarObj = {
+                                id: this.downloadsInfo[index].id,
+                                xzFile: res.files[0].path,
+                                installDir: this.installConfig.installDir
+                            };
+                            this.tarPush(tarObj);
                         }
                     } else {
                         console.log("cannot found download info!");
@@ -115,7 +126,23 @@ export class AppsService {
     getApps(callback) {
         this.http.get('./apps.json')
             .map(response => {
-                return response.json()
+                let apps = response.json();
+                let localAppData = JSON.parse(localStorage.getItem("localAppData"));
+                console.log("app:",apps);
+                console.log("store:",localAppData);
+                apps = apps.map((app)=>{
+                    if(localAppData) {
+                        localAppData.map((v)=>{
+                            if(v.id == app.id) {
+                                app.local = v.local;
+                            }
+                        });
+                    }
+                    return app;
+                });
+
+
+                return apps;
             })
             .subscribe((data) => {
                 this.data = data;
@@ -140,8 +167,6 @@ export class AppsService {
     download(id, uri) {
         //console.log(id);
         //console.log(uri);
-        let tmp_gid;
-        let i = this.downloadsInfo.findIndex((v)=>{return v.id == id});
         //console.log(i);
         if(this.downloadsInfo.findIndex((v)=>{return v.id == id}) !== -1) {
             console.log("this app downloading")
@@ -182,7 +207,7 @@ export class AppsService {
         }
 
         let tmp = {
-            installDir: __dirname,
+            installDir: this.path.join(this.electron.remote.app.getPath('appData'), 'mycard'),
             shortcut: {
                 desktop: false,
                 application: false
@@ -190,11 +215,132 @@ export class AppsService {
             mods: mods
         };
         //console.log(tmp);
-
         this.installConfig = tmp;
-
         return tmp;
 
     }
 
+    // tar
+    tarQueue = [];
+    isExtracting = false;
+
+    tarPush(tarObj) {
+        this.tarQueue.push(tarObj);
+
+        if(this.tarQueue.length > 0 && !this.isExtracting) {
+            this.doTar();
+        }
+
+
+    }
+
+    doTar() {
+        let tarPath;
+        switch (process.platform) {
+            case 'win32':
+                tarPath = this.path.join(process.execPath, '..', '..', 'tar.exe');
+                break;
+            case 'darwin':
+                tarPath = 'bsdtar'; // for debug
+                break;
+            default:
+                throw 'unsupported platform';
+        }
+        let opt = {
+        };
+
+        let tarObj;
+        if(this.tarQueue.length > 0) {
+            tarObj = this.tarQueue[0];
+        } else {
+            console.log("Empty Queue!");
+
+            return;
+        }
+
+        this.isExtracting = true;
+        console.log("Start tar " + tarObj.id);
+
+        let downLoadsInfoIndex = this.downloadsInfo.findIndex((v)=>{return v.id == tarObj.id});
+        if(downLoadsInfoIndex !== -1) {
+            this.downloadsInfo[downLoadsInfoIndex].status = "install";
+        } else {
+            console.log("cannot found download info!");
+        }
+
+
+
+
+        let xzFile = tarObj.xzFile;
+        let installDir = this.path.join(tarObj.installDir, tarObj.id);
+        if (!this.fs.existsSync(installDir)) {
+            console.log('app dir not exists');
+            this.mkdirp(installDir, (err)=> {
+                if (err) {
+                    console.error(err)
+                } else {
+                    console.log('create app dir');
+                }
+            });
+        }
+
+        let tar = this.execFile(tarPath, ['xvf', xzFile, '-C', installDir], opt, (err, stdout, stderr)=>{
+            if(err) {
+                throw err;
+            }
+
+            let re = /^x\s(.*)/;
+            let logArr = stderr.toString().trim().split(this.os.EOL);
+            logArr = logArr.map((v)=>{
+                if(v.match(re)) {
+                    return v.match(re)[1];
+                } else {
+                    console.log("no match");
+                    return v;
+                }
+            });
+
+            let appLocal = {
+                id: tarObj.id,
+                local: {
+                    path: installDir,
+                    version: "0.1",
+                    files: logArr
+                }
+            };
+
+            let localAppData = JSON.parse(localStorage.getItem("localAppData"));
+            if(!localAppData || !Array.isArray(localAppData)) {
+                localAppData = [];
+            }
+
+            let index = localAppData.findIndex((v)=>{
+                return v.id == tarObj.id;
+            });
+            if(index === -1) {
+                localAppData.push(appLocal);
+            } else {
+                localAppData[index] = appLocal;
+            }
+            localStorage.setItem("localAppData", JSON.stringify(localAppData));
+
+            let tmp = this.tarQueue.shift();
+            this.isExtracting = false;
+            this.downloadsInfo[downLoadsInfoIndex].status = "complete";
+
+            this.data = this.data.map((app)=>{
+                if(app.id == tarObj.id) {
+                    app.local = appLocal.local;
+                }
+                return app;
+            });
+            console.log(tmp);
+            console.log("this app complete!");
+            console.log(localAppData);
+
+            this.doTar();
+
+        });
+
+    }
 }

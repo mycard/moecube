@@ -4,4 +4,5 @@
 export class AppLocal {
     path: string;
     version: string;
+    files: string[];
 }

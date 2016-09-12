@@ -7,6 +7,8 @@
         <button type="button" class="btn btn-secondary">正版代购</button>
     </div>
     <div *ngIf="appsService.getDownloadInfo(routingService.app)">
+        <div *ngIf="appsService.getDownloadInfo(routingService.app).status === 'install'">正在安装...</div>
+        <div *ngIf="appsService.getDownloadInfo(routingService.app).status === 'wait'">等待安装...</div>
         <progress *ngIf="appsService.getDownloadInfo(routingService.app).status === 'active'"
                   class="progress progress-striped progress-animated"
                   value="{{appsService.getDownloadInfo(routingService.app).progress}}" max="100">
@@ -67,6 +69,8 @@
             <td *ngIf="!checkInstall(mod.id)">
                 <button *ngIf="!appsService.getDownloadInfo(mod.id)" (click)="install(mod.id)" type="button" class="btn btn-primary btn-sm">安装</button>
                 <progress *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'active'" class="progress progress-striped progress-animated" value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
+                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'wait'">等待安装...</div>
+                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'install'">正在安装...</div>
             </td>
         </tr>
         </tbody>
@@ -77,7 +81,9 @@
 <pre class="debug">
 {{appsService.downloadsInfo | json}}
 {{appsService.installConfig | json}}
+{{appsService.tarQueue | json}}
 </pre>
+<button (click)="appsService.doTar()" >DOTAR</button>
 
 <!-- Modal -->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
