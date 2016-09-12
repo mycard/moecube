@@ -14,6 +14,8 @@ declare var $;
 export class AppDetailComponent {
     platform = process.platform;
 
+    electron = window['System']._nodeRequire('electron');
+
     constructor(private appsService: AppsService, private routingService: RoutingService ) {
     }
     _currentApp;
@@ -126,8 +128,13 @@ export class AppDetailComponent {
         }
 
         $("#install-modal").modal("hide");
+    }
 
-
+    openDir() {
+        let dir = this.electron.remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory']});
+        console.log(dir);
+        this.appsService.installConfig.installDir = dir[0];
+        return dir[0];
     }
 
 }
