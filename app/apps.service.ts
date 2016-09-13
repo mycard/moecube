@@ -37,7 +37,6 @@ export class AppsService {
     mkdirp = window['System']._nodeRequire('mkdirp');
     electron = window['System']._nodeRequire('electron');
     Aria2 = window['System']._nodeRequire('aria2');
-    spawn = window['System']._nodeRequire('child_process');
     execFile = window['System']._nodeRequire('child_process').execFile;
     //localStorage = window['localStorage'];
 

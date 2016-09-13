@@ -14,7 +14,10 @@ declare var $;
 export class AppDetailComponent {
     platform = process.platform;
 
+    fs = window['System']._nodeRequire('fs');
     electron = window['System']._nodeRequire('electron');
+    spawn = window['System']._nodeRequire('child_process').spawn;
+    path = window['System']._nodeRequire('path');
 
     constructor(private appsService: AppsService, private routingService: RoutingService ) {
     }
@@ -58,7 +61,7 @@ export class AppDetailComponent {
 
     _mods;
     get mods() {
-        let contains = ["optional", "language"];
+        let contains = ["optional", "language", "emulator"];
 
         if(this.currentApp) {
             if(this.currentApp.references[process.platform] && this.currentApp.references[process.platform].length > 0) {
@@ -137,13 +140,51 @@ export class AppDetailComponent {
         return dir[0];
     }
     openDir(id) {
-        this.appsService.data.map((v)=>{
-            if(v.id == id) {
-                this.electron.remote.shell.showItemInFolder(v.local.path);
-            }
+        this.electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
+    }
 
+    startApp(id) {
+        let execute = this.path.join(this.searchApp(id).local.path, this.searchApp(id).actions[process.platform]["main"].execute);
+        let args = this.searchApp(id).actions[process.platform]["main"].args;
+        let env = this.searchApp(id).actions[process.platform]["main"].env;
+        let opt = {
+            env: env
+        };
+
+        let open = '';
+        let openId = this.searchApp(id).actions[process.platform]["main"].open;
+        if(openId) {
+            this.searchApp(openId).actions[process.platform]["main"].execute;
+            if(this.checkInstall(openId)) {
+                open = this.path.join(this.searchApp(openId).local.path, this.searchApp(openId).actions[process.platform]["main"].execute);
+                args.push(execute);
+            } else {
+                console.error('open app not found');
+            }
+        } else {
+            //没有需要通过open启动依赖,直接启动程序
+            open = execute;
+        }
+
+        let handle = this.spawn(open, args, opt);
+
+        handle.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
         });
 
+        handle.stderr.on('data', (data) => {
+            console.log(`stderr: ${data}`);
+        });
+
+        handle.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+            this.electron.remote.getCurrentWindow().restore();
+        });
+
+        this.electron.remote.getCurrentWindow().minimize();
+
     }
+
+
 
 }
