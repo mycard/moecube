@@ -130,11 +130,20 @@ export class AppDetailComponent {
         $("#install-modal").modal("hide");
     }
 
-    openDir() {
+    selectDir() {
         let dir = this.electron.remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory']});
         console.log(dir);
         this.appsService.installConfig.installDir = dir[0];
         return dir[0];
+    }
+    openDir(id) {
+        this.appsService.data.map((v)=>{
+            if(v.id == id) {
+                this.electron.remote.shell.showItemInFolder(v.local.path);
+            }
+
+        });
+
     }
 
 }

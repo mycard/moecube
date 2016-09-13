@@ -18,7 +18,7 @@
 <div *ngIf="isInstalled">
     <button type="button" class="btn btn-primary">运行</button>
     <button type="button" class="btn btn-secondary">设置</button>
-    <button type="button" class="btn btn-secondary">游览本地文件</button>
+    <button (click)="openDir(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
 
@@ -104,7 +104,7 @@
                     <div class="input-group">
                         <input type="text" [(ngModel)]="appsService.installConfig.installDir" name="installDir" class="form-control" placeholder="安装位置">
                         <span class="input-group-btn">
-                            <button (click)="openDir()" class="btn btn-secondary" type="button">浏览</button>
+                            <button (click)="selectDir()" class="btn btn-secondary" type="button">浏览</button>
                         </span>
                     </div>
                 </div>
