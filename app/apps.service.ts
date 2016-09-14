@@ -46,6 +46,10 @@ export class AppsService {
     //[{"id": "th01", "gid": "aria2gid", "status": "active/install/complete/wait", "progress": "0-100"}]
     downloadsInfo = [];
 
+    //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
+    // th01
+    waitInstallQueue = [];
+
 
     aria2IsOpen = false;
 
@@ -76,10 +80,49 @@ export class AppsService {
                             this.downloadsInfo[index].status = "wait";
                             let tarObj = {
                                 id: this.downloadsInfo[index].id,
-                                xzFile: res.files[0].path,
-                                installDir: this.installConfig.installDir
+                                    xzFile: res.files[0].path,
+                                    installDir: this.installConfig.installDir
                             };
-                            this.tarPush(tarObj);
+                            let promise = new Promise((resolve, reject)=>{
+                                let refs = this.searchApp(this.downloadsInfo[index].id).references;
+                                console.log(refs);
+                                //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
+                                let waitObj;
+
+                                let waitRef = ["runtime", "emulator", "dependency"];
+                                if(!this.isEmptyObject(refs)) {
+                                    refs[process.platform].map((ref)=>{
+                                        if(waitRef.includes(ref.type)) {
+                                            if(!this.checkInstall(ref.id)) {
+                                                if(!waitObj) {
+                                                    waitObj = {
+                                                        id: this.downloadsInfo[index].id,
+                                                        wait: [ref.id],
+                                                        resolve: resolve,
+                                                        tarObj: tarObj
+                                                    }
+                                                } else {
+                                                    waitObj.wait.push(ref.id);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                                console.log("wait obj:", waitObj);
+
+                                if(waitObj) {
+                                    this.waitInstallQueue.push(waitObj);
+                                } else {
+                                    resolve();
+                                }
+
+                            }).then(()=>{
+                                console.log(tarObj);
+                                this.tarPush(tarObj);
+                            });
+                            promise.catch((err)=>{
+                                console.log("err", err);
+                            })
                         }
                     } else {
                         console.log("cannot found download info!");
@@ -161,6 +204,24 @@ export class AppsService {
                     callback();
                 }
             });
+    }
+
+
+    searchApp(id): App {
+        let data = this.data;
+        let tmp;
+        if(data) {
+            tmp = data.find((v)=>v.id === id);
+            return tmp;
+        }
+    }
+    checkInstall(id): boolean {
+        if(this.searchApp(id)) {
+            if(this.searchApp(id).local.path) {
+                return true;
+            }
+        }
+        return false;
     }
 
     download(id, uri) {
@@ -333,6 +394,25 @@ export class AppsService {
                 }
                 return app;
             });
+            //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
+            this.waitInstallQueue = this.waitInstallQueue.map((waitObj)=>{
+                waitObj.wait.splice(waitObj.wait.findIndex(()=>tarObj.id), 1);
+                if(waitObj.wait.length <= 0) {
+                    waitObj.resolve();
+                    console.log(tarObj);
+                    return;
+                } else {
+                    return waitObj;
+                }
+            });
+            this.waitInstallQueue = this.waitInstallQueue.filter((waitObj)=>{
+                if(waitObj){
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
             console.log(tmp);
             console.log("this app complete!");
             console.log(localAppData);
@@ -341,5 +421,12 @@ export class AppsService {
 
         });
 
+    }
+
+    isEmptyObject(e) {
+        let t;
+        for (t in e)
+            return !1;
+        return !0
     }
 }

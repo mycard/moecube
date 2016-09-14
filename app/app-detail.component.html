@@ -82,6 +82,7 @@
 {{appsService.downloadsInfo | json}}
 {{appsService.installConfig | json}}
 {{appsService.tarQueue | json}}
+{{appsService.waitInstallQueue | json}}
 </pre>
 <button (click)="appsService.doTar()" >DOTAR</button>
 
@@ -126,7 +127,7 @@
                     <label>
                         <input type="checkbox" [(ngModel)]="appsService.installConfig.mods[mod.id]" name="{{mod.id}}"
                                [disabled]="['dependency', 'runtime'].includes(mod.type)">
-                        {{searchApp(mod.id).name[searchApp(mod.id).locales[0]]}}
+                        {{appsService.searchApp(mod.id).name[appsService.searchApp(mod.id).locales[0]]}}
                     </label>
                 </div>
             </div>

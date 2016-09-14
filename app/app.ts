@@ -30,10 +30,10 @@ export class App {
     actions: {[platform: string]: {[action: string]: {execute: string, args: string[], env: {}, open: string}}};
     references: {[platform: string]: {id: string, type: string}[]};
     locales: string[];
-    download: string;           // meta4 url
+    download: {[platform: string]: string};           // meta4 url
     news: {title: string, url: string, image: string}[];
     tags: string[];
-    version: string;
+    version: {[platform: string]: string};
     local: AppLocal;
     constructor(app: AppInterface) {
         this.id = app.id;

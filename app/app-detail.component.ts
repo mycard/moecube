@@ -23,7 +23,7 @@ export class AppDetailComponent {
     }
     _currentApp;
     get currentApp(): App {
-        return this.searchApp(this.routingService.app);
+        return this.appsService.searchApp(this.routingService.app);
     }
 
     _name;
@@ -92,18 +92,10 @@ export class AppDetailComponent {
     }
 
 
-    searchApp(id): App {
-        let data = this.appsService.data;
-        let tmp;
-        if(data) {
-            tmp = data.find((v)=>v.id === id);
-            return tmp;
-        }
-    }
 
     checkInstall(id): boolean {
-        if(this.searchApp(id)) {
-            if(this.searchApp(id).local.path) {
+        if(this.appsService.searchApp(id)) {
+            if(this.appsService.searchApp(id).local.path) {
                 return true;
             }
         }
@@ -111,7 +103,8 @@ export class AppDetailComponent {
     }
 
     install(id) {
-        let uri = this.searchApp(id).download;
+        let uri = this.appsService.searchApp(id).download[process.platform];
+        console.log(process.platform);
         if(uri) {
             this.appsService.download(id, uri);
         } else {
@@ -140,23 +133,24 @@ export class AppDetailComponent {
         return dir[0];
     }
     openDir(id) {
-        this.electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
+        this.electron.remote.shell.showItemInFolder(this.appsService.searchApp(id).local.path);
     }
 
     startApp(id) {
-        let execute = this.path.join(this.searchApp(id).local.path, this.searchApp(id).actions[process.platform]["main"].execute);
-        let args = this.searchApp(id).actions[process.platform]["main"].args;
-        let env = this.searchApp(id).actions[process.platform]["main"].env;
+        let execute = this.path.join(this.appsService.searchApp(id).local.path, this.appsService.searchApp(id).actions[process.platform]["main"].execute);
+        let args = this.appsService.searchApp(id).actions[process.platform]["main"].args;
+        let env = this.appsService.searchApp(id).actions[process.platform]["main"].env;
         let opt = {
+            cwd: this.appsService.searchApp(id).local.path,
             env: env
         };
 
         let open = '';
-        let openId = this.searchApp(id).actions[process.platform]["main"].open;
+        let openId = this.appsService.searchApp(id).actions[process.platform]["main"].open;
         if(openId) {
-            this.searchApp(openId).actions[process.platform]["main"].execute;
+            this.appsService.searchApp(openId).actions[process.platform]["main"].execute;
             if(this.checkInstall(openId)) {
-                open = this.path.join(this.searchApp(openId).local.path, this.searchApp(openId).actions[process.platform]["main"].execute);
+                open = this.path.join(this.appsService.searchApp(openId).local.path, this.appsService.searchApp(openId).actions[process.platform]["main"].execute);
                 args.push(execute);
             } else {
                 console.error('open app not found');

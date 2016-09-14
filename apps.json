@@ -2,7 +2,7 @@
   {
     "id": "th105",
     "name": {
-      "zh-CN": "东方绯想天"
+      "zh-CN": "th07"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -13,7 +13,7 @@
     "actions": {
       "darwin": {
         "main": {
-          "execute": "th13.exe",
+          "execute": "th07.exe",
           "args": [],
           "env": {"LC_ALL": "ja_JP"},
           "open": "wine"
@@ -24,7 +24,7 @@
       "darwin": [
         {
           "id": "th06",
-          "type": "optional"
+          "type": "emulator"
         },
         {
           "id": "th12_mod1",
@@ -39,7 +39,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "http://thief.mycard.moe/metalinks/th13.meta4",
+    "download": {"darwin": "http://thief.mycard.moe/metalinks/th07.meta4"},
     "news": [
       {
         "title": "News Title",
@@ -55,6 +55,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -96,11 +97,12 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [],
     "tags": [
       "STG"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "/foo/bar",
       "version": "10.3"
@@ -131,11 +133,12 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "http://thief.mycard.moe/metalinks/th12.meta4",
+    "download": {"darwin": "http://thief.mycard.moe/metalinks/th12.meta4"},
     "news": [],
     "tags": [
       "STG"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": "10.3"
@@ -166,11 +169,12 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "http://thief.mycard.moe/metalinks/th11.meta4",
+    "download": {"darwin": "http://thief.mycard.moe/metalinks/th11.meta4"},
     "news": [],
     "tags": [
       "STG"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "/usr/local/bin",
       "version": "1.8"
@@ -179,7 +183,7 @@
   {
     "id": "th06",
     "name": {
-      "zh-CN": "东方绯想天"
+      "zh-CN": "th06"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -201,7 +205,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "http://thief.mycard.moe/metalinks/th10.meta4",
+    "download": {"darwin": "http://thief.mycard.moe/metalinks/th06.meta4"},
     "news": [
       {
         "title": "News Title",
@@ -217,6 +221,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -247,7 +252,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [
       {
         "title": "News Title",
@@ -263,6 +268,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "/Applications/Sublime Text.app/Contents/MacOS",
       "version": ""
@@ -271,7 +277,7 @@
   {
     "id": "th08",
     "name": {
-      "zh-CN": "东方绯想天"
+      "zh-CN": "TH08"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -282,10 +288,10 @@
     "actions": {
       "darwin": {
         "main": {
-          "execute": "",
+          "execute": "th08.exe",
           "args": [],
-          "env": "",
-          "open": ""
+          "env": {"LC_ALL": "ja_JP"},
+          "open": "wine"
         }
       }
     },
@@ -293,7 +299,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {"darwin": "http://thief.mycard.moe/metalinks/th08.meta4"},
     "news": [
       {
         "title": "News Title",
@@ -309,6 +315,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -339,7 +346,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [
       {
         "title": "News Title",
@@ -355,6 +362,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -385,7 +393,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [
       {
         "title": "News Title",
@@ -401,6 +409,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -431,7 +440,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [
       {
         "title": "News Title",
@@ -447,6 +456,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""
@@ -477,7 +487,7 @@
     "locales": [
       "zh-CN"
     ],
-    "download": "",
+    "download": {},
     "news": [
       {
         "title": "News Title",
@@ -493,6 +503,7 @@
     "tags": [
       "game"
     ],
+    "version": {"darwin": "1.06"},
     "local": {
       "path": "",
       "version": ""

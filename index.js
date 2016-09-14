@@ -90,7 +90,8 @@ function createAria2c() {
         default:
             throw 'unsupported platform';
     }
-    let aria2c = child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all']);
+    //--split=10 --min-split-size=1M --max-connection-per-server=10
+    let aria2c = child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', "--continue", "--split=10", "--min-split-size=1M", "--max-connection-per-server=10"]);
     aria2c.on('data', (data)=> {
         console.log(data);
     })
