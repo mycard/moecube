@@ -9,8 +9,7 @@
     "pack": "./node_modules/.bin/build --dir",
     "dist": "./node_modules/.bin/build",
     "release": "build",
-    "electron": "electron .",
-    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "start": "tsc && electron .",
     "lite": "lite-server",
     "postinstall": "typings install",
     "tsc": "tsc",
@@ -34,11 +33,11 @@
     "bootstrap": "next",
     "core-js": "latest",
     "font-awesome": "latest",
-    "ng2-translate": "2.5.0",
+    "ng2-translate": "latest",
     "reflect-metadata": "latest",
-    "rxjs": "latest",
+    "rxjs": "5.0.0-beta.12",
     "systemjs": "latest",
-    "tether": "latest",
+    "tether": "latest",git s
     "zone.js": "latest"
   },
   "devDependencies": {

@@ -16,7 +16,7 @@ import {CommunityComponent} from './community.component';
 import {RoutingService} from './routing.service';
 import {AppsService} from './apps.service';
 
-import {TranslateModule} from 'ng2-translate/ng2-translate';
+import {TranslateModule} from 'ng2-translate';
 
 @NgModule({
     imports: [BrowserModule, FormsModule, HttpModule, TranslateModule.forRoot()],
