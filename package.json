@@ -37,7 +37,7 @@
     "reflect-metadata": "latest",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "latest",
-    "tether": "latest",git s
+    "tether": "latest",
     "zone.js": "latest"
   },
   "devDependencies": {
