@@ -39,7 +39,7 @@ export class AppsComponent {
 
     selectApp(id) {
         this.routingService.app = id;
-        this.appsService.createInstllConfig(id);
+        this.appsService.createInstallConfig(id);
 
 
     }

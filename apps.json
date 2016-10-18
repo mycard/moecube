@@ -15,12 +15,15 @@
         "main": {
           "execute": "th07.exe",
           "args": [],
-          "env": {"LC_ALL": "ja_JP"},
+          "env": {
+            "LC_ALL": "ja_JP"
+          },
           "open": "wine"
         }
       }
     },
     "references": {
+      "win32": [],
       "darwin": [
         {
           "id": "th06",
@@ -39,7 +42,10 @@
     "locales": [
       "zh-CN"
     ],
-    "download": {"darwin": "http://thief.mycard.moe/metalinks/th07.meta4"},
+    "download": {
+      "darwin": "http://thief.mycard.moe/metalinks/th07.meta4",
+      "win32": "http://thief.mycard.moe/metalinks/th07.meta4"
+    },
     "news": [
       {
         "title": "News Title",
@@ -55,7 +61,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -102,7 +110,9 @@
     "tags": [
       "STG"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "/foo/bar",
       "version": "10.3"
@@ -133,12 +143,16 @@
     "locales": [
       "zh-CN"
     ],
-    "download": {"darwin": "http://thief.mycard.moe/metalinks/th12.meta4"},
+    "download": {
+      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
+    },
     "news": [],
     "tags": [
       "STG"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": "10.3"
@@ -169,12 +183,16 @@
     "locales": [
       "zh-CN"
     ],
-    "download": {"darwin": "http://thief.mycard.moe/metalinks/th11.meta4"},
+    "download": {
+      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
+    },
     "news": [],
     "tags": [
       "STG"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "/usr/local/bin",
       "version": "1.8"
@@ -205,7 +223,9 @@
     "locales": [
       "zh-CN"
     ],
-    "download": {"darwin": "http://thief.mycard.moe/metalinks/th06.meta4"},
+    "download": {
+      "darwin": "http://thief.mycard.moe/metalinks/th06.meta4"
+    },
     "news": [
       {
         "title": "News Title",
@@ -221,7 +241,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -268,7 +290,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "/Applications/Sublime Text.app/Contents/MacOS",
       "version": ""
@@ -290,7 +314,9 @@
         "main": {
           "execute": "th08.exe",
           "args": [],
-          "env": {"LC_ALL": "ja_JP"},
+          "env": {
+            "LC_ALL": "ja_JP"
+          },
           "open": "wine"
         }
       }
@@ -299,7 +325,9 @@
     "locales": [
       "zh-CN"
     ],
-    "download": {"darwin": "http://thief.mycard.moe/metalinks/th08.meta4"},
+    "download": {
+      "darwin": "http://thief.mycard.moe/metalinks/th08.meta4"
+    },
     "news": [
       {
         "title": "News Title",
@@ -315,7 +343,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -362,7 +392,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -409,7 +441,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -456,7 +490,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""
@@ -503,7 +539,9 @@
     "tags": [
       "game"
     ],
-    "version": {"darwin": "1.06"},
+    "version": {
+      "darwin": "1.06"
+    },
     "local": {
       "path": "",
       "version": ""

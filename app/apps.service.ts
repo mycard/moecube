@@ -68,7 +68,7 @@ export class AppsService {
             };
             this._aria2.onDownloadComplete = (response)=> {
                 console.log(response);
-                this.aria2.tellStatus(response.gid, (err, res)=>{
+                this._aria2.tellStatus(response.gid, (err, res)=>{
                     console.log(res);
                     let index = this.downloadsInfo.findIndex((v)=>{return v.gid == res.gid});
                     if(index !== -1) {
@@ -255,7 +255,7 @@ export class AppsService {
     }
 
     installConfig;
-    createInstllConfig(id) {
+    createInstallConfig(id) {
         let app = this.data.find((app)=>{return app.id == id;});
         let platform = process.platform;
         let mods = {};
@@ -298,7 +298,7 @@ export class AppsService {
         let tarPath;
         switch (process.platform) {
             case 'win32':
-                tarPath = this.path.join(process.execPath, '..', '..', 'tar.exe');
+                tarPath = this.path.join(process.execPath, '..', '../../../bin/', 'tar.exe');
                 break;
             case 'darwin':
                 tarPath = 'bsdtar'; // for debug
