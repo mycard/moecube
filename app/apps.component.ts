@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AppsService } from './apps.service'
 import { RoutingService } from './routing.service'
-import {App} from "./app";
 
 @Component({
     selector: 'apps',

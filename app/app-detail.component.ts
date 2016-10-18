@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { AppsService } from './apps.service'
-import { RoutingService } from './routing.service'
+import {Component} from '@angular/core';
+import {AppsService} from './apps.service'
+import {RoutingService} from './routing.service'
 import {App} from "./app";
 
 declare var process;
@@ -19,8 +19,9 @@ export class AppDetailComponent {
     spawn = window['System']._nodeRequire('child_process').spawn;
     path = window['System']._nodeRequire('path');
 
-    constructor(private appsService: AppsService, private routingService: RoutingService ) {
+    constructor(private appsService: AppsService, private routingService: RoutingService) {
     }
+
     _currentApp;
     get currentApp(): App {
         return this.appsService.searchApp(this.routingService.app);
@@ -28,7 +29,7 @@ export class AppDetailComponent {
 
     _name;
     get name() {
-        if(this.currentApp) {
+        if (this.currentApp) {
             return this.currentApp.name[this.currentApp.locales[0]];
         }
         return "Loading";
@@ -42,8 +43,8 @@ export class AppDetailComponent {
 
     _news;
     get news() {
-        if(this.currentApp) {
-            if(this.currentApp.news.length > 0) {
+        if (this.currentApp) {
+            if (this.currentApp.news.length > 0) {
                 return this.currentApp.news;
             }
         }
@@ -63,15 +64,15 @@ export class AppDetailComponent {
     get mods() {
         let contains = ["optional", "language", "emulator"];
 
-        if(this.currentApp) {
-            if(this.currentApp.references[process.platform] && this.currentApp.references[process.platform].length > 0) {
+        if (this.currentApp) {
+            if (this.currentApp.references[process.platform] && this.currentApp.references[process.platform].length > 0) {
                 let refs = this.currentApp.references[process.platform];
-                refs = refs.filter((ref)=>{
+                refs = refs.filter((ref)=> {
                     return contains.includes(ref.type);
                 });
-                refs = refs.map((ref)=>{
+                refs = refs.map((ref)=> {
                     let tmp = Object.create(ref);
-                    switch(tmp.type) {
+                    switch (tmp.type) {
                         case "optional":
                             tmp.type = "选项";
                             break;
@@ -92,10 +93,10 @@ export class AppDetailComponent {
     }
 
 
-
     checkInstall(id): boolean {
-        if(this.appsService.searchApp(id)) {
-            if(this.appsService.searchApp(id).local.path) {
+        if (this.appsService.searchApp(id)) {
+            let local = this.appsService.searchApp(id).local;
+            if (local && local.path) {
                 return true;
             }
         }
@@ -105,7 +106,7 @@ export class AppDetailComponent {
     install(id) {
         let uri = this.appsService.searchApp(id).download[process.platform];
         console.log(process.platform);
-        if(uri) {
+        if (uri) {
             this.appsService.download(id, uri);
         } else {
             console.log("lost download uri!");
@@ -117,8 +118,8 @@ export class AppDetailComponent {
     installSubmit(theForm) {
         console.log(theForm);
         this.install(this.routingService.app);
-        for(let mod in this.appsService.installConfig.mods) {
-            if(this.appsService.installConfig.mods[mod]) {
+        for (let mod in this.appsService.installConfig.mods) {
+            if (this.appsService.installConfig.mods[mod]) {
                 this.install(mod);
             }
         }
@@ -132,6 +133,7 @@ export class AppDetailComponent {
         this.appsService.installConfig.installDir = dir[0];
         return dir[0];
     }
+
     openDir(id) {
         this.electron.remote.shell.showItemInFolder(this.appsService.searchApp(id).local.path);
     }
@@ -147,9 +149,9 @@ export class AppDetailComponent {
 
         let open = '';
         let openId = this.appsService.searchApp(id).actions[process.platform]["main"].open;
-        if(openId) {
+        if (openId) {
             this.appsService.searchApp(openId).actions[process.platform]["main"].execute;
-            if(this.checkInstall(openId)) {
+            if (this.checkInstall(openId)) {
                 open = this.path.join(this.appsService.searchApp(openId).local.path, this.appsService.searchApp(openId).actions[process.platform]["main"].execute);
                 args.push(execute);
             } else {
@@ -178,7 +180,6 @@ export class AppDetailComponent {
         this.electron.remote.getCurrentWindow().minimize();
 
     }
-
 
 
 }

@@ -1,550 +1,2402 @@
 [
   {
-    "id": "th105",
-    "name": {
-      "zh-CN": "th07"
-    },
+    "category": "lang",
     "description": {
       "zh-CN": "fxt desc"
     },
-    "author": "ZUN",
+    "tags": [
+      "game"
+    ],
     "homepage": "http://www.myacg.cc",
-    "category": "game",
+    "author": "ZUN",
     "actions": {
-      "darwin": {
+      "win32": {
         "main": {
           "execute": "th07.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
-          },
-          "open": "wine"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
         }
       }
+    },
+    "version": {
+      "darwin": "1.06"
     },
     "references": {
       "win32": [],
       "darwin": [
         {
-          "id": "th06",
-          "type": "emulator"
+          "type": "emulator",
+          "id": "th06"
         },
         {
-          "id": "th12_mod1",
-          "type": "language"
+          "type": "language",
+          "id": "th12_mod1"
         },
         {
-          "id": "wine",
-          "type": "emulator"
+          "type": "emulator",
+          "id": "wine"
         }
       ]
     },
-    "locales": [
-      "zh-CN"
-    ],
     "download": {
-      "darwin": "http://thief.mycard.moe/metalinks/th07.meta4",
-      "win32": "http://thief.mycard.moe/metalinks/th07.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
     },
     "news": [
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       },
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       }
     ],
-    "tags": [
-      "game"
+    "id": "th06-lang-zh-TW",
+    "locales": [
+      "zh-CN"
     ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
     }
   },
   {
-    "id": "th11",
-    "name": {
-      "zh-CN": "地灵殿"
-    },
-    "description": {
-      "zh-CN": "th12 desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
     "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {
-      "darwin": [
-        {
-          "id": "th105",
-          "type": "optional"
-        },
-        {
-          "id": "th12_mod1",
-          "type": "language"
-        }
-      ]
-    },
-    "locales": [
-      "zh-CN"
-    ],
-    "download": {},
-    "news": [],
-    "tags": [
-      "STG"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "/foo/bar",
-      "version": "10.3"
-    }
-  },
-  {
-    "id": "th12_mod1",
-    "name": {
-      "zh-CN": "th12_mod1"
-    },
-    "description": {
-      "zh-CN": "th12 desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "language",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
-    "locales": [
-      "zh-CN"
-    ],
-    "download": {
-      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
-    },
-    "news": [],
-    "tags": [
-      "STG"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": "10.3"
-    }
-  },
-  {
-    "id": "wine",
-    "name": {
-      "zh-CN": "wine"
-    },
-    "description": {
-      "zh-CN": "th12 desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "emulator",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "wine",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
-    "locales": [
-      "zh-CN"
-    ],
-    "download": {
-      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
-    },
-    "news": [],
-    "tags": [
-      "STG"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "/usr/local/bin",
-      "version": "1.8"
-    }
-  },
-  {
-    "id": "th06",
-    "name": {
-      "zh-CN": "th06"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
-    "author": "ZUN",
+    "tags": [
+      "game"
+    ],
     "homepage": "http://www.myacg.cc",
-    "category": "game",
+    "author": "ZUN",
     "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
       "darwin": {
         "main": {
-          "execute": "",
+          "execute": "th07.exe",
           "args": [],
-          "env": "",
-          "open": ""
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
         }
       }
     },
-    "references": {},
-    "locales": [
-      "zh-CN"
-    ],
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
     "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th06.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th06.meta4"
     },
     "news": [
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       },
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       }
     ],
-    "tags": [
-      "game"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
-    }
-  },
-  {
-    "id": "sublime",
-    "name": {
-      "zh-CN": "sublime"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "Sublime Text",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
+    "id": "th06",
     "locales": [
       "zh-CN"
     ],
-    "download": {},
-    "news": [
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      },
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      }
-    ],
-    "tags": [
-      "game"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "/Applications/Sublime Text.app/Contents/MacOS",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6"
     }
   },
   {
-    "id": "th08",
-    "name": {
-      "zh-CN": "TH08"
-    },
+    "category": "lang",
     "description": {
       "zh-CN": "fxt desc"
     },
-    "author": "ZUN",
+    "tags": [
+      "game"
+    ],
     "homepage": "http://www.myacg.cc",
-    "category": "game",
+    "author": "ZUN",
     "actions": {
-      "darwin": {
+      "win32": {
         "main": {
-          "execute": "th08.exe",
+          "execute": "th07.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
-          },
-          "open": "wine"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
         }
       }
     },
-    "references": {},
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th075-lang-zh-TW",
     "locales": [
       "zh-CN"
     ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u8403\u68a6\u60f3 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
     "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th075.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th075",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u8403\u68a6\u60f3"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th07-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th07.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th07.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th07",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th08-lang-zh-CN",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6 \u8bed\u8a00\u5305(\u7b80\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th08.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th08.meta4"
     },
     "news": [
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       },
       {
-        "title": "News Title",
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
       }
     ],
-    "tags": [
-      "game"
+    "id": "th08",
+    "locales": [
+      "zh-CN"
     ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6"
     }
   },
   {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th095-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u6587\u82b1\u5e16 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th095.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th095",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u6587\u82b1\u5e16"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th09-langzh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u82b1\u6620\u51a2 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th09.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th09.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
     "id": "th09",
-    "name": {
-      "zh-CN": "东方绯想天"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
     "locales": [
       "zh-CN"
     ],
-    "download": {},
-    "news": [
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      },
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      }
-    ],
-    "tags": [
-      "game"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u82b1\u6620\u51a2"
     }
   },
   {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th105-lang-zh-CN",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u7eef\u60f3\u5929 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th105.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th105",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u7eef\u60f3\u5929"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th10-lang-zh-CN-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u98ce\u795e\u5f55 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587, \u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th10.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
     "id": "th10",
-    "name": {
-      "zh-CN": "东方绯想天"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
     "locales": [
       "zh-CN"
     ],
-    "download": {},
-    "news": [
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      },
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      }
-    ],
-    "tags": [
-      "game"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u98ce\u795e\u5f55"
     }
   },
   {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th11-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5730\u7075\u6bbf \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th11",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5730\u7075\u6bbf"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th123-lang-zh-CN",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u975e\u60f3\u5929\u5219 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th123",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u975e\u60f3\u5929\u5219"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th12-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u661f\u83b2\u8239 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
     "id": "th12",
-    "name": {
-      "zh-CN": "东方绯想天"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
     "locales": [
       "zh-CN"
     ],
-    "download": {},
-    "news": [
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      },
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      }
-    ],
-    "tags": [
-      "game"
-    ],
-    "version": {
-      "darwin": "1.06"
-    },
-    "local": {
-      "path": "",
-      "version": ""
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u661f\u83b2\u8239"
     }
   },
   {
-    "id": "th13",
-    "name": {
-      "zh-CN": "东方绯想天"
-    },
+    "category": "lang",
     "description": {
       "zh-CN": "fxt desc"
     },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "category": "game",
-    "actions": {
-      "darwin": {
-        "main": {
-          "execute": "",
-          "args": [],
-          "env": "",
-          "open": ""
-        }
-      }
-    },
-    "references": {},
-    "locales": [
-      "zh-CN"
-    ],
-    "download": {},
-    "news": [
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      },
-      {
-        "title": "News Title",
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg"
-      }
-    ],
     "tags": [
       "game"
     ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
     "version": {
       "darwin": "1.06"
     },
-    "local": {
-      "path": "",
-      "version": ""
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th1-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u7075\u5f02\u4f20 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th1.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th1.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th1",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u7075\u5f02\u4f20"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th2-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u68a6\u65f6\u7a7a \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th2.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th2.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th2",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u68a6\u65f6\u7a7a"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th3-lang-zh-TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5c01\u9b54\u5f55 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th3.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th3.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th3",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5c01\u9b54\u5f55"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th4-lang-zh_TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5e7b\u60f3\u4e61 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th4.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th4.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th4",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u5e7b\u60f3\u4e61"
+    }
+  },
+  {
+    "category": "lang",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th5-lang-zh_TW",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u602a\u7eee\u8c08 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+    }
+  },
+  {
+    "category": "game",
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "tags": [
+      "game"
+    ],
+    "homepage": "http://www.myacg.cc",
+    "author": "ZUN",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "references": {
+      "win32": [],
+      "darwin": [
+        {
+          "type": "emulator",
+          "id": "th06"
+        },
+        {
+          "type": "language",
+          "id": "th12_mod1"
+        },
+        {
+          "type": "emulator",
+          "id": "wine"
+        }
+      ]
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th5.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th5.meta4"
+    },
+    "news": [
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      },
+      {
+        "url": "#",
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
+        "title": "News Title"
+      }
+    ],
+    "id": "th5",
+    "locales": [
+      "zh-CN"
+    ],
+    "name": {
+      "zh-CN": "\u4e1c\u65b9\u602a\u7eee\u8c08"
     }
   }
 ]
