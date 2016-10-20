@@ -2,15 +2,12 @@
     <div class="form-group">
         <label for="exampleSelect1">卡组</label>
         <select class="form-control" id="exampleSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+            <option *ngFor="let item of decks">{{item}}</option>
         </select>
     </div>
     <button type="submit" class="btn btn-secondary">编辑</button>
     <button type="submit" class="btn btn-secondary">删除</button>
+    <button type="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
 </form>
 
 <div>

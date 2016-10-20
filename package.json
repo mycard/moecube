@@ -30,6 +30,7 @@
     "@angular/upgrade": "latest",
     "angular2-in-memory-web-api": "latest",
     "aria2": "latest",
+    "bluebird": "^3.4.6",
     "bootstrap": "next",
     "core-js": "latest",
     "font-awesome": "latest",
