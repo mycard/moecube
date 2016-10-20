@@ -88,15 +88,6 @@
     </table>
 </div>
 
-<!== DEBUG -->
-<pre class="debug">
-{{appsService.downloadsInfo | json}}
-{{appsService.installConfig | json}}
-{{appsService.tarQueue | json}}
-{{appsService.waitInstallQueue | json}}
-</pre>
-<button (click)="appsService.doTar()">DOTAR</button>
-
 <!-- Modal -->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">

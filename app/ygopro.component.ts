@@ -4,6 +4,10 @@
 import {Component} from '@angular/core';
 import {AppsService} from "./apps.service";
 import {RoutingService} from "./routing.service";
+
+declare var System;
+const fs = System._nodeRequire('fs');
+
 @Component({
     selector: 'ygopro',
     templateUrl: 'app/ygopro.component.html',
@@ -11,5 +15,10 @@ import {RoutingService} from "./routing.service";
 })
 export class YGOProComponent {
     constructor(private appsService: AppsService, private routingService: RoutingService) {
+    }
+    decks () {
+        return new Promise(()=>{
+            fs.readdir()
+        })
     }
 }
