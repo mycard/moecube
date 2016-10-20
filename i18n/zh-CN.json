@@ -1,4 +1,9 @@
 {
   "library": "游戏",
-  "community": "社区"
+  "community": "社区",
+  "settings": "设置",
+  "uninstall": "卸载",
+  "general":"常规",
+  "updates":"更新",
+  "local files":"本地文件"
 }

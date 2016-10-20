@@ -10,6 +10,7 @@
         'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
         'rxjs': 'node_modules/rxjs',
         'ng2-translate': 'node_modules/ng2-translate/bundles/ng2-translate.js',
+        "os":''
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {

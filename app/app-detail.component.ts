@@ -5,7 +5,6 @@ import {App} from "./app";
 
 declare var process;
 declare var $;
-
 @Component({
     selector: 'app-detail',
     templateUrl: 'app/app-detail.component.html',
@@ -105,13 +104,18 @@ export class AppDetailComponent {
 
     install(id) {
         let uri = this.appsService.searchApp(id).download[process.platform];
-        console.log(process.platform);
+        $('#install-modal').modal('hide');
         if (uri) {
             this.appsService.download(id, uri);
         } else {
             console.log("lost download uri!");
-
         }
+
+    }
+
+    uninstall(id: string) {
+        id = this.currentApp.id;
+        this.appsService.uninstall(id);
     }
 
 
@@ -123,8 +127,6 @@ export class AppDetailComponent {
                 this.install(mod);
             }
         }
-
-        $("#install-modal").modal("hide");
     }
 
     selectDir() {
