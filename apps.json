@@ -2398,5 +2398,80 @@
     "name": {
       "zh-CN": "\u4e1c\u65b9\u602a\u7eee\u8c08"
     }
+  }, 
+  {
+    "category": "game", 
+    "description": {
+      "zh-CN": "fxt desc"
+    }, 
+    "tags": [
+      "game"
+    ], 
+    "homepage": "http://www.myacg.cc", 
+    "author": "ZUN", 
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe", 
+          "args": [], 
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }, 
+      "darwin": {
+        "main": {
+          "execute": "th07.exe", 
+          "args": [], 
+          "open": "wine", 
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    }, 
+    "version": {
+      "darwin": "1.06"
+    }, 
+    "references": {
+      "win32": [], 
+      "darwin": [
+        {
+          "type": "emulator", 
+          "id": "th06"
+        }, 
+        {
+          "type": "language", 
+          "id": "th12_mod1"
+        }, 
+        {
+          "type": "emulator", 
+          "id": "wine"
+        }
+      ]
+    }, 
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4", 
+      "darwin": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4"
+    }, 
+    "news": [
+      {
+        "url": "#", 
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg", 
+        "title": "News Title"
+      }, 
+      {
+        "url": "#", 
+        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg", 
+        "title": "News Title"
+      }
+    ], 
+    "id": "ygopro-win32", 
+    "locales": [
+      "zh-CN"
+    ], 
+    "name": {
+      "zh-CN": "YGOPRO"
+    }
   }
 ]
