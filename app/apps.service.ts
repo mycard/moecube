@@ -322,7 +322,9 @@ export class AppsService {
             default:
                 throw 'unsupported platform';
         }
-        let opt = {};
+        let opt = {
+            maxBuffer: 20*1024*1024
+        };
 
         let tarObj;
         if (this.tarQueue.length > 0) {
@@ -437,5 +439,9 @@ export class AppsService {
         for (t in e)
             return !1;
         return !0
+    }
+
+    browse(id) {
+        this.electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
     }
 }
