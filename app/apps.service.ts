@@ -4,8 +4,16 @@ import 'rxjs/Rx';
 import {App} from "./app";
 import {AppLocal} from "./app-local";
 import {TranslateService} from "ng2-translate";
+import {RoutingService} from "./routing.service";
 
 declare var process;
+const os = window['System']._nodeRequire('os');
+const fs = window['System']._nodeRequire('fs');
+const path = window['System']._nodeRequire('path');
+const mkdirp = window['System']._nodeRequire('mkdirp');
+const electron = window['System']._nodeRequire('electron');
+const Aria2 = window['System']._nodeRequire('aria2');
+const execFile = window['System']._nodeRequire('child_process').execFile;
 
 @Injectable()
 export class AppsService {
@@ -27,13 +35,7 @@ export class AppsService {
 
     }
 
-    os = window['System']._nodeRequire('os');
-    fs = window['System']._nodeRequire('fs');
-    path = window['System']._nodeRequire('path');
-    mkdirp = window['System']._nodeRequire('mkdirp');
-    electron = window['System']._nodeRequire('electron');
-    Aria2 = window['System']._nodeRequire('aria2');
-    execFile = window['System']._nodeRequire('child_process').execFile;
+
     //localStorage = window['localStorage'];
 
 
@@ -53,7 +55,7 @@ export class AppsService {
     _aria2;
     get aria2() {
         if (!this._aria2) {
-            this._aria2 = new this.Aria2();
+            this._aria2 = new Aria2();
             console.log("new aria2");
             this._aria2.onopen = ()=> {
                 console.log('aria2 open');
@@ -146,11 +148,11 @@ export class AppsService {
 
     _download_dir;
     get download_dir() {
-        const dir = this.path.join(this.electron.remote.app.getAppPath(), 'cache');
+        const dir = path.join(electron.remote.app.getAppPath(), 'cache');
 
-        if (!this.fs.existsSync(dir)) {
+        if (!fs.existsSync(dir)) {
             console.log('cache not exists');
-            this.mkdirp(dir, (err)=> {
+            mkdirp(dir, (err)=> {
                 if (err) {
                     console.error(err)
                 } else {
@@ -224,24 +226,42 @@ export class AppsService {
         return false;
     }
 
-    deleteFile(path: string) {
+    deleteFile(path: string): Promise<string> {
         return new Promise((resolve, reject)=> {
-            this.fs.unlink(path, (err)=> {
-                resolve(path);
+            fs.lstat(path, (err, stats)=> {
+                if (stats.isDirectory()) {
+                    fs.rmdir(path, (err)=> {
+                        resolve(path);
+                    });
+                } else {
+                    fs.unlink(path, (err)=> {
+                        resolve(path);
+                    });
+                }
             });
-        });
+        })
     }
 
-    uninstall(id) {
+    uninstall(id: string) {
+        let current = this;
         if (this.checkInstall(id)) {
-            let files = this.searchApp(id).local.files.sort().reverse();
-            files.reduce((pre, curr, index, arr)=> {
-                this.deleteFile(curr).then((path)=> {
-                    console.log("delete ", path)
+            let files: string[] = this.searchApp(id).local.files.sort().reverse();
+            // 删除本目录
+            files.push('.');
+            let install_dir = this.searchApp(id).local.path;
+            files
+                .map((file)=>
+                    ()=>Promise.resolve(path.join(install_dir, file))
+                )
+                .reduce((promise: Promise<string>, task)=>
+                        promise.then(task).then(this.deleteFile)
+                    , Promise.resolve(''))
+                .then((value)=> {
+                    this.searchApp(id).local = null;
+                    localStorage.setItem("localAppData", JSON.stringify(this.data));
                 });
-                return "1"
-            })
         }
+
     }
 
     download(id, uri) {
@@ -284,7 +304,7 @@ export class AppsService {
         }
 
         let tmp = {
-            installDir: this.path.join(this.electron.remote.app.getPath('appData'), 'mycard'),
+            installDir: path.join(electron.remote.app.getPath('appData'), 'mycard'),
             shortcut: {
                 desktop: false,
                 application: false
@@ -314,7 +334,7 @@ export class AppsService {
         let tarPath;
         switch (process.platform) {
             case 'win32':
-                tarPath = this.path.join(process.execPath, '..', '../../../bin/', 'tar.exe');
+                tarPath = path.join(process.execPath, '..', '../../../bin/', 'tar.exe');
                 break;
             case 'darwin':
                 tarPath = 'bsdtar'; // for debug
@@ -323,7 +343,7 @@ export class AppsService {
                 throw 'unsupported platform';
         }
         let opt = {
-            maxBuffer: 20*1024*1024
+            maxBuffer: 20 * 1024 * 1024
         };
 
         let tarObj;
@@ -349,10 +369,10 @@ export class AppsService {
 
 
         let xzFile = tarObj.xzFile;
-        let installDir = this.path.join(tarObj.installDir, tarObj.id);
-        if (!this.fs.existsSync(installDir)) {
+        let installDir = path.join(tarObj.installDir, tarObj.id);
+        if (!fs.existsSync(installDir)) {
             console.log('app dir not exists');
-            this.mkdirp(installDir, (err)=> {
+            mkdirp(installDir, (err)=> {
                 if (err) {
                     console.error(err)
                 } else {
@@ -361,7 +381,7 @@ export class AppsService {
             });
         }
 
-        let tar = this.execFile(tarPath, ['xvf', xzFile, '-C', installDir], opt, (err, stdout, stderr)=> {
+        let tar = execFile(tarPath, ['xvf', xzFile, '-C', installDir], opt, (err, stdout, stderr)=> {
             if (err) {
                 throw err;
             }
@@ -398,7 +418,8 @@ export class AppsService {
             let tmp = this.tarQueue.shift();
             this.isExtracting = false;
             this.downloadsInfo[downLoadsInfoIndex].status = "complete";
-
+            // 为了卸载时能重新显示安装条
+            this.downloadsInfo.splice(downLoadsInfoIndex, 1);
             this.data = this.data.map((app)=> {
                 if (app.id == tarObj.id) {
                     app.local = appLocal.local;
@@ -442,6 +463,6 @@ export class AppsService {
     }
 
     browse(id) {
-        this.electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
+        electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
     }
 }
