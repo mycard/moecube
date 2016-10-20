@@ -1,11 +1,11 @@
 <form class="form-inline">
     <div class="form-group">
         <label for="exampleSelect1">卡组</label>
-        <select class="form-control" id="exampleSelect1">
-            <option *ngFor="let item of decks">{{item}}</option>
+        <select class="form-control" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
+            <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-secondary">编辑</button>
+    <button type="submit" class="btn btn-secondary" (click)="edit_deck(current_deck)">编辑</button>
     <button type="submit" class="btn btn-secondary">删除</button>
     <button type="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
 </form>
