@@ -134,10 +134,6 @@ export class AppDetailComponent {
         return dir[0];
     }
 
-    openDir(id) {
-        this.electron.remote.shell.showItemInFolder(this.appsService.searchApp(id).local.path);
-    }
-
     startApp(id) {
         let execute = this.path.join(this.appsService.searchApp(id).local.path, this.appsService.searchApp(id).actions[process.platform]["main"].execute);
         let args = this.appsService.searchApp(id).actions[process.platform]["main"].args;

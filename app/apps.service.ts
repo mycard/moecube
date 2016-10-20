@@ -430,4 +430,8 @@ export class AppsService {
             return !1;
         return !0
     }
+
+    browse(id) {
+        this.electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
+    }
 }

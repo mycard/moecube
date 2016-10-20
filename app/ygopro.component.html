@@ -1,0 +1,23 @@
+<form class="form-inline">
+    <div class="form-group">
+        <label for="exampleSelect1">卡组</label>
+        <select class="form-control" id="exampleSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-secondary">编辑</button>
+    <button type="submit" class="btn btn-secondary">删除</button>
+</form>
+
+<div>
+    <button type="button" class="btn btn-primary">竞技匹配</button>
+    <button type="button" class="btn btn-secondary">娱乐匹配</button>
+    <!--<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>-->
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
+    <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">浏览本地文件</button>
+</div>

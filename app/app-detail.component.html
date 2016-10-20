@@ -15,12 +15,13 @@
         </progress>
     </div>
 </div>
-<div *ngIf="isInstalled">
+<div *ngIf="isInstalled && (routingService.app != 'ygopro')">
     <button (click)="startApp(routingService.app)" type="button" class="btn btn-primary">运行</button>
     <button type="button" class="btn btn-secondary">设置</button>
-    <button (click)="openDir(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>
+    <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
+<ygopro *ngIf="isInstalled && (routingService.app == 'ygopro')"></ygopro>
 
 <br>
 
@@ -65,12 +66,22 @@
             <td>{{'app.' + mod.id + '.name' | translate}}</td>
             <td>{{mod.type}}</td>
             <td *ngIf="checkInstall(mod.id)">
-                <button type="button" class="btn btn-danger btn-sm">卸载</button></td>
+                <button type="button" class="btn btn-danger btn-sm">卸载</button>
+            </td>
             <td *ngIf="!checkInstall(mod.id)">
-                <button *ngIf="!appsService.getDownloadInfo(mod.id)" (click)="install(mod.id)" type="button" class="btn btn-primary btn-sm">安装</button>
-                <progress *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'active'" class="progress progress-striped progress-animated" value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
-                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'wait'">等待安装...</div>
-                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'install'">正在安装...</div>
+                <button *ngIf="!appsService.getDownloadInfo(mod.id)" (click)="install(mod.id)" type="button"
+                        class="btn btn-primary btn-sm">安装
+                </button>
+                <progress
+                        *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'active'"
+                        class="progress progress-striped progress-animated"
+                        value="{{appsService.getDownloadInfo(mod.id).progress}}" max="100"></progress>
+                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'wait'">
+                    等待安装...
+                </div>
+                <div *ngIf="appsService.getDownloadInfo(mod.id) && appsService.getDownloadInfo(mod.id).status === 'install'">
+                    正在安装...
+                </div>
             </td>
         </tr>
         </tbody>
@@ -84,7 +95,7 @@
 {{appsService.tarQueue | json}}
 {{appsService.waitInstallQueue | json}}
 </pre>
-<button (click)="appsService.doTar()" >DOTAR</button>
+<button (click)="appsService.doTar()">DOTAR</button>
 
 <!-- Modal -->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -103,7 +114,8 @@
                 <h4>安装位置</h4>
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" [(ngModel)]="appsService.installConfig.installDir" name="installDir" class="form-control" placeholder="安装位置">
+                        <input type="text" [(ngModel)]="appsService.installConfig.installDir" name="installDir"
+                               class="form-control" placeholder="安装位置">
                         <span class="input-group-btn">
                             <button (click)="selectDir()" class="btn btn-secondary" type="button">浏览</button>
                         </span>
@@ -112,7 +124,8 @@
                 <h4>快捷方式</h4>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.application" name="application">
+                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.application"
+                               name="application">
                         创建应用程序快捷方式
                     </label>
                 </div>
