@@ -17,7 +17,7 @@
 </div>
 <div *ngIf="isInstalled && (routingService.app != 'ygopro')">
     <button (click)="startApp(routingService.app)" type="button" class="btn btn-primary">运行</button>
-    <button type="button" class="btn btn-secondary">设置</button>
+    <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
     <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
