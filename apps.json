@@ -35,20 +35,7 @@
     }, 
     "references": {
       "win32": [], 
-      "darwin": [
-        {
-          "type": "emulator", 
-          "id": "th06"
-        }, 
-        {
-          "type": "language", 
-          "id": "th12_mod1"
-        }, 
-        {
-          "type": "emulator", 
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     }, 
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4", 
@@ -2435,20 +2422,7 @@
     }, 
     "references": {
       "win32": [], 
-      "darwin": [
-        {
-          "type": "emulator", 
-          "id": "th06"
-        }, 
-        {
-          "type": "language", 
-          "id": "th12_mod1"
-        }, 
-        {
-          "type": "emulator", 
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     }, 
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4", 
@@ -2471,7 +2445,7 @@
       "zh-CN"
     ], 
     "name": {
-      "zh-CN": "YGOPRO"
+      "zh-CN": "YGOPro"
     }
   }
 ]

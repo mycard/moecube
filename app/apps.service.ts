@@ -307,6 +307,7 @@ export class AppsService {
                 throw 'unsupported platform';
         }
         let opt = {
+            maxBuffer: 20*1024*1024
         };
 
         let tarObj;
