@@ -125,9 +125,13 @@
 
                     </div>
                     <div id="local-files" role="tabpanel" class="tab-pane fade">
-                        <button type="button" (click)="uninstall()">
-                            {{'uninstall'|translate}}
-                        </button>
+                        <div class="list-inline">
+                            <button type="button" [disabled]="!isInstalled" (click)="uninstall()">
+                                {{'uninstall'|translate}}
+                            </button>
+                            <i *ngIf="uninstalling" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -229,14 +229,18 @@ export class AppsService {
     deleteFile(path: string): Promise<string> {
         return new Promise((resolve, reject)=> {
             fs.lstat(path, (err, stats)=> {
-                if (stats.isDirectory()) {
-                    fs.rmdir(path, (err)=> {
-                        resolve(path);
-                    });
+                if (!err) {
+                    if (stats.isDirectory()) {
+                        fs.rmdir(path, (err)=> {
+                            resolve(path);
+                        });
+                    } else {
+                        fs.unlink(path, (err)=> {
+                            resolve(path);
+                        });
+                    }
                 } else {
-                    fs.unlink(path, (err)=> {
-                        resolve(path);
-                    });
+                    resolve(path);
                 }
             });
         })
@@ -249,9 +253,9 @@ export class AppsService {
             // 删除本目录
             files.push('.');
             let install_dir = this.searchApp(id).local.path;
-            files
+            return files
                 .map((file)=>
-                    ()=>Promise.resolve(path.join(install_dir, file))
+                    ()=>path.join(install_dir, file)
                 )
                 .reduce((promise: Promise<string>, task)=>
                         promise.then(task).then(this.deleteFile)

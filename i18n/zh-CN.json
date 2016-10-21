@@ -3,7 +3,8 @@
   "community": "社区",
   "settings": "设置",
   "uninstall": "卸载",
-  "general":"常规",
-  "updates":"更新",
-  "local files":"本地文件"
+  "general": "常规",
+  "updates": "更新",
+  "local files": "本地文件",
+  "uninstall confirm": "这将删除所有本地内容，确认执行？"
 }

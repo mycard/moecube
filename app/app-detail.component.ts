@@ -113,9 +113,17 @@ export class AppDetailComponent {
 
     }
 
+    uninstalling: boolean;
+
     uninstall(id: string) {
-        id = this.currentApp.id;
-        this.appsService.uninstall(id);
+        if (confirm("确认删除？")) {
+            this.uninstalling = true;
+            id = this.currentApp.id;
+            this.appsService.uninstall(id).then(()=> {
+                    this.uninstalling = false;
+                }
+            );
+        }
     }
 
 
