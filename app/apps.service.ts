@@ -250,9 +250,9 @@ export class AppsService {
             // 删除本目录
             files.push('.');
             let install_dir = this.searchApp(id).local.path;
-            files
+            return files
                 .map((file)=>
-                    ()=>Promise.resolve(path.join(install_dir, file))
+                    ()=>path.join(install_dir, file)
                 )
                 .reduce((promise: Promise<string>, task)=>
                         promise.then(task).then(this.deleteFile)
