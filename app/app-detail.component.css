@@ -20,3 +20,6 @@ progress {
     margin-top: 2px;
 }
 
+.carousel-inner img {
+    width: 100%;
+}

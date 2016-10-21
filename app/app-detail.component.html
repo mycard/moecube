@@ -4,7 +4,7 @@
     <div *ngIf="!appsService.getDownloadInfo(routingService.app)">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
         <button type="button" class="btn btn-secondary">导入</button>
-        <button type="button" class="btn btn-secondary">正版代购</button>
+        <!--<button type="button" class="btn btn-secondary">正版代购</button>-->
     </div>
     <div *ngIf="appsService.getDownloadInfo(routingService.app)">
         <div *ngIf="appsService.getDownloadInfo(routingService.app).status === 'install'">正在安装...</div>
@@ -18,22 +18,44 @@
 <div *ngIf="isInstalled && (routingService.app != 'ygopro')">
     <button (click)="startApp(routingService.app)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
-    <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>
+    <!--<button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>-->
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
 <ygopro *ngIf="isInstalled && (routingService.app == 'ygopro')"></ygopro>
 
 <br>
 
-<h2>新闻</h2>
+<h2 *ngIf="news">新闻</h2>
 
-<p *ngIf="!news">没有新闻</p>
-<div *ngIf="news">
+<!--<div *ngIf="news">
     <div class="list-group">
         <a *ngFor="let item of news" href="{{item.url}}" class="list-group-item">{{item.title}}</a>
     </div>
+</div>-->
 
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li *ngFor="let item of news; let index = index;" data-target="#carousel-example-generic" [data-slide-to]="index" [class.active]="index == 0"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div *ngFor="let item of news; let index = index;" class="carousel-item" [class.active]="index == 0">
+            <img [src]="item.image" [alt]="item.title">
+            <div class="carousel-caption">
+                <h3>{{item.title}}</h3>
+                <p>{{item.text}}</p>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+        <span class="icon-prev" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+        <span class="icon-next" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
 </div>
+
 
 <br>
 
@@ -88,7 +110,12 @@
     </table>
 </div>
 
-<button (click)="appsService.doTar()">DOTAR</button>
+<div *ngIf="isInstalled">
+    <h2>本地文件</h2>
+    <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">浏览本地文件</button>
+    <button (click)="uninstall()" type="button" class="btn btn-secondary">{{'uninstall'|translate}}</button>
+</div>
+
 <div class="modal fade" id="settings-modal" tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -191,10 +218,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button id="submit" type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
-
             </div>
-            <!--
-            -->
         </form>
     </div>
 </div>

@@ -229,18 +229,15 @@ export class AppsService {
     deleteFile(path: string): Promise<string> {
         return new Promise((resolve, reject)=> {
             fs.lstat(path, (err, stats)=> {
-                if (!err) {
-                    if (stats.isDirectory()) {
-                        fs.rmdir(path, (err)=> {
-                            resolve(path);
-                        });
-                    } else {
-                        fs.unlink(path, (err)=> {
-                            resolve(path);
-                        });
-                    }
+                if (err) return resolve(path);
+                if (stats.isDirectory()) {
+                    fs.rmdir(path, (err)=> {
+                        resolve(path);
+                    });
                 } else {
-                    resolve(path);
+                    fs.unlink(path, (err)=> {
+                        resolve(path);
+                    });
                 }
             });
         })

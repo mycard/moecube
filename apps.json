@@ -97,20 +97,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th06.meta4",
@@ -172,20 +159,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
@@ -247,20 +221,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
@@ -322,20 +283,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
@@ -397,20 +345,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th07.meta4",
@@ -472,20 +407,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
@@ -547,20 +469,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th08.meta4",
@@ -622,20 +531,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
@@ -697,20 +593,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
@@ -772,20 +655,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
@@ -847,20 +717,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th09.meta4",
@@ -922,20 +779,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
@@ -997,20 +841,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
@@ -1072,20 +903,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
@@ -1147,20 +965,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
@@ -1222,20 +1027,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
@@ -1297,20 +1089,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
@@ -1372,20 +1151,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
@@ -1447,20 +1213,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
@@ -1522,20 +1275,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
@@ -1597,20 +1337,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
@@ -1672,20 +1399,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
@@ -1747,20 +1461,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th1.meta4",
@@ -1822,20 +1523,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
@@ -1897,20 +1585,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th2.meta4",
@@ -1972,20 +1647,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
@@ -2047,20 +1709,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th3.meta4",
@@ -2122,20 +1771,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
@@ -2197,20 +1833,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th4.meta4",
@@ -2272,20 +1895,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
@@ -2347,20 +1957,7 @@
     },
     "references": {
       "win32": [],
-      "darwin": [
-        {
-          "type": "emulator",
-          "id": "th06"
-        },
-        {
-          "type": "language",
-          "id": "th12_mod1"
-        },
-        {
-          "type": "emulator",
-          "id": "wine"
-        }
-      ]
+      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th5.meta4",
@@ -2434,13 +2031,15 @@
     "news": [
       {
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
+        "image": "http://pic.4j4j.cn/upload/pic/20140327/af650cf463.jpg",
+        "title": "News Title",
+        "text": "喵喵喵喵"
       },
       {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
+        "url": "https://ygobbs.com/t/7%E6%9C%8825%E6%97%A5-MyCard%E5%B7%B2%E6%9B%B4%E6%96%B0INOV910%E7%AD%89%E6%96%B0%E5%8D%A1%EF%BC%8C1033A%E7%A8%8B%E5%BA%8F%E3%80%82%E5%86%85%E5%B8%A6%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BB%A5%E5%8F%8A%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%E3%80%82/80143",
+        "image": "http://image.tianjimedia.com/uploadImages/2012/159/1EF112986273.jpg",
+        "title": "News Title2",
+        "text": "聚集的祈愿将成为新生的闪耀之星，化作光芒闪耀的道路吧！"
       }
     ]
   }
