@@ -12,6 +12,7 @@ const path = System._nodeRequire('path');
 const child_process = System._nodeRequire('child_process');
 //const Promise = System._nodeRequire('bluebird');
 const ini = System._nodeRequire('ini');
+const electron = System._nodeRequire('electron');
 
 @Component({
     selector: 'ygopro',
@@ -27,18 +28,22 @@ export class YGOProComponent {
     numfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
     textfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
 
+    windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
+
+    servers = [{address:"112.124.105.11", port: 7911}];
+
     constructor(private appsService: AppsService, private routingService: RoutingService) {
         this.refresh()
     }
 
-    refresh() {
+    refresh = () => {
         this.get_decks().then((decks)=> {
             this.decks = decks;
             if (!(this.current_deck in this.decks)) {
                 this.current_deck = decks[0];
             }
         })
-    }
+    };
 
     get_decks(): Promise<[string]> {
         return new Promise((resolve, reject)=> {
@@ -77,6 +82,12 @@ export class YGOProComponent {
             .catch(reason=>console.log(reason))
     }
 
+    delete_deck(deck) {
+        return new Promise((resolve, reject) => {
+            fs.unlink(path.join(this.app.local.path, 'deck', deck + '.ydk'), resolve)
+        }).then(this.refresh)
+    }
+
     fix_fonts = (data) => {
         return this.get_font([data.numfont])
             .catch(() => this.get_font(this.numfont[process.platform]).then(font => data['numfont'] = font))
@@ -105,15 +116,39 @@ export class YGOProComponent {
         })
     };
 
+    join(name, server) {
+        this.load_system_conf()
+            .then(this.fix_fonts)
+            .then(data => {
+                data['lastdeck'] = this.current_deck;
+                data['lastip'] = server.address;
+                data['lastport'] = server.port;
+                data['roompass'] = name;
+                return data
+            })
+            .then(this.save_system_conf)
+            .then(()=>['-j'])
+            .then(this.start_game)
+            .catch(reason=>console.log(reason))
+    };
+
+    join_windbot(name) {
+        this.join(name, this.servers[0])
+    }
+
     start_game = (args) => {
+        let win = electron.remote.getCurrentWindow();
+        win.minimize();
         return new Promise((resolve, reject)=> {
             let child = child_process.spawn(path.join(this.app.local.path, this.app.actions[process.platform]['main']['execute']), args, {cwd: this.app.local.path});
             child.on('error', (error)=> {
-                reject(error)
+                reject(error);
+                win.restore()
             });
             child.on('exit', (code, signal)=> {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
-                resolve(code)
+                resolve(code);
+                win.restore()
             })
         })
     };
