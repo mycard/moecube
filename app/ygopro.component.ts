@@ -133,7 +133,7 @@ export class YGOProComponent {
     };
 
     join_windbot(name) {
-        this.join(name, this.servers[0])
+        this.join('AI#'+name, this.servers[0])
     }
 
     start_game = (args) => {

@@ -23,3 +23,15 @@ progress {
 .carousel-inner img {
     width: 100%;
 }
+
+#news h3 {
+    font-size: 1.5rem;
+}
+#news p {
+    margin-bottom: 0;
+}
+
+#news a {
+    display: block;
+    margin-bottom: 1rem;
+}

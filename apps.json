@@ -41,18 +41,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th06-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -106,13 +95,12 @@
     "news": [
       {
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
+        "title": "红魔乡新闻",
+        "text": "周刊照片杂志（写真週刊誌）「FLASH」的吉祥物「写写丸」（しゃしゃまる）。该杂志的记者也常以「写写丸」的名义进行体验取材、突击取材等。"
       },
       {
         "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
+        "title": "红魔乡新闻2"
       }
     ],
     "id": "th06",
@@ -165,18 +153,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th075-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -227,18 +204,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th075.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th075",
     "locales": [
       "zh-CN"
@@ -289,18 +255,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th07-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -351,18 +306,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th07.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th07.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th07",
     "locales": [
       "zh-CN"
@@ -413,18 +357,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th08-lang-zh-CN",
     "locales": [
       "zh-CN"
@@ -475,18 +408,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th08.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th08.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th08",
     "locales": [
       "zh-CN"
@@ -537,18 +459,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th095-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -599,18 +510,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th095.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th095",
     "locales": [
       "zh-CN"
@@ -661,18 +561,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th09-langzh-TW",
     "locales": [
       "zh-CN"
@@ -723,18 +612,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th09.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th09.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th09",
     "locales": [
       "zh-CN"
@@ -785,18 +663,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th105-lang-zh-CN",
     "locales": [
       "zh-CN"
@@ -847,18 +714,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th105.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th105",
     "locales": [
       "zh-CN"
@@ -909,18 +765,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th10-lang-zh-CN-zh-TW",
     "locales": [
       "zh-CN"
@@ -971,18 +816,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th10.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th10",
     "locales": [
       "zh-CN"
@@ -1033,18 +867,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th11-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -1095,18 +918,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th11",
     "locales": [
       "zh-CN"
@@ -1157,18 +969,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th123-lang-zh-CN",
     "locales": [
       "zh-CN"
@@ -1219,18 +1020,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th123",
     "locales": [
       "zh-CN"
@@ -1281,18 +1071,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th12-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -1343,18 +1122,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th12",
     "locales": [
       "zh-CN"
@@ -1405,18 +1173,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th1-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -1467,18 +1224,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th1.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th1.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th1",
     "locales": [
       "zh-CN"
@@ -1529,18 +1275,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th2-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -1591,18 +1326,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th2.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th2.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th2",
     "locales": [
       "zh-CN"
@@ -1653,18 +1377,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th3-lang-zh-TW",
     "locales": [
       "zh-CN"
@@ -1715,18 +1428,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th3.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th3.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th3",
     "locales": [
       "zh-CN"
@@ -1777,18 +1479,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th4-lang-zh_TW",
     "locales": [
       "zh-CN"
@@ -1839,18 +1530,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th4.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th4.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th4",
     "locales": [
       "zh-CN"
@@ -1901,18 +1581,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th5-lang-zh_TW",
     "locales": [
       "zh-CN"
@@ -1963,18 +1632,7 @@
       "win32": "http://thief.mycard.moe/metalinks/th5.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th5.meta4"
     },
-    "news": [
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      },
-      {
-        "url": "#",
-        "image": "http://www.myacg.cc/wp-content/uploads/2000/01/newBanner51.jpg",
-        "title": "News Title"
-      }
-    ],
+    "news": [],
     "id": "th5",
     "locales": [
       "zh-CN"

@@ -33,7 +33,7 @@
     </div>
 </div>-->
 
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+<!--<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
         <li *ngFor="let item of news; let index = index;" data-target="#carousel-example-generic" [data-slide-to]="index" [class.active]="index == 0"></li>
     </ol>
@@ -54,10 +54,14 @@
         <span class="icon-next" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
     </a>
+</div>-->
+
+
+<div id="news" *ngFor="let item of news">
+    <h3>{{item.title}}</h3>
+    <p>{{item.text}}</p>
+    <a *ngIf="item.url" [href]="item.url">了解更多</a>
 </div>
-
-
-<br>
 
 <div *ngIf="friends">
     <h2>好友</h2>

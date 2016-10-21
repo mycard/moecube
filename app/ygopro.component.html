@@ -33,7 +33,7 @@
                 <label>选择对手</label>
                 <div id="windbot" class="list-group">
                     <a *ngFor="let name of windbot" href="#" class="list-group-item"
-                       onclick="join_windbot(name)">{{name}}</a>
+                       (click)="join_windbot(name)">{{name}}</a>
                 </div>
             </div>
             <div class="modal-footer">
