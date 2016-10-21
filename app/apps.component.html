@@ -1,10 +1,14 @@
+<span>已安装</span>
 <ul class="nav nav-sidebar">
-    <li *ngFor="let app of apps" [class.active]="app.id==routingService.app"><a
-            (click)="selectApp(app.id)"
-            href="#"
-    >
-        {{app.name[app.locales[0]]}}
-    </a></li>
+    <li *ngFor="let app of grouped_apps.installed" [class.active]="app.id==routingService.app">
+        <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
+    </li>
+</ul>
+<span>未安装</span>
+<ul class="nav nav-sidebar">
+    <li *ngFor="let app of grouped_apps.not_installed" [class.active]="app.id==routingService.app">
+        <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
+    </li>
 </ul>
 <!--<ul class="nav nav-sidebar">
     <li><a href="">Nav item</a></li>
