@@ -85,7 +85,12 @@
       "darwin": "1.06"
     },
     "references": {
-      "win32": [],
+      "win32": [
+        {
+          "id": "th06-lang-zh-TW",
+          "type": "language"
+        }
+      ],
       "darwin": []
     },
     "download": {
@@ -146,7 +151,8 @@
       "darwin": "1.06"
     },
     "references": {
-      "win32": [],
+      "win32": [
+      ],
       "darwin": []
     },
     "download": {
