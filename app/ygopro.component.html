@@ -58,7 +58,8 @@
                     <div class="form-group row">
                         <label for="game-create-title" class="col-sm-2 form-control-label">游戏标题</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="game-create-title" name="title" [(ngModel)]="room.title">
+                            <input type="text" class="form-control" id="game-create-title" name="title"
+                                   [(ngModel)]="room.title">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -118,7 +119,7 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck" >不检查卡组
+                                    <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">不检查卡组
                                 </label>
                             </div>
                             <div class="checkbox">
@@ -164,7 +165,25 @@
                     <th class="extra">额外选项</th>
                 </tr>
                 </thead>
-                <tbody class="modal-body"></tbody>
+                <tbody class="modal-body">
+
+                <tr *ngFor="let room of rooms" class="room" (click)="join_room(room)">
+                    <td class="title">{{room.title}}</td>
+                    <td class="users">
+                        <img *ngFor="let user of room.users" class="avatar"
+                             [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
+                    </td>
+                    <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.mode]}}</td>
+                    <td class="extra">
+                        <span *ngIf="room.rule != default_options.rule">{{{'0': 'OCG', '1': 'TCG', '2': 'O/T', '3': '专有卡禁止'}[room.rule]}}</span>
+                        <span *ngIf="room.start_lp != default_options.start_lp">{{room.start_lp}} LP</span>
+                        <span *ngIf="room.start_hand != default_options.start_hand">{{room.start_hand}} 初始</span>
+                        <span *ngIf="room.draw_count != default_options.draw_count">{{room.draw_count}} 抽卡</span>
+                        <span *ngIf="room.enable_priority != default_options.enable_priority">优先权</span>
+                        <span *ngIf="room.no_check_deck != default_options.no_check_deck">不检查</span>
+                        <span *ngIf="room.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
+                    </td>
+                </tbody>
             </table>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

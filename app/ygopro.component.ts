@@ -1,9 +1,10 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {AppsService} from "./apps.service";
 import {RoutingService} from "./routing.service";
+
 
 declare var process;
 declare var System;
@@ -22,7 +23,7 @@ const electron = System._nodeRequire('electron');
     templateUrl: 'app/ygopro.component.html',
     styleUrls: ['app/ygopro.component.css'],
 })
-export class YGOProComponent {
+export class YGOProComponent implements OnInit {
     app = this.appsService.searchApp('ygopro');
     decks = [];
     current_deck;
@@ -33,15 +34,14 @@ export class YGOProComponent {
 
     windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
-    servers = [{address:"112.124.105.11", port: 7911}];
+    servers = [{id: 'tiramisu', url: 'wss://tiramisu.mycard.moe:7923', address: "112.124.105.11", port: 7911}];
 
 
     user = {external_id: 1, username: 'zh99998'}; // for test
 
-    room = {
-        title: this.user.username + '的房间',
-        rule: 0,
+    default_options = {
         mode: 1,
+        rule: 0,
         start_lp: 8000,
         start_hand: 5,
         draw_count: 1,
@@ -50,56 +50,53 @@ export class YGOProComponent {
         no_shuffle_deck: false
     };
 
+    room = Object.assign({title: this.user.username + '的房间'}, this.default_options);
+
     rooms = [];
 
-    constructor(private appsService: AppsService, private routingService: RoutingService) {
-        this.refresh()
+    connections = [];
 
-        // $('#game-list-modal').on('show.bs.modal', function (event) {
-        //     var tbody = $('#game-list-modal tbody');
-        //     for (let serfer of this.servers) {
-        //
-        //             if (server.private) return;
-        //             var connection = new ReconnectingWebSocket(server.url);
-        //             connection.onclose = function (event) {
-        //                 tbody.children('[data-server-id="' + server.id + '"]').remove()
-        //             };
-        //             connection.onmessage = function (event) {
-        //                 console.log(event)
-        //                 var message = JSON.parse(event.data);
-        //                 switch (message.event) {
-        //                     case 'init':
-        //                         tbody.children('[data-server-id="' + server.id + '"]').remove();
-        //                         for (var i = 0; i < message.data.length; i++) {
-        //                             tbody.append(room_template(message.data[i], server));
-        //                         }
-        //                         break;
-        //                     case 'create':
-        //                         tbody.append(room_template(message.data, server));
-        //                         break;
-        //                     case 'update':
-        //                         $('#room-' + server.id + '-' + message.data.id).replaceWith(room_template(message.data, server));
-        //                         break;
-        //                     case 'delete':
-        //                         $('#room-' + server.id + '-' + message.data).remove();
-        //                     //auto width not works.
-        //                     /*var thead = $('#game-list-modal .modal-header th');
-        //                      tbody.find('tr:first-child td').each(function (index, element) {
-        //                      $(thead[index]).width($(element).width())
-        //                      });
-        //                      */
-        //                 }
-        //             };
-        //             roomlist_connections[server_id] = connection;
-        //
-        //     }
-        // });
-        //
-        // $('#game-list-modal').on('hide.bs.modal', function (event) {
-        //     for (var i in roomlist_connections) {
-        //         roomlist_connections[i].close();
-        //     }
-        // });
+    constructor(private appsService: AppsService, private routingService: RoutingService, private ref: ChangeDetectorRef) {
+        this.refresh();
+    }
+
+    ngOnInit() {
+        let modal = $('#game-list-modal');
+
+        modal.on('show.bs.modal', (event) => {
+            this.connections = this.servers.map((server)=> {
+                let connection = new WebSocket(server.url);
+                connection.onclose = () => {
+                    this.rooms = this.rooms.filter(room=>room.server != server)
+                };
+                connection.onmessage = (event) => {
+                    let message = JSON.parse(event.data);
+                    //console.log(message)
+                    switch (message.event) {
+                        case 'init':
+                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map(data => Object.assign({server: server}, this.default_options, data)));
+                            break;
+                        case 'create':
+                            this.rooms.push(Object.assign({server: server}, this.default_options, message.data));
+                            break;
+                        case 'update':
+                            Object.assign(this.rooms.find(room=>room.server == server && room.id == message.data.id), this.default_options, message.data);
+                            break;
+                        case 'delete':
+                            this.rooms.splice(this.rooms.findIndex(room=>room.server == server && room.id == message.data), 1);
+                    }
+                    this.ref.detectChanges()
+                };
+                return connection;
+            });
+        });
+
+        modal.on('hide.bs.modal', (event) => {
+            for (let connection of this.connections) {
+                connection.close();
+            }
+            this.connections = []
+        });
     }
 
     refresh = () => {
@@ -201,7 +198,7 @@ export class YGOProComponent {
     };
 
     join_windbot(name) {
-        this.join('AI#'+name, this.servers[0])
+        this.join('AI#' + name, this.servers[0])
     }
 
     start_game = (args) => {
@@ -247,6 +244,7 @@ export class YGOProComponent {
         $('#game-create-modal').modal('hide');
     }
 
-
-
+    join_room(room) {
+        this.join(room.id, room.server);
+    }
 }
