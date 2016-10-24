@@ -7,8 +7,11 @@ import {RoutingService} from "./routing.service";
 
 declare var process;
 declare var System;
+declare var $;
+
 const fs = System._nodeRequire('fs');
 const path = System._nodeRequire('path');
+const crypto = System._nodeRequire('crypto');
 const child_process = System._nodeRequire('child_process');
 //const Promise = System._nodeRequire('bluebird');
 const ini = System._nodeRequire('ini');
@@ -32,8 +35,71 @@ export class YGOProComponent {
 
     servers = [{address:"112.124.105.11", port: 7911}];
 
+
+    user = {external_id: 1, username: 'zh99998'}; // for test
+
+    room = {
+        title: this.user.username + '的房间',
+        rule: 0,
+        mode: 1,
+        start_lp: 8000,
+        start_hand: 5,
+        draw_count: 1,
+        enable_priority: false,
+        no_check_deck: false,
+        no_shuffle_deck: false
+    };
+
+    rooms = [];
+
     constructor(private appsService: AppsService, private routingService: RoutingService) {
         this.refresh()
+
+        // $('#game-list-modal').on('show.bs.modal', function (event) {
+        //     var tbody = $('#game-list-modal tbody');
+        //     for (let serfer of this.servers) {
+        //
+        //             if (server.private) return;
+        //             var connection = new ReconnectingWebSocket(server.url);
+        //             connection.onclose = function (event) {
+        //                 tbody.children('[data-server-id="' + server.id + '"]').remove()
+        //             };
+        //             connection.onmessage = function (event) {
+        //                 console.log(event)
+        //                 var message = JSON.parse(event.data);
+        //                 switch (message.event) {
+        //                     case 'init':
+        //                         tbody.children('[data-server-id="' + server.id + '"]').remove();
+        //                         for (var i = 0; i < message.data.length; i++) {
+        //                             tbody.append(room_template(message.data[i], server));
+        //                         }
+        //                         break;
+        //                     case 'create':
+        //                         tbody.append(room_template(message.data, server));
+        //                         break;
+        //                     case 'update':
+        //                         $('#room-' + server.id + '-' + message.data.id).replaceWith(room_template(message.data, server));
+        //                         break;
+        //                     case 'delete':
+        //                         $('#room-' + server.id + '-' + message.data).remove();
+        //                     //auto width not works.
+        //                     /*var thead = $('#game-list-modal .modal-header th');
+        //                      tbody.find('tr:first-child td').each(function (index, element) {
+        //                      $(thead[index]).width($(element).width())
+        //                      });
+        //                      */
+        //                 }
+        //             };
+        //             roomlist_connections[server_id] = connection;
+        //
+        //     }
+        // });
+        //
+        // $('#game-list-modal').on('hide.bs.modal', function (event) {
+        //     for (var i in roomlist_connections) {
+        //         roomlist_connections[i].close();
+        //     }
+        // });
     }
 
     refresh = () => {
@@ -124,12 +190,14 @@ export class YGOProComponent {
                 data['lastip'] = server.address;
                 data['lastport'] = server.port;
                 data['roompass'] = name;
+                data['nickname'] = this.user.username;
+                console.log(data)
                 return data
             })
             .then(this.save_system_conf)
             .then(()=>['-j'])
             .then(this.start_game)
-            .catch(reason=>console.log(reason))
+            .catch(reason=>alert(reason))
     };
 
     join_windbot(name) {
@@ -152,4 +220,33 @@ export class YGOProComponent {
             })
         })
     };
+
+    create_room(options) {
+        let options_buffer = new Buffer(6);
+        // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
+        options_buffer.writeUInt8((options.private ? 2 : 1) << 4, 1);
+        options_buffer.writeUInt8(parseInt(options.rule) << 5 | parseInt(options.mode) << 3 | (options.enable_priority ? 1 << 2 : 0) | (options.no_check_deck ? 1 << 1 : 0) | (options.no_shuffle_deck ? 1 : 0), 2);
+        options_buffer.writeUInt16LE(parseInt(options.start_lp), 3);
+        options_buffer.writeUInt8(parseInt(options.start_hand) << 4 | parseInt(options.draw_count), 5);
+        let checksum = 0;
+        for (let i = 1; i < options_buffer.length; i++) {
+            checksum -= options_buffer.readUInt8(i)
+        }
+        options_buffer.writeUInt8(checksum & 0xFF, 0);
+
+        let secret = this.user.external_id % 65535 + 1;
+        for (let i = 0; i < options_buffer.length; i += 2) {
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+        }
+
+        let password = options_buffer.toString('base64') + options.title.replace(/\s/, String.fromCharCode(0xFEFF));
+        let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_')
+
+        this.join(password, this.servers[0]);
+
+        $('#game-create-modal').modal('hide');
+    }
+
+
+
 }

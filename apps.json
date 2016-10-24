@@ -47,7 +47,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7ea2\u9b54\u4e61 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方红魔乡 语言包(繁体中文)"
     }
   },
   {
@@ -56,7 +56,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -113,7 +113,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7ea2\u9b54\u4e61"
+      "zh-CN": "东方红魔乡"
     }
   },
   {
@@ -151,8 +151,7 @@
       "darwin": "1.06"
     },
     "references": {
-      "win32": [
-      ],
+      "win32": [],
       "darwin": []
     },
     "download": {
@@ -165,7 +164,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u8403\u68a6\u60f3 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方萃梦想 语言包(繁体中文)"
     }
   },
   {
@@ -174,7 +173,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -216,7 +215,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u8403\u68a6\u60f3"
+      "zh-CN": "东方萃梦想"
     }
   },
   {
@@ -267,7 +266,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6 \u8bed\u8a00\u5305(\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方妖妖梦 语言包(繁体中文)"
     }
   },
   {
@@ -276,7 +275,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -318,7 +317,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5996\u5996\u68a6"
+      "zh-CN": "东方妖妖梦"
     }
   },
   {
@@ -369,7 +368,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u6c38\u591c\u6284 \u8bed\u8a00\u5305(\u7b80\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方永夜抄 语言包(简体中文)"
     }
   },
   {
@@ -378,7 +377,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -420,7 +419,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u6c38\u591c\u6284"
+      "zh-CN": "东方永夜抄"
     }
   },
   {
@@ -471,7 +470,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u6587\u82b1\u5e16 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方文花帖 (繁体中文)"
     }
   },
   {
@@ -480,7 +479,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -522,7 +521,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u6587\u82b1\u5e16"
+      "zh-CN": "东方文花帖"
     }
   },
   {
@@ -573,7 +572,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u82b1\u6620\u51a2 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方花映冢 (繁体中文)"
     }
   },
   {
@@ -582,7 +581,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -624,7 +623,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u82b1\u6620\u51a2"
+      "zh-CN": "东方花映冢"
     }
   },
   {
@@ -675,7 +674,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7eef\u60f3\u5929 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方绯想天 语言包 (简体中文)"
     }
   },
   {
@@ -684,7 +683,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -726,7 +725,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7eef\u60f3\u5929"
+      "zh-CN": "东方绯想天"
     }
   },
   {
@@ -777,7 +776,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u98ce\u795e\u5f55 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587, \u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方风神录 语言包 (简体中文, 繁体中文)"
     }
   },
   {
@@ -786,7 +785,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -828,7 +827,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u98ce\u795e\u5f55"
+      "zh-CN": "东方风神录"
     }
   },
   {
@@ -879,7 +878,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5730\u7075\u6bbf \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方地灵殿 语言包 (繁体中文)"
     }
   },
   {
@@ -888,7 +887,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -930,7 +929,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5730\u7075\u6bbf"
+      "zh-CN": "东方地灵殿"
     }
   },
   {
@@ -981,7 +980,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u975e\u60f3\u5929\u5219 \u8bed\u8a00\u5305 (\u7b80\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方非想天则 语言包 (简体中文)"
     }
   },
   {
@@ -990,7 +989,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1032,7 +1031,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u975e\u60f3\u5929\u5219"
+      "zh-CN": "东方非想天则"
     }
   },
   {
@@ -1083,7 +1082,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u661f\u83b2\u8239 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方星莲船 语言包 (繁体中文)"
     }
   },
   {
@@ -1092,7 +1091,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1134,7 +1133,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u661f\u83b2\u8239"
+      "zh-CN": "东方星莲船"
     }
   },
   {
@@ -1185,7 +1184,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7075\u5f02\u4f20 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方灵异传 语言包 (繁体中文)"
     }
   },
   {
@@ -1194,7 +1193,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou_pc98"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1236,7 +1235,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u7075\u5f02\u4f20"
+      "zh-CN": "东方灵异传"
     }
   },
   {
@@ -1287,7 +1286,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u68a6\u65f6\u7a7a \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方梦时空 语言包 (繁体中文)"
     }
   },
   {
@@ -1296,7 +1295,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou_pc98"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1338,7 +1337,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u68a6\u65f6\u7a7a"
+      "zh-CN": "东方梦时空"
     }
   },
   {
@@ -1389,7 +1388,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5c01\u9b54\u5f55 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方封魔录 语言包 (繁体中文)"
     }
   },
   {
@@ -1398,7 +1397,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou_pc98"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1440,7 +1439,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5c01\u9b54\u5f55"
+      "zh-CN": "东方封魔录"
     }
   },
   {
@@ -1491,7 +1490,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5e7b\u60f3\u4e61 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方幻想乡 语言包 (繁体中文)"
     }
   },
   {
@@ -1500,7 +1499,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou_pc98"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1542,7 +1541,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u5e7b\u60f3\u4e61"
+      "zh-CN": "东方幻想乡"
     }
   },
   {
@@ -1593,7 +1592,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u602a\u7eee\u8c08 \u8bed\u8a00\u5305 (\u7e41\u4f53\u4e2d\u6587)"
+      "zh-CN": "东方怪绮谈 语言包 (繁体中文)"
     }
   },
   {
@@ -1602,7 +1601,7 @@
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "touhou_pc98"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
@@ -1644,7 +1643,7 @@
       "zh-CN"
     ],
     "name": {
-      "zh-CN": "\u4e1c\u65b9\u602a\u7eee\u8c08"
+      "zh-CN": "东方怪绮谈"
     }
   },
   {
@@ -1657,8 +1656,7 @@
     },
     "category": "game",
     "tags": [
-      "game",
-      "card"
+      "yugioh"
     ],
     "locales": [
       "zh-CN"
