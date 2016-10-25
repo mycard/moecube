@@ -20,5 +20,9 @@ webview[hidden] {
     width: 0;
     height: 0;
     flex: 0 1;
-    display: inherit;
+    display: block;
+}
+
+#candy {
+    flex: 0 1;
 }
