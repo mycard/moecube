@@ -1,66 +1,35 @@
 [
   {
-    "category": "module",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "language"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th06.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th06.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "parent": "th06",
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th06-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
+    "id": "th06",
     "name": {
-      "zh-CN": "东方红魔乡 语言包(繁体中文)"
-    }
-  },
-  {
-    "category": "game",
+      "zh-CN": "东方红魔乡"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th06-lang-zh-TW"
+      ],
+      "darwin": [
+        "th06-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -84,19 +53,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "dependencies": {
-      "win32": [],
-      "darwin": []
-    },
-    "references": {
-      "win32": [
-        {
-          "id": "th06-lang-zh-TW",
-          "type": "language"
-        }
-      ],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th06.meta4",
@@ -112,29 +68,40 @@
         "url": "#",
         "title": "红魔乡新闻2"
       }
-    ],
-    "id": "th06",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方红魔乡"
-    }
+    ]
   },
   {
-    "category": "lang",
+    "id": "th06-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方红魔乡 语言包(繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th06",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th06.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -143,7 +110,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th06.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -155,84 +122,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
     },
-    "news": [],
-    "id": "th075-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方萃梦想 语言包(繁体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th07",
+    "name": {
+      "zh-CN": "东方妖妖梦"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou"
     ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
     },
     "references": {
-      "win32": [],
-      "darwin": []
+      "win32": [
+        "th07-lang-zh-TW"
+      ],
+      "darwin": [
+        "th07-lang-zh-TW"
+      ]
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th075.meta4"
-    },
-    "news": [],
-    "id": "th075",
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
     "locales": [
       "zh-CN"
     ],
-    "name": {
-      "zh-CN": "东方萃梦想"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
     "actions": {
       "win32": {
         "main": {
@@ -256,85 +182,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th07-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方妖妖梦 语言包(繁体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th07.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th07.meta4"
     },
-    "news": [],
-    "id": "th07",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方妖妖梦"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th07-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方妖妖梦 语言包(繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th07",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -359,33 +241,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4"
     },
-    "news": [],
-    "id": "th08-lang-zh-CN",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方永夜抄 语言包(简体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th075",
+    "name": {
+      "zh-CN": "东方萃梦想"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th075-lang-zh-TW"
+      ],
+      "darwin": [
+        "th075-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -410,33 +302,159 @@
     "version": {
       "darwin": "1.06"
     },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th075.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th075-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方萃梦想 语言包(繁体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th075",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
     "references": {
       "win32": [],
       "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th08",
+    "name": {
+      "zh-CN": "东方永夜抄"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th08-lang-zh-CN"
+      ],
+      "darwin": [
+        "th08-lang-zh-CN"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th08.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th08.meta4"
     },
-    "news": [],
-    "id": "th08",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方永夜抄"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th08-lang-zh-CN",
+    "name": {
+      "zh-CN": "东方永夜抄 语言包(简体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th08",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -461,84 +479,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4"
     },
-    "news": [],
-    "id": "th095-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方文花帖 (繁体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th09",
+    "name": {
+      "zh-CN": "东方花映冢"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou"
     ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
     },
     "references": {
-      "win32": [],
-      "darwin": []
+      "win32": [
+        "th09-langzh-TW"
+      ],
+      "darwin": [
+        "th09-langzh-TW"
+      ]
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th095.meta4"
-    },
-    "news": [],
-    "id": "th095",
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
     "locales": [
       "zh-CN"
     ],
-    "name": {
-      "zh-CN": "东方文花帖"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
     "actions": {
       "win32": {
         "main": {
@@ -562,85 +539,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4"
-    },
-    "news": [],
-    "id": "th09-langzh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方花映冢 (繁体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th09.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th09.meta4"
     },
-    "news": [],
-    "id": "th09",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方花映冢"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th09-langzh-TW",
+    "name": {
+      "zh-CN": "东方花映冢 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th09",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -665,33 +598,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4"
     },
-    "news": [],
-    "id": "th105-lang-zh-CN",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方绯想天 语言包 (简体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th095",
+    "name": {
+      "zh-CN": "东方文花帖"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th095-lang-zh-TW"
+      ],
+      "darwin": [
+        "th095-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -716,33 +659,40 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th105.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th095.meta4"
     },
-    "news": [],
-    "id": "th105",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方绯想天"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th095-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方文花帖 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th095",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -767,441 +717,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4"
     },
-    "news": [],
-    "id": "th10-lang-zh-CN-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方风神录 语言包 (简体中文, 繁体中文)"
-    }
+    "news": []
   },
   {
+    "id": "th1",
+    "name": {
+      "zh-CN": "东方灵异传"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
     "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th10.meta4"
-    },
-    "news": [],
-    "id": "th10",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方风神录"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th11-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方地灵殿 语言包 (繁体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
-    },
-    "news": [],
-    "id": "th11",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方地灵殿"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4"
-    },
-    "news": [],
-    "id": "th123-lang-zh-CN",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方非想天则 语言包 (简体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
-    },
-    "news": [],
-    "id": "th123",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方非想天则"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th12-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方星莲船 语言包 (繁体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "touhou"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
-    },
-    "news": [],
-    "id": "th12",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方星莲船"
-    }
-  },
-  {
-    "category": "lang",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "tags": [
-      "game"
-    ],
-    "homepage": "http://www.myacg.cc",
-    "author": "ZUN",
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th1-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方灵异传 语言包 (繁体中文)"
-    }
-  },
-  {
-    "category": "game",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
     "tags": [
       "touhou_pc98"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th1-lang-zh-TW"
+      ],
+      "darwin": [
+        "th1-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1225,34 +777,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th1.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th1.meta4"
     },
-    "news": [],
-    "id": "th1",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方灵异传"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th1-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方灵异传 语言包 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th1",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1277,33 +836,638 @@
     "version": {
       "darwin": "1.06"
     },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th10",
+    "name": {
+      "zh-CN": "东方风神录"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th10-lang-zh-CN-zh-TW"
+      ],
+      "darwin": [
+        "th10-lang-zh-CN-zh-TW"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th10.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th10-lang-zh-CN-zh-TW",
+    "name": {
+      "zh-CN": "东方风神录 语言包 (简体中文, 繁体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th10",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
     "references": {
       "win32": [],
       "darwin": []
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4"
-    },
-    "news": [],
-    "id": "th2-lang-zh-TW",
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
     "locales": [
       "zh-CN"
     ],
-    "name": {
-      "zh-CN": "东方梦时空 语言包 (繁体中文)"
-    }
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4"
+    },
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th105",
+    "name": {
+      "zh-CN": "东方绯想天"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th105-lang-zh-CN"
+      ],
+      "darwin": [
+        "th105-lang-zh-CN"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th105.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th105-lang-zh-CN",
+    "name": {
+      "zh-CN": "东方绯想天 语言包 (简体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th105",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th11",
+    "name": {
+      "zh-CN": "东方地灵殿"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th11-lang-zh-TW"
+      ],
+      "darwin": [
+        "th11-lang-zh-TW"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th11-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方地灵殿 语言包 (繁体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th11",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th12",
+    "name": {
+      "zh-CN": "东方星莲船"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th12-lang-zh-TW"
+      ],
+      "darwin": [
+        "th12-lang-zh-TW"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th12-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方星莲船 语言包 (繁体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th12",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th123",
+    "name": {
+      "zh-CN": "东方非想天则"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th123-lang-zh-CN"
+      ],
+      "darwin": [
+        "th123-lang-zh-CN"
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th123-lang-zh-CN",
+    "name": {
+      "zh-CN": "东方非想天则 语言包 (简体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th123",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "th2",
+    "name": {
+      "zh-CN": "东方梦时空"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
     "tags": [
       "touhou_pc98"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th2-lang-zh-TW"
+      ],
+      "darwin": [
+        "th2-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1327,34 +1491,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th2.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th2.meta4"
     },
-    "news": [],
-    "id": "th2",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方梦时空"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th2-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方梦时空 语言包 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th2",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1379,33 +1550,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4"
     },
-    "news": [],
-    "id": "th3-lang-zh-TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方封魔录 语言包 (繁体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th3",
+    "name": {
+      "zh-CN": "东方封魔录"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou_pc98"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th3-lang-zh-TW"
+      ],
+      "darwin": [
+        "th3-lang-zh-TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1429,34 +1610,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th3.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th3.meta4"
     },
-    "news": [],
-    "id": "th3",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方封魔录"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th3-lang-zh-TW",
+    "name": {
+      "zh-CN": "东方封魔录 语言包 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th3",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1481,33 +1669,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4"
     },
-    "news": [],
-    "id": "th4-lang-zh_TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方幻想乡 语言包 (繁体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th4",
+    "name": {
+      "zh-CN": "东方幻想乡"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou_pc98"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th4-lang-zh_TW"
+      ],
+      "darwin": [
+        "th4-lang-zh_TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1531,34 +1729,41 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th4.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th4.meta4"
     },
-    "news": [],
-    "id": "th4",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方幻想乡"
-    }
+    "news": []
   },
   {
-    "category": "lang",
+    "id": "th4-lang-zh_TW",
+    "name": {
+      "zh-CN": "东方幻想乡 语言包 (繁体中文)"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "module",
+    "parent": "th4",
     "tags": [
-      "game"
+      "language"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1583,33 +1788,43 @@
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
     "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4"
+      "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4"
     },
-    "news": [],
-    "id": "th5-lang-zh_TW",
-    "locales": [
-      "zh-CN"
-    ],
-    "name": {
-      "zh-CN": "东方怪绮谈 语言包 (繁体中文)"
-    }
+    "news": []
   },
   {
-    "category": "game",
+    "id": "th5",
+    "name": {
+      "zh-CN": "东方怪绮谈"
+    },
     "description": {
       "zh-CN": "fxt desc"
     },
+    "category": "game",
     "tags": [
       "touhou_pc98"
     ],
-    "homepage": "http://www.myacg.cc",
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [
+        "th5-lang-zh_TW"
+      ],
+      "darwin": [
+        "th5-lang-zh_TW"
+      ]
+    },
     "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
     "actions": {
       "win32": {
         "main": {
@@ -1633,23 +1848,70 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
     },
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th5.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th5.meta4"
     },
-    "news": [],
-    "id": "th5",
+    "news": []
+  },
+  {
+    "id": "th5-lang-zh_TW",
+    "name": {
+      "zh-CN": "东方怪绮谈 语言包 (繁体中文)"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "module",
+    "parent": "th5",
+    "tags": [
+      "language"
+    ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
     "locales": [
       "zh-CN"
     ],
-    "name": {
-      "zh-CN": "东方怪绮谈"
-    }
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LC_ALL": "ja_JP"
+          }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4"
+    },
+    "news": []
   },
   {
     "id": "ygopro",
@@ -1663,11 +1925,21 @@
     "tags": [
       "yugioh"
     ],
+    "dependency": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "Fluorohydride",
+    "homepage": "https://github.com/Fluorohydride/ygopro",
     "locales": [
       "zh-CN"
     ],
-    "homepage": "https://github.com/Fluorohydride/ygopro",
-    "author": "Fluorohydride",
     "actions": {
       "win32": {
         "main": {
@@ -1684,16 +1956,12 @@
         }
       }
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/ygopro-osx.meta4"
-    },
     "version": {
       "darwin": "1.06"
     },
-    "references": {
-      "win32": [],
-      "darwin": []
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/ygopro-osx.meta4"
     },
     "news": [
       {
