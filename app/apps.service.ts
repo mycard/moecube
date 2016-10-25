@@ -19,7 +19,15 @@ const execFile = window['System']._nodeRequire('child_process').execFile;
 export class AppsService {
 
 
-    currentApp: App;
+    private _currentApp: App;
+
+    get currentApp(): App {
+        return this._currentApp;
+    }
+
+    set currentApp(app: App) {
+        this._currentApp = app;
+    }
 
     constructor(private http: Http, private translate: TranslateService, private settings: SettingsService) {
         let loop = setInterval(()=> {
@@ -197,23 +205,6 @@ export class AppsService {
             .subscribe((apps) => {
                 console.log(apps);
                 this.data = apps;
-                // for (let app of data) {
-                // }
-                // this.data = data;
-                // for (let app of data) {
-                //     //console.log(app)
-                //     for (let attribute of ['name', 'description']) {
-                //         if (!app[attribute]) {
-                //             continue
-                //         } //这句应当是不需要的, 如果转换成了 App 类型, 应当保证一定有这些属性
-                //         for (let locale of Object.keys(app[attribute])) {
-                //             let result = {};
-                //             result[`app.${app['id']}.${attribute}`] = app[attribute][locale];
-                //             this.translate.setTranslation(locale, result, true);
-                //         }
-                //     }
-                // }
-                //console.log(this.data);
                 if (typeof(callback) === 'function') {
                     callback();
                 }

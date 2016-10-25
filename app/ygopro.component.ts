@@ -1,9 +1,8 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {RoutingService} from "./routing.service";
 
 
 declare var process;
@@ -56,7 +55,7 @@ export class YGOProComponent implements OnInit {
 
     connections = [];
 
-    constructor(private appsService: AppsService, private routingService: RoutingService, private ref: ChangeDetectorRef) {
+    constructor(private appsService: AppsService, private ref: ChangeDetectorRef) {
         this.refresh();
     }
 

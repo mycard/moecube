@@ -2,7 +2,6 @@
  * Created by zh99998 on 16/9/2.
  */
 import {Component} from "@angular/core";
-import {RoutingService} from "./routing.service";
 import {AppsService} from "./apps.service";
 @Component({
     selector: 'lobby',
@@ -10,6 +9,6 @@ import {AppsService} from "./apps.service";
     styleUrls: ['app/lobby.component.css'],
 })
 export class LobbyComponent {
-    constructor(private routingService: RoutingService, private appsService: AppsService) {
+    constructor(private appsService: AppsService) {
     }
 }

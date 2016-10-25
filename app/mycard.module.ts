@@ -12,7 +12,6 @@ import {RosterComponent} from "./roster.component";
 import {CandyComponent} from "./candy.component";
 import {CommunityComponent} from "./community.component";
 import {YGOProComponent} from "./ygopro.component";
-import {RoutingService} from "./routing.service";
 import {AppsService} from "./apps.service";
 import {TranslateModule} from "ng2-translate";
 import {SettingsService} from "./settings.sevices";
@@ -22,7 +21,7 @@ import {LoginService} from "./login.service";
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, TranslateModule.forRoot()],
     declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, CandyComponent, YGOProComponent],
     bootstrap: [MyCardComponent],
-    providers: [RoutingService, AppsService, SettingsService, LoginService],
+    providers: [AppsService, SettingsService, LoginService],
     schemas: [NO_ERRORS_SCHEMA]
 })
 export class MyCard {
