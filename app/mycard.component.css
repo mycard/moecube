@@ -82,3 +82,10 @@ li > a:hover, #window-buttons > i:hover {
 .navbar {
     border-radius: initial;
 }
+
+/* https://github.com/electron/electron/issues/7661#event-827104990 */
+.hide {
+    width: 0;
+    height: 0;
+    flex: 0 1;
+}
