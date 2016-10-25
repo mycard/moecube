@@ -11,7 +11,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -83,7 +83,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -140,7 +140,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -202,7 +202,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -259,7 +259,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -321,7 +321,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -378,7 +378,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -440,7 +440,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -497,7 +497,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -559,7 +559,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -616,7 +616,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -678,7 +678,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -735,7 +735,7 @@
     "tags": [
       "touhou_pc98"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -797,7 +797,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -854,7 +854,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -916,7 +916,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -973,7 +973,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1035,7 +1035,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1092,7 +1092,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1154,7 +1154,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1211,7 +1211,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1273,7 +1273,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1330,7 +1330,7 @@
     "tags": [
       "touhou"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1392,7 +1392,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1449,7 +1449,7 @@
     "tags": [
       "touhou_pc98"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1511,7 +1511,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1568,7 +1568,7 @@
     "tags": [
       "touhou_pc98"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1630,7 +1630,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1687,7 +1687,7 @@
     "tags": [
       "touhou_pc98"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1749,7 +1749,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1806,7 +1806,7 @@
     "tags": [
       "touhou_pc98"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1868,7 +1868,7 @@
     "tags": [
       "language"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
@@ -1925,7 +1925,7 @@
     "tags": [
       "yugioh"
     ],
-    "dependency": {
+    "dependencies": {
       "win32": [],
       "darwin": [
         "wine"
