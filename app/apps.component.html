@@ -1,29 +1,24 @@
-<span>已安装</span>
-<ul class="nav nav-sidebar">
+<span *ngIf="grouped_apps.installed">已安装</span>
+<ul *ngIf="grouped_apps.installed" class="nav nav-sidebar">
     <li *ngFor="let app of grouped_apps.installed" [class.active]="app.id==routingService.app">
         <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
     </li>
 </ul>
-<span>未安装</span>
-<ul class="nav nav-sidebar">
-    <li *ngFor="let app of grouped_apps.not_installed" [class.active]="app.id==routingService.app">
+<span *ngIf="grouped_apps.yugioh">游戏王</span>
+<ul *ngIf="grouped_apps.yugioh" class="nav nav-sidebar">
+    <li *ngFor="let app of grouped_apps.yugioh" [class.active]="app.id==routingService.app">
         <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
     </li>
 </ul>
-<!--<ul class="nav nav-sidebar">
-    <li><a href="">Nav item</a></li>
-    <li><a href="">Nav item again</a></li>
-    <li><a href="">One more nav</a></li>
-    <li><a href="">Another nav item</a></li>
-    <li><a href="">More navigation</a></li>
+<span *ngIf="grouped_apps.touhou">东方 Project</span>
+<ul *ngIf="grouped_apps.touhou" class="nav nav-sidebar">
+    <li *ngFor="let app of grouped_apps.touhou" [class.active]="app.id==routingService.app">
+        <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
+    </li>
 </ul>
-<ul class="nav nav-sidebar">
-    <li><a href="">Nav item again</a></li>
-    <li><a href="">One more nav</a></li>
-    <li><a href="">Another nav item</a></li>
-</ul>-->
-
-
-<!--<div class="list-group">
-
-</div>-->
+<span *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
+<ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-sidebar">
+    <li *ngFor="let app of grouped_apps.touhou_pc98" [class.active]="app.id==routingService.app">
+        <a (click)="selectApp(app.id)" href="#">{{app.name[app.locales[0]]}}</a>
+    </li>
+</ul>

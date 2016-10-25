@@ -53,19 +53,20 @@
                 </button>
                 <h4 class="modal-title" id="myModalLabel">创建房间</h4>
             </div>
-            <form id="game-create">
+            <form id="game-create" (submit)="create_room(room)">
                 <div class="modal-body">
                     <div class="form-group row">
                         <label for="game-create-title" class="col-sm-2 form-control-label">游戏标题</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="game-create-title" name="title">
+                            <input type="text" class="form-control" id="game-create-title" name="title"
+                                   [(ngModel)]="room.title">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="game-create-rule" class="col-sm-2 form-control-label">卡片允许</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="game-create-rule" name="rule">
-                                <option value="0" selected>OCG</option>
+                            <select class="form-control" id="game-create-rule" name="rule" [(ngModel)]="room.rule">
+                                <option value="0">OCG</option>
                                 <option value="1">TCG</option>
                                 <option value="2">OCG & TCG</option>
                                 <option value="3">专有卡禁止</option>
@@ -75,22 +76,22 @@
                     <div class="form-group row">
                         <label for="game-create-mode" class="col-sm-2 form-control-label">决斗模式</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="game-create-mode" name="mode">
+                            <select class="form-control" id="game-create-mode" name="mode" [(ngModel)]="room.mode">
                                 <option value="0">单局模式</option>
-                                <option value="1" selected>比赛模式</option>
+                                <option value="1">比赛模式</option>
                                 <option value="2">TAG</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 form-control-label">额外选项</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <div class="row">
                                 <label for="game-create-start-lp" class="col-sm-6 form-control-label">初始 LP</label>
                                 <div class="col-sm-6">
                                     <input name="start_lp" type="number" value="8000" min="1" max="65536"
                                            class="form-control form-control-sm game-create-extra"
-                                           id="game-create-start-lp">
+                                           id="game-create-start-lp" [(ngModel)]="room.start_lp">
                                 </div>
                             </div>
                             <div class="row">
@@ -98,7 +99,7 @@
                                 <div class="col-sm-6">
                                     <input name="start_hand" type="number" value="5" min="0" max="16"
                                            class="form-control form-control-sm game-create-extra"
-                                           id="game-create-start-hand">
+                                           id="game-create-start-hand" [(ngModel)]="room.start_hand">
                                 </div>
                             </div>
                             <div class="row">
@@ -106,29 +107,29 @@
                                 <div class="col-sm-6">
                                     <input name="draw_count" type="number" value="1" min="0" max="16"
                                            class="form-control form-control-sm game-create-extra"
-                                           id="game-create-draw-count">
+                                           id="game-create-draw-count" [(ngModel)]="room.draw_count">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <div class="checkbox">
                                 <label>
-                                    <input name="enable_priority" type="checkbox">允许启动效果优先权
+                                    <input name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">允许启动效果优先权
                                 </label>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input name="no_check_deck" type="checkbox">不检查卡组
+                                    <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">不检查卡组
                                 </label>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input name="no_shuffle_deck" type="checkbox">开局不洗卡组
+                                    <input name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">开局不洗卡组
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <!--<div class="form-group row">
                         <label class="col-sm-2">私密房间</label>
                         <div class="col-sm-10">
                             <div class="checkbox">
@@ -137,7 +138,7 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal"
@@ -164,7 +165,25 @@
                     <th class="extra">额外选项</th>
                 </tr>
                 </thead>
-                <tbody class="modal-body"></tbody>
+                <tbody class="modal-body">
+
+                <tr *ngFor="let room of rooms" class="room" (click)="join_room(room)">
+                    <td class="title">{{room.title}}</td>
+                    <td class="users">
+                        <img *ngFor="let user of room.users" class="avatar"
+                             [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
+                    </td>
+                    <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.mode]}}</td>
+                    <td class="extra">
+                        <span *ngIf="room.rule != default_options.rule">{{{'0': 'OCG', '1': 'TCG', '2': 'O/T', '3': '专有卡禁止'}[room.rule]}}</span>
+                        <span *ngIf="room.start_lp != default_options.start_lp">{{room.start_lp}} LP</span>
+                        <span *ngIf="room.start_hand != default_options.start_hand">{{room.start_hand}} 初始</span>
+                        <span *ngIf="room.draw_count != default_options.draw_count">{{room.draw_count}} 抽卡</span>
+                        <span *ngIf="room.enable_priority != default_options.enable_priority">优先权</span>
+                        <span *ngIf="room.no_check_deck != default_options.no_check_deck">不检查</span>
+                        <span *ngIf="room.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
+                    </td>
+                </tbody>
             </table>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

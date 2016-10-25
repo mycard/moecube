@@ -1,14 +1,18 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {AppsService} from "./apps.service";
 import {RoutingService} from "./routing.service";
 
+
 declare var process;
 declare var System;
+declare var $;
+
 const fs = System._nodeRequire('fs');
 const path = System._nodeRequire('path');
+const crypto = System._nodeRequire('crypto');
 const child_process = System._nodeRequire('child_process');
 //const Promise = System._nodeRequire('bluebird');
 const ini = System._nodeRequire('ini');
@@ -19,7 +23,7 @@ const electron = System._nodeRequire('electron');
     templateUrl: 'app/ygopro.component.html',
     styleUrls: ['app/ygopro.component.css'],
 })
-export class YGOProComponent {
+export class YGOProComponent implements OnInit {
     app = this.appsService.searchApp('ygopro');
     decks = [];
     current_deck;
@@ -30,10 +34,69 @@ export class YGOProComponent {
 
     windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
-    servers = [{address:"112.124.105.11", port: 7911}];
+    servers = [{id: 'tiramisu', url: 'wss://tiramisu.mycard.moe:7923', address: "112.124.105.11", port: 7911}];
 
-    constructor(private appsService: AppsService, private routingService: RoutingService) {
-        this.refresh()
+
+    user = {external_id: 1, username: 'zh99998'}; // for test
+
+    default_options = {
+        mode: 1,
+        rule: 0,
+        start_lp: 8000,
+        start_hand: 5,
+        draw_count: 1,
+        enable_priority: false,
+        no_check_deck: false,
+        no_shuffle_deck: false
+    };
+
+    room = Object.assign({title: this.user.username + '的房间'}, this.default_options);
+
+    rooms = [];
+
+    connections = [];
+
+    constructor(private appsService: AppsService, private routingService: RoutingService, private ref: ChangeDetectorRef) {
+        this.refresh();
+    }
+
+    ngOnInit() {
+        let modal = $('#game-list-modal');
+
+        modal.on('show.bs.modal', (event) => {
+            this.connections = this.servers.map((server)=> {
+                let connection = new WebSocket(server.url);
+                connection.onclose = () => {
+                    this.rooms = this.rooms.filter(room=>room.server != server)
+                };
+                connection.onmessage = (event) => {
+                    let message = JSON.parse(event.data);
+                    //console.log(message)
+                    switch (message.event) {
+                        case 'init':
+                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map(data => Object.assign({server: server}, this.default_options, data)));
+                            break;
+                        case 'create':
+                            this.rooms.push(Object.assign({server: server}, this.default_options, message.data));
+                            break;
+                        case 'update':
+                            Object.assign(this.rooms.find(room=>room.server == server && room.id == message.data.id), this.default_options, message.data);
+                            break;
+                        case 'delete':
+                            this.rooms.splice(this.rooms.findIndex(room=>room.server == server && room.id == message.data), 1);
+                    }
+                    this.ref.detectChanges()
+                };
+                return connection;
+            });
+        });
+
+        modal.on('hide.bs.modal', (event) => {
+            for (let connection of this.connections) {
+                connection.close();
+            }
+            this.connections = []
+        });
     }
 
     refresh = () => {
@@ -124,16 +187,18 @@ export class YGOProComponent {
                 data['lastip'] = server.address;
                 data['lastport'] = server.port;
                 data['roompass'] = name;
+                data['nickname'] = this.user.username;
+                console.log(data)
                 return data
             })
             .then(this.save_system_conf)
             .then(()=>['-j'])
             .then(this.start_game)
-            .catch(reason=>console.log(reason))
+            .catch(reason=>alert(reason))
     };
 
     join_windbot(name) {
-        this.join('AI#'+name, this.servers[0])
+        this.join('AI#' + name, this.servers[0])
     }
 
     start_game = (args) => {
@@ -152,4 +217,48 @@ export class YGOProComponent {
             })
         })
     };
+
+    create_room(options) {
+        let options_buffer = new Buffer(6);
+        // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
+        options_buffer.writeUInt8((options.private ? 2 : 1) << 4, 1);
+        options_buffer.writeUInt8(parseInt(options.rule) << 5 | parseInt(options.mode) << 3 | (options.enable_priority ? 1 << 2 : 0) | (options.no_check_deck ? 1 << 1 : 0) | (options.no_shuffle_deck ? 1 : 0), 2);
+        options_buffer.writeUInt16LE(parseInt(options.start_lp), 3);
+        options_buffer.writeUInt8(parseInt(options.start_hand) << 4 | parseInt(options.draw_count), 5);
+        let checksum = 0;
+        for (let i = 1; i < options_buffer.length; i++) {
+            checksum -= options_buffer.readUInt8(i)
+        }
+        options_buffer.writeUInt8(checksum & 0xFF, 0);
+
+        let secret = this.user.external_id % 65535 + 1;
+        for (let i = 0; i < options_buffer.length; i += 2) {
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+        }
+
+        let password = options_buffer.toString('base64') + options.title.replace(/\s/, String.fromCharCode(0xFEFF));
+        let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_')
+
+        this.join(password, this.servers[0]);
+    }
+
+    join_room(room) {
+        let options_buffer = new Buffer(6);
+        options_buffer.writeUInt8(3 << 4, 1);
+        let checksum = 0;
+        for (var i = 1; i < options_buffer.length; i++) {
+            checksum -= options_buffer.readUInt8(i)
+        }
+        options_buffer.writeUInt8(checksum & 0xFF, 0);
+
+        let secret = this.user.external_id % 65535 + 1;
+        for (i = 0; i < options_buffer.length; i += 2) {
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+        }
+
+
+        let password = options_buffer.toString('base64') + room.id;
+
+        this.join(password, room.server);
+    }
 }

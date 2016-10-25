@@ -42,16 +42,18 @@ export class AppsComponent {
     }
 
     get grouped_apps() {
-        let result = {'installed': [], 'not_installed': []};
-
+        let result = {'installed': []};
         for (let app of this.apps) {
             if (app.local) {
                 result.installed.push(app)
             } else {
-                result.not_installed.push(app)
+                if (!result[app.tags[0]]) {
+                    result[app.tags[0]] = []
+                }
+                result[app.tags[0]].push(app)
             }
         }
+        //console.log(result)
         return result
     }
-
 }
