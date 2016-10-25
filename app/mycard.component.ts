@@ -1,6 +1,5 @@
 import {Component, Renderer} from "@angular/core";
 import {TranslateService} from "ng2-translate";
-import {RoutingService} from "./routing.service";
 const electron = System._nodeRequire('electron');
 declare var process;
 declare var System;
@@ -18,7 +17,7 @@ export class MyCardComponent {
 
     platform = process.platform;
 
-    constructor(private routingService: RoutingService, private renderer: Renderer, private translate: TranslateService) {
+    constructor( private renderer: Renderer, private translate: TranslateService) {
         renderer.listenGlobal('window', 'message', (event) => {
             console.log(event);
             // Do something with 'event'

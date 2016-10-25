@@ -1,61 +1,33 @@
-<h1>{{'app.' + currentApp.id + '.name' | translate}}</h1>
+<h1>{{'app.' + appsService.currentApp.id + '.name' | translate}}</h1>
 <h2>{{appsService._aa}}</h2>
 <div *ngIf="!isInstalled">
-    <div *ngIf="!appsService.getDownloadInfo(routingService.app)">
-        <button type="button" (click)="updateInstallConfig()" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
+    <div *ngIf="!appsService.getDownloadInfo(appsService.currentApp)">
+        <button type="button" (click)="updateInstallConfig()" class="btn btn-primary" data-toggle="modal"
+                data-target="#install-modal">安装
+        </button>
         <button type="button" class="btn btn-secondary">导入</button>
         <!--<button type="button" class="btn btn-secondary">正版代购</button>-->
     </div>
-    <div *ngIf="appsService.getDownloadInfo(routingService.app)">
-        <div *ngIf="appsService.getDownloadInfo(routingService.app).status === 'install'">正在安装...</div>
-        <div *ngIf="appsService.getDownloadInfo(routingService.app).status === 'wait'">等待安装...</div>
-        <progress *ngIf="appsService.getDownloadInfo(routingService.app).status === 'active'"
+    <div *ngIf="appsService.getDownloadInfo(appsService.currentApp)">
+        <div *ngIf="appsService.getDownloadInfo(appsService.currentApp).status === 'install'">正在安装...</div>
+        <div *ngIf="appsService.getDownloadInfo(appsService.currentApp).status === 'wait'">等待安装...</div>
+        <progress *ngIf="appsService.getDownloadInfo(appsService.currentApp).status === 'active'"
                   class="progress progress-striped progress-animated"
-                  value="{{appsService.getDownloadInfo(routingService.app).progress}}" max="100">
+                  value="{{appsService.getDownloadInfo(appsService.currentApp).progress}}" max="100">
         </progress>
     </div>
 </div>
-<div *ngIf="isInstalled && (routingService.app != 'ygopro')">
-    <button (click)="startApp(routingService.app)" type="button" class="btn btn-primary">运行</button>
+<div *ngIf="isInstalled && (appsService.currentApp != 'ygopro')">
+    <button (click)="startApp(appsService.currentApp)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
-    <!--<button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">游览本地文件</button>-->
+    <!--<button (click)="appsService.browse(appsService.currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
-<ygopro *ngIf="isInstalled && (routingService.app == 'ygopro')"></ygopro>
+<ygopro *ngIf="isInstalled && (appsService.currentApp == 'ygopro')"></ygopro>
 
 <br>
 
 <h2 *ngIf="news">新闻</h2>
-
-<!--<div *ngIf="news">
-    <div class="list-group">
-        <a *ngFor="let item of news" href="{{item.url}}" class="list-group-item">{{item.title}}</a>
-    </div>
-</div>-->
-
-<!--<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li *ngFor="let item of news; let index = index;" data-target="#carousel-example-generic" [data-slide-to]="index" [class.active]="index == 0"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div *ngFor="let item of news; let index = index;" class="carousel-item" [class.active]="index == 0">
-            <img [src]="item.image" [alt]="item.title">
-            <div class="carousel-caption">
-                <h3>{{item.title}}</h3>
-                <p>{{item.text}}</p>
-            </div>
-        </div>
-    </div>
-    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-        <span class="icon-prev" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-        <span class="icon-next" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>-->
-
 
 <div id="news" *ngFor="let item of news">
     <h3>{{item.title}}</h3>
@@ -116,7 +88,7 @@
 
 <div *ngIf="isInstalled">
     <h2>本地文件</h2>
-    <button (click)="appsService.browse(routingService.app)" type="button" class="btn btn-secondary">浏览本地文件</button>
+    <button (click)="appsService.browse(appsService.currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
     <button (click)="uninstall()" type="button" class="btn btn-secondary">{{'uninstall'|translate}}</button>
 </div>
 
@@ -189,7 +161,7 @@
                 <h4>{{'install_path'|translate}}</h4>
                 <div class="form-group">
                     <select class="form-control">
-                        <option *ngFor="let library of settings.getLibraries()" [selected]="library['default']">
+                        <option *ngFor="let library of settingsService.getLibraries()" [selected]="library['default']">
                             {{ library['path']}}
                         </option>
                     </select>

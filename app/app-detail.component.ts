@@ -1,7 +1,5 @@
 import {Component, OnInit} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {RoutingService} from "./routing.service";
-import {App} from "./app";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 
@@ -13,7 +11,7 @@ declare var $;
     templateUrl: 'app/app-detail.component.html',
     styleUrls: ['app/app-detail.component.css'],
 })
-export class AppDetailComponent implements OnInit{
+export class AppDetailComponent implements OnInit {
     platform = process.platform;
 
     fs = window['System']._nodeRequire('fs');
@@ -23,37 +21,34 @@ export class AppDetailComponent implements OnInit{
 
     installConfig: InstallConfig;
 
-    ngOnInit(){
-       this.updateInstallConfig();
+    constructor(private appsService: AppsService, private settingsService: SettingsService) {
     }
+
+    ngOnInit() {
+        this.updateInstallConfig();
+    }
+
     updateInstallConfig() {
-        this.installConfig = this.appsService.getInstallConfig(this.currentApp);
-    }
-
-    constructor(private appsService: AppsService, private routingService: RoutingService, private settings: SettingsService) {
-    }
-
-    get currentApp(): App {
-        return this.appsService.searchApp(this.routingService.app);
+        this.installConfig = this.appsService.getInstallConfig(this.appsService.currentApp);
     }
 
     get name() {
-        if (this.currentApp) {
-            return this.currentApp.name[this.currentApp.locales[0]];
+        let currentApp = this.appsService.currentApp;
+        if (currentApp) {
+            return currentApp.name[this.settingsService.getLocale()];
         }
         return "Loading";
     };
 
     get isInstalled() {
-        return this.checkInstall(this.routingService.app);
+        return this.checkInstall(this.appsService.currentApp);
     }
 
 
     get news() {
-        if (this.currentApp) {
-            if (this.currentApp.news.length > 0) {
-                return this.currentApp.news;
-            }
+        let currentApp = this.appsService.currentApp;
+        if (currentApp) {
+            return currentApp.news;
         }
     }
 
@@ -68,9 +63,10 @@ export class AppDetailComponent implements OnInit{
     get mods() {
         let contains = ["optional", "language", "emulator"];
 
-        if (this.currentApp) {
-            if (this.currentApp.references[process.platform] && this.currentApp.references[process.platform].length > 0) {
-                let refs = this.currentApp.references[process.platform];
+        let currentApp = this.appsService.currentApp;
+        if (currentApp) {
+            if (currentApp.references[process.platform] && currentApp.references[process.platform].length > 0) {
+                let refs = currentApp.references[process.platform];
                 refs = refs.filter((ref)=> {
                     return contains.includes(ref.type);
                 });
@@ -123,7 +119,6 @@ export class AppDetailComponent implements OnInit{
     uninstall(id: string) {
         if (confirm("确认删除？")) {
             this.uninstalling = true;
-            id = this.currentApp.id;
             this.appsService.uninstall(id).then(()=> {
                     this.uninstalling = false;
                 }

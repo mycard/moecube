@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {RoutingService} from "./routing.service";
+import {App} from "./app";
 
 @Component({
     selector: 'apps',
@@ -9,31 +9,16 @@ import {RoutingService} from "./routing.service";
 })
 export class AppsComponent implements OnInit {
 
-    constructor(private appsService: AppsService, private routingService: RoutingService) {
+    constructor(private appsService: AppsService) {
     }
 
     ngOnInit() {
+
     }
 
-    // _apps;
-    // get apps() {
-    //
-    //     let data = this.appsService.data;
-    //     let apps;
-    //
-    //     if (data) {
-    //         apps = this.appsService.data.filter((app)=> {
-    //             return contains.includes(app.category);
-    //         });
-    //     }
-    //
-    //     return apps || [];
-    // }
-    //
-    // selectApp(id) {
-    //     this.routingService.app = id;
-    //     this.appsService.createInstallConfig(id);
-    // }
+    chooseApp(app: App) {
+        this.appsService.currentApp = app;
+    }
 
     get grouped_apps() {
         let contains = ["game", "music", "book"];
