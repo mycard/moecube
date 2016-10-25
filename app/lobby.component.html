@@ -1,7 +1,9 @@
 <!-- Begin page content -->
 <div id="main">
-    <apps></apps>
+    <apps *ngIf="appsService.allApps"></apps>
     <app-detail *ngIf="routingService.app"></app-detail>
     <roster></roster>
 </div>
-<webview id="candy" src="./candy/index.html?jid=zh99998@mycard.moe&password=&nickname=zh99998测试&autojoin=ygopro_china_north@conference.mycard.moe" nodeintegration></webview>
+<webview id="candy"
+         src="./candy/index.html?jid=zh99998@mycard.moe&password=&nickname=zh99998测试&autojoin=ygopro_china_north@conference.mycard.moe"
+         nodeintegration></webview>

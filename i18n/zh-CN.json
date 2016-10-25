@@ -2,9 +2,17 @@
   "library": "游戏",
   "community": "社区",
   "settings": "设置",
+  "cancel": "取消",
+  "install": "安装",
   "uninstall": "卸载",
   "general": "常规",
   "updates": "更新",
   "local files": "本地文件",
-  "uninstall confirm": "这将删除所有本地内容，确认执行？"
+  "uninstall confirm": "这将删除所有本地内容，确认执行？",
+  "browse": "浏览",
+  "install_path": "安装路径",
+  "shortcut": "快捷方式",
+  "create_shortcut": "创建应用程序快捷方式",
+  "create_desktop_shortcut": "创建桌面快捷方式",
+  "additions": "附加内容"
 }

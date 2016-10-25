@@ -1,16 +1,19 @@
-import {Component} from '@angular/core';
-import {AppsService} from './apps.service'
-import {RoutingService} from './routing.service'
+import {Component, OnInit} from "@angular/core";
+import {AppsService} from "./apps.service";
+import {RoutingService} from "./routing.service";
 import {App} from "./app";
+import {InstallConfig} from "./install-config";
+import {SettingsService} from "./settings.sevices";
 
 declare var process;
 declare var $;
+
 @Component({
     selector: 'app-detail',
     templateUrl: 'app/app-detail.component.html',
     styleUrls: ['app/app-detail.component.css'],
 })
-export class AppDetailComponent {
+export class AppDetailComponent implements OnInit{
     platform = process.platform;
 
     fs = window['System']._nodeRequire('fs');
@@ -18,15 +21,22 @@ export class AppDetailComponent {
     spawn = window['System']._nodeRequire('child_process').spawn;
     path = window['System']._nodeRequire('path');
 
-    constructor(private appsService: AppsService, private routingService: RoutingService) {
+    installConfig: InstallConfig;
+
+    ngOnInit(){
+       this.updateInstallConfig();
+    }
+    updateInstallConfig() {
+        this.installConfig = this.appsService.getInstallConfig(this.currentApp);
     }
 
-    _currentApp;
+    constructor(private appsService: AppsService, private routingService: RoutingService, private settings: SettingsService) {
+    }
+
     get currentApp(): App {
         return this.appsService.searchApp(this.routingService.app);
     }
 
-    _name;
     get name() {
         if (this.currentApp) {
             return this.currentApp.name[this.currentApp.locales[0]];
@@ -34,13 +44,11 @@ export class AppDetailComponent {
         return "Loading";
     };
 
-    _isInstalled;
     get isInstalled() {
         return this.checkInstall(this.routingService.app);
     }
 
 
-    _news;
     get news() {
         if (this.currentApp) {
             if (this.currentApp.news.length > 0) {
@@ -49,17 +57,14 @@ export class AppDetailComponent {
         }
     }
 
-    _friends;
     get friends() {
         return false;
     }
 
-    _achievement;
     get achievement() {
         return false;
     }
 
-    _mods;
     get mods() {
         let contains = ["optional", "language", "emulator"];
 
@@ -127,14 +132,14 @@ export class AppDetailComponent {
     }
 
 
-    installSubmit(theForm) {
-        console.log(theForm);
-        this.install(this.routingService.app);
-        for (let mod in this.appsService.installConfig.mods) {
-            if (this.appsService.installConfig.mods[mod]) {
-                this.install(mod);
-            }
-        }
+    installSubmit() {
+        console.log(this.installConfig);
+        // this.install(this.routingService.app);
+        // for (let mod in this.appsService.installConfig.mods) {
+        //     if (this.appsService.installConfig.mods[mod]) {
+        //         this.install(mod);
+        //     }
+        // }
     }
 
     selectDir() {

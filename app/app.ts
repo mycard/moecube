@@ -1,24 +1,25 @@
 import {AppLocal} from "./app-local";
 
 /*
-export enum Reference_Type {
-    runtime, // directx
-    emulator, // wine, np2
-    dependency, //
-    optional, // fxtz
-    language
-}
-*/
+ export enum Reference_Type {
+ runtime, // directx
+ emulator, // wine, np2
+ dependency, //
+ optional, // fxtz
+ language,
+ host
+ }
+ */
 /*
-export enum App_Category {
-    game,
-    music,
-    book,
-    runtime, // directx
-    emulator, // wine, np2
-    language
-}
-*/
+ export enum App_Category {
+ game,
+ music,
+ book,
+ runtime, // directx
+ emulator, // wine, np2
+ language
+ }
+ */
 
 export class App {
     id: string;
@@ -27,21 +28,24 @@ export class App {
     author: string;             // English Only
     homepage: string;
     category: string;
+    parent: App;
     actions: {[platform: string]: {[action: string]: {execute: string, args: string[], env: {}, open: string}}};
-    references: {[platform: string]: {id: string, type: string}[]};
+    references: Map<string,App>;
+    dependencies: Map<string,App>;
     locales: string[];
     download: {[platform: string]: string};           // meta4 url
     news: {title: string, url: string, image: string}[];
     tags: string[];
     version: {[platform: string]: string};
     local: AppLocal;
+
     constructor(app: AppInterface) {
         this.id = app.id;
         this.name = app.name;
         this.description = app.description;
         this.author = app.author;
         this.homepage = app.homepage;
-        this.category =app.category;
+        this.category = app.category;
         this.actions = app.actions;
         this.references = app.references;
         this.locales = app.locales;

@@ -6,11 +6,11 @@
             <a (click)="changeFouce('store')" class="nav-link" href="#">商店</a>
         </li>
         -->
-        <li [ngClass]="{active: routingService.component == 'lobby'}" class="nav-item">
-            <a (click)="changeFouce('lobby')" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
+        <li [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
+            <a (click)="currentPage='lobby'" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
         </li>
-        <li [ngClass]="{active: routingService.component == 'community'}" class="nav-item">
-            <a (click)="changeFouce('community')" class="nav-link" href="#">{{'community'| translate}}</a>
+        <li [ngClass]="{active: currentPage === 'community'}" class="nav-item">
+            <a (click)="currentPage='community'" class="nav-link" href="#">{{'community'| translate}}</a>
         </li>
     </ul>
     <div class="navbar-right">
@@ -19,7 +19,7 @@
                 <img id="avatar" src="https://ygobbs.com/letter_avatar_proxy/v2/letter/a/e47774/36.png" alt="image">
             </a>
             <a href="#forum" class="require-login profile item" id="username"></a>
-            <a (click)="changeFouce('login');" href="#ygopro" id="logout" class="require-login item">切换账号</a>
+            <a (click)="currentPage='login'" href="#ygopro" id="logout" class="require-login item">切换账号</a>
             <a (click)="refresh()" href="#ygopro" id="refresh" class="item">刷新</a>
         </div>
         <div id="window-buttons" [class.darwin]="platform == 'darwin'">
@@ -31,8 +31,8 @@
     </div>
 </nav>
 
-<login class="page" [ngClass]="{hide: routingService.component != 'login'}"></login>
-<store class="page" [ngClass]="{hide: routingService.component != 'store'}"></store>
-<lobby class="page" [ngClass]="{hide: routingService.component != 'lobby'}"></lobby>
-<webview id="community" class="page" [ngClass]="{hide: routingService.component != 'community'}"
+<login class="page" [ngClass]="{hide: currentPage!= 'login'}"></login>
+<store class="page" [ngClass]="{hide: currentPage!= 'store'}"></store>
+<lobby class="page" [ngClass]="{hide: currentPage!= 'lobby'}"></lobby>
+<webview id="community" class="page" [ngClass]="{hide: currentPage!= 'community'}"
          src="https://ygobbs.com"></webview>
