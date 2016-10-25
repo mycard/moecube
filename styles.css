@@ -14,15 +14,3 @@ h2, h3 {
 body {
     margin: 2em;
 }
-
-/* https://github.com/electron/electron/issues/7661#event-827104990 */
-webview[hidden] {
-    width: 0;
-    height: 0;
-    flex: 0 1;
-    display: block;
-}
-
-#candy {
-    flex: 0 1;
-}
