@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
 import "rxjs/Rx";
 import {App} from "./app";
@@ -16,7 +16,7 @@ const Aria2 = window['System']._nodeRequire('aria2');
 const execFile = window['System']._nodeRequire('child_process').execFile;
 
 @Injectable()
-export class AppsService implements OnInit {
+export class AppsService {
 
 
     currentApp: App;
@@ -36,10 +36,6 @@ export class AppsService implements OnInit {
             })
         }, 1000);
 
-    }
-
-
-    ngOnInit() {
         this.getApps(()=> {
             //console.log(appsService.data)
             if (this.data.size > 0) {
@@ -47,9 +43,6 @@ export class AppsService implements OnInit {
             }
         });
     }
-
-    //localStorage = window['localStorage'];
-
 
     private data: Map<string,App>;
 
@@ -202,6 +195,7 @@ export class AppsService implements OnInit {
                 return apps;
             }).map(this.loadApps)
             .subscribe((apps) => {
+                console.log(apps);
                 this.data = apps;
                 // for (let app of data) {
                 // }
