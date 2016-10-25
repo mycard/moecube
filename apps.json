@@ -1,18 +1,18 @@
 [
   {
-    "category": "lang",
+    "category": "module",
     "description": {
       "zh-CN": "fxt desc"
     },
     "tags": [
-      "game"
+      "language"
     ],
     "homepage": "http://www.myacg.cc",
     "author": "ZUN",
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th06.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -21,7 +21,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th06.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -37,6 +37,7 @@
       "win32": [],
       "darwin": []
     },
+    "parent": "th06",
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
@@ -83,6 +84,10 @@
     },
     "version": {
       "darwin": "1.06"
+    },
+    "dependencies": {
+      "win32": [],
+      "darwin": []
     },
     "references": {
       "win32": [
