@@ -240,11 +240,25 @@ export class YGOProComponent implements OnInit {
         let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_')
 
         this.join(password, this.servers[0]);
-
-        $('#game-create-modal').modal('hide');
     }
 
     join_room(room) {
-        this.join(room.id, room.server);
+        let options_buffer = new Buffer(6);
+        options_buffer.writeUInt8(3 << 4, 1);
+        let checksum = 0;
+        for (var i = 1; i < options_buffer.length; i++) {
+            checksum -= options_buffer.readUInt8(i)
+        }
+        options_buffer.writeUInt8(checksum & 0xFF, 0);
+
+        let secret = this.user.external_id % 65535 + 1;
+        for (i = 0; i < options_buffer.length; i += 2) {
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+        }
+
+
+        let password = options_buffer.toString('base64') + room.id;
+
+        this.join(password, room.server);
     }
 }

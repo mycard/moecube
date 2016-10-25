@@ -19,3 +19,7 @@ a {
 .active > a {
     color: #fff;
 }
+
+span {
+    margin-left: 8px;
+}
