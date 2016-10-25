@@ -1,20 +1,23 @@
 <nav class="navbar navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
+        <li *ngIf="!loginService.user" class="nav-item active">
+            <a class="nav-link" href="#">登录<span class="sr-only">(current)</span></a>
+        </li>
         <!--
         <li [ngClass]="{active: routingService.component == 'store'}" class="nav-item">
             <a (click)="changeFouce('store')" class="nav-link" href="#">商店</a>
         </li>
         -->
-        <li [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
+        <li *ngIf="loginService.user" [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
             <a (click)="currentPage='lobby'" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
         </li>
-        <li [ngClass]="{active: currentPage === 'community'}" class="nav-item">
+        <li *ngIf="loginService.user" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
             <a (click)="currentPage='community'" class="nav-link" href="#">{{'community'| translate}}</a>
         </li>
     </ul>
     <div class="navbar-right">
-        <div id="user">
+        <div id="user" *ngIf="loginService.user">
             <a href="#forum" class="require-login profile">
                 <img id="avatar" src="https://ygobbs.com/letter_avatar_proxy/v2/letter/a/e47774/36.png" alt="image">
             </a>
@@ -31,8 +34,8 @@
     </div>
 </nav>
 
-<login class="page" [ngClass]="{hide: currentPage != 'login'}"></login>
-<store class="page" [ngClass]="{hide: currentPage != 'store'}"></store>
-<lobby class="page" [ngClass]="{hide: currentPage != 'lobby'}"></lobby>
-<webview id="community" class="page" [ngClass]="{hide: currentPage != 'community'}"
+<login class="page" *ngIf="!loginService.user"></login>
+<store class="page" [hidden]="!loginService.user || currentPage != 'store'"></store>
+<lobby class="page" [hidden]="!loginService.user || currentPage != 'lobby'"></lobby>
+<webview id="community" class="page" [hidden]="!loginService.user || currentPage != 'community'"
          src="https://ygobbs.com"></webview>

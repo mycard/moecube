@@ -1,6 +1,7 @@
 import {Component, Renderer} from "@angular/core";
 import {TranslateService} from "ng2-translate";
 import {RoutingService} from "./routing.service";
+import {LoginService} from "./login.service";
 const electron = System._nodeRequire('electron');
 declare var process;
 declare var System;
@@ -14,11 +15,12 @@ declare var System;
 })
 
 export class MyCardComponent {
-    currentPage: string="lobby";
+    currentPage: string = "lobby";
 
     platform = process.platform;
 
-    constructor(private routingService: RoutingService, private renderer: Renderer, private translate: TranslateService) {
+    constructor(private routingService: RoutingService, private renderer: Renderer, private translate: TranslateService, private loginService: LoginService) {
+
         renderer.listenGlobal('window', 'message', (event) => {
             console.log(event);
             // Do something with 'event'
