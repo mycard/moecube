@@ -31,8 +31,8 @@
     </div>
 </nav>
 
-<login class="page" [ngClass]="{hide: currentPage!= 'login'}"></login>
-<store class="page" [ngClass]="{hide: currentPage!= 'store'}"></store>
-<lobby class="page" [ngClass]="{hide: currentPage!= 'lobby'}"></lobby>
-<webview id="community" class="page" [ngClass]="{hide: currentPage!= 'community'}"
+<login class="page" [hidden]="currentPage!= 'login'"></login>
+<store class="page" [hidden]="currentPage!= 'store'"></store>
+<lobby class="page" [hidden]="currentPage!= 'lobby'"></lobby>
+<webview id="community" class="page" [hidden]=" currentPage!= 'community'"
          src="https://ygobbs.com"></webview>

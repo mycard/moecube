@@ -1,14 +1,28 @@
 /* Master Styles */
 h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
+    color: #369;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 250%;
 }
+
 h2, h3 {
-  color: #444;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: lighter;
+    color: #444;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
 }
+
 body {
-  margin: 2em;
+    margin: 2em;
+}
+
+/* https://github.com/electron/electron/issues/7661#event-827104990 */
+webview[hidden] {
+    width: 0;
+    height: 0;
+    flex: 0 1;
+    display: block;
+}
+
+#candy {
+    flex: 0 1;
 }
