@@ -1,10 +1,10 @@
-import {Injectable, transition} from '@angular/core';
-import {Http} from '@angular/http';
-import 'rxjs/Rx';
+import {Injectable, OnInit} from "@angular/core";
+import {Http} from "@angular/http";
+import "rxjs/Rx";
 import {App} from "./app";
-import {AppLocal} from "./app-local";
 import {TranslateService} from "ng2-translate";
-import {RoutingService} from "./routing.service";
+import {InstallConfig} from "./install-config";
+import {SettingsService} from "./settings.sevices";
 
 declare var process;
 const os = window['System']._nodeRequire('os');
@@ -16,9 +16,12 @@ const Aria2 = window['System']._nodeRequire('aria2');
 const execFile = window['System']._nodeRequire('child_process').execFile;
 
 @Injectable()
-export class AppsService {
+export class AppsService implements OnInit {
 
-    constructor(private http: Http, private translate: TranslateService) {
+
+    currentApp: App;
+
+    constructor(private http: Http, private translate: TranslateService, private settings: SettingsService) {
         let loop = setInterval(()=> {
             this.aria2.tellActive().then((res)=> {
                 if (res) {
@@ -36,10 +39,23 @@ export class AppsService {
     }
 
 
+    ngOnInit() {
+        this.getApps(()=> {
+            //console.log(appsService.data)
+            if (this.data.size > 0) {
+                this.currentApp = this.data.get('ygopro');
+            }
+        });
+    }
+
     //localStorage = window['localStorage'];
 
 
-    data: App[];
+    private data: Map<string,App>;
+
+    get allApps(): Map<string,App> {
+        return this.data;
+    }
 
     //[{"id": "th01", "gid": "aria2gid", "status": "active/install/complete/wait", "progress": "0-100"}]
     downloadsInfo = [];
@@ -174,7 +190,7 @@ export class AppsService {
                 apps = apps.map((app)=> {
                     if (localAppData) {
                         localAppData.map((v)=> {
-                            if (v.id == app.id) {
+                            if (v.id === app.id) {
                                 app.local = v.local;
                             }
                         });
@@ -184,22 +200,25 @@ export class AppsService {
 
 
                 return apps;
-            })
-            .subscribe((data) => {
-                this.data = data;
-                for (let app of data) {
-                    //console.log(app)
-                    for (let attribute of ['name', 'description']) {
-                        if (!app[attribute]) {
-                            continue
-                        } //这句应当是不需要的, 如果转换成了 App 类型, 应当保证一定有这些属性
-                        for (let locale of Object.keys(app[attribute])) {
-                            let result = {};
-                            result[`app.${app['id']}.${attribute}`] = app[attribute][locale];
-                            this.translate.setTranslation(locale, result, true);
-                        }
-                    }
-                }
+            }).map(this.loadApps)
+            .subscribe((apps) => {
+                this.data = apps;
+                // for (let app of data) {
+                // }
+                // this.data = data;
+                // for (let app of data) {
+                //     //console.log(app)
+                //     for (let attribute of ['name', 'description']) {
+                //         if (!app[attribute]) {
+                //             continue
+                //         } //这句应当是不需要的, 如果转换成了 App 类型, 应当保证一定有这些属性
+                //         for (let locale of Object.keys(app[attribute])) {
+                //             let result = {};
+                //             result[`app.${app['id']}.${attribute}`] = app[attribute][locale];
+                //             this.translate.setTranslation(locale, result, true);
+                //         }
+                //     }
+                // }
                 //console.log(this.data);
                 if (typeof(callback) === 'function') {
                     callback();
@@ -207,14 +226,18 @@ export class AppsService {
             });
     }
 
+    loadApps(data: any): Map<string,App> {
+        let result = new Map<string,App>();
+        for (let item of data) {
+            let id = item["id"];
+            let app = new App(item);
+            result.set(id, app);
+        }
+        return result;
+    }
 
     searchApp(id): App {
-        let data = this.data;
-        let tmp;
-        if (data) {
-            tmp = data.find((v)=>v.id === id);
-            return tmp;
-        }
+        return this.data.get(id);
     }
 
     checkInstall(id): boolean {
@@ -291,32 +314,46 @@ export class AppsService {
 
     installConfig;
 
-    createInstallConfig(id) {
-        let app = this.data.find((app)=> {
-            return app.id == id;
-        });
+    getInstallConfig(app: App): InstallConfig {
+        let id = app.id;
+        let installConfig = new InstallConfig(app);
         let platform = process.platform;
-        let mods = {};
+        let references: InstallConfig[] = [];
         if (app.references[platform]) {
-            app.references[platform].map((mod)=> {
-                mods[mod.id] = false;
-            });
-
+            // app.references[platform].forEach((item)=> {
+            //     references.push();
+            // });
         }
-
-        let tmp = {
-            installDir: path.join(electron.remote.app.getPath('appData'), 'mycard'),
-            shortcut: {
-                desktop: false,
-                application: false
-            },
-            mods: mods
-        };
-        //console.log(tmp);
-        this.installConfig = tmp;
-        return tmp;
-
+        installConfig.references = references;
+        return installConfig;
     }
+
+    // createInstallConfig(id) {
+    //     let app = this.data.find((app)=> {
+    //         return app.id == id;
+    //     });
+    //     let platform = process.platform;
+    //     let mods = {};
+    //     if (app.references[platform]) {
+    //         app.references[platform].map((mod)=> {
+    //             mods[mod.id] = false;
+    //         });
+    //
+    //     }
+    //
+    //     let tmp = {
+    //         installDir: path.join(electron.remote.app.getPath('appData'), 'mycard'),
+    //         shortcut: {
+    //             desktop: false,
+    //             application: false
+    //         },
+    //         mods: mods
+    //     };
+    //     //console.log(tmp);
+    //     this.installConfig = tmp;
+    //     return tmp;
+    //
+    // }
 
     // tar
     tarQueue = [];
@@ -421,12 +458,8 @@ export class AppsService {
             this.downloadsInfo[downLoadsInfoIndex].status = "complete";
             // 为了卸载时能重新显示安装条
             this.downloadsInfo.splice(downLoadsInfoIndex, 1);
-            this.data = this.data.map((app)=> {
-                if (app.id == tarObj.id) {
-                    app.local = appLocal.local;
-                }
-                return app;
-            });
+            this.data.get(tarObj.id).local = appLocal.local;
+
             //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
             this.waitInstallQueue = this.waitInstallQueue.map((waitObj)=> {
                 waitObj.wait.splice(waitObj.wait.findIndex(()=>tarObj.id), 1);

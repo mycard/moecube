@@ -2,7 +2,7 @@
 <h2>{{appsService._aa}}</h2>
 <div *ngIf="!isInstalled">
     <div *ngIf="!appsService.getDownloadInfo(routingService.app)">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
+        <button type="button" (click)="updateInstallConfig()" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
         <button type="button" class="btn btn-secondary">导入</button>
         <!--<button type="button" class="btn btn-secondary">正版代购</button>-->
     </div>
@@ -176,52 +176,51 @@
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="install-form" class="modal-content" (ngSubmit)="installSubmit(theForm)" #theForm="ngForm">
+        <form id="install-form" class="modal-content" (ngSubmit)="installSubmit()" #theForm="ngForm">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">安装 {{name}}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{'install'|translate}} {{name}}</h4>
             </div>
             <div class="modal-body">
                 <p>即将开始安装 {{name}}</p>
                 <!-- 安装位置选择只在 windows 下存在, 为了方便调试暂时不加ngif -->
-                <h4>安装位置</h4>
+                <h4>{{'install_path'|translate}}</h4>
                 <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" [(ngModel)]="appsService.installConfig.installDir" name="installDir"
-                               class="form-control" placeholder="安装位置">
-                        <span class="input-group-btn">
-                            <button (click)="selectDir()" class="btn btn-secondary" type="button">浏览</button>
-                        </span>
-                    </div>
+                    <select class="form-control">
+                        <option *ngFor="let library of settings.getLibraries()" [selected]="library['default']">
+                            {{ library['path']}}
+                        </option>
+                    </select>
                 </div>
-                <h4>快捷方式</h4>
+                <h4>{{'shortcut'|translate}}</h4>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.application"
-                               name="application">
-                        创建应用程序快捷方式
+                        <input type="checkbox" name="application" [(ngModel)]="installConfig.createShortcut">
+                        {{'create_shortcut'|translate}}
                     </label>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" [(ngModel)]="appsService.installConfig.shortcut.desktop" name="desktop">
-                        创建桌面快捷方式
+                        <input type="checkbox" name="desktop" [(ngModel)]="installConfig.createDesktopShortcut">
+                        {{'create_desktop_shortcut'|translate}}
                     </label>
                 </div>
-                <h4>附加内容</h4>
-                <div *ngFor="let mod of currentApp.references[platform]">
+                <h4>{{'additions'|translate}}</h4>
+                <div *ngFor="let reference of installConfig.references">
                     <label>
-                        <input type="checkbox" [(ngModel)]="appsService.installConfig.mods[mod.id]" name="{{mod.id}}"
-                               [disabled]="['dependency', 'runtime'].includes(mod.type)">
-                        {{appsService.searchApp(mod.id).name[appsService.searchApp(mod.id).locales[0]]}}
+                        <input type="checkbox" [(ngModel)]="reference.id" name="references"
+                               value="{{reference.id}}">
+                        {{reference.name}}
                     </label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button id="submit" type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'cancel'|translate}}</button>
+                <button id="submit" type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">
+                    {{'install' |translate}}
+                </button>
             </div>
         </form>
     </div>
