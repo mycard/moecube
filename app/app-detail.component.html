@@ -27,7 +27,7 @@
 
 <br>
 
-<h2 *ngIf="news">新闻</h2>
+<h2 *ngIf="news.length">新闻</h2>
 
 <div id="news" *ngFor="let item of news">
     <h3>{{item.title}}</h3>
@@ -35,7 +35,7 @@
     <a *ngIf="item.url" [href]="item.url">了解更多</a>
 </div>
 
-<div *ngIf="friends">
+<!--<div *ngIf="friends">
     <h2>好友</h2>
     <p>好友信息</p>
     <br>
@@ -45,9 +45,9 @@
     <h2>成就</h2>
     <p>成就信息</p>
     <br>
-</div>
+</div>-->
 
-<div *ngIf="mods">
+<div *ngIf="mods && mods.length">
     <h2>Mods</h2>
     <table class="table table-striped">
         <thead class="thead-inverse">

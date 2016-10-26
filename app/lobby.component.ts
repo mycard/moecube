@@ -3,12 +3,22 @@
  */
 import {Component} from "@angular/core";
 import {AppsService} from "./apps.service";
+import {LoginService} from "./login.service";
 @Component({
     selector: 'lobby',
     templateUrl: 'app/lobby.component.html',
     styleUrls: ['app/lobby.component.css'],
 })
 export class LobbyComponent {
-    constructor(private appsService: AppsService) {
+    constructor(private appsService: AppsService, private loginService: LoginService) {
+
+    }
+
+    get candy_url() {
+        if (this.loginService.user) {
+            return './candy/index.html?jid=' + this.loginService.user.username + '@mycard.moe&password=' + this.loginService.user.external_id + '&nickname=' + this.loginService.user.username + '&autojoin=ygopro_china_north@conference.mycard.moe'
+        } else {
+            return null
+        }
     }
 }
