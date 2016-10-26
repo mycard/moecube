@@ -19,10 +19,10 @@
     <div class="navbar-right">
         <div id="user" *ngIf="loginService.user">
             <a href="#forum" class="require-login profile">
-                <img id="avatar" src="https://ygobbs.com/letter_avatar_proxy/v2/letter/a/e47774/36.png" alt="image">
+                <img id="avatar" [src]="loginService.user.avatar_url" alt="image">
             </a>
             <a href="#forum" class="require-login profile item" id="username"></a>
-            <a (click)="currentPage='login'" href="#ygopro" id="logout" class="require-login item">切换账号</a>
+            <a (click)="loginService.logout()" href="#ygopro" id="logout" class="require-login item">切换账号</a>
             <a (click)="refresh()" href="#ygopro" id="refresh" class="item">刷新</a>
         </div>
         <div id="window-buttons" [class.darwin]="platform == 'darwin'">

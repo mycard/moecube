@@ -28,6 +28,12 @@ export class LoginComponent {
             'sig': crypto.createHmac('sha256', 'zsZv6LXHDwwtUAGa').update(payload).digest('hex')
         });
         this.url = "https://ygobbs.com/session/sso_provider?" + request;
+        if (this.loginService.logging_out) {
+            let request = querystring.stringify({
+                'redirect': this.url
+            });
+            this.url = "https://ygobbs.com/logout?" + request;
+        }
     }
 
     return_sso(return_url) {
