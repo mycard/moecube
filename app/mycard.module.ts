@@ -9,7 +9,6 @@ import {LobbyComponent} from "./lobby.component";
 import {AppsComponent} from "./apps.component";
 import {AppDetailComponent} from "./app-detail.component";
 import {RosterComponent} from "./roster.component";
-import {CandyComponent} from "./candy.component";
 import {CommunityComponent} from "./community.component";
 import {YGOProComponent} from "./ygopro.component";
 import {AppsService} from "./apps.service";
@@ -19,7 +18,7 @@ import {LoginService} from "./login.service";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, TranslateModule.forRoot()],
-    declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, CandyComponent, YGOProComponent],
+    declarations: [MyCardComponent, LoginComponent, StoreComponent, LobbyComponent, CommunityComponent, AppsComponent, AppDetailComponent, RosterComponent, YGOProComponent],
     bootstrap: [MyCardComponent],
     providers: [AppsService, SettingsService, LoginService],
     schemas: [NO_ERRORS_SCHEMA]

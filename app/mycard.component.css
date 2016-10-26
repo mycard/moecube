@@ -66,10 +66,6 @@ a {
     cursor: default;
 }
 
-#window-buttons.darwin {
-    display: none;
-}
-
 #window-buttons > i {
     color: rgba(255, 255, 255, .75);
     margin: .5rem;
