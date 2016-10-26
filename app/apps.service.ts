@@ -19,6 +19,7 @@ const execFile = window['System']._nodeRequire('child_process').execFile;
 export class AppsService {
 
 
+    installConfig: InstallConfig;
     private _currentApp: App;
 
     get currentApp(): App {
@@ -29,7 +30,7 @@ export class AppsService {
         this._currentApp = app;
     }
 
-    constructor(private http: Http, private translate: TranslateService, private settings: SettingsService) {
+    constructor(private http: Http, private translate: TranslateService, private settingsService: SettingsService) {
         let loop = setInterval(()=> {
             this.aria2.tellActive().then((res)=> {
                 if (res) {
@@ -97,7 +98,7 @@ export class AppsService {
                             let tarObj = {
                                 id: this.downloadsInfo[index].id,
                                 xzFile: res.files[0].path,
-                                installDir: this.installConfig.installDir
+                                installDir: this.installConfig.installPath
                             };
                             let promise = new Promise((resolve, reject)=> {
                                 let refs = this.searchApp(this.downloadsInfo[index].id).references;
@@ -186,8 +187,6 @@ export class AppsService {
             .map(response => {
                 let apps = response.json();
                 let localAppData = JSON.parse(localStorage.getItem("localAppData"));
-                console.log("app:", apps);
-                console.log("store:", localAppData);
                 apps = apps.map((app)=> {
                     if (localAppData) {
                         localAppData.map((v)=> {
@@ -198,12 +197,9 @@ export class AppsService {
                     }
                     return app;
                 });
-
-
                 return apps;
             }).map(this.loadApps)
             .subscribe((apps) => {
-                console.log(apps);
                 this.data = apps;
                 if (typeof(callback) === 'function') {
                     callback();
@@ -211,15 +207,34 @@ export class AppsService {
             });
     }
 
-    loadApps(data: any): Map<string,App> {
+    getLocalString(app: App, tag: string): string {
+        let locale = this.settingsService.getLocale();
+        let value = app[tag][locale];
+        if (!value) {
+            value = app[tag]["en-US"];
+        }
+        return value;
+    }
+
+    loadApps = (data: any): Map<string,App> => {
         let result = new Map<string,App>();
+        let locale = this.settingsService.getLocale();
+
         for (let item of data) {
             let id = item["id"];
+            ['name', 'description'].forEach((key, index)=> {
+                let value = item[key][locale];
+                if (!value) {
+                    value = item[key]["en-US"];
+                }
+                item[key] = value;
+            });
+
             let app = new App(item);
             result.set(id, app);
         }
         return result;
-    }
+    };
 
     searchApp(id): App {
         return this.data.get(id);
@@ -273,13 +288,16 @@ export class AppsService {
 
     }
 
-    download(id, uri) {
+    download() {
+        let id = this.currentApp.id;
         if (this.downloadsInfo.findIndex((v)=> {
                 return v.id == id
             }) !== -1) {
             console.log("this app is downloading")
         } else {
-            this.aria2.addUri([uri], {'dir': this.download_dir}, (error, gid)=> {
+            let url = this.currentApp.download[process.platform];
+            this.aria2.addUri([url], {'dir': this.download_dir}, (error, gid)=> {
+                console.log(error, gid);
                 if (error) {
                     console.error(error);
                 }
@@ -297,11 +315,10 @@ export class AppsService {
         return info;
     }
 
-    installConfig;
 
     getInstallConfig(app: App): InstallConfig {
         let id = app.id;
-        let installConfig = new InstallConfig(app);
+        this.installConfig = new InstallConfig(app);
         let platform = process.platform;
         let references: InstallConfig[] = [];
         if (app.references[platform]) {
@@ -309,36 +326,10 @@ export class AppsService {
             //     references.push();
             // });
         }
-        installConfig.references = references;
-        return installConfig;
+        this.installConfig.references = references;
+        return this.installConfig;
     }
 
-    // createInstallConfig(id) {
-    //     let app = this.data.find((app)=> {
-    //         return app.id == id;
-    //     });
-    //     let platform = process.platform;
-    //     let mods = {};
-    //     if (app.references[platform]) {
-    //         app.references[platform].map((mod)=> {
-    //             mods[mod.id] = false;
-    //         });
-    //
-    //     }
-    //
-    //     let tmp = {
-    //         installDir: path.join(electron.remote.app.getPath('appData'), 'mycard'),
-    //         shortcut: {
-    //             desktop: false,
-    //             application: false
-    //         },
-    //         mods: mods
-    //     };
-    //     //console.log(tmp);
-    //     this.installConfig = tmp;
-    //     return tmp;
-    //
-    // }
 
     // tar
     tarQueue = [];
@@ -444,6 +435,7 @@ export class AppsService {
             // 为了卸载时能重新显示安装条
             this.downloadsInfo.splice(downLoadsInfoIndex, 1);
             this.data.get(tarObj.id).local = appLocal.local;
+            console.log(11111, this.data.get(tarObj.id), appLocal);
 
             //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
             this.waitInstallQueue = this.waitInstallQueue.map((waitObj)=> {
@@ -481,7 +473,7 @@ export class AppsService {
         return !0
     }
 
-    browse(id) {
-        electron.remote.shell.showItemInFolder(this.searchApp(id).local.path);
+    browse(app: App) {
+        electron.remote.shell.showItemInFolder(app.local.path);
     }
 }

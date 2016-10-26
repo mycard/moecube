@@ -23,8 +23,8 @@ import {AppLocal} from "./app-local";
 
 export class App {
     id: string;
-    name: {[locale: string]: string};          // i18n
-    description: {[locale: string]: string};   //i18n
+    name: string;          // i18n
+    description: string;   //i18n
     author: string;             // English Only
     homepage: string;
     category: string;
@@ -55,6 +55,7 @@ export class App {
         this.version = app.version;
         this.local = app.local;
     }
+
 }
 
 export interface AppInterface extends App {

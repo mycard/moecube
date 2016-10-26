@@ -7,7 +7,7 @@ import {Injectable} from "@angular/core";
 export class SettingsService {
 
     static SETTING_LIBRARY = "library";
-    libraries: [{selected: boolean,path: string}];
+    libraries: [{"default": boolean,path: string}];
 
     getLibraries() {
         if (!this.libraries) {
@@ -21,7 +21,7 @@ export class SettingsService {
         if (!this.libraries) {
             this.getLibraries()
         }
-        return this.libraries.find((item)=>item.selected === true);
+        return this.libraries.find((item)=>item.default === true);
     }
 
     static SETTING_LOCALE = "locale";

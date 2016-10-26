@@ -30,6 +30,7 @@ export class AppDetailComponent implements OnInit {
 
     updateInstallConfig() {
         this.installConfig = this.appsService.getInstallConfig(this.appsService.currentApp);
+        this.installConfig.installPath = this.settingsService.getDefaultLibrary().path;
     }
 
     get name() {
@@ -41,7 +42,7 @@ export class AppDetailComponent implements OnInit {
     };
 
     get isInstalled() {
-        return this.checkInstall(this.appsService.currentApp);
+        return this.checkInstall(this.appsService.currentApp.id);
     }
 
 
@@ -103,17 +104,6 @@ export class AppDetailComponent implements OnInit {
         return false;
     }
 
-    install(id) {
-        let uri = this.appsService.searchApp(id).download[process.platform];
-        $('#install-modal').modal('hide');
-        if (uri) {
-            this.appsService.download(id, uri);
-        } else {
-            console.log("lost download uri!");
-        }
-
-    }
-
     uninstalling: boolean;
 
     uninstall(id: string) {
@@ -127,14 +117,9 @@ export class AppDetailComponent implements OnInit {
     }
 
 
-    installSubmit() {
-        console.log(this.installConfig);
-        // this.install(this.routingService.app);
-        // for (let mod in this.appsService.installConfig.mods) {
-        //     if (this.appsService.installConfig.mods[mod]) {
-        //         this.install(mod);
-        //     }
-        // }
+    install() {
+        $('#install-modal').modal('hide');
+        this.appsService.download();
     }
 
     selectDir() {
