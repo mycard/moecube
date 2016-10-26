@@ -13,7 +13,6 @@ const fs = System._nodeRequire('fs');
 const path = System._nodeRequire('path');
 const crypto = System._nodeRequire('crypto');
 const child_process = System._nodeRequire('child_process');
-//const Promise = System._nodeRequire('bluebird');
 const ini = System._nodeRequire('ini');
 const electron = System._nodeRequire('electron');
 
@@ -111,7 +110,7 @@ export class YGOProComponent implements OnInit {
         return new Promise((resolve, reject)=> {
             fs.readdir(path.join(this.app.local.path, 'deck'), (error, files)=> {
                 if (error) {
-                    reject(error)
+                    resolve([])
                 } else {
                     resolve(files.filter(file=>path.extname(file) == ".ydk").map(file=>path.basename(file, '.ydk')));
                 }

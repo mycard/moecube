@@ -16,13 +16,13 @@
         </progress>
     </div>
 </div>
-<div *ngIf="isInstalled && (appsService.currentApp != 'ygopro')">
+<div *ngIf="isInstalled && (appsService.currentApp.id != 'ygopro')">
     <button (click)="startApp(appsService.currentApp)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
     <!--<button (click)="appsService.browse(appsService.currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
     <button type="button" class="btn btn-secondary">联机</button>
 </div>
-<ygopro *ngIf="isInstalled && (appsService.currentApp == 'ygopro')"></ygopro>
+<ygopro *ngIf="isInstalled && (appsService.currentApp.id == 'ygopro')"></ygopro>
 
 <br>
 

@@ -129,19 +129,19 @@ export class AppDetailComponent implements OnInit {
         return dir[0];
     }
 
-    startApp(id) {
-        let execute = this.path.join(this.appsService.searchApp(id).local.path, this.appsService.searchApp(id).actions[process.platform]["main"].execute);
-        let args = this.appsService.searchApp(id).actions[process.platform]["main"].args;
-        let env = this.appsService.searchApp(id).actions[process.platform]["main"].env;
+    startApp(app) {
+        let execute = this.path.join(app.local.path, app.actions[process.platform]["main"].execute);
+        let args = app.actions[process.platform]["main"].args;
+        let env = app.actions[process.platform]["main"].env;
         let opt = {
-            cwd: this.appsService.searchApp(id).local.path,
+            cwd: app.local.path,
             env: env
         };
 
         let open = '';
-        let openId = this.appsService.searchApp(id).actions[process.platform]["main"].open;
+        let openId = app.actions[process.platform]["main"].open;
         if (openId) {
-            this.appsService.searchApp(openId).actions[process.platform]["main"].execute;
+            //this.appsService.searchApp(openId).actions[process.platform]["main"].execute;
             if (this.checkInstall(openId)) {
                 open = this.path.join(this.appsService.searchApp(openId).local.path, this.appsService.searchApp(openId).actions[process.platform]["main"].execute);
                 args.push(execute);

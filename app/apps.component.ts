@@ -23,17 +23,19 @@ export class AppsComponent implements OnInit {
     get grouped_apps() {
         let contains = ["game", "music", "book"];
         let apps = Array.from(this.appsService.allApps.values());
-        let result = {'installed': []};
+        let result = {};
         for (let app of apps) {
             if (contains.includes(app.category)) {
+                let tag;
                 if (app.local) {
-                    result.installed.push(app)
+                    tag = 'installed';
                 } else {
-                    if (!result[app.tags[0]]) {
-                        result[app.tags[0]] = []
-                    }
-                    result[app.tags[0]].push(app)
+                    tag = app.tags[0];
                 }
+                if (!result[tag]) {
+                    result[tag] = []
+                }
+                result[tag].push(app)
             }
         }
         //console.log(result)
