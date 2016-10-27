@@ -20,7 +20,7 @@
     <button (click)="startApp(appsService.currentApp)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
     <!--<button (click)="appsService.browse(appsService.currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
-    <button type="button" class="btn btn-secondary">联机</button>
+    <button type="button" class="btn btn-secondary" (click)="appsService.network(appsService.currentApp)">联机</button>
 </div>
 <ygopro *ngIf="isInstalled && (appsService.currentApp.id == 'ygopro')"></ygopro>
 

@@ -10,7 +10,7 @@ const child_process = require('child_process');
 const path = require('path');
 
 // this should be placed at top of main.js to handle setup events quickly
-if (handleSquirrelEvent()) {
+if (handleSquirrelEvent() || handleElevate()) {
     // squirrel event handled and app will exit in 1000ms, so don't do anything else
     return;
 }
@@ -77,6 +77,14 @@ function handleSquirrelEvent() {
             return true;
     }
 };
+
+function handleElevate() {
+    if (process.argv[1] == '-e') {
+        app.dock.hide();
+        require("./" + process.argv[2]);
+        return true;
+    }
+}
 
 function createAria2c() {
     let aria2c_path;

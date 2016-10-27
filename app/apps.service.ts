@@ -7,13 +7,32 @@ import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 
 declare var process;
-const os = window['System']._nodeRequire('os');
-const fs = window['System']._nodeRequire('fs');
-const path = window['System']._nodeRequire('path');
-const mkdirp = window['System']._nodeRequire('mkdirp');
-const electron = window['System']._nodeRequire('electron');
-const Aria2 = window['System']._nodeRequire('aria2');
-const execFile = window['System']._nodeRequire('child_process').execFile;
+declare var System;
+const os = System._nodeRequire('os');
+const fs = System._nodeRequire('fs');
+const path = System._nodeRequire('path');
+const readline = System._nodeRequire('readline');
+const mkdirp = System._nodeRequire('mkdirp');
+const electron = System._nodeRequire('electron');
+const Aria2 = System._nodeRequire('aria2');
+const execFile = System._nodeRequire('child_process').execFile;
+const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
+sudo.fork = function (modulePath, args, options) {
+    return sudo.spawn(electron.remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
+        readline.createInterface({input: child.stdout}).on('line', (line) => {
+            child.emit('message', JSON.parse(line));
+        });
+        child.send = (message, sendHandle, options, callback)=> {
+            child.stdin.write(JSON.stringify(message) + os.EOL);
+            if (callback) {
+                callback()
+            }
+        };
+        return child
+    })
+};
+
+//const sudo = System._nodeRequire('sudo-prompt');
 
 @Injectable()
 export class AppsService {
@@ -475,5 +494,24 @@ export class AppsService {
 
     browse(app: App) {
         electron.remote.shell.showItemInFolder(app.local.path);
+    }
+
+    /*child.on('exit', reject);
+     let rl = readline.createInterface({
+     input: child.stdout,
+     output: child.stdin
+     });
+     rl.on('line', (input) => {
+     resolve();
+     console.log(`Received: ${input}`);
+     });*/
+
+    network(app: App) {
+        sudo.fork('maotama').then((child)=> {
+            //new WebSocket()
+            setInterval(()=> {
+                child.send({action: 'connect', arguments: [10800, 10900, '112.124.105.11']})
+            }, 200);
+        });
     }
 }

@@ -1377,7 +1377,17 @@
       "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
     },
-    "news": []
+    "news": [],
+    "network": {
+      "protocol": "maotama",
+      "port": 10800,
+      "servers": [
+        {
+          "id": "tiramisu",
+          "url": "wss://tiramisu.mycard.moe:10800"
+        }
+      ]
+    }
   },
   {
     "id": "th123-lang-zh-CN",
