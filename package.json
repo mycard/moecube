@@ -39,6 +39,7 @@
     "ng2-translate": "latest",
     "raw-socket": "^1.5.0",
     "reflect-metadata": "latest",
+    "regenerator-runtime": "^0.9.5",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "latest",
     "tether": "latest",
