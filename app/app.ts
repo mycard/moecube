@@ -29,7 +29,7 @@ export class App {
     homepage: string;
     category: string;
     parent: App;
-    actions: {[action: string]: {execute: string, args: string[], env: {}, open: App}};
+    actions: Map<string,{execute: string, args: string[], env: {}, open: App}>;
     references: Map<string,App>;
     dependencies: Map<string,App>;
     locales: string[];

@@ -33,7 +33,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "東方紅魔郷.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
