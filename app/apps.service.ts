@@ -107,25 +107,26 @@ export class AppsService {
                                 //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
                                 let waitObj;
 
-                                let waitRef = ["runtime", "emulator", "dependency"];
-                                if (!this.isEmptyObject(refs)) {
-                                    refs[process.platform].map((ref)=> {
-                                        if (waitRef.includes(ref.type)) {
-                                            if (!this.checkInstall(ref.id)) {
-                                                if (!waitObj) {
-                                                    waitObj = {
-                                                        id: this.downloadsInfo[index].id,
-                                                        wait: [ref.id],
-                                                        resolve: resolve,
-                                                        tarObj: tarObj
-                                                    }
-                                                } else {
-                                                    waitObj.wait.push(ref.id);
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
+                                // TODO 重写依赖的安装
+                                // let waitRef = ["runtime", "emulator", "dependency"];
+                                // if (!this.isEmptyObject(refs)) {
+                                //     refs[process.platform].map((ref)=> {
+                                //         if (waitRef.includes(ref.type)) {
+                                //             if (!this.checkInstall(ref.id)) {
+                                //                 if (!waitObj) {
+                                //                     waitObj = {
+                                //                         id: this.downloadsInfo[index].id,
+                                //                         wait: [ref.id],
+                                //                         resolve: resolve,
+                                //                         tarObj: tarObj
+                                //                     }
+                                //                 } else {
+                                //                     waitObj.wait.push(ref.id);
+                                //                 }
+                                //             }
+                                //         }
+                                //     });
+                                // }
                                 console.log("wait obj:", waitObj);
 
                                 if (waitObj) {
@@ -138,9 +139,9 @@ export class AppsService {
                                 console.log(tarObj);
                                 this.tarPush(tarObj);
                             });
-                            promise.catch((err)=> {
-                                console.log("err", err);
-                            })
+                            // promise.catch((err)=> {
+                            //     err.printt
+                            // })
                         }
                     } else {
                         console.log("cannot found download info!");
@@ -249,7 +250,18 @@ export class AppsService {
 
         }
 
+        // 设置App关系
         for (let id of Array.from(apps.keys())) {
+            let temp = apps.get(id)["actions"]
+            let map = new Map<string,any>();
+            for (let action of Object.keys(temp)) {
+                let openId = temp[action]["open"];
+                if (openId) {
+                    temp[action]["open"] = apps.get(openId);
+                }
+                map.set(action, temp[action]);
+            }
+            apps.get(id).actions = map;
 
             ['dependencies', 'references', 'parent'].forEach((key)=> {
                 let app = apps.get(id);
@@ -265,6 +277,7 @@ export class AppsService {
                 }
             });
         }
+        console.log(apps);
         return apps;
     };
 
@@ -327,7 +340,7 @@ export class AppsService {
             }) !== -1) {
             console.log("this app is downloading")
         } else {
-            let url = this.currentApp.download[process.platform];
+            let url = this.currentApp.download;
             this.aria2.addUri([url], {'dir': this.download_dir}, (error, gid)=> {
                 console.log(error, gid);
                 if (error) {

@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {AppsService} from "./apps.service";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
+import {App} from "./app";
 
 declare var process;
 declare var $;
@@ -42,7 +43,7 @@ export class AppDetailComponent implements OnInit {
     };
 
     get isInstalled() {
-        let currentApp=this.appsService.currentApp;
+        let currentApp = this.appsService.currentApp;
         return !!(currentApp.local && currentApp.local.path);
 
     }
@@ -120,20 +121,20 @@ export class AppDetailComponent implements OnInit {
         return dir[0];
     }
 
-    startApp(app) {
-        let execute = this.path.join(app.local.path, app.actions[process.platform]["main"].execute);
-        let args = app.actions[process.platform]["main"].args;
-        let env = app.actions[process.platform]["main"].env;
+    startApp(app: App) {
+        let execute = this.path.join(app.local.path, app.actions.get("main").execute);
+        let args = app.actions.get("main").args;
+        let env = app.actions.get("main").env;
         let opt = {
             cwd: app.local.path,
             env: env
         };
 
         let open = '';
-        let openId = app.actions[process.platform]["main"].open;
-        if (openId) {
+        let openApp = app.actions.get("main").open;
+        if (openApp) {
             if (this.isInstalled) {
-                open = this.path.join(this.appsService.searchApp(openId).local.path, this.appsService.searchApp(openId).actions[process.platform]["main"].execute);
+                open = this.path.join(openApp.local.path, openApp.actions.get("main").execute);
                 args.push(execute);
             } else {
                 console.error('open app not found');
