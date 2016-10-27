@@ -20,7 +20,25 @@
     <button (click)="startApp(appsService.currentApp)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
     <!--<button (click)="appsService.browse(appsService.currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
-    <button type="button" class="btn btn-secondary" (click)="appsService.network(appsService.currentApp)">联机</button>
+
+    <div id="network" *ngIf="appsService.currentApp.network && appsService.currentApp.network.protocol == 'maotama'">
+        <div class="input-group">
+            <input *ngIf="appsService.connections.get(appsService.currentApp)" [value]="appsService.connections.get(appsService.currentApp)" readonly type="text" class="form-control" aria-label="Text input with dropdown button">
+            <div class="input-group-btn btn-group">
+                <button *ngIf="!appsService.connections.get(appsService.currentApp)" (click)="appsService.network(appsService.currentApp, appsService.currentApp.network.servers[0])" type="button" class="btn btn-secondary" aria-haspopup="true" aria-expanded="false">
+                    联机
+                </button>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 38px;">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a *ngFor="let server of appsService.currentApp.network.servers"
+                       (click)="appsService.network(appsService.currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <ygopro *ngIf="isInstalled && (appsService.currentApp.id == 'ygopro')"></ygopro>
 

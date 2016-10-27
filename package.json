@@ -37,7 +37,7 @@
     "ini": "latest",
     "mkdirp": "latest",
     "ng2-translate": "latest",
-    "raw-socket": "^1.5.0",
+    "raw-socket": "latest",
     "reflect-metadata": "latest",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "latest",
@@ -48,7 +48,7 @@
     "concurrently": "latest",
     "electron": "latest",
     "electron-builder": "latest",
-    "electron-rebuild": "^1.3.0",
+    "electron-rebuild": "latest",
     "lite-server": "latest",
     "typescript": "latest",
     "typings": "latest"

@@ -51,6 +51,16 @@
         }
       }
     },
+    "network": {
+      "protocol": "maotama",
+      "port": 10800,
+      "servers": [
+        {
+          "id": "tiramisu",
+          "url": "wss://tiramisu.mycard.moe:10800"
+        }
+      ]
+    },
     "version": {
       "darwin": "1.06"
     },

@@ -3,8 +3,29 @@ import {AppsService} from "./apps.service";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 
+declare var System;
 declare var process;
 declare var $;
+
+const readline = System._nodeRequire('readline');
+const os = System._nodeRequire('os');
+const electron = System._nodeRequire('electron');
+const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
+
+sudo.fork = function (modulePath, args, options) {
+    return sudo.spawn(electron.remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
+        readline.createInterface({input: child.stdout}).on('line', (line) => {
+            child.emit('message', JSON.parse(line));
+        });
+        child.send = (message, sendHandle, options, callback)=> {
+            child.stdin.write(JSON.stringify(message) + os.EOL);
+            if (callback) {
+                callback()
+            }
+        };
+        return child
+    })
+};
 
 @Component({
     selector: 'app-detail',
@@ -161,6 +182,5 @@ export class AppDetailComponent implements OnInit {
         this.electron.remote.getCurrentWindow().minimize();
 
     }
-
 
 }

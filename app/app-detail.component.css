@@ -35,3 +35,9 @@ progress {
     display: block;
     margin-bottom: 1rem;
 }
+
+#network {
+    display: inline-block;
+    vertical-align: middle;
+    width: 240px;
+}

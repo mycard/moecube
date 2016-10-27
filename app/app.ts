@@ -35,6 +35,7 @@ export class App {
     locales: string[];
     download: {[platform: string]: string};           // meta4 url
     news: {title: string, url: string, image: string}[];
+    network: any;
     tags: string[];
     version: {[platform: string]: string};
     local: AppLocal;
@@ -53,6 +54,7 @@ export class App {
         this.locales = app.locales;
         this.download = app.download;
         this.news = app.news;
+        this.network = app.network;
         this.tags = app.tags;
         this.version = app.version;
         this.local = app.local;

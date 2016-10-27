@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, ApplicationRef} from "@angular/core";
 import {Http} from "@angular/http";
 import {App} from "./app";
 import {InstallConfig} from "./install-config";
@@ -46,7 +46,7 @@ export class AppsService {
         this._currentApp = app;
     }
 
-    constructor(private http: Http, private settingsService: SettingsService) {
+    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef) {
         this.loadApps(()=> {
             if (this.data.size > 0) {
                 this.currentApp = this.data.get('ygopro');
@@ -509,22 +509,39 @@ export class AppsService {
         electron.remote.shell.showItemInFolder(app.local.path);
     }
 
-    /*child.on('exit', reject);
-     let rl = readline.createInterface({
-     input: child.stdout,
-     output: child.stdin
-     });
-     rl.on('line', (input) => {
-     resolve();
-     console.log(`Received: ${input}`);
-     });*/
+    connections = new Map<App, string>();
+    maotama;
 
-    network(app: App) {
-        sudo.fork('maotama').then((child)=> {
-            //new WebSocket()
-            setInterval(()=> {
-                child.send({action: 'connect', arguments: [10800, 10900, '112.124.105.11']})
-            }, 200);
-        });
+    network(app: App, server) {
+        if(!this.maotama){
+            this.maotama = sudo.fork('maotama')
+        }
+
+        this.maotama.then((child)=> {
+
+            let connection = new WebSocket(server.url);
+            let id;
+            connection.onmessage = (event)=> {
+                let message = <{action: string;arguments: any[]}>JSON.parse(event.data);
+                console.log(message);
+                switch (message.action) {
+                    case 'listen':
+                        this.connections.set(app, `${message.arguments[0]}:${message.arguments[1]}`);
+                        this.ref.tick();
+                        break;
+                    case 'connect':
+                        id = setInterval(()=> {
+                            child.send({
+                                action: 'connect',
+                                arguments: [app.network.port, message.arguments[1], message.arguments[0]]
+                            })
+                        }, 200);
+                        break;
+                    case 'connected':
+                        clearInterval(id);
+                        break;
+                }
+            }
+        })
     }
 }
