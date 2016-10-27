@@ -24,9 +24,12 @@
     <div id="network" *ngIf="appsService.currentApp.network && appsService.currentApp.network.protocol == 'maotama'">
         <div class="input-group">
             <input *ngIf="appsService.connections.get(appsService.currentApp)" [value]="appsService.connections.get(appsService.currentApp)" readonly type="text" class="form-control" aria-label="Text input with dropdown button">
-            <div class="input-group-btn btn-group">
-                <button *ngIf="!appsService.connections.get(appsService.currentApp)" (click)="appsService.network(appsService.currentApp, appsService.currentApp.network.servers[0])" type="button" class="btn btn-secondary" aria-haspopup="true" aria-expanded="false">
+            <div class="input-group-btn">
+                <button *ngIf="!appsService.connections.get(appsService.currentApp)" (click)="appsService.network(appsService.currentApp, appsService.currentApp.network.servers[0])" type="button" class="btn btn-secondary">
                     联机
+                </button>
+                <button *ngIf="appsService.connections.get(appsService.currentApp)" (click)="copy(appsService.connections.get(appsService.currentApp))" type="button" class="btn btn-secondary">
+                    复制
                 </button>
                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 38px;">

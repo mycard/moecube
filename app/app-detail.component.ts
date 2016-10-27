@@ -10,11 +10,11 @@ declare var $;
 
 const readline = System._nodeRequire('readline');
 const os = System._nodeRequire('os');
-const electron = System._nodeRequire('electron');
+const {clipboard, remote} = System._nodeRequire('electron');
 const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
 
 sudo.fork = function (modulePath, args, options) {
-    return sudo.spawn(electron.remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
+    return sudo.spawn(remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
         readline.createInterface({input: child.stdout}).on('line', (line) => {
             child.emit('message', JSON.parse(line));
         });
@@ -136,7 +136,7 @@ export class AppDetailComponent implements OnInit {
     }
 
     selectDir() {
-        let dir = this.electron.remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory']});
+        let dir = remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory']});
         console.log(dir);
         this.appsService.installConfig.installDir = dir[0];
         return dir[0];
@@ -177,11 +177,15 @@ export class AppDetailComponent implements OnInit {
 
         handle.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
-            this.electron.remote.getCurrentWindow().restore();
+            remote.getCurrentWindow().restore();
         });
 
-        this.electron.remote.getCurrentWindow().minimize();
+        remote.getCurrentWindow().minimize();
 
+    }
+
+    copy(text){
+        clipboard.writeText(text);
     }
 
 }
