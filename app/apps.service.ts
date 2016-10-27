@@ -1,8 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import "rxjs/Rx";
 import {App} from "./app";
-import {TranslateService} from "ng2-translate";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 
@@ -18,7 +16,6 @@ const execFile = window['System']._nodeRequire('child_process').execFile;
 @Injectable()
 export class AppsService {
 
-
     installConfig: InstallConfig;
     private _currentApp: App;
 
@@ -30,23 +27,8 @@ export class AppsService {
         this._currentApp = app;
     }
 
-    constructor(private http: Http, private translate: TranslateService, private settingsService: SettingsService) {
-        let loop = setInterval(()=> {
-            this.aria2.tellActive().then((res)=> {
-                if (res) {
-                    res.map((v)=> {
-                        let index = this.downloadsInfo.findIndex((info)=> {
-                            return info.gid == v.gid;
-                        });
-                        this.downloadsInfo[index].progress = (v.completedLength / v.totalLength) * 100;
-
-                    });
-                }
-            })
-        }, 1000);
-
-        this.getApps(()=> {
-            //console.log(appsService.data)
+    constructor(private http: Http, private settingsService: SettingsService) {
+        this.loadApps(()=> {
             if (this.data.size > 0) {
                 this.currentApp = this.data.get('ygopro');
             }
@@ -182,7 +164,7 @@ export class AppsService {
         return dir;
     }
 
-    getApps(callback) {
+    loadApps(callback) {
         this.http.get('./apps.json')
             .map(response => {
                 let apps = response.json();
@@ -198,7 +180,7 @@ export class AppsService {
                     return app;
                 });
                 return apps;
-            }).map(this.loadApps)
+            }).map(this.loadAppsList)
             .subscribe((apps) => {
                 this.data = apps;
                 if (typeof(callback) === 'function') {
@@ -216,24 +198,55 @@ export class AppsService {
         return value;
     }
 
-    loadApps = (data: any): Map<string,App> => {
-        let result = new Map<string,App>();
+    loadAppsList = (data: any): Map<string,App> => {
+        let apps = new Map<string,App>();
         let locale = this.settingsService.getLocale();
+        let platform = process.platform;
 
         for (let item of data) {
-            let id = item["id"];
-            ['name', 'description'].forEach((key, index)=> {
-                let value = item[key][locale];
+            let app = new App(item);
+
+            // 去除无关语言
+            ['name', 'description'].forEach((key)=> {
+                let value = app[key][locale];
                 if (!value) {
-                    value = item[key]["en-US"];
+                    value = app[key]["en-US"];
                 }
-                item[key] = value;
+                app[key] = value;
             });
 
-            let app = new App(item);
-            result.set(id, app);
+            // 去除平台无关的内容
+            ['actions', 'dependencies', 'references', 'download'].forEach((key)=> {
+                if (app[key]) {
+                    if (app[key][platform]) {
+                        app[key] = app[key][platform];
+                    }
+                    else {
+                        app[key] = null;
+                    }
+                }
+            });
+            apps.set(item.id, app);
+
         }
-        return result;
+
+        for (let id of Array.from(apps.keys())) {
+
+            ['dependencies', 'references', 'parent'].forEach((key)=> {
+                let app = apps.get(id);
+                let value = app[key];
+                if (value) {
+                    if (Array.isArray(value)) {
+                        value.forEach((appId, index, array)=> {
+                            array[index] = apps.get(appId);
+                        })
+                    } else {
+                        app[key] = apps.get(value);
+                    }
+                }
+            });
+        }
+        return apps;
     };
 
     searchApp(id): App {

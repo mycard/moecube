@@ -42,7 +42,9 @@ export class AppDetailComponent implements OnInit {
     };
 
     get isInstalled() {
-        return this.checkInstall(this.appsService.currentApp.id);
+        let currentApp=this.appsService.currentApp;
+        return !!(currentApp.local && currentApp.local.path);
+
     }
 
 
@@ -93,17 +95,6 @@ export class AppDetailComponent implements OnInit {
         }
     }
 
-
-    checkInstall(id): boolean {
-        if (this.appsService.searchApp(id)) {
-            let local = this.appsService.searchApp(id).local;
-            if (local && local.path) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     uninstalling: boolean;
 
     uninstall(id: string) {
@@ -141,8 +132,7 @@ export class AppDetailComponent implements OnInit {
         let open = '';
         let openId = app.actions[process.platform]["main"].open;
         if (openId) {
-            //this.appsService.searchApp(openId).actions[process.platform]["main"].execute;
-            if (this.checkInstall(openId)) {
+            if (this.isInstalled) {
                 open = this.path.join(this.appsService.searchApp(openId).local.path, this.appsService.searchApp(openId).actions[process.platform]["main"].execute);
                 args.push(execute);
             } else {

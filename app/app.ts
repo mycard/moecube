@@ -29,7 +29,7 @@ export class App {
     homepage: string;
     category: string;
     parent: App;
-    actions: {[platform: string]: {[action: string]: {execute: string, args: string[], env: {}, open: string}}};
+    actions: {[action: string]: {execute: string, args: string[], env: {}, open: App}};
     references: Map<string,App>;
     dependencies: Map<string,App>;
     locales: string[];
@@ -39,7 +39,7 @@ export class App {
     version: {[platform: string]: string};
     local: AppLocal;
 
-    constructor(app: AppInterface) {
+    constructor(app) {
         this.id = app.id;
         this.name = app.name;
         this.description = app.description;
@@ -47,6 +47,8 @@ export class App {
         this.homepage = app.homepage;
         this.category = app.category;
         this.actions = app.actions;
+        this.dependencies = app.dependencies;
+        this.parent = app.parent;
         this.references = app.references;
         this.locales = app.locales;
         this.download = app.download;
@@ -58,13 +60,3 @@ export class App {
 
 }
 
-export interface AppInterface extends App {
-}
-/*export interface TestInterface {
- id: string;
- name: {[locale: string]: string};
- }
-
- let test: TestInterface = <TestInterface>{id: '1', name: {"x": "Guy"}};
-
- console.log(test)*/
