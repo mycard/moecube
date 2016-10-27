@@ -4,7 +4,7 @@
 /dist/
 /cache/
 /typings/
-/npm-debug.log
+/npm-debug.log*
 /.idea/
 .DS_Store
 Thumbs.db
