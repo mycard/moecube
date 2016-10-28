@@ -1,8 +1,14 @@
 version: '{build}'
 
-platform:
-  - x86
-  - x64
+platform: x86
+
+environment:
+  npm_config_target: 1.2.3
+  npm_config_arch: ia32
+  npm_config_target_arch: ia32
+  npm_config_disturl: https://atom.io/download/atom-shell
+  npm_config_runtime: electron
+  npm_config_build_from_source: true
 
 cache:
   - node_modules

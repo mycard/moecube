@@ -522,25 +522,28 @@ export class AppsService {
         electron.remote.shell.showItemInFolder(app.local.path);
     }
 
-    connections = new Map<App, string>();
+    connections = new Map<App, {connection: WebSocket, address: string}>();
     maotama;
 
     network(app: App, server) {
         if (!this.maotama) {
             this.maotama = sudo.fork('maotama')
         }
-
         this.maotama.then((child)=> {
-
-            let connection = new WebSocket(server.url);
+            let connection = this.connections.get(app);
+            if (connection) {
+                connection.connection.close();
+            }
+            connection = {connection: new WebSocket(server.url), address: null};
             let id;
-            connection.onmessage = (event)=> {
+            this.connections.set(app, connection);
+            connection.connection.onmessage = (event)=> {
                 console.log(event.data);
                 let [action, args] = event.data.split(' ', 2);
                 let [address, port] = args.split(':');
                 switch (action) {
                     case 'LISTEN':
-                        this.connections.set(app, args);
+                        connection.address = args;
                         this.ref.tick();
                         break;
                     case 'CONNECT':
@@ -553,9 +556,24 @@ export class AppsService {
                         break;
                     case 'CONNECTED':
                         clearInterval(id);
+                        id = null;
                         break;
                 }
-            }
+            };
+            connection.connection.onclose = (event: CloseEvent)=> {
+                if (id) {
+                    clearInterval(id);
+                }
+                // 如果还是在界面上显示的那个连接
+                if (this.connections.get(app) == connection) {
+                    this.connections.delete(app);
+                    if (event.code != 1000 && !connection.address) {
+                        alert(`出错了 ${event.code}`);
+                    }
+                }
+                // 如果还没建立好就出错了，就弹窗提示这个错误
+                this.ref.tick();
+            };
         })
     }
 }

@@ -7,6 +7,14 @@ os:
 sudo: required
 dist: trusty
 
+env:
+  npm_config_target: 1.2.3
+  npm_config_arch: x64
+  npm_config_target_arch: x64
+  npm_config_disturl: https://atom.io/download/atom-shell
+  npm_config_runtime: electron
+  npm_config_build_from_source: true
+
 addons:
   apt:
     packages:

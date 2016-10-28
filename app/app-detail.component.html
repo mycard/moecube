@@ -23,19 +23,20 @@
 
     <div id="network" *ngIf="appsService.currentApp.network && appsService.currentApp.network.protocol == 'maotama'">
         <div class="input-group">
-            <input *ngIf="appsService.connections.get(appsService.currentApp)" [value]="appsService.connections.get(appsService.currentApp)" readonly type="text" class="form-control" aria-label="Text input with dropdown button">
+            <input *ngIf="appsService.connections.get(appsService.currentApp)" [value]="appsService.connections.get(appsService.currentApp).address || 'Loading...'" readonly type="text" class="form-control" aria-label="Text input with dropdown button">
             <div class="input-group-btn">
                 <button *ngIf="!appsService.connections.get(appsService.currentApp)" (click)="appsService.network(appsService.currentApp, appsService.currentApp.network.servers[0])" type="button" class="btn btn-secondary">
                     联机
                 </button>
-                <button *ngIf="appsService.connections.get(appsService.currentApp)" (click)="copy(appsService.connections.get(appsService.currentApp))" type="button" class="btn btn-secondary">
+                <button *ngIf="appsService.connections.get(appsService.currentApp)" (click)="copy(appsService.connections.get(appsService.currentApp).address)" [disabled]="!appsService.connections.get(appsService.currentApp).address" type="button" class="btn btn-secondary">
                     复制
                 </button>
                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 38px;">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
-                <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(appsService.currentApp)">
+                    <h6 class="dropdown-header">选择服务器</h6>
                     <a *ngFor="let server of appsService.currentApp.network.servers"
                        (click)="appsService.network(appsService.currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
                 </div>
