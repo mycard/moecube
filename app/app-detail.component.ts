@@ -3,14 +3,15 @@ import {AppsService} from "./apps.service";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 import {App} from "./app";
+import {DownloadService} from "./download.service";
 
 declare var System;
-declare var process;
 declare var $;
 
-const readline = System._nodeRequire('readline');
-const os = System._nodeRequire('os');
-const {clipboard, remote} = System._nodeRequire('electron');
+import * as readline from 'readline';
+import * as os from 'os';
+import {clipboard, remote} from 'electron';
+
 const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
 
 sudo.fork = function (modulePath, args, options) {
@@ -32,6 +33,7 @@ sudo.fork = function (modulePath, args, options) {
     selector: 'app-detail',
     templateUrl: 'app/app-detail.component.html',
     styleUrls: ['app/app-detail.component.css'],
+    providers: [DownloadService]
 })
 export class AppDetailComponent implements OnInit {
     platform = process.platform;
@@ -43,7 +45,8 @@ export class AppDetailComponent implements OnInit {
 
     installConfig: InstallConfig;
 
-    constructor(private appsService: AppsService, private settingsService: SettingsService) {
+    constructor(private appsService: AppsService, private settingsService: SettingsService,
+                private  downloadService: DownloadService) {
     }
 
     ngOnInit() {
@@ -184,7 +187,7 @@ export class AppDetailComponent implements OnInit {
 
     }
 
-    copy(text){
+    copy(text) {
         clipboard.writeText(text);
     }
 
