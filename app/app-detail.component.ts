@@ -3,6 +3,7 @@ import {AppsService} from "./apps.service";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 import {App} from "./app";
+import {DownloadService} from "./download.service";
 
 declare var System;
 declare var process;
@@ -32,6 +33,7 @@ sudo.fork = function (modulePath, args, options) {
     selector: 'app-detail',
     templateUrl: 'app/app-detail.component.html',
     styleUrls: ['app/app-detail.component.css'],
+    providers: [DownloadService]
 })
 export class AppDetailComponent implements OnInit {
     platform = process.platform;
@@ -43,7 +45,8 @@ export class AppDetailComponent implements OnInit {
 
     installConfig: InstallConfig;
 
-    constructor(private appsService: AppsService, private settingsService: SettingsService) {
+    constructor(private appsService: AppsService, private settingsService: SettingsService,
+                private  downloadService: DownloadService) {
     }
 
     ngOnInit() {
