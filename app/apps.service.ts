@@ -526,7 +526,7 @@ export class AppsService {
     maotama;
 
     network(app: App, server) {
-        if(!this.maotama){
+        if (!this.maotama) {
             this.maotama = sudo.fork('maotama')
         }
 
@@ -535,22 +535,23 @@ export class AppsService {
             let connection = new WebSocket(server.url);
             let id;
             connection.onmessage = (event)=> {
-                let message = <{action: string;arguments: any[]}>JSON.parse(event.data);
-                console.log(message);
-                switch (message.action) {
-                    case 'listen':
-                        this.connections.set(app, `${message.arguments[0]}:${message.arguments[1]}`);
+                console.log(event.data);
+                let [action, args] = event.data.split(' ', 2);
+                let [address, port] = args.split(':');
+                switch (action) {
+                    case 'LISTEN':
+                        this.connections.set(app, args);
                         this.ref.tick();
                         break;
-                    case 'connect':
+                    case 'CONNECT':
                         id = setInterval(()=> {
                             child.send({
                                 action: 'connect',
-                                arguments: [app.network.port, message.arguments[1], message.arguments[0]]
+                                arguments: [app.network.port, port, address]
                             })
                         }, 200);
                         break;
-                    case 'connected':
+                    case 'CONNECTED':
                         clearInterval(id);
                         break;
                 }
