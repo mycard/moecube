@@ -1,22 +1,3 @@
-const os = require('os');
-const readline = require('readline');
-
-process.send = (message, sendHandle, options, callback)=> {
-    process.stdout.write(JSON.stringify(message) + os.EOL);
-    if (callback) {
-        callback()
-    }
-};
-
-process.stdin.on('end', ()=> {
-    process.emit('disconnect')
-});
-
-readline.createInterface({input: process.stdin}).on('line', (line) => {
-    process.emit('message', JSON.parse(line))
-});
-
-
 const raw = require("raw-socket");
 let socket = raw.createSocket({protocol: raw.Protocol.UDP});
 

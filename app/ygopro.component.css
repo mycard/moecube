@@ -24,11 +24,6 @@
     border-radius: 50%;
 }
 
-#game-list-modal .players {
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-}
-
 #game-list-modal .close {
     position: absolute;
     top: 15px;

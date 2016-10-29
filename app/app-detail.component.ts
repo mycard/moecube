@@ -20,8 +20,7 @@ export class AppDetailComponent implements OnInit {
     platform = process.platform;
     installConfig: InstallConfig;
 
-    constructor(private appsService: AppsService, private settingsService: SettingsService,
-                private  downloadService: DownloadService) {
+    constructor(private appsService: AppsService, private settingsService: SettingsService, private  downloadService: DownloadService) {
     }
 
     ngOnInit() {

@@ -9,13 +9,8 @@
     width: 20rem;
 }
 
-.news-block {
-    padding: 0;
-}
-
 progress {
-    margin: 0;
-    margin-top: 2px;
+    margin: 2px 0 0;
 }
 
 .carousel-inner img {
