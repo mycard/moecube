@@ -2,7 +2,6 @@
  * System configuration for Angular 2 samples
  * Adjust as necessary for your application needs.
  */
-(function (global) {
     // map tells the System loader where to look for things
     var map = {
         'app': 'app', // 'dist',
@@ -11,8 +10,7 @@
         'rxjs': 'node_modules/rxjs',
         'ng2-translate': 'node_modules/ng2-translate/bundles/index.js',
         "electron": "@node/electron",
-        "readline": "@node/readline",
-        "os":"@node/os"
+        "ini": "@node/ini",
     };
     // packages tells the System loader how to load when no filename and/or no extension
     var packages = {
@@ -20,6 +18,12 @@
         'rxjs': {defaultExtension: 'js'},
         'angular2-in-memory-web-api': {main: 'index.js', defaultExtension: 'js'}
     };
+
+let builtin_modules = ["buffer", "querystring", "events", "http", "cluster", "zlib", "os", "https", "punycode", "repl", "readline", "vm", "child_process", "url", "dns", "net", "dgram", "fs", "path", "string_decoder", "tls", "crypto", "stream", "util", "assert", "tty", "domain", "constants", "process", "v8", "timers", "console"];
+for (let mod of builtin_modules) {
+    map[mod] = `@node/${mod}`;
+}
+
     var ngPackageNames = [
         'common',
         'compiler',
@@ -51,4 +55,3 @@
         packages: packages
     };
     System.config(config);
-})(this);

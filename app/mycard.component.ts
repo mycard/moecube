@@ -1,10 +1,6 @@
 import {Component, Renderer} from "@angular/core";
 import {TranslateService} from "ng2-translate";
-import {LoginService} from "./login.service";
-const electron = System._nodeRequire('electron');
-declare var process;
-declare var System;
-
+import {remote} from "electron";
 
 @Component({
     selector: 'mycard',
@@ -18,7 +14,7 @@ export class MyCardComponent {
 
     platform = process.platform;
 
-    constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService) {
+    constructor(private renderer: Renderer, private translate: TranslateService) {
         renderer.listenGlobal('window', 'message', (event) => {
             console.log(event);
             // Do something with 'event'
@@ -28,12 +24,12 @@ export class MyCardComponent {
         translate.setDefaultLang('en-US');
 
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        translate.use(electron.remote.app.getLocale());
+        translate.use(remote.app.getLocale());
 
     }
 
 
     refresh() {
-        electron.remote.getCurrentWindow().reload()
+        remote.getCurrentWindow().reload()
     }
 }

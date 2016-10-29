@@ -3,20 +3,19 @@ import {Http} from "@angular/http";
 import {App} from "./app";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
+import * as os from "os";
+import * as fs from "fs";
+import * as path from "path";
+import * as readline from "readline";
+import * as mkdirp from "mkdirp";
+import * as child_process from "child_process";
+import {remote} from "electron";
 
-declare var process;
-declare var System;
-const os = System._nodeRequire('os');
-const fs = System._nodeRequire('fs');
-const path = System._nodeRequire('path');
-const readline = System._nodeRequire('readline');
-const mkdirp = System._nodeRequire('mkdirp');
-const electron = System._nodeRequire('electron');
-const Aria2 = System._nodeRequire('aria2');
-const execFile = System._nodeRequire('child_process').execFile;
-const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
-sudo.fork = function (modulePath, args, options) {
-    return sudo.spawn(electron.remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
+const Aria2 = require('aria2');
+const Sudo = require('electron-sudo').default;
+
+Sudo.prototype.fork = function (modulePath, args, options) {
+    return this.spawn(remote.app.getPath('exe'), ['-e', modulePath].concat(args), options).then((child)=> {
         readline.createInterface({input: child.stdout}).on('line', (line) => {
             child.emit('message', JSON.parse(line));
         });
@@ -29,8 +28,6 @@ sudo.fork = function (modulePath, args, options) {
         return child
     })
 };
-
-//const sudo = System._nodeRequire('sudo-prompt');
 
 @Injectable()
 export class AppsService {
@@ -101,7 +98,7 @@ export class AppsService {
                                 xzFile: res.files[0].path,
                                 installDir: this.installConfig.installPath
                             };
-                            let promise = new Promise((resolve, reject)=> {
+                            new Promise((resolve)=> {
                                 let refs = this.searchApp(this.downloadsInfo[index].id).references;
                                 console.log(refs);
                                 //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
@@ -127,7 +124,7 @@ export class AppsService {
                                 //         }
                                 //     });
                                 // }
-                                console.log("wait obj:", waitObj);
+                                //console.log("wait obj:", waitObj);
 
                                 if (waitObj) {
                                     this.waitInstallQueue.push(waitObj);
@@ -148,16 +145,16 @@ export class AppsService {
                     }
                 });
             };
-            this._aria2.onmessage = (m)=> {
-                //console.log('IN:', m);
-                //console.log('download infoi:', this.downloadsInfo);
+            //this._aria2.onmessage = (m)=> {
+            //console.log('IN:', m);
+            //console.log('download infoi:', this.downloadsInfo);
 
-            }
+            //}
         }
 
         if (!this.aria2IsOpen) {
             this._aria2.open().then(()=> {
-                console.log('aria2 websocket open')
+                console.log('aria2 websocket open');
                 this.aria2IsOpen = true;
             });
         }
@@ -166,9 +163,9 @@ export class AppsService {
 
     }
 
-    _download_dir;
+    //_download_dir;
     get download_dir() {
-        const dir = path.join(electron.remote.app.getAppPath(), 'cache');
+        const dir = path.join(remote.app.getAppPath(), 'cache');
 
         if (!fs.existsSync(dir)) {
             console.log('cache not exists');
@@ -189,7 +186,7 @@ export class AppsService {
             .map(response => {
                 let apps = response.json();
                 let localAppData = JSON.parse(localStorage.getItem("localAppData"));
-                apps = apps.map((app)=> {
+                apps = apps.map((app: any)=> {
                     if (localAppData) {
                         localAppData.map((v)=> {
                             if (v.id === app.id) {
@@ -252,7 +249,7 @@ export class AppsService {
 
         // 设置App关系
         for (let id of Array.from(apps.keys())) {
-            let temp = apps.get(id)["actions"]
+            let temp = apps.get(id)["actions"];
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -312,7 +309,7 @@ export class AppsService {
     }
 
     uninstall(id: string) {
-        let current = this;
+        //let current = this;
         if (this.checkInstall(id)) {
             let files: string[] = this.searchApp(id).local.files.sort().reverse();
             // 删除本目录
@@ -362,7 +359,7 @@ export class AppsService {
 
 
     getInstallConfig(app: App): InstallConfig {
-        let id = app.id;
+        //let id = app.id;
         this.installConfig = new InstallConfig(app);
         let platform = process.platform;
         let references: InstallConfig[] = [];
@@ -440,7 +437,7 @@ export class AppsService {
             });
         }
 
-        let tar = execFile(tarPath, ['xvf', xzFile, '-C', installDir], opt, (err, stdout, stderr)=> {
+        let tar = child_process.execFile(tarPath, ['xvf', xzFile, '-C', installDir], opt, (err, stdout, stderr)=> {
             if (err) {
                 throw err;
             }
@@ -494,11 +491,7 @@ export class AppsService {
                 }
             });
             this.waitInstallQueue = this.waitInstallQueue.filter((waitObj)=> {
-                if (waitObj) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return waitObj
             });
 
             console.log(tmp);
@@ -511,15 +504,8 @@ export class AppsService {
 
     }
 
-    isEmptyObject(e) {
-        let t;
-        for (t in e)
-            return !1;
-        return !0
-    }
-
     browse(app: App) {
-        electron.remote.shell.showItemInFolder(app.local.path);
+        remote.shell.showItemInFolder(app.local.path);
     }
 
     connections = new Map<App, {connection: WebSocket, address: string}>();
@@ -527,7 +513,7 @@ export class AppsService {
 
     network(app: App, server) {
         if (!this.maotama) {
-            this.maotama = sudo.fork('maotama')
+            this.maotama = new Sudo({name: 'MyCard'}).fork('maotama')
         }
         this.maotama.then((child)=> {
             let connection = this.connections.get(app);

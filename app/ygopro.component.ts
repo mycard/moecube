@@ -3,18 +3,15 @@
  */
 import {Component, OnInit, ChangeDetectorRef} from "@angular/core";
 import {AppsService} from "./apps.service";
+import * as fs from "fs";
+import * as path from "path";
+import * as crypto from "crypto";
+import * as child_process from "child_process";
+import {remote} from "electron";
+import * as ini from "ini";
+import {EncodeOptions} from "ini";
 
-
-declare var process;
-declare var System;
 declare var $;
-
-const fs = System._nodeRequire('fs');
-const path = System._nodeRequire('path');
-const crypto = System._nodeRequire('crypto');
-const child_process = System._nodeRequire('child_process');
-const ini = System._nodeRequire('ini');
-const electron = System._nodeRequire('electron');
 
 @Component({
     selector: 'ygopro',
@@ -170,7 +167,7 @@ export class YGOProComponent implements OnInit {
 
     save_system_conf = (data) => {
         return new Promise((resolve, reject)=> {
-            fs.writeFile(this.system_conf, ini.stringify(data, {whitespace: true}), (error) => {
+            fs.writeFile(this.system_conf, ini.stringify(data, <EncodeOptions>{whitespace: true}), (error) => {
                 if (error) return reject(error);
                 resolve(data);
             });
@@ -186,7 +183,7 @@ export class YGOProComponent implements OnInit {
                 data['lastport'] = server.port;
                 data['roompass'] = name;
                 data['nickname'] = this.user.username;
-                console.log(data)
+                console.log(data);
                 return data
             })
             .then(this.save_system_conf)
@@ -200,10 +197,10 @@ export class YGOProComponent implements OnInit {
     }
 
     start_game = (args) => {
-        let win = electron.remote.getCurrentWindow();
+        let win = remote.getCurrentWindow();
         win.minimize();
         return new Promise((resolve, reject)=> {
-            let child = child_process.spawn(path.join(this.app.local.path, this.app.actions[process.platform]['main']['execute']), args, {cwd: this.app.local.path});
+            let child = child_process.spawn(path.join(this.app.local.path, this.app.actions.get('main').execute), args, {cwd: this.app.local.path});
             child.on('error', (error)=> {
                 reject(error);
                 win.restore()
@@ -235,7 +232,7 @@ export class YGOProComponent implements OnInit {
         }
 
         let password = options_buffer.toString('base64') + options.title.replace(/\s/, String.fromCharCode(0xFEFF));
-        let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_')
+        let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
     }

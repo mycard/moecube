@@ -3,10 +3,9 @@
  */
 import {Component} from "@angular/core";
 import {LoginService} from "./login.service";
-declare var System;
-const crypto = System._nodeRequire('crypto');
-const querystring = System._nodeRequire('querystring');
-const url = System._nodeRequire('url');
+import * as crypto from "crypto";
+import * as querystring from "querystring";
+import * as url from "url";
 
 @Component({
     selector: 'login',

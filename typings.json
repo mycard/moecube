@@ -2,7 +2,11 @@
   "globalDependencies": {
     "core-js": "registry:dt/core-js",
     "electron/github-electron": "registry:dt/electron/github-electron",
+    "ini": "registry:dt/ini",
     "jasmine": "registry:dt/jasmine",
     "node": "registry:dt/node"
+  },
+  "dependencies": {
+    "mkdirp": "registry:npm/mkdirp"
   }
 }

@@ -4,30 +4,11 @@ import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 import {App} from "./app";
 import {DownloadService} from "./download.service";
+import {clipboard, remote} from "electron";
+import * as path from "path";
+import * as child_process from "child_process";
 
-declare var System;
 declare var $;
-
-import * as readline from 'readline';
-import * as os from 'os';
-import {clipboard, remote} from 'electron';
-
-const sudo = new (System._nodeRequire('electron-sudo').default)({name: 'MyCard'});
-
-sudo.fork = function (modulePath, args, options) {
-    return sudo.spawn(remote.app.getPath('exe'), ['-e', modulePath]).then((child)=> {
-        readline.createInterface({input: child.stdout}).on('line', (line) => {
-            child.emit('message', JSON.parse(line));
-        });
-        child.send = (message, sendHandle, options, callback)=> {
-            child.stdin.write(JSON.stringify(message) + os.EOL);
-            if (callback) {
-                callback()
-            }
-        };
-        return child
-    })
-};
 
 @Component({
     selector: 'app-detail',
@@ -37,12 +18,6 @@ sudo.fork = function (modulePath, args, options) {
 })
 export class AppDetailComponent implements OnInit {
     platform = process.platform;
-
-    fs = window['System']._nodeRequire('fs');
-    electron = window['System']._nodeRequire('electron');
-    spawn = window['System']._nodeRequire('child_process').spawn;
-    path = window['System']._nodeRequire('path');
-
     installConfig: InstallConfig;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
@@ -146,7 +121,7 @@ export class AppDetailComponent implements OnInit {
     }
 
     startApp(app: App) {
-        let execute = this.path.join(app.local.path, app.actions.get("main").execute);
+        let execute = path.join(app.local.path, app.actions.get("main").execute);
         let args = app.actions.get("main").args;
         let env = app.actions.get("main").env;
         let opt = {
@@ -158,7 +133,7 @@ export class AppDetailComponent implements OnInit {
         let openApp = app.actions.get("main").open;
         if (openApp) {
             if (this.isInstalled) {
-                open = this.path.join(openApp.local.path, openApp.actions.get("main").execute);
+                open = path.join(openApp.local.path, openApp.actions.get("main").execute);
                 args.push(execute);
             } else {
                 console.error('open app not found');
@@ -168,7 +143,7 @@ export class AppDetailComponent implements OnInit {
             open = execute;
         }
 
-        let handle = this.spawn(open, args, opt);
+        let handle = child_process.spawn(open, args, opt);
 
         handle.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
