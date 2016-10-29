@@ -149,10 +149,10 @@ export class YGOProComponent implements OnInit {
     fix_fonts = (data) => {
         return this.get_font([data.numfont])
             .catch(() => this.get_font(this.numfont[process.platform]).then(font => data['numfont'] = font))
-            .catch()
+            .catch(null)
             .then(() => this.get_font([data.textfont.split(' ', 2)[0]]))
             .catch(() => this.get_font(this.textfont[process.platform]).then(font => data['textfont'] = `${font} 14`))
-            .catch()
+            .catch(null)
             .then(() => data)
     };
 

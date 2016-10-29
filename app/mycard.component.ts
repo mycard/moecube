@@ -1,6 +1,7 @@
 import {Component, Renderer} from "@angular/core";
 import {TranslateService} from "ng2-translate";
 import {remote} from "electron";
+import {LoginService} from "./login.service";
 
 @Component({
     selector: 'mycard',
@@ -14,7 +15,7 @@ export class MyCardComponent {
 
     platform = process.platform;
 
-    constructor(private renderer: Renderer, private translate: TranslateService) {
+    constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService) {
         renderer.listenGlobal('window', 'message', (event) => {
             console.log(event);
             // Do something with 'event'
