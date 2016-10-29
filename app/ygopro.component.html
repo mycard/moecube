@@ -18,8 +18,7 @@
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 
-<div class="modal fade" id="game-create-windbot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="game-create-windbot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -31,8 +30,7 @@
             <div class="modal-body">
                 <label>选择对手</label>
                 <div id="windbot" class="list-group">
-                    <a *ngFor="let name of windbot" href="#" class="list-group-item"
-                       (click)="join_windbot(name)">{{name}}</a>
+                    <a *ngFor="let name of windbot" href="#" class="list-group-item" (click)="join_windbot(name)">{{name}}</a>
                 </div>
             </div>
             <div class="modal-footer">
@@ -42,8 +40,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="game-create-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="game-create-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -57,8 +54,7 @@
                     <div class="form-group row">
                         <label for="game-create-title" class="col-sm-2 form-control-label">游戏标题</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="game-create-title" name="title"
-                                   [(ngModel)]="room.title">
+                            <input type="text" class="form-control" id="game-create-title" name="title" [(ngModel)]="room.title">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -88,25 +84,19 @@
                             <div class="row">
                                 <label for="game-create-start-lp" class="col-sm-6 form-control-label">初始 LP</label>
                                 <div class="col-sm-6">
-                                    <input name="start_lp" type="number" value="8000" min="1" max="65536"
-                                           class="form-control form-control-sm game-create-extra"
-                                           id="game-create-start-lp" [(ngModel)]="room.start_lp">
+                                    <input name="start_lp" type="number" value="8000" min="1" max="65536" class="form-control form-control-sm game-create-extra" id="game-create-start-lp" [(ngModel)]="room.start_lp">
                                 </div>
                             </div>
                             <div class="row">
                                 <label for="game-create-start-hand" class="col-sm-6 form-control-label">初始手牌数</label>
                                 <div class="col-sm-6">
-                                    <input name="start_hand" type="number" value="5" min="0" max="16"
-                                           class="form-control form-control-sm game-create-extra"
-                                           id="game-create-start-hand" [(ngModel)]="room.start_hand">
+                                    <input name="start_hand" type="number" value="5" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-start-hand" [(ngModel)]="room.start_hand">
                                 </div>
                             </div>
                             <div class="row">
                                 <label for="game-create-draw-count" class="col-sm-6 form-control-label">每回合抽卡</label>
                                 <div class="col-sm-6">
-                                    <input name="draw_count" type="number" value="1" min="0" max="16"
-                                           class="form-control form-control-sm game-create-extra"
-                                           id="game-create-draw-count" [(ngModel)]="room.draw_count">
+                                    <input name="draw_count" type="number" value="1" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-draw-count" [(ngModel)]="room.draw_count">
                                 </div>
                             </div>
                         </div>
@@ -117,8 +107,7 @@
                                 </label>
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">不检查卡组
+                                <label> <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">不检查卡组
                                 </label>
                             </div>
                             <div class="checkbox">
@@ -140,8 +129,7 @@
                     </div>-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal"
-                            data-target="#game-list-modal">查看房间
+                    <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-list-modal">查看房间
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     <button type="submit" class="btn btn-primary">创建</button>
@@ -149,10 +137,8 @@
             </form>
         </div>
     </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="game-list-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+</div><!-- Modal -->
+<div class="modal fade" id="game-list-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <table class="table table-striped table-hover">
@@ -169,8 +155,7 @@
                 <tr *ngFor="let room of rooms" class="room" (click)="join_room(room)">
                     <td class="title">{{room.title}}</td>
                     <td class="users">
-                        <img *ngFor="let user of room.users" class="avatar"
-                             [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
+                        <img *ngFor="let user of room.users" class="avatar" [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
                     </td>
                     <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.mode]}}</td>
                     <td class="extra">
@@ -188,8 +173,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal"
-                        data-target="#game-create-modal">创建房间
+                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-create-modal">创建房间
                 </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
             </div>

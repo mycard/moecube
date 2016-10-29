@@ -18,11 +18,9 @@
     </ul>
     <div class="navbar-right">
         <div id="user" *ngIf="loginService.user">
-            <a href="#forum" class="require-login profile">
-                <img id="avatar" [src]="loginService.user.avatar_url" alt="image">
-            </a>
-            <a href="#forum" class="require-login profile item" id="username"></a>
-            <a (click)="loginService.logout()" href="#ygopro" id="logout" class="require-login item">切换账号</a>
+            <a class="require-login profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
+            <a class="require-login profile item" id="username"></a>
+            <a (click)="loginService.logout()" id="logout" class="require-login item">切换账号</a>
             <!--<a (click)="refresh()" href="#ygopro" id="refresh" class="item">刷新</a>-->
         </div>
         <div id="window-buttons" [hidden]="platform == 'darwin'">
@@ -33,9 +31,7 @@
         </div>
     </div>
 </nav>
-
 <login class="page" *ngIf="!loginService.user"></login>
 <store class="page" *ngIf="loginService.user" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.user" [hidden]="currentPage != 'lobby'"></lobby>
-<webview id="community" class="page" *ngIf="loginService.user" [hidden]="currentPage != 'community'"
-         src="https://ygobbs.com"></webview>
+<webview id="community" class="page" *ngIf="loginService.user" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>

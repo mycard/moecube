@@ -5,11 +5,9 @@
     padding: 1rem;
 }
 
-
 .list-group {
     width: 20rem;
 }
-
 
 .news-block {
     padding: 0;
@@ -27,6 +25,7 @@ progress {
 #news h3 {
     font-size: 1.5rem;
 }
+
 #news p {
     margin-bottom: 0;
 }
@@ -42,12 +41,12 @@ progress {
     width: 300px;
 }
 
-#network .input-group-btn>.btn:not(:last-child):not(.dropdown-toggle){
+#network .input-group-btn > .btn:not(:last-child):not(.dropdown-toggle) {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
 
-#network .input-group-btn>.dropdown-toggle{
+#network .input-group-btn > .dropdown-toggle {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }

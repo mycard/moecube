@@ -3,10 +3,12 @@
     overflow-y: auto;
     height: 21.5rem;
 }
+
 #game-list-modal thead {
     position: relative;
     display: block;
 }
+
 #game-list-modal tr {
     width: 100%;
     display: table;
@@ -15,6 +17,7 @@
 #game-list-modal .table {
     margin-bottom: 0;
 }
+
 #game-list-modal .avatar {
     width: 25px;
     height: 25px;
@@ -31,10 +34,12 @@
     top: 15px;
     right: 15px;
 }
+
 #game-list-modal .modal-header {
     padding-left: 0;
     padding-right: 0;
 }
+
 #game-list-modal .modal-header th {
     line-height: 36px;
     padding-top: 0;
@@ -42,16 +47,17 @@
     border: none;
 
 }
+
 #game-list-modal .modal-body {
     padding: 0;
     height: 21.4rem;
 }
 
-#game-list-modal .modal-body tr:first-child td{
+#game-list-modal .modal-body tr:first-child td {
     border-top: none;
 }
 
-#game-list-modal .modal-body tr:last-child td{
+#game-list-modal .modal-body tr:last-child td {
     border-bottom: none;
 }
 
@@ -59,12 +65,15 @@
 #game-list-modal .title {
     width: 25%;
 }
+
 #game-list-modal .users {
     width: 20%;
 }
+
 #game-list-modal .mode {
     width: 20%;
 }
+
 #game-list-modal .extra {
     width: 35%;
 }

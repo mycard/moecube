@@ -1,6 +1,7 @@
 :host {
     display: flex;
 }
+
 webview {
     flex-grow: 1;
 }

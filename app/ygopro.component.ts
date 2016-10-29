@@ -10,8 +10,56 @@ import * as child_process from "child_process";
 import {remote} from "electron";
 import * as ini from "ini";
 import {EncodeOptions} from "ini";
+import {LoginService} from "./login.service";
 
 declare var $;
+
+interface SystemConf {
+    use_d3d: string
+    antialias: string
+    errorlog: string
+    nickname: string
+    gamename: string
+    lastdeck: string
+    textfont: string
+    numfont: string
+    serverport: string
+    lastip: string
+    lastport: string
+    autopos: string
+    randompos: string
+    autochain: string
+    waitchain: string
+    mute_opponent: string
+    mute_spectators: string
+    hide_setname: string
+    hide_hint_button: string
+    control_mode: string
+    draw_field_spell: string
+    separate_clear_button: string
+    roompass: string
+}
+
+interface Server {
+    id: string
+    url: string
+    address: string
+    port: number
+}
+
+interface Room {
+    id?: string
+    title?: string
+    server?: Server
+    mode: number,
+    rule: number,
+    start_lp: number,
+    start_hand: number,
+    draw_count: number,
+    enable_priority: boolean,
+    no_check_deck: boolean,
+    no_shuffle_deck: boolean
+}
 
 @Component({
     selector: 'ygopro',
@@ -20,8 +68,8 @@ declare var $;
 })
 export class YGOProComponent implements OnInit {
     app = this.appsService.searchApp('ygopro');
-    decks = [];
-    current_deck;
+    decks: string[] = [];
+    current_deck: string;
 
     system_conf = path.join(this.app.local.path, 'system.conf');
     numfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
@@ -29,12 +77,15 @@ export class YGOProComponent implements OnInit {
 
     windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
-    servers = [{id: 'tiramisu', url: 'wss://tiramisu.mycard.moe:7923', address: "112.124.105.11", port: 7911}];
+    servers: Server[] = [{
+        id: 'tiramisu',
+        url: 'wss://tiramisu.mycard.moe:7923',
+        address: "112.124.105.11",
+        port: 7911
+    }];
 
 
-    user = {external_id: 1, username: 'zh99998'}; // for test
-
-    default_options = {
+    default_options: Room = {
         mode: 1,
         rule: 0,
         start_lp: 8000,
@@ -45,13 +96,13 @@ export class YGOProComponent implements OnInit {
         no_shuffle_deck: false
     };
 
-    room = Object.assign({title: this.user.username + '的房间'}, this.default_options);
+    room: Room = Object.assign({title: this.loginService.user.username + '的房间'}, this.default_options);
 
-    rooms = [];
+    rooms: Room[] = [];
 
-    connections = [];
+    connections: WebSocket[] = [];
 
-    constructor(private appsService: AppsService, private ref: ChangeDetectorRef) {
+    constructor(private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         this.refresh();
     }
 
@@ -94,16 +145,15 @@ export class YGOProComponent implements OnInit {
         });
     }
 
-    refresh = () => {
-        this.get_decks().then((decks)=> {
-            this.decks = decks;
-            if (!(this.current_deck in this.decks)) {
-                this.current_deck = decks[0];
-            }
-        })
+    async refresh() {
+        let decks = await this.get_decks();
+        this.decks = decks;
+        if (!(this.current_deck in this.decks)) {
+            this.current_deck = decks[0];
+        }
     };
 
-    get_decks(): Promise<[string]> {
+    get_decks(): Promise<string[]> {
         return new Promise((resolve, reject)=> {
             fs.readdir(path.join(this.app.local.path, 'deck'), (error, files)=> {
                 if (error) {
@@ -115,48 +165,37 @@ export class YGOProComponent implements OnInit {
         })
     }
 
-    get_font(files: string[]) {
-        return new Promise((resolve, reject)=> {
-            files.reduce((promise, file: string) => {
-                return promise.then(()=>file).then(()=>new Promise((resolve, reject)=> {
-                    fs.access(file, fs.constants.R_OK, (error) => {
-                        error ? resolve(`can't find fonts ${files[process.platform]}`) : reject(file)
-                    });
-                }));
-            }, Promise.resolve()).then(reject, resolve);
-        })
+    async get_font(files: string[]): Promise<string> {
+        for (let file in files) {
+            let found = await new Promise((resolve)=>fs.access(file, fs.constants.R_OK, error=>resolve(!error)));
+            if (found) {
+                return file;
+            }
+        }
     }
 
-    edit_deck(deck) {
-        this.load_system_conf()
-            .then(this.fix_fonts)
-            .then(data => {
-                data['lastdeck'] = deck;
-                return data
-            })
-            .then(this.save_system_conf)
-            .then(()=>['-d'])
-            .then(this.start_game)
-            .catch(reason=>console.log(reason))
+    async delete_deck(deck) {
+        await new Promise(resolve => fs.unlink(path.join(this.app.local.path, 'deck', deck + '.ydk'), resolve));
+        return this.refresh()
     }
 
-    delete_deck(deck) {
-        return new Promise((resolve, reject) => {
-            fs.unlink(path.join(this.app.local.path, 'deck', deck + '.ydk'), resolve)
-        }).then(this.refresh)
-    }
+    async fix_fonts(data) {
+        if (!await this.get_font([data.numfont])) {
+            let font = await this.get_font(this.numfont[process.platform]);
+            if (font) {
+                data['numfont'] = font
+            }
+        }
 
-    fix_fonts = (data) => {
-        return this.get_font([data.numfont])
-            .catch(() => this.get_font(this.numfont[process.platform]).then(font => data['numfont'] = font))
-            .catch(null)
-            .then(() => this.get_font([data.textfont.split(' ', 2)[0]]))
-            .catch(() => this.get_font(this.textfont[process.platform]).then(font => data['textfont'] = `${font} 14`))
-            .catch(null)
-            .then(() => data)
+        if (!await this.get_font([data.textfont.split(' ', 2)[0]])) {
+            let font = await this.get_font(this.textfont[process.platform]);
+            if (font) {
+                data['textfont'] = `${font} 14`
+            }
+        }
     };
 
-    load_system_conf = () => {
+    load_system_conf(): Promise<SystemConf> {
         return new Promise((resolve, reject)=> {
             fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
                 if (error) return reject(error);
@@ -165,7 +204,7 @@ export class YGOProComponent implements OnInit {
         })
     };
 
-    save_system_conf = (data) => {
+    save_system_conf(data: SystemConf) {
         return new Promise((resolve, reject)=> {
             fs.writeFile(this.system_conf, ini.stringify(data, <EncodeOptions>{whitespace: true}), (error) => {
                 if (error) return reject(error);
@@ -174,29 +213,31 @@ export class YGOProComponent implements OnInit {
         })
     };
 
-    join(name, server) {
-        this.load_system_conf()
-            .then(this.fix_fonts)
-            .then(data => {
-                data['lastdeck'] = this.current_deck;
-                data['lastip'] = server.address;
-                data['lastport'] = server.port;
-                data['roompass'] = name;
-                data['nickname'] = this.user.username;
-                console.log(data);
-                return data
-            })
-            .then(this.save_system_conf)
-            .then(()=>['-j'])
-            .then(this.start_game)
-            .catch(reason=>alert(reason))
+    async join(name, server) {
+        let system_conf = await this.load_system_conf();
+        await this.fix_fonts(system_conf);
+        system_conf.lastdeck = this.current_deck;
+        system_conf.lastip = server.address;
+        system_conf.lastport = server.port;
+        system_conf.roompass = name;
+        system_conf.nickname = this.loginService.user.username;
+        await this.save_system_conf(system_conf);
+        return this.start_game(['-j']);
     };
 
-    join_windbot(name) {
-        this.join('AI#' + name, this.servers[0])
+    async edit_deck(deck: string) {
+        let system_conf = await this.load_system_conf();
+        await this.fix_fonts(system_conf);
+        system_conf.lastdeck = deck;
+        await this.save_system_conf(system_conf);
+        return this.start_game(['-d']);
     }
 
-    start_game = (args) => {
+    join_windbot(name) {
+        return this.join('AI#' + name, this.servers[0])
+    }
+
+    start_game(args) {
         let win = remote.getCurrentWindow();
         win.minimize();
         return new Promise((resolve, reject)=> {
@@ -207,7 +248,7 @@ export class YGOProComponent implements OnInit {
             });
             child.on('exit', (code, signal)=> {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
-                resolve(code);
+                resolve();
                 win.restore()
             })
         })
@@ -226,13 +267,13 @@ export class YGOProComponent implements OnInit {
         }
         options_buffer.writeUInt8(checksum & 0xFF, 0);
 
-        let secret = this.user.external_id % 65535 + 1;
+        let secret = this.loginService.user.external_id % 65535 + 1;
         for (let i = 0; i < options_buffer.length; i += 2) {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
 
         let password = options_buffer.toString('base64') + options.title.replace(/\s/, String.fromCharCode(0xFEFF));
-        let room_id = crypto.createHash('md5').update(password + this.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
+        let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
     }
@@ -246,7 +287,7 @@ export class YGOProComponent implements OnInit {
         }
         options_buffer.writeUInt8(checksum & 0xFF, 0);
 
-        let secret = this.user.external_id % 65535 + 1;
+        let secret = this.loginService.user.external_id % 65535 + 1;
         for (i = 0; i < options_buffer.length; i += 2) {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
