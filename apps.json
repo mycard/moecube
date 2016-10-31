@@ -1341,9 +1341,12 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "directx"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "directx"
       ]
     },
     "references": {
@@ -2135,6 +2138,61 @@
     "download": {
       "win32": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4",
       "darwin": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "directx",
+    "name": {
+      "zh-CN": "DirectX 最终用户运行时"
+    },
+    "description": {
+      "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
+    },
+    "category": "runtime",
+    "tags": [
+      "yugioh"
+    ],
+    "dependencies": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "Fluorohydride",
+    "homepage": "https://github.com/Fluorohydride/ygopro",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "install": {
+          "execute": "DXSETUP.exe",
+          "args": [
+            "/silent"
+          ]
+        }
+      },
+      "darwin": {
+        "install": {
+          "execute": "DXSETUP.exe",
+          "args": [
+            "/silent"
+          ],
+          "open": "wine"
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/directx.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/directx.meta4"
     },
     "news": []
   }
