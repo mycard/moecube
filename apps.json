@@ -1997,5 +1997,145 @@
         "text": "聚集的祈愿将成为新生的闪耀之星，化作光芒闪耀的道路吧！"
       }
     ]
+  },
+  {
+    "id": "desmume",
+    "name": {
+      "zh-CN": "DeSmuME"
+    },
+    "description": {
+      "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
+    },
+    "category": "emulator",
+    "tags": [
+      "yugioh"
+    ],
+    "dependencies": {
+      "win32": [],
+      "darwin": []
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "Fluorohydride",
+    "homepage": "https://github.com/Fluorohydride/ygopro",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "DeSmuME_0.9.11_x86.exe",
+          "args": [],
+          "env": {}
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "DeSmuME.app/Contents/MacOS/DeSmuME",
+          "args": [],
+          "env": {}
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/desmume-win32.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/desmume-darwin.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "ghost_trick",
+    "name": {
+      "zh-CN": "幽灵诡计"
+    },
+    "description": {
+      "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
+    },
+    "category": "emulator",
+    "tags": [
+      "yugioh"
+    ],
+    "dependencies": {
+      "win32": [],
+      "darwin": []
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "Fluorohydride",
+    "homepage": "https://github.com/Fluorohydride/ygopro",
+    "locales": [
+      "ja-JP"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "5017 - Ghost Trick (J).nds",
+          "args": [],
+          "env": {},
+          "open": "desmume"
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "5017 - Ghost Trick (J).nds",
+          "args": [],
+          "env": {},
+          "open": "desmume"
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/ghost_trick.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/ghost_trick.meta4"
+    },
+    "news": []
+  },
+  {
+    "id": "ghost_trick-lang-zh-CN",
+    "name": {
+      "zh-CN": "幽灵诡计 语言包(简体中文)"
+    },
+    "description": {
+      "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
+    },
+    "category": "emulator",
+    "tags": [
+      "yugioh"
+    ],
+    "dependencies": {
+      "win32": [],
+      "darwin": []
+    },
+    "references": {
+      "win32": [],
+      "darwin": []
+    },
+    "author": "Fluorohydride",
+    "homepage": "https://github.com/Fluorohydride/ygopro",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {},
+      "darwin": {}
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "download": {
+      "win32": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4",
+      "darwin": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4"
+    },
+    "news": []
   }
 ]
