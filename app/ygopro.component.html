@@ -11,10 +11,12 @@
 </form>
 
 <div>
-    <button type="button" class="btn btn-primary">竞技匹配</button>
-    <button type="button" class="btn btn-secondary">娱乐匹配</button>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
+    <button (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" [disabled]="matching" type="button" class="btn btn-primary">竞技匹配</button>
+    <button (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary">取消等待</button>
+    <button (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" [disabled]="matching" type="button" class="btn btn-secondary">娱乐匹配</button>
+    <button (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary">取消等待</button>
+    <button [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
+    <button [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 
