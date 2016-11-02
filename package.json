@@ -8,6 +8,7 @@
   "scripts": {
     "pack": "tsc && build --dir",
     "dist": "tsc && build",
+    "release": "tsc && build",
     "start": "tsc && electron .",
     "postinstall": "typings install",
     "tsc": "tsc",
@@ -57,11 +58,9 @@
     "category": "public.app-category.social-networking",
     "publish": [
       {
-        "provider": "generic",
-        "url": "https://wudizhanche.mycard.moe/publish"
-      },
-      {
-        "provider": "github"
+        "provider": "bintray",
+        "user": "zh99998",
+        "repo": "mycard"
       }
     ],
     "win": {

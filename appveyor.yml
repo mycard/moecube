@@ -5,6 +5,10 @@ platform: x86
 environment:
   priv_key:
       secure: ek1AH0N8/KF6VoildmkHnu4TY1yBZcptm20AesAOanRSSGLFqkXeRxL80mHSXtiVY8ggtQNsEQR4M69gCiw1OPVWz4OAN6Vg6id6kho9GqYxWCdADbmffSNPB5leksRGjGmkAF99WHiOIZrLRUb6Bia91Fe5+SngPhI01GDDUZA2urv9x50uBBhc+kvV0bv7J5TeXDGr7tfZ3J2aL/3tf/WPqBkqjWlGAj99HTWpkIiQgwaBHoyBvEFD0uHa1BdSmI7PySGabbx4/4zqyGkO38Ce7t/Ntu/dgedzVxlXYfuiXDI8caAPZSVsJ9E2S3VKesZJzHtV9KM/8Xq0RFPythdC/qTvd2e3IAZGudZpgbUHGAHLJnCzn189Zm+Qle8CbbVuPNDcf1B/G/XwEU2MsDXGkF/kFxdeqbHgjzneyns=
+  BT_TOKEN:
+      secure: VNRwtuHDHJQS0UbCW2WmNSyyRtKhYPC5FCZztllsIygyg3dj5H/YY89UUmPW9vU7
+  GH_TOKEN:
+      secure: itZ9Z1dxEpfPJLdTs/PiY98pVZ3GCLNWfid7eAu7SL88Jl9AIrf/3rviKFEbsnoY
   npm_config_target: 1.4.5
   npm_config_arch: ia32
   npm_config_target_arch: ia32
@@ -42,16 +46,16 @@ build_script:
 
 test: off
 
-artifacts:
-  - path: dist/latest.yml
-  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
-
-deploy:
-  - provider: FTP
-    protocol: sftp
-    host: wudizhanche.mycard.moe
-    username: root
-    password:
-    folder: /data/publish
-    on:
-      appveyor_repo_tag: true
+#artifacts:
+#  - path: dist/latest.yml
+#  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
+#
+#deploy:
+#  - provider: FTP
+#    protocol: sftp
+#    host: wudizhanche.mycard.moe
+#    username: root
+#    password:
+#    folder: /data/publish
+#    on:
+#      appveyor_repo_tag: true
