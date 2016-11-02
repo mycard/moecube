@@ -42,8 +42,10 @@ artifacts:
   - path: MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
 
 deploy:
-  provider: FTP
-  protocol: sftp
-  host: wudizhanche.mycard.moe
-  username: root
-  folder: /data/publish
+  - provider: FTP
+    protocol: sftp
+    host: wudizhanche.mycard.moe
+    username: root
+    folder: /data/publish
+    on:
+      appveyor_repo_tag: true
