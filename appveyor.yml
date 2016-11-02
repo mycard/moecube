@@ -3,6 +3,8 @@ version: '{build}'
 platform: x86
 
 environment:
+  priv_key:
+      secure: ek1AH0N8/KF6VoildmkHnu4TY1yBZcptm20AesAOanRSSGLFqkXeRxL80mHSXtiVY8ggtQNsEQR4M69gCiw1OPVWz4OAN6Vg6id6kho9GqYxWCdADbmffSNPB5leksRGjGmkAF99WHiOIZrLRUb6Bia91Fe5+SngPhI01GDDUZA2urv9x50uBBhc+kvV0bv7J5TeXDGr7tfZ3J2aL/3tf/WPqBkqjWlGAj99HTWpkIiQgwaBHoyBvEFD0uHa1BdSmI7PySGabbx4/4zqyGkO38Ce7t/Ntu/dgedzVxlXYfuiXDI8caAPZSVsJ9E2S3VKesZJzHtV9KM/8Xq0RFPythdC/qTvd2e3IAZGudZpgbUHGAHLJnCzn189Zm+Qle8CbbVuPNDcf1B/G/XwEU2MsDXGkF/kFxdeqbHgjzneyns=
   npm_config_target: 1.4.5
   npm_config_arch: ia32
   npm_config_target_arch: ia32
@@ -19,6 +21,10 @@ cache:
 shallow_clone: true
 
 init:
+  - ps: $fileContent = "-----BEGIN EC PRIVATE KEY-----`n"
+  - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
+  - ps: $fileContent += "`n-----END EC PRIVATE KEY-----`n"
+  - ps: Set-Content c:\users\appveyor\.ssh\id_ecdsa $fileContent
   - git config --global core.autocrlf input
 
 install:
