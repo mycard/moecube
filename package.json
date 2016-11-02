@@ -55,6 +55,15 @@
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://mycard.moe/publish"
+      },
+      {
+        "provider": "github"
+      }
+    ],
     "win": {
       "target": [
         "nsis"
