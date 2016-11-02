@@ -55,7 +55,6 @@
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
-    "asar": false,
     "win": {
       "target": [
         "nsis"
