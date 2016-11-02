@@ -3,7 +3,7 @@ version: '{build}'
 platform: x86
 
 environment:
-  npm_config_target: 1.2.3
+  npm_config_target: 1.4.5
   npm_config_arch: ia32
   npm_config_target_arch: ia32
   npm_config_disturl: https://atom.io/download/atom-shell
@@ -33,19 +33,19 @@ build_script:
   - node --version
   - npm --version
   - npm run dist
-  - tree /f dist
 
 test: off
 
 artifacts:
-  - path: latest.yml
-  - path: MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
+  - path: dist/latest.yml
+  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
 
 deploy:
   - provider: FTP
     protocol: sftp
     host: wudizhanche.mycard.moe
     username: root
+    password:
     folder: /data/publish
     on:
       appveyor_repo_tag: true
