@@ -25,7 +25,7 @@ install:
   - ps: Install-Product node # 6 $env:platform
   #- git reset --hard HEAD
   - npm install npm -g
-  # - npm install electron-builder
+  - npm install electron-builder
   - npm install
   - npm prune
 
