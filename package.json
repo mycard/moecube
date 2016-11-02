@@ -58,7 +58,10 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "https://mycard.moe/publish"
+        "url": "https://wudizhanche.mycard.moe/publish"
+      },
+      {
+        "provider": "github"
       }
     ],
     "win": {

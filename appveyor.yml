@@ -35,18 +35,15 @@ build_script:
   - npm run dist
   - tree /f dist
 
-#artifacts:
-#  - path: ygopro-images
-#    name: ygopro-images-$(locale)
-#    type: zip
-#  - path: records-$(locale).json
-#    name: records-$(locale)
-#
-#deploy:
-#  provider: FTP
-#  protocol: sftp
-#  host: pokeboy.mycard.moe
-#  username: root
-#  folder: /data/publish
-
 test: off
+
+artifacts:
+  - path: latest.yml
+  - path: MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
+
+deploy:
+  provider: FTP
+  protocol: sftp
+  host: pokeboy.mycard.moe
+  username: root
+  folder: /data/publish
