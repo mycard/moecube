@@ -33,7 +33,7 @@ build_script:
   - node --version
   - npm --version
   - npm run dist
-  - ls dist/win
+  - tree /f dist
 
 #artifacts:
 #  - path: ygopro-images
