@@ -6,15 +6,12 @@
   "version": "3.0.0-dev.5",
   "repository": "github:mycard/mycard",
   "scripts": {
-    "pack": "./node_modules/.bin/build --dir",
-    "dist": "./node_modules/.bin/build",
-    "release": "build",
+    "pack": "tsc && ./node_modules/.bin/build --dir",
+    "dist": "tsc && ./node_modules/.bin/build",
     "start": "tsc && electron .",
-    "lite": "lite-server",
     "postinstall": "typings install",
     "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "typings": "typings"
+    "tsc:w": "tsc -w"
   },
   "license": "UNLICENSED",
   "dependencies": {
