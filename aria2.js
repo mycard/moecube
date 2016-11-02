@@ -3,7 +3,7 @@
  * Created by weijian on 2016/10/27.
  */
 const Rx = require("rxjs/Rx");
-const {ipcMain} = require('electron');
+const { ipcMain } = require('electron');
 const child_process_1 = require("child_process");
 // import * as Aria2 from "aria2";
 const Aria2 = require("aria2");
@@ -15,7 +15,7 @@ a.on('error', (error) => {
 function createProcess(aria2c_path, args = []) {
     return child_process_1.spawn(aria2c_path, args);
 }
-let options = {'host': 'localhost', 'port': 6800, 'secure': false};
+let options = { 'host': 'localhost', 'port': 6800, 'secure': false };
 let aria2 = new Aria2(options);
 aria2.onDownloadComplete = (response) => {
     console.log(response);

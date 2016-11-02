@@ -59,8 +59,9 @@
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
     "win": {
-      "iconUrl": "http://mycard.moe/logo.png",
-      "remoteReleases": true
+      "target": [
+        "nsis"
+      ]
     },
     "mac": {
       "target": "dmg"
