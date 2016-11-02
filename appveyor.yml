@@ -33,5 +33,20 @@ build_script:
   - node --version
   - npm --version
   - npm run dist
+  - ls dist/win
+
+#artifacts:
+#  - path: ygopro-images
+#    name: ygopro-images-$(locale)
+#    type: zip
+#  - path: records-$(locale).json
+#    name: records-$(locale)
+#
+#deploy:
+#  provider: FTP
+#  protocol: sftp
+#  host: pokeboy.mycard.moe
+#  username: root
+#  folder: /data/publish
 
 test: off
