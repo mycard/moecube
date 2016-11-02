@@ -44,6 +44,6 @@ artifacts:
 deploy:
   provider: FTP
   protocol: sftp
-  host: pokeboy.mycard.moe
+  host: wudizhanche.mycard.moe
   username: root
   folder: /data/publish
