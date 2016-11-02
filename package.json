@@ -3,7 +3,7 @@
   "description": "mycard",
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
-  "version": "3.0.0-dev.4",
+  "version": "3.0.0-dev.5",
   "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "./node_modules/.bin/build --dir",
@@ -58,6 +58,7 @@
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
+    "asar": false,
     "win": {
       "target": [
         "nsis"
