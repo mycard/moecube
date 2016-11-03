@@ -47,8 +47,8 @@ build_script:
 test: off
 
 artifacts:
-  - path: dist/latest.yml
   - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
+  - path: dist/latest.yml
 
 deploy:
   - provider: FTP
