@@ -4,11 +4,12 @@ node_js: node
 os:
   - linux
   - osx
-sudo: required
 dist: trusty
+sudo: false
+group: beta
 
 env:
-  npm_config_target: 1.2.3
+  npm_config_target: 1.4.5
   npm_config_arch: x64
   npm_config_target_arch: x64
   npm_config_disturl: https://atom.io/download/atom-shell
@@ -30,13 +31,8 @@ cache:
   - $HOME/.cache
 
 install:
-- npm install electron-builder # force install next version to test electron-builder
 - npm install
 - npm prune
 
 script:
-- npm run release
-
-branches:
-  only:
-    - v3
+- npm run dist
