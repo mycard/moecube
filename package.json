@@ -63,11 +63,6 @@
         "url": "https://wudizhanche.mycard.moe/publish"
       },
       {
-        "provider": "bintray",
-        "user": "zh99998",
-        "repo": "mycard"
-      },
-      {
         "provider": "github"
       }
     ],
