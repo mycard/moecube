@@ -3,7 +3,7 @@
   "description": "mycard",
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
-  "version": "3.0.0-dev.5",
+  "version": "3.0.0-dev.6",
   "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "tsc && build --dir",
