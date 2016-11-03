@@ -46,16 +46,20 @@ build_script:
 
 test: off
 
-#artifacts:
-#  - path: dist/latest.yml
-#  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
-#
-#deploy:
-#  - provider: FTP
-#    protocol: sftp
-#    host: wudizhanche.mycard.moe
-#    username: root
-#    password:
-#    folder: /data/publish
-#    on:
-#      appveyor_repo_tag: true
+artifacts:
+  - path: dist/latest.yml
+  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
+
+deploy:
+  - provider: FTP
+    protocol: sftp
+    host:
+      secure: kOmWSMPWqwRatoWbsDnyEePCfTVRsmKqvCTREDvihT8=
+    username:
+      secure: K5zchLMnJ3JaEqx3/bSl5A==
+    password:
+      secure: Eu+oVcSuxpc6BVmjxSgM2yBCRnwRsoUye8QCkaIGlX4=
+    folder:
+      secure: I/l1mtYuzA7y/ujuCXCahQ==
+    on:
+      appveyor_repo_tag: true

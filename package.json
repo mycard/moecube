@@ -58,9 +58,16 @@
     "category": "public.app-category.social-networking",
     "publish": [
       {
+        "provider": "generic",
+        "url": "https://wudizhanche.mycard.moe/publish"
+      },
+      {
         "provider": "bintray",
         "user": "zh99998",
         "repo": "mycard"
+      },
+      {
+        "provider": "github"
       }
     ],
     "win": {
