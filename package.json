@@ -58,6 +58,9 @@
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
+    "extraResources": [
+      "bin"
+    ],
     "win": {
       "iconUrl": "http://mycard.moe/logo.png",
       "remoteReleases": true

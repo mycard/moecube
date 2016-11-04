@@ -1,7 +1,32 @@
 <!-- Begin page content -->
 <div id="main">
-    <apps *ngIf="appsService.allApps"></apps>
-    <app-detail *ngIf="appsService._currentApp"></app-detail>
+    <div id="apps" *ngIf="apps">
+        <span *ngIf="grouped_apps.installed">已安装</span>
+        <ul *ngIf="grouped_apps.installed" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.installed" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+        <span *ngIf="grouped_apps.yugioh">游戏王</span>
+        <ul *ngIf="grouped_apps.yugioh" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.yugioh" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+        <span *ngIf="grouped_apps.touhou">东方 Project</span>
+        <ul *ngIf="grouped_apps.touhou" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.touhou" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+        <span *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
+        <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.touhou_pc98" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <app-detail *ngIf="currentApp" [currentApp]="currentApp"></app-detail>
     <roster></roster>
 </div>
 <webview id="candy" [src]="candy_url" nodeintegration></webview>

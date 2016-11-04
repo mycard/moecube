@@ -6,21 +6,18 @@ import {App} from "./app";
 export class InstallConfig {
     app: App;
     install: boolean;
-    installPath: string;
+    installLibrary: string;
     installDir: string;
     createShortcut: boolean;
     createDesktopShortcut: boolean;
     references: InstallConfig[];
 
-    constructor(app: App, installPath = ".", installDir = "", install = true, shortcut = false, desktopShortcut = false) {
+    constructor(app: App, installLibrary = "", installDir = "", install = true, shortcut = false, desktopShortcut = false) {
         this.app = app;
         this.createShortcut = shortcut;
         this.createDesktopShortcut = desktopShortcut;
         this.install = install;
         this.installDir = installDir;
-    }
-
-    updateChecked() {
-
+        this.installLibrary = installLibrary;
     }
 }
