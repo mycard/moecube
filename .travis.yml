@@ -5,8 +5,7 @@ os:
   - linux
   - osx
 dist: trusty
-sudo: false
-group: beta
+sudo: required
 
 env:
   npm_config_target: 1.4.5
