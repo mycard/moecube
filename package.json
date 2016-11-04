@@ -57,6 +57,15 @@
     "productName": "MyCard",
     "appId": "com.mycard.mycard",
     "category": "public.app-category.social-networking",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://wudizhanche.mycard.moe/downloads"
+      },
+      {
+        "provider": "github"
+      }
+    ],
     "extraResources": [
       "bin"
     ],
