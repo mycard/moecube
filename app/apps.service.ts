@@ -1,6 +1,6 @@
 import {Injectable, ApplicationRef} from "@angular/core";
 import {Http} from "@angular/http";
-import {App} from "./app";
+import {App, AppStatus} from "./app";
 import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 import * as os from "os";
@@ -10,6 +10,9 @@ import * as readline from "readline";
 import * as mkdirp from "mkdirp";
 import * as child_process from "child_process";
 import {remote} from "electron";
+import "rxjs/Rx";
+import {AppLocal} from "./app-local";
+
 
 const Aria2 = require('aria2');
 const Sudo = require('electron-sudo').default;
@@ -32,30 +35,13 @@ Sudo.prototype.fork = function (modulePath, args, options) {
 @Injectable()
 export class AppsService {
 
-    installConfig: InstallConfig;
-    private _currentApp: App;
-
-    get currentApp(): App {
-        return this._currentApp;
+    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,) {
     }
 
-    set currentApp(app: App) {
-        this._currentApp = app;
-    }
 
-    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef) {
-        this.loadApps(()=> {
-            if (this.data.size > 0) {
-                this.currentApp = this.data.get('ygopro');
-            }
-        });
-    }
-
-    private data: Map<string,App>;
-
-    get allApps(): Map<string,App> {
-        return this.data;
-    }
+    // get allApps(): Map<string,App> {
+    //     return this.data;
+    // }
 
     //[{"id": "th01", "gid": "aria2gid", "status": "active/install/complete/wait", "progress": "0-100"}]
     downloadsInfo = [];
@@ -96,11 +82,11 @@ export class AppsService {
                             let tarObj = {
                                 id: this.downloadsInfo[index].id,
                                 xzFile: res.files[0].path,
-                                installDir: this.installConfig.installPath
+                                // installDir: this.installConfig.installLibrary
                             };
                             new Promise((resolve)=> {
-                                let refs = this.searchApp(this.downloadsInfo[index].id).references;
-                                console.log(refs);
+                                // let refs = this.searchApp(this.downloadsInfo[index].id).references;
+                                // console.log(refs);
                                 //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
                                 let waitObj;
 
@@ -124,7 +110,7 @@ export class AppsService {
                                 //         }
                                 //     });
                                 // }
-                                //console.log("wait obj:", waitObj);
+                                // console.log("wait obj:", waitObj);
 
                                 if (waitObj) {
                                     this.waitInstallQueue.push(waitObj);
@@ -181,38 +167,13 @@ export class AppsService {
         return dir;
     }
 
-    loadApps(callback) {
-        this.http.get('./apps.json')
-            .map(response => {
-                let apps = response.json();
-                let localAppData = JSON.parse(localStorage.getItem("localAppData"));
-                apps = apps.map((app: any)=> {
-                    if (localAppData) {
-                        localAppData.map((v)=> {
-                            if (v.id === app.id) {
-                                app.local = v.local;
-                            }
-                        });
-                    }
-                    return app;
-                });
-                return apps;
-            }).map(this.loadAppsList)
-            .subscribe((apps) => {
-                this.data = apps;
-                if (typeof(callback) === 'function') {
-                    callback();
-                }
+    loadApps() {
+        return this.http.get('./apps.json')
+            .toPromise()
+            .then((response)=> {
+                let data = response.json();
+                return this.loadAppsList(data);
             });
-    }
-
-    getLocalString(app: App, tag: string): string {
-        let locale = this.settingsService.getLocale();
-        let value = app[tag][locale];
-        if (!value) {
-            value = app[tag]["en-US"];
-        }
-        return value;
     }
 
     loadAppsList = (data: any): Map<string,App> => {
@@ -222,6 +183,17 @@ export class AppsService {
 
         for (let item of data) {
             let app = new App(item);
+            let local = localStorage.getItem(app.id);
+            if (local) {
+                app.local = new AppLocal();
+                app.local.update(JSON.parse(local));
+            }
+            app.status = new AppStatus();
+            if (local) {
+                app.status.status = "ready";
+            } else {
+                app.status.status = "init";
+            }
 
             // 去除无关语言
             ['name', 'description'].forEach((key)=> {
@@ -233,7 +205,7 @@ export class AppsService {
             });
 
             // 去除平台无关的内容
-            ['actions', 'dependencies', 'references', 'download'].forEach((key)=> {
+            ['actions', 'dependencies', 'references', 'download', 'version'].forEach((key)=> {
                 if (app[key]) {
                     if (app[key][platform]) {
                         app[key] = app[key][platform];
@@ -265,31 +237,20 @@ export class AppsService {
                 let value = app[key];
                 if (value) {
                     if (Array.isArray(value)) {
+                        let map = new Map<string,App>();
                         value.forEach((appId, index, array)=> {
-                            array[index] = apps.get(appId);
-                        })
+                            map.set(appId, apps.get(appId));
+                        });
+                        app[key] = map;
                     } else {
                         app[key] = apps.get(value);
                     }
                 }
             });
         }
-        console.log(apps);
         return apps;
     };
 
-    searchApp(id): App {
-        return this.data.get(id);
-    }
-
-    checkInstall(id): boolean {
-        if (this.searchApp(id)) {
-            if (this.searchApp(id).local.path) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     deleteFile(path: string): Promise<string> {
         return new Promise((resolve, reject)=> {
@@ -308,44 +269,53 @@ export class AppsService {
         })
     }
 
+    saveAppLocal(app: App, appLocal: AppLocal) {
+        localStorage.setItem(app.id, JSON.stringify(appLocal));
+    }
+
+    install(config: InstallConfig) {
+        let app = config.app;
+    }
+
     uninstall(id: string) {
-        //let current = this;
-        if (this.checkInstall(id)) {
-            let files: string[] = this.searchApp(id).local.files.sort().reverse();
-            // 删除本目录
-            files.push('.');
-            let install_dir = this.searchApp(id).local.path;
-            return files
-                .map((file)=>
-                    ()=>path.join(install_dir, file)
-                )
-                .reduce((promise: Promise<string>, task)=>
-                        promise.then(task).then(this.deleteFile)
-                    , Promise.resolve(''))
-                .then((value)=> {
-                    this.searchApp(id).local = null;
-                    localStorage.setItem("localAppData", JSON.stringify(this.data));
-                });
-        }
+        // //let current = this;
+        // if (this.checkInstall(id)) {
+        //     let files: string[] = this.searchApp(id).local.files.sort().reverse();
+        //     // 删除本目录
+        //     files.push('.');
+        //     let install_dir = this.searchApp(id).local.path;
+        //     return files
+        //         .map((file)=>
+        //             ()=>path.join(install_dir, file)
+        //         )
+        //         .reduce((promise: Promise<string>, task)=>
+        //                 promise.then(task).then(this.deleteFile)
+        //             , Promise.resolve(''))
+        //         .then((value)=> {
+        //             this.searchApp(id).local = null;
+        //             localStorage.setItem("localAppData", JSON.stringify(this.data));
+        //             return Promise.resolve()
+        //         });
+        // }
 
     }
 
     download() {
-        let id = this.currentApp.id;
-        if (this.downloadsInfo.findIndex((v)=> {
-                return v.id == id
-            }) !== -1) {
-            console.log("this app is downloading")
-        } else {
-            let url = this.currentApp.download;
-            this.aria2.addUri([url], {'dir': this.download_dir}, (error, gid)=> {
-                console.log(error, gid);
-                if (error) {
-                    console.error(error);
-                }
-                this.downloadsInfo.push({"id": id, "gid": gid, "status": "active", "progress": 0});
-            });
-        }
+        // let id = this.currentApp.id;
+        // if (this.downloadsInfo.findIndex((v)=> {
+        //         return v.id == id
+        //     }) !== -1) {
+        //     console.log("this app is downloading")
+        // } else {
+        //     let url = this.currentApp.download;
+        //     this.aria2.addUri([url], {'dir': this.download_dir}, (error, gid)=> {
+        //         console.log(error, gid);
+        //         if (error) {
+        //             console.error(error);
+        //         }
+        //         this.downloadsInfo.push({"id": id, "gid": gid, "status": "active", "progress": 0});
+        //     });
+        // }
     }
 
     getDownloadInfo(id) {
@@ -355,21 +325,6 @@ export class AppsService {
         });
 
         return info;
-    }
-
-
-    getInstallConfig(app: App): InstallConfig {
-        //let id = app.id;
-        this.installConfig = new InstallConfig(app);
-        let platform = process.platform;
-        let references: InstallConfig[] = [];
-        if (app.references[platform]) {
-            // app.references[platform].forEach((item)=> {
-            //     references.push();
-            // });
-        }
-        this.installConfig.references = references;
-        return this.installConfig;
     }
 
 
@@ -476,8 +431,8 @@ export class AppsService {
             this.downloadsInfo[downLoadsInfoIndex].status = "complete";
             // 为了卸载时能重新显示安装条
             this.downloadsInfo.splice(downLoadsInfoIndex, 1);
-            this.data.get(tarObj.id).local = appLocal.local;
-            console.log(11111, this.data.get(tarObj.id), appLocal);
+            // this.data.get(tarObj.id).local = appLocal.local;
+            // console.log(11111, this.data.get(tarObj.id), appLocal);
 
             //[{"id": "th01", "wait":["wine", "dx"], resolve: resolve, tarObj: tarObj}]
             this.waitInstallQueue = this.waitInstallQueue.map((waitObj)=> {

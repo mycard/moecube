@@ -66,6 +66,18 @@
         "provider": "github"
       }
     ],
+    "extraResources": [
+      "bin"
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://wudizhanche.mycard.moe/downloads"
+      },
+      {
+        "provider": "github"
+      }
+    ],
     "win": {
       "target": [
         "nsis"

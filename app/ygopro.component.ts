@@ -1,7 +1,7 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef} from "@angular/core";
+import {Component, OnInit, ChangeDetectorRef, Input} from "@angular/core";
 import {AppsService} from "./apps.service";
 import * as fs from "fs";
 import * as path from "path";
@@ -11,6 +11,7 @@ import {remote} from "electron";
 import * as ini from "ini";
 import {EncodeOptions} from "ini";
 import {LoginService} from "./login.service";
+import {App} from "./app";
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
@@ -70,7 +71,8 @@ interface Room {
     styleUrls: ['app/ygopro.component.css'],
 })
 export class YGOProComponent implements OnInit {
-    app = this.appsService.searchApp('ygopro');
+    @Input()
+    app: App;
     decks: string[] = [];
     current_deck: string;
 

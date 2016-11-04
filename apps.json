@@ -94,8 +94,11 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th06"
+      ],
       "darwin": [
+        "th06",
         "wine"
       ]
     },
@@ -1384,6 +1387,7 @@
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
     },
     "download": {
@@ -2188,6 +2192,7 @@
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
     },
     "download": {
