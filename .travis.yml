@@ -42,6 +42,6 @@ script:
 
 deploy:
   provider: script
-  script: bash -c 'ssh-keyscan wudizhanche.mycard.moe >> ~/.ssh/known_hosts; if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls dist; dist/mac; scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe:/data/uploads; else scp dist/mycard-$TRAVIS_TAG-x86_64.AppImage root@wudizhanche.mycard.moe:/data/uploads; fi'
+  script: bash -c 'ssh-keyscan wudizhanche.mycard.moe >> ~/.ssh/known_hosts; if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -R; ls dist; dist/mac; scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe:/data/uploads; else scp dist/mycard-$TRAVIS_TAG-x86_64.AppImage root@wudizhanche.mycard.moe:/data/uploads; fi'
   on:
     tags: true
