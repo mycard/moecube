@@ -1,4 +1,4 @@
-import {Component, Renderer} from "@angular/core";
+import {Component, Renderer, ChangeDetectorRef} from "@angular/core";
 import {TranslateService} from "ng2-translate";
 import {remote} from "electron";
 import {LoginService} from "./login.service";
@@ -18,7 +18,7 @@ export class MyCardComponent {
     currentWindow = remote.getCurrentWindow();
     window = window;
 
-    constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService) {
+    constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         renderer.listenGlobal('window', 'message', (event) => {
             console.log(event);
             // Do something with 'event'
@@ -30,6 +30,7 @@ export class MyCardComponent {
         // the lang to use, if the lang isn't available, it will use the current loader to get them
         translate.use(remote.app.getLocale());
 
+        this.currentWindow.on('maximize', ()=>ref.detectChanges());
+        this.currentWindow.on('unmaximize', ()=>ref.detectChanges());
     }
-
 }
