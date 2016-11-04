@@ -22,11 +22,11 @@
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
             <a href="#" (click)="loginService.logout()" class="item">切换账号</a>
         </div>
-        <div id="window-buttons" [hidden]="platform == 'darwin'">
-            <i id="minimize" class="fa fa-minus" aria-hidden="true"></i>
-            <i id="maximize" class="fa fa-expand" aria-hidden="true"></i>
-            <i id="restore" class="fa fa-clone" hidden aria-hidden="true"></i>
-            <i id="close" class="fa fa-times" aria-hidden="true"></i>
+        <div id="window-buttons" *ngIf="platform != 'darwin'">
+            <i (click)="currentWindow.minimize()" class="fa fa-minus" aria-hidden="true"></i>
+            <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" aria-hidden="true"></i>
+            <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" aria-hidden="true"></i>
+            <i (click)="window.close()" class="fa fa-times" aria-hidden="true"></i>
         </div>
     </div>
 </nav>

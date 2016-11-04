@@ -3,6 +3,7 @@ import {TranslateService} from "ng2-translate";
 import {remote} from "electron";
 import {LoginService} from "./login.service";
 
+
 @Component({
     selector: 'mycard',
     templateUrl: 'app/mycard.component.html',
@@ -14,6 +15,8 @@ export class MyCardComponent {
     currentPage: string = "lobby";
 
     platform = process.platform;
+    currentWindow = remote.getCurrentWindow();
+    window = window;
 
     constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService) {
         renderer.listenGlobal('window', 'message', (event) => {
@@ -29,8 +32,4 @@ export class MyCardComponent {
 
     }
 
-
-    refresh() {
-        remote.getCurrentWindow().reload()
-    }
 }
