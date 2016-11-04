@@ -12,6 +12,9 @@ import * as ini from "ini";
 import {EncodeOptions} from "ini";
 import {LoginService} from "./login.service";
 import {App} from "./app";
+import {Http, Headers, URLSearchParams} from "@angular/http";
+import "rxjs/Rx";
+import {ISubscription} from "rxjs/Subscription";
 
 declare var $;
 
@@ -42,8 +45,8 @@ interface SystemConf {
 }
 
 interface Server {
-    id: string
-    url: string
+    id?: string
+    url?: string
     address: string
     port: number
 }
@@ -104,7 +107,7 @@ export class YGOProComponent implements OnInit {
 
     connections: WebSocket[] = [];
 
-    constructor(private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         this.refresh();
     }
 
@@ -298,5 +301,37 @@ export class YGOProComponent implements OnInit {
         let password = options_buffer.toString('base64') + room.id;
 
         this.join(password, room.server);
+    }
+
+    matching: ISubscription | null;
+    matching_arena: string | null;
+
+    request_match(arena = 'entertain') {
+        let headers = new Headers();
+        headers.append("Authorization", "Basic " + btoa(this.loginService.user.username + ":" + this.loginService.user.external_id));
+        let search = new URLSearchParams();
+        search.set("arena", arena);
+        this.matching_arena = arena;
+        this.matching = this.http.post('https://mycard.moe/ygopro/match', null, {
+            headers: headers,
+            search: search
+        }).map(response=>response.json())
+            .subscribe((data)=> {
+                this.join(data['password'], {
+                    address: data['address'],
+                    port: data['port']
+                });
+            }, (error)=> {
+                alert(`匹配失败\n${error}`)
+            }, ()=> {
+                this.matching = null;
+                this.matching_arena = null;
+            });
+    }
+
+    cancel_match() {
+        this.matching.unsubscribe();
+        this.matching = null;
+        this.matching_arena = null;
     }
 }

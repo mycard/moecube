@@ -18,10 +18,9 @@
     </ul>
     <div class="navbar-right">
         <div id="user" *ngIf="loginService.user">
-            <a class="require-login profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
-            <a class="require-login profile item" id="username"></a>
-            <a (click)="loginService.logout()" id="logout" class="require-login item">切换账号</a>
-            <!--<a (click)="refresh()" href="#ygopro" id="refresh" class="item">刷新</a>-->
+            <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
+            <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
+            <a href="#" (click)="loginService.logout()" class="item">切换账号</a>
         </div>
         <div id="window-buttons" [hidden]="platform == 'darwin'">
             <i id="minimize" class="fa fa-minus" aria-hidden="true"></i>

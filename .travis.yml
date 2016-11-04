@@ -4,11 +4,11 @@ node_js: node
 os:
   - linux
   - osx
-sudo: required
 dist: trusty
+sudo: required
 
 env:
-  npm_config_target: 1.2.3
+  npm_config_target: 1.4.5
   npm_config_arch: x64
   npm_config_target_arch: x64
   npm_config_disturl: https://atom.io/download/atom-shell
@@ -29,14 +29,20 @@ cache:
   - $HOME/.electron
   - $HOME/.cache
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_9f35b7f09ebe_key -iv $encrypted_9f35b7f09ebe_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
+  - chmod 600 $HOME/.ssh/id_ecdsa
+
 install:
-- npm install electron-builder # force install next version to test electron-builder
 - npm install
 - npm prune
 
 script:
-- npm run release
+- npm run dist
 
-branches:
-  only:
-    - v3
+deploy:
+  provider: script
+  script: bash -c 'ssh-keyscan wudizhanche.mycard.moe >> ~/.ssh/known_hosts; if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe:/data/uploads; else scp dist/mycard-$TRAVIS_TAG-x86_64.AppImage root@wudizhanche.mycard.moe:/data/uploads; fi'
+  skip_cleanup: true
+  on:
+    tags: true
