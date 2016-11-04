@@ -55,6 +55,6 @@ deploy:
     password:
       secure: Eu+oVcSuxpc6BVmjxSgM2yBCRnwRsoUye8QCkaIGlX4=
     folder:
-      secure: SQ05N5WzLmhu9abQhK/EaQ==
+      secure: hOfOYpwk3SlvYd2YXf/NiA==
     on:
       appveyor_repo_tag: true
