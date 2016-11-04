@@ -56,8 +56,8 @@
       "port": 10800,
       "servers": [
         {
-          "id": "tiramisu",
-          "url": "wss://tiramisu.mycard.moe:10800"
+          "id": "wudizhanche",
+          "url": "ws://wudizhanche.mycard.moe:10800"
         }
       ]
     },
