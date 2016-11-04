@@ -1,46 +1,39 @@
 'use strict';
 
-const electron = require('electron');
-const autoUpdater = require("electron-auto-updater").autoUpdater;
+const {ipcMain, app, BrowserWindow} = require('electron');
+const {autoUpdater} = require("electron-auto-updater");
 
 if (process.platform == 'darwin') {
-    autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update");
+    try {
+        autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update");
+    } catch (err) {
+
+    }
 }
 
 autoUpdater.on('error', (event)=>console.log('error', event));
 autoUpdater.on('checking-for-update', (event)=>console.log('checking-for-update', event));
 autoUpdater.on('update-available', (event)=>console.log('update-available', event));
 autoUpdater.on('update-not-available', (event)=>console.log('update-not-available', event));
-autoUpdater.checkForUpdates();
-console.log(1);
 
 let updateWindow;
 autoUpdater.on('update-downloaded', (event)=> {
     updateWindow = new BrowserWindow({
         width: 640,
         height: 480,
-        // frame: process.platform == 'darwin',
-        // titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
     });
 
-    // and load the index.html of the app.
     updateWindow.loadURL(`file://${__dirname}/update.html`);
 
-    // Open the DevTools.
-    // updateWindow.webContents.openDevTools();
-
-    // Emitted when the window is closed.
     updateWindow.on('closed', function () {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
         updateWindow = null
+    });
+
+    ipcMain.on('update', (event, arg) => {
+        autoUpdater.quitAndInstall()
     })
 });
 
-
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
 
 const child_process = require('child_process');
 const path = require('path');
@@ -179,7 +172,10 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', ()=> {
+    autoUpdater.checkForUpdates();
+    createWindow()
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

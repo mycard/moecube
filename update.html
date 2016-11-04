@@ -1,1 +1,18 @@
-update
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>更新</title>
+</head>
+<body>
+有新版本，点击更新
+<button id="update">更新</button>
+如果自动更新失败，请至 https://mycard.moe 手动下载最新版本
+<script>
+    const {ipcRenderer} = require('electron');
+    document.getElementById('update').addEventListener('click', ()=> {
+        ipcRenderer.send('update');
+    })
+</script>
+</body>
+</html>
