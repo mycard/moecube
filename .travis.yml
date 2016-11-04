@@ -31,7 +31,7 @@ cache:
   - $HOME/.cache
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_c268b785a48e_key -iv $encrypted_c268b785a48e_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
+  - openssl aes-256-cbc -K $encrypted_9f35b7f09ebe_key -iv $encrypted_9f35b7f09ebe_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
   - chmod 600 $HOME/.ssh/id_ecdsa
 
 install:
