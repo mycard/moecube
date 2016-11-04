@@ -30,9 +30,19 @@ cache:
   - $HOME/.electron
   - $HOME/.cache
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_c268b785a48e_key -iv $encrypted_c268b785a48e_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
+  - chmod 600 $HOME/.ssh/id_ecdsa
+
 install:
 - npm install
 - npm prune
 
 script:
 - npm run dist
+
+deploy:
+  provider: script
+  script: if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe; else ls -r; fi
+  on:
+    tags: true

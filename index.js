@@ -3,13 +3,16 @@
 const electron = require('electron');
 const autoUpdater = require("electron-auto-updater").autoUpdater;
 
+if (process.platform == 'darwin') {
+    autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update");
+}
 
-// autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/publish");
 autoUpdater.on('error', (event)=>console.log('error', event));
 autoUpdater.on('checking-for-update', (event)=>console.log('checking-for-update', event));
 autoUpdater.on('update-available', (event)=>console.log('update-available', event));
 autoUpdater.on('update-not-available', (event)=>console.log('update-not-available', event));
 autoUpdater.checkForUpdates();
+console.log(1);
 
 let updateWindow;
 autoUpdater.on('update-downloaded', (event)=> {
