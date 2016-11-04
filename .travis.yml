@@ -42,6 +42,6 @@ script:
 
 deploy:
   provider: script
-  script: bash -c 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls dist/mac; scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe; else then ls dist; ls dist/linux; scp dist/linux/mycard-$TRAVIS_TAG-x86_64.AppImage root@wudizhanche.mycard.moe; fi'
+  script: bash -c 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls dist/mac; scp dist/mac/MyCard-$TRAVIS_TAG.dmg dist/mac/MyCard-$TRAVIS_TAG-mac.zip root@wudizhanche.mycard.moe; else ls dist; ls dist/linux; scp dist/linux/mycard-$TRAVIS_TAG-x86_64.AppImage root@wudizhanche.mycard.moe; fi'
   on:
     tags: true
