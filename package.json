@@ -3,7 +3,7 @@
   "description": "mycard",
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://mycard.moe",
-  "version": "3.0.0-dev.6",
+  "version": "3.0.0-dev.7",
   "repository": "github:mycard/mycard",
   "scripts": {
     "pack": "tsc && build --dir",
@@ -27,11 +27,11 @@
     "@angular/router-deprecated": "latest",
     "@angular/upgrade": "latest",
     "angular2-in-memory-web-api": "latest",
-    "electron-auto-updater": "latest",
     "aria2": "latest",
     "bootstrap": "next",
     "core-js": "latest",
-    "electron-sudo": "github:mycard/electron-sudo",
+    "electron-auto-updater": "latest",
+    "electron-sudo": "github:mycard/electron-sudo#patch-1",
     "font-awesome": "latest",
     "ini": "latest",
     "mkdirp": "latest",
@@ -68,15 +68,6 @@
     ],
     "extraResources": [
       "bin"
-    ],
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://wudizhanche.mycard.moe/downloads"
-      },
-      {
-        "provider": "github"
-      }
     ],
     "win": {
       "target": [
