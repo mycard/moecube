@@ -27,7 +27,6 @@ cache:
 shallow_clone: true
 
 init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - ps: $fileContent = "-----BEGIN EC PRIVATE KEY-----`n"
   - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
   - ps: $fileContent += "`n-----END EC PRIVATE KEY-----`n"
@@ -67,5 +66,3 @@ deploy:
       secure: hOfOYpwk3SlvYd2YXf/NiA==
     on:
       appveyor_repo_tag: true
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
