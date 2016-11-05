@@ -2,19 +2,20 @@
 
 const {ipcMain, app, BrowserWindow} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
+const child_process = require('child_process');
+const path = require('path');
 
 if (process.platform == 'darwin') {
     try {
         autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update");
     } catch (err) {
-
     }
 }
 
 autoUpdater.on('error', (event)=>console.log('error', event));
-autoUpdater.on('checking-for-update', (event)=>console.log('checking-for-update', event));
-autoUpdater.on('update-available', (event)=>console.log('update-available', event));
-autoUpdater.on('update-not-available', (event)=>console.log('update-not-available', event));
+autoUpdater.on('checking-for-update', (event)=>console.log('checking-for-update'));
+autoUpdater.on('update-available', (event)=>console.log('update-available'));
+autoUpdater.on('update-not-available', (event)=>console.log('update-not-available'));
 
 let updateWindow;
 autoUpdater.on('update-downloaded', (event)=> {
@@ -34,78 +35,6 @@ autoUpdater.on('update-downloaded', (event)=> {
     })
 });
 
-
-const child_process = require('child_process');
-const path = require('path');
-
-// this should be placed at top of main.js to handle setup events quickly
-if (handleSquirrelEvent() || handleElevate()) {
-    // squirrel event handled and app will exit in 1000ms, so don't do anything else
-    return;
-}
-
-function handleSquirrelEvent() {
-    if (process.argv.length === 1) {
-        return false;
-    }
-
-    const ChildProcess = require('child_process');
-    const path = require('path');
-
-    const appFolder = path.resolve(process.execPath, '..');
-    const rootAtomFolder = path.resolve(appFolder, '..');
-    const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-    const exeName = path.basename(process.execPath);
-
-    const spawn = function (command, args) {
-        let spawnedProcess, error;
-
-        try {
-            spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-        } catch (error) {
-        }
-
-        return spawnedProcess;
-    };
-
-    const spawnUpdate = function (args) {
-        return spawn(updateDotExe, args);
-    };
-
-    const squirrelEvent = process.argv[1];
-    switch (squirrelEvent) {
-        case '--squirrel-install':
-        case '--squirrel-updated':
-            // Optionally do things such as:
-            // - Add your .exe to the PATH
-            // - Write to the registry for things like file associations and
-            //   explorer context menus
-
-            // Install desktop and start menu shortcuts
-            spawnUpdate(['--createShortcut', exeName]);
-
-            setTimeout(app.quit, 1000);
-            return true;
-
-        case '--squirrel-uninstall':
-            // Undo anything you did in the --squirrel-install and
-            // --squirrel-updated handlers
-
-            // Remove desktop and start menu shortcuts
-            spawnUpdate(['--removeShortcut', exeName]);
-
-            setTimeout(app.quit, 1000);
-            return true;
-
-        case '--squirrel-obsolete':
-            // This is called on the outgoing version of your app before
-            // we update to the new version - it's the opposite of
-            // --squirrel-updated
-
-            app.quit();
-            return true;
-    }
-}
 function handleElevate() {
     if (process.argv[1] == '-e') {
         app.dock.hide();
@@ -119,26 +48,23 @@ function handleElevate() {
     }
 }
 
+if (handleElevate()) {
+    return;
+}
+
 function createAria2c() {
     let aria2c_path;
     switch (process.platform) {
         case 'win32':
-            aria2c_path = path.join(process.execPath, '..', '..', 'aria2c.exe');
+            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
             break;
         case 'darwin':
-            aria2c_path = 'aria2c'; // for debug
+            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
             break;
         default:
             throw 'unsupported platform';
     }
-    //--split=10 --min-split-size=1M --max-connection-per-server=10
-    let aria2c = child_process.spawn(aria2c_path,
-        ['--enable-rpc', '--rpc-allow-origin-all', "--continue", "--split=10", "--min-split-size=1M", "--max-connection-per-server=10"],
-        {stdio: 'ignore'});
-    aria2c.on('data', (data)=> {
-        console.log(data);
-    });
-    return aria2c;
+    return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', "--continue", "--split=10", "--min-split-size=1M", "--max-connection-per-server=10"], {stdio: 'ignore'});
 }
 
 const aria2c = createAria2c();
