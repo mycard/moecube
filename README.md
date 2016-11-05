@@ -27,7 +27,7 @@ curl -L https://github.com/aria2/aria2/releases/download/release-1.27.1/aria2-1.
 ```bash
 mkdir -p bin
 curl -L -o aria2-1.27.1-win-32bit-build1.zip https://github.com/aria2/aria2/releases/download/release-1.27.1/aria2-1.27.1-win-32bit-build1.zip
-unzip -o /Users/zh99998/Downloads/aria2-1.28.0-win-32bit-build1.zip aria2-1.28.0-win-32bit-build1/aria2c.exe
+unzip -o aria2-1.28.0-win-32bit-build1.zip aria2-1.28.0-win-32bit-build1/aria2c.exe
 mv aria2-1.28.0-win-32bit-build1/aria2c.exe bin
 rm -rf aria2-1.28.0-win-32bit-build1 aria2-1.27.1-win-32bit-build1.zip
 
