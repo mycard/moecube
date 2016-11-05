@@ -35,6 +35,8 @@ Sudo.prototype.fork = function (modulePath, args, options) {
 @Injectable()
 export class AppsService {
 
+    private apps: Map<string,App>;
+
     constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,) {
     }
 
@@ -44,7 +46,8 @@ export class AppsService {
             .toPromise()
             .then((response)=> {
                 let data = response.json();
-                return this.loadAppsList(data);
+                this.apps = this.loadAppsList(data);
+                return this.apps;
             });
     }
 
@@ -123,55 +126,52 @@ export class AppsService {
         return apps;
     };
 
-
-    deleteFile(path: string): Promise<string> {
-        return new Promise((resolve, reject)=> {
-            fs.lstat(path, (err, stats)=> {
-                if (err) return resolve(path);
-                if (stats.isDirectory()) {
-                    fs.rmdir(path, (err)=> {
-                        resolve(path);
-                    });
-                } else {
-                    fs.unlink(path, (err)=> {
-                        resolve(path);
-                    });
-                }
-            });
-        })
+    findChildren(app: App): App[] {
+        let children = [];
+        for (let child of this.apps.values()) {
+            if (child.parent === app) {
+                children.push(child);
+            }
+        }
+        return children;
     }
 
-    saveAppLocal(app: App, appLocal: AppLocal) {
-        localStorage.setItem(app.id, JSON.stringify(appLocal));
+    runApp(app: App) {
+        let children = this.findChildren(app);
+        let cwd = app.local.path;
+        let action = app.actions.get('main');
+        let args = [];
+        let env = {};
+        for (let child of children) {
+            action = child.actions.get('main');
+        }
+        let execute = path.join(cwd, action.execute);
+        if (action.open) {
+            let openAction = action.open.actions.get('main');
+            args = args.concat(openAction.args);
+            args.push(action.execute);
+            execute = path.join(action.open.local.path, openAction.execute);
+            env = Object.assign(env, openAction.env);
+        }
+        args = args.concat(action.args);
+        env = Object.assign(env, action.env);
+        let handle = child_process.spawn(execute, args, {env: env, cwd: cwd});
+
+        handle.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
+        });
+
+        handle.stderr.on('data', (data) => {
+            console.log(`stderr: ${data}`);
+        });
+
+        handle.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+            remote.getCurrentWindow().restore();
+        });
+
+        remote.getCurrentWindow().minimize();
     }
-
-    install(config: InstallConfig) {
-        let app = config.app;
-    }
-
-    uninstall(id: string) {
-        // //let current = this;
-        // if (this.checkInstall(id)) {
-        //     let files: string[] = this.searchApp(id).local.files.sort().reverse();
-        //     // 删除本目录
-        //     files.push('.');
-        //     let install_dir = this.searchApp(id).local.path;
-        //     return files
-        //         .map((file)=>
-        //             ()=>path.join(install_dir, file)
-        //         )
-        //         .reduce((promise: Promise<string>, task)=>
-        //                 promise.then(task).then(this.deleteFile)
-        //             , Promise.resolve(''))
-        //         .then((value)=> {
-        //             this.searchApp(id).local = null;
-        //             localStorage.setItem("localAppData", JSON.stringify(this.data));
-        //             return Promise.resolve()
-        //         });
-        // }
-
-    }
-
 
     browse(app: App) {
         remote.shell.showItemInFolder(app.local.path);

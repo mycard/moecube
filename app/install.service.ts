@@ -14,6 +14,7 @@ import {EventEmitter} from "events";
 import {AppLocal} from "./app-local";
 import {Http} from "@angular/http";
 import ReadableStream = NodeJS.ReadableStream;
+import {AppsService} from "./apps.service";
 
 @Injectable()
 export class InstallService {
@@ -25,7 +26,7 @@ export class InstallService {
 
     checksumUri = "http://thief.mycard.moe/checksums/";
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private appsService: AppsService) {
         if (process.platform === "win32") {
             this.tarPath = path.join(process.resourcesPath, 'bin/tar.exe');
         } else {
@@ -43,7 +44,6 @@ export class InstallService {
     getComplete(app: App): Promise<App> {
         return new Promise((resolve, reject)=> {
             this.eventEmitter.once(app.id, (complete)=> {
-                console.log("receive ",app.id);
                 resolve();
             });
         });
@@ -103,9 +103,7 @@ export class InstallService {
 
     saveAppLocal(app: App) {
         if (app.local) {
-            let a = JSON.stringify(app.local)
-            console.log(a);
-            localStorage.setItem(app.id, a);
+            localStorage.setItem(app.id, JSON.stringify(app.local));
         }
     }
 
@@ -164,7 +162,6 @@ export class InstallService {
                 local.version = app.version;
                 app.local = local;
                 this.saveAppLocal(app);
-                console.log("send ",app.id);
                 this.eventEmitter.emit(app.id, 'install complete');
                 this.installQueue.delete(app);
                 this.installingQueue.delete(app);
@@ -182,6 +179,57 @@ export class InstallService {
                 this.doInstall()
             }
         }
+    }
+
+    deleteFile(file: string): Promise<string> {
+        return new Promise((resolve, reject)=> {
+            fs.lstat(file, (err, stats)=> {
+                if (err) return resolve(path);
+                if (stats.isDirectory()) {
+                    fs.rmdir(file, (err)=> {
+                        resolve(file);
+                    });
+                } else {
+                    fs.unlink(file, (err)=> {
+                        resolve(file);
+                    });
+                }
+            });
+        })
+    }
+
+    async uninstall(app: App) {
+        if (!app.parent) {
+            let children = this.appsService.findChildren(app);
+            for (let child of children) {
+                if(child.isInstalled()) {
+                    await this.uninstall(child);
+                }
+            }
+        }
+        let files = Array.from(app.local.files.keys()).sort().reverse();
+        console.log(files);
+        for (let file of files) {
+            let oldFile = file;
+            if (!path.isAbsolute(file)) {
+                oldFile = path.join(app.local.path, file);
+            }
+            await this.deleteFile(oldFile);
+            if (app.parent) {
+                let backFile = path.join(app.local.path, "backup", file);
+                await new Promise((resolve, reject)=> {
+                    fs.rename(backFile, oldFile, resolve);
+                });
+            }
+        }
+
+        if (app.parent) {
+            await this.deleteFile(path.join(app.local.path, "backup"));
+        } else {
+            await this.deleteFile(app.local.path);
+        }
+        app.local = null;
+        localStorage.removeItem(app.id);
     }
 
 }

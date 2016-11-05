@@ -30,11 +30,6 @@ export class AppDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.updateInstallConfig();
-        ipcRenderer.on('download-message-reply', (event, arg)=> {
-            console.log(arg);
-        });
-        ipcRenderer.send("download-message", "ping")
     }
 
     updateInstallConfig() {
@@ -52,14 +47,6 @@ export class AppDetailComponent implements OnInit {
 
     get news() {
         return this.currentApp.news;
-    }
-
-    get friends() {
-        return false;
-    }
-
-    get achievement() {
-        return false;
     }
 
     get mods() {
@@ -95,15 +82,11 @@ export class AppDetailComponent implements OnInit {
         return [];
     }
 
-    uninstalling: boolean;
 
-    uninstall(id: string) {
+    async uninstall(app: App) {
         if (confirm("确认删除？")) {
-            this.uninstalling = true;
-            // this.appsService.uninstall(id).then(()=> {
-            //         this.uninstalling = false;
-            //     }
-            // );
+            await this.installService.uninstall(app);
+            this.currentApp.status.status = "init";
         }
     }
 
@@ -148,9 +131,7 @@ export class AppDetailComponent implements OnInit {
                         return this.installService.add(completeApp, options);
                     });
             }));
-            console.log("before")
             await this.installService.getComplete(currentApp);
-            console.log("install complete");
             currentApp.status.status = "ready";
             this.ref.detectChanges();
         } catch (e) {
@@ -167,42 +148,8 @@ export class AppDetailComponent implements OnInit {
         return dir[0];
     }
 
-    startApp(app: App) {
-        let execute = path.join(app.local.path, app.actions.get("main").execute);
-        let args = app.actions.get("main").args;
-        let env = app.actions.get("main").env;
-        let opt = {
-            cwd: app.local.path,
-            env: env
-        };
-
-        let open = '';
-        let openApp = app.actions.get("main").open;
-        if (openApp) {
-            open = path.join(openApp.local.path, openApp.actions.get("main").execute);
-            args.push(execute);
-        } else {
-            //没有需要通过open启动依赖,直接启动程序
-            open = execute;
-        }
-
-        let handle = child_process.spawn(open, args, opt);
-
-        handle.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
-        });
-
-        handle.stderr.on('data', (data) => {
-            console.log(`stderr: ${data}`);
-        });
-
-        handle.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            remote.getCurrentWindow().restore();
-        });
-
-        remote.getCurrentWindow().minimize();
-
+    runApp(app: App) {
+        this.appsService.runApp(app);
     }
 
     copy(text) {
