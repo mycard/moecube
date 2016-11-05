@@ -27,11 +27,11 @@ cache:
 shallow_clone: true
 
 init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - ps: $fileContent = "-----BEGIN EC PRIVATE KEY-----`n"
   - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
   - ps: $fileContent += "`n-----END EC PRIVATE KEY-----`n"
   - ps: Set-Content c:\users\appveyor\.ssh\id_ecdsa $fileContent
-  - git config --global core.autocrlf input
 
 install:
   - set PATH=%PATH%;C:\MinGW\msys\1.0 # tar xz
@@ -67,3 +67,5 @@ deploy:
       secure: hOfOYpwk3SlvYd2YXf/NiA==
     on:
       appveyor_repo_tag: true
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
