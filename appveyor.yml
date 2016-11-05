@@ -34,6 +34,7 @@ init:
   - git config --global core.autocrlf input
 
 install:
+  - set %PATH%;C:\MinGW\msys\1.0 # tar xz
   - mkdir -p bin
   - curl -L -o aria2-1.28.0-win-32bit-build1.zip https://github.com/aria2/aria2/releases/download/release-1.28.0/aria2-1.28.0-win-32bit-build1.zip
   - unzip -o aria2-1.28.0-win-32bit-build1.zip aria2-1.28.0-win-32bit-build1/aria2c.exe
