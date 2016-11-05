@@ -136,9 +136,11 @@ export class AppDetailComponent implements OnInit {
                     (error)=> {
                     },
                     ()=> {
-                        currentApp.status.status = "waiting";
-                        this.ref.detectChanges();
-
+                        // 避免安装过快
+                        if (currentApp.status.status === "downloading") {
+                            currentApp.status.status = "waiting";
+                            this.ref.detectChanges();
+                        }
                     });
             await Promise.all(downloadApps.map((app)=> {
                 return this.downloadService.getComplete(app)
@@ -146,7 +148,11 @@ export class AppDetailComponent implements OnInit {
                         return this.installService.add(completeApp, options);
                     });
             }));
+            console.log("before")
+            await this.installService.getComplete(currentApp);
+            console.log("install complete");
             currentApp.status.status = "ready";
+            this.ref.detectChanges();
         } catch (e) {
             new Notification(currentApp.name, {body: "下载失败"});
         }

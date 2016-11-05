@@ -41,7 +41,12 @@ export class InstallService {
     }
 
     getComplete(app: App): Promise<App> {
-        return null;
+        return new Promise((resolve, reject)=> {
+            this.eventEmitter.once(app.id, (complete)=> {
+                console.log("receive ",app.id);
+                resolve();
+            });
+        });
     }
 
     extract(file: string, destPath: string) {
@@ -151,7 +156,6 @@ export class InstallService {
                     destPath = path.join(options.installLibrary, app.id);
                     await this.createDirectory(destPath);
                 }
-                this.installQueue.delete(app);
                 await this.extract(packagePath, destPath);
                 await this.postInstall(app, destPath);
                 let local = new AppLocal();
@@ -160,6 +164,9 @@ export class InstallService {
                 local.version = app.version;
                 app.local = local;
                 this.saveAppLocal(app);
+                console.log("send ",app.id);
+                this.eventEmitter.emit(app.id, 'install complete');
+                this.installQueue.delete(app);
                 this.installingQueue.delete(app);
                 if (this.installQueue.size > 0) {
                     await this.doInstall()

@@ -1,3 +1,4 @@
+import {App} from "./app";
 /**
  * Created by zh99998 on 16/9/6.
  */
@@ -5,6 +6,7 @@ export class AppLocal {
     path: string;
     version: string;
     files: Map<string,string>;
+    action: Map<string,{execute: string, args: string[], env: {}, open: App}>;
 
     update(local) {
         this.path = local.path;
