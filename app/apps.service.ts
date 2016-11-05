@@ -1,4 +1,4 @@
-import {Injectable, ApplicationRef} from "@angular/core";
+import {Injectable, ApplicationRef, NgZone} from "@angular/core";
 import {Http} from "@angular/http";
 import {App, AppStatus} from "./app";
 import {InstallConfig} from "./install-config";
@@ -17,25 +17,24 @@ import {AppLocal} from "./app-local";
 const Aria2 = require('aria2');
 const Sudo = require('electron-sudo').default;
 
-Sudo.prototype.fork = function (modulePath, args, options) {
-    return this.spawn(remote.app.getPath('exe'), ['-e', modulePath].concat(args), options).then((child)=> {
-        readline.createInterface({input: child.stdout}).on('line', (line) => {
-            child.emit('message', JSON.parse(line));
-        });
-        child.send = (message, sendHandle, options, callback)=> {
-            child.stdin.write(JSON.stringify(message) + os.EOL);
-            if (callback) {
-                callback()
-            }
-        };
-        return child
-    })
+Sudo.prototype.fork = async function (modulePath, args, options) {
+    let child = await this.spawn(remote.app.getPath('exe'), ['-e', modulePath].concat(args), options);
+    readline.createInterface({input: child.stdout}).on('line', (line) => {
+        child.emit('message', JSON.parse(line));
+    });
+    child.send = (message, sendHandle, options, callback)=> {
+        child.stdin.write(JSON.stringify(message) + os.EOL);
+        if (callback) {
+            callback()
+        }
+    };
+    return child
 };
 
 @Injectable()
 export class AppsService {
 
-    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,) {
+    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef, private ngZong: NgZone) {
     }
 
 
@@ -466,55 +465,60 @@ export class AppsService {
     connections = new Map<App, {connection: WebSocket, address: string}>();
     maotama;
 
-    network(app: App, server) {
+    async network(app: App, server) {
         if (!this.maotama) {
             this.maotama = new Sudo({name: 'MyCard'}).fork('maotama')
         }
-        this.maotama.then((child)=> {
-            let connection = this.connections.get(app);
-            if (connection) {
-                connection.connection.close();
-            }
-            connection = {connection: new WebSocket(server.url), address: null};
-            let id;
-            this.connections.set(app, connection);
-            connection.connection.onmessage = (event)=> {
-                console.log(event.data);
-                let [action, args] = event.data.split(' ', 2);
-                let [address, port] = args.split(':');
-                switch (action) {
-                    case 'LISTEN':
-                        connection.address = args;
-                        this.ref.tick();
-                        break;
-                    case 'CONNECT':
+        let child = await this.maotama;
+        // child.on('message', console.log);
+        // child.on('exit', console.log);
+        // child.on('error', console.log);
+
+        let connection = this.connections.get(app);
+        if (connection) {
+            connection.connection.close();
+        }
+        connection = {connection: new WebSocket(server.url), address: null};
+        let id;
+        this.connections.set(app, connection);
+        connection.connection.onmessage = (event)=> {
+            console.log(event.data);
+            let [action, args] = event.data.split(' ', 2);
+            let [address, port] = args.split(':');
+            switch (action) {
+                case 'LISTEN':
+                    connection.address = args;
+                    this.ref.tick();
+                    break;
+                case 'CONNECT':
+                    this.ngZong.runOutsideAngular(()=> {
                         id = setInterval(()=> {
                             child.send({
                                 action: 'connect',
                                 arguments: [app.network.port, port, address]
                             })
                         }, 200);
-                        break;
-                    case 'CONNECTED':
-                        clearInterval(id);
-                        id = null;
-                        break;
-                }
-            };
-            connection.connection.onclose = (event: CloseEvent)=> {
-                if (id) {
+                    });
+                    break;
+                case 'CONNECTED':
                     clearInterval(id);
+                    id = null;
+                    break;
+            }
+        };
+        connection.connection.onclose = (event: CloseEvent)=> {
+            if (id) {
+                clearInterval(id);
+            }
+            // 如果还是在界面上显示的那个连接
+            if (this.connections.get(app) == connection) {
+                this.connections.delete(app);
+                if (event.code != 1000 && !connection.address) {
+                    // 如果还没建立好就出错了，就弹窗提示这个错误
+                    alert(`出错了 ${event.code}`);
                 }
-                // 如果还是在界面上显示的那个连接
-                if (this.connections.get(app) == connection) {
-                    this.connections.delete(app);
-                    if (event.code != 1000 && !connection.address) {
-                        alert(`出错了 ${event.code}`);
-                    }
-                }
-                // 如果还没建立好就出错了，就弹窗提示这个错误
                 this.ref.tick();
-            };
-        })
+            }
+        };
     }
 }
