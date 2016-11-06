@@ -53,4 +53,4 @@ deploy:
     on:
       appveyor_repo_tag: true
 
-deploy_script: curl -vv -X POST "https://wudizhanche.mycard.moe/publish?platform=win32&version=$(APPVEYOR_REPO_TAG_NAME)"
+deploy_script: curl -vv -X POST "https://wudizhanche.mycard.moe/publish?platform=win32&version=%APPVEYOR_REPO_TAG_NAME%"
