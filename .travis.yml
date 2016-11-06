@@ -43,6 +43,6 @@ script:
 
 deploy:
   provider: script
-  script: curl -vv -X POST "https://wudizhanche.mycard.moe/publish?platform=${TRAVIS_OS_NAME}&version=${TRAVIS_TAG}"
+  script: curl --fail --verbose --request POST "https://wudizhanche.mycard.moe/publish?platform=${TRAVIS_OS_NAME}&version=${TRAVIS_TAG}"
   on:
     tags: true
