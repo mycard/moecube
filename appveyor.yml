@@ -48,20 +48,8 @@ install:
 build_script:
   - npm run dist
 
-artifacts:
-  - path: dist/MyCard Setup $(APPVEYOR_REPO_TAG_NAME).exe
-  - path: dist/latest.yml
-
 deploy:
-  - provider: FTP
-    protocol: sftp
-    host:
-      secure: kOmWSMPWqwRatoWbsDnyEePCfTVRsmKqvCTREDvihT8=
-    username:
-      secure: K5zchLMnJ3JaEqx3/bSl5A==
-    password:
-      secure: Eu+oVcSuxpc6BVmjxSgM2yBCRnwRsoUye8QCkaIGlX4=
-    folder:
-      secure: hOfOYpwk3SlvYd2YXf/NiA==
+  - provider: script
+    script: curl -vv -X POST "https://wudizhanche.mycard.moe/publish?platform=win32&version=$(APPVEYOR_REPO_TAG_NAME)"
     on:
       appveyor_repo_tag: true
