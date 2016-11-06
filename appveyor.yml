@@ -48,4 +48,4 @@ install:
 build_script:
   - npm run dist
 
-deploy_script: bash -c 'if [ -z "${APPVEYOR_REPO_TAG_NAME}" ]; then curl --fail --verbose --request POST "https://wudizhanche.mycard.moe/publish?platform=win32&version=${APPVEYOR_REPO_TAG_NAME}"; fi'
+deploy_script: bash -c 'if [[ $APPVEYOR_REPO_TAG_NAME ]]; then curl --fail --verbose --request POST "https://wudizhanche.mycard.moe/publish?platform=win32&version=${APPVEYOR_REPO_TAG_NAME}"; fi'
