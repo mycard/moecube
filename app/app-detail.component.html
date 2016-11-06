@@ -12,7 +12,7 @@
           class="progress progress-striped progress-animated"
           value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
 <div *ngIf="currentApp.status.status==='ready' && (currentApp.id != 'ygopro')">
-    <button (click)="startApp(currentApp)" type="button" class="btn btn-primary">运行</button>
+    <button (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行</button>
     <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
     <!--<button (click)="appsService.browse(currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
 
@@ -114,7 +114,7 @@
 <div *ngIf="currentApp.isInstalled()">
     <h2>本地文件</h2>
     <button (click)="appsService.browse(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
-    <button (click)="uninstall(currentApp.id)" type="button" class="btn btn-secondary">
+    <button (click)="uninstall(currentApp)" type="button" class="btn btn-secondary">
         {{'uninstall'|translate}}
     </button>
 </div>
@@ -202,7 +202,8 @@
                 <h4>{{'additions'|translate}}</h4>
                 <div *ngFor="let reference of installConfig.references">
                     <label>
-                        <input type="checkbox" [(ngModel)]="reference.install" name="references" value="{{reference.app.id}}">
+                        <input type="checkbox" [(ngModel)]="reference.install" name="references"
+                               value="{{reference.app.id}}">
                         {{reference.app.name}}
                     </label>
                 </div>

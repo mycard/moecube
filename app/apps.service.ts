@@ -1,4 +1,4 @@
-import {Injectable, ApplicationRef, NgZone} from "@angular/core";
+import {Injectable, ApplicationRef} from "@angular/core";
 import {Http} from "@angular/http";
 import {App, AppStatus} from "./app";
 import {InstallConfig} from "./install-config";
@@ -17,24 +17,27 @@ import {AppLocal} from "./app-local";
 const Aria2 = require('aria2');
 const Sudo = require('electron-sudo').default;
 
-Sudo.prototype.fork = async function (modulePath, args, options) {
-    let child = await this.spawn(remote.app.getPath('exe'), ['-e', modulePath].concat(args), options);
-    readline.createInterface({input: child.stdout}).on('line', (line) => {
-        child.emit('message', JSON.parse(line));
-    });
-    child.send = (message, sendHandle, options, callback)=> {
-        child.stdin.write(JSON.stringify(message) + os.EOL);
-        if (callback) {
-            callback()
-        }
-    };
-    return child
+Sudo.prototype.fork = function (modulePath, args, options) {
+    return this.spawn(remote.app.getPath('exe'), ['-e', modulePath].concat(args), options).then((child)=> {
+        readline.createInterface({input: child.stdout}).on('line', (line) => {
+            child.emit('message', JSON.parse(line));
+        });
+        child.send = (message, sendHandle, options, callback)=> {
+            child.stdin.write(JSON.stringify(message) + os.EOL);
+            if (callback) {
+                callback()
+            }
+        };
+        return child
+    })
 };
 
 @Injectable()
 export class AppsService {
 
-    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef, private ngZong: NgZone) {
+    private apps: Map<string,App>;
+
+    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,) {
     }
 
 
@@ -43,7 +46,8 @@ export class AppsService {
             .toPromise()
             .then((response)=> {
                 let data = response.json();
-                return this.loadAppsList(data);
+                this.apps = this.loadAppsList(data);
+                return this.apps;
             });
     }
 
@@ -122,55 +126,52 @@ export class AppsService {
         return apps;
     };
 
-
-    deleteFile(path: string): Promise<string> {
-        return new Promise((resolve, reject)=> {
-            fs.lstat(path, (err, stats)=> {
-                if (err) return resolve(path);
-                if (stats.isDirectory()) {
-                    fs.rmdir(path, (err)=> {
-                        resolve(path);
-                    });
-                } else {
-                    fs.unlink(path, (err)=> {
-                        resolve(path);
-                    });
-                }
-            });
-        })
+    findChildren(app: App): App[] {
+        let children = [];
+        for (let child of this.apps.values()) {
+            if (child.parent === app) {
+                children.push(child);
+            }
+        }
+        return children;
     }
 
-    saveAppLocal(app: App, appLocal: AppLocal) {
-        localStorage.setItem(app.id, JSON.stringify(appLocal));
+    runApp(app: App) {
+        let children = this.findChildren(app);
+        let cwd = app.local.path;
+        let action = app.actions.get('main');
+        let args = [];
+        let env = {};
+        for (let child of children) {
+            action = child.actions.get('main');
+        }
+        let execute = path.join(cwd, action.execute);
+        if (action.open) {
+            let openAction = action.open.actions.get('main');
+            args = args.concat(openAction.args);
+            args.push(action.execute);
+            execute = path.join(action.open.local.path, openAction.execute);
+            env = Object.assign(env, openAction.env);
+        }
+        args = args.concat(action.args);
+        env = Object.assign(env, action.env);
+        let handle = child_process.spawn(execute, args, {env: env, cwd: cwd});
+
+        handle.stdout.on('data', (data) => {
+            console.log(`stdout: ${data}`);
+        });
+
+        handle.stderr.on('data', (data) => {
+            console.log(`stderr: ${data}`);
+        });
+
+        handle.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+            remote.getCurrentWindow().restore();
+        });
+
+        remote.getCurrentWindow().minimize();
     }
-
-    install(config: InstallConfig) {
-        let app = config.app;
-    }
-
-    uninstall(id: string) {
-        // //let current = this;
-        // if (this.checkInstall(id)) {
-        //     let files: string[] = this.searchApp(id).local.files.sort().reverse();
-        //     // 删除本目录
-        //     files.push('.');
-        //     let install_dir = this.searchApp(id).local.path;
-        //     return files
-        //         .map((file)=>
-        //             ()=>path.join(install_dir, file)
-        //         )
-        //         .reduce((promise: Promise<string>, task)=>
-        //                 promise.then(task).then(this.deleteFile)
-        //             , Promise.resolve(''))
-        //         .then((value)=> {
-        //             this.searchApp(id).local = null;
-        //             localStorage.setItem("localAppData", JSON.stringify(this.data));
-        //             return Promise.resolve()
-        //         });
-        // }
-
-    }
-
 
     browse(app: App) {
         remote.shell.showItemInFolder(app.local.path);
@@ -179,60 +180,55 @@ export class AppsService {
     connections = new Map<App, {connection: WebSocket, address: string}>();
     maotama;
 
-    async network(app: App, server) {
+    network(app: App, server) {
         if (!this.maotama) {
             this.maotama = new Sudo({name: 'MyCard'}).fork('maotama')
         }
-        let child = await this.maotama;
-        // child.on('message', console.log);
-        // child.on('exit', console.log);
-        // child.on('error', console.log);
-
-        let connection = this.connections.get(app);
-        if (connection) {
-            connection.connection.close();
-        }
-        connection = {connection: new WebSocket(server.url), address: null};
-        let id;
-        this.connections.set(app, connection);
-        connection.connection.onmessage = (event)=> {
-            console.log(event.data);
-            let [action, args] = event.data.split(' ', 2);
-            let [address, port] = args.split(':');
-            switch (action) {
-                case 'LISTEN':
-                    connection.address = args;
-                    this.ref.tick();
-                    break;
-                case 'CONNECT':
-                    this.ngZong.runOutsideAngular(()=> {
+        this.maotama.then((child)=> {
+            let connection = this.connections.get(app);
+            if (connection) {
+                connection.connection.close();
+            }
+            connection = {connection: new WebSocket(server.url), address: null};
+            let id;
+            this.connections.set(app, connection);
+            connection.connection.onmessage = (event)=> {
+                console.log(event.data);
+                let [action, args] = event.data.split(' ', 2);
+                let [address, port] = args.split(':');
+                switch (action) {
+                    case 'LISTEN':
+                        connection.address = args;
+                        this.ref.tick();
+                        break;
+                    case 'CONNECT':
                         id = setInterval(()=> {
                             child.send({
                                 action: 'connect',
                                 arguments: [app.network.port, port, address]
                             })
                         }, 200);
-                    });
-                    break;
-                case 'CONNECTED':
-                    clearInterval(id);
-                    id = null;
-                    break;
-            }
-        };
-        connection.connection.onclose = (event: CloseEvent)=> {
-            if (id) {
-                clearInterval(id);
-            }
-            // 如果还是在界面上显示的那个连接
-            if (this.connections.get(app) == connection) {
-                this.connections.delete(app);
-                if (event.code != 1000 && !connection.address) {
-                    // 如果还没建立好就出错了，就弹窗提示这个错误
-                    alert(`出错了 ${event.code}`);
+                        break;
+                    case 'CONNECTED':
+                        clearInterval(id);
+                        id = null;
+                        break;
                 }
+            };
+            connection.connection.onclose = (event: CloseEvent)=> {
+                if (id) {
+                    clearInterval(id);
+                }
+                // 如果还是在界面上显示的那个连接
+                if (this.connections.get(app) == connection) {
+                    this.connections.delete(app);
+                    if (event.code != 1000 && !connection.address) {
+                        alert(`出错了 ${event.code}`);
+                    }
+                }
+                // 如果还没建立好就出错了，就弹窗提示这个错误
                 this.ref.tick();
-            }
-        };
+            };
+        })
     }
 }

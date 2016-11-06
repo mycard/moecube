@@ -55,7 +55,7 @@ export class App {
     status: AppStatus;
 
     isInstalled(): boolean {
-        return this.local !== undefined;
+        return !!this.local;
     }
 
     constructor(app) {
