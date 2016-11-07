@@ -62,6 +62,7 @@
       ]
     },
     "version": {
+      "win32": "1.09",
       "darwin": "1.06"
     },
     "download": {
