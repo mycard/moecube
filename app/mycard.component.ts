@@ -1,4 +1,4 @@
-import {Component, Renderer, ChangeDetectorRef} from "@angular/core";
+import {Component, Renderer, ChangeDetectorRef, OnInit} from "@angular/core";
 import {TranslateService} from "ng2-translate";
 import {remote} from "electron";
 import {LoginService} from "./login.service";
@@ -11,12 +11,16 @@ import {LoginService} from "./login.service";
 
 })
 
-export class MyCardComponent {
+export class MyCardComponent implements OnInit {
     currentPage: string = "lobby";
 
     platform = process.platform;
     currentWindow = remote.getCurrentWindow();
     window = window;
+
+    ngOnInit() {
+
+    }
 
     constructor(private renderer: Renderer, private translate: TranslateService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         renderer.listenGlobal('window', 'message', (event) => {

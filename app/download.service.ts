@@ -21,12 +21,18 @@ export class DownloadService {
     open = this.aria2.open();
 
     constructor(private ngZone: NgZone, private http: Http) {
-        this.aria2.onDownloadComplete = (gid)=> {
-            let app = this.gidAppMap.get(gid.gid);
+        this.aria2.onDownloadComplete = (result)=> {
+            let app = this.gidAppMap.get(result.gid);
             if (app) {
                 this.appGidMap.delete(app);
-                this.gidAppMap.delete(gid.gid);
+                this.gidAppMap.delete(result.gid);
                 this.eventEmitter.emit(app.id, 'complete');
+                //
+            }
+
+            if (this.map.get(result.gid)) {
+                this.map.get(result.gid).complete();
+                this.map.delete(result.gid);
             }
         }
     }
@@ -71,6 +77,26 @@ export class DownloadService {
             tasks.push(task);
         }
         return tasks;
+    }
+
+    map: Map<string,any> = new Map();
+
+    async addMetalink(metalink: string, library: string) {
+        let meta4 = btoa(metalink);
+        let gid = ( await this.aria2.addMetalink(meta4, {dir: library}))[0];
+        return Observable.create((observer)=> {
+            this.map.set(gid, observer);
+            let interval;
+            this.ngZone.runOutsideAngular(()=> {
+                interval = setInterval(async()=> {
+                    let status = await this.aria2.tellStatus(gid);
+                    this.map.get(gid).next(status);
+                }, 1000)
+            });
+            return ()=> {
+                clearInterval(interval);
+            }
+        });
     }
 
     async addUri(app: App, path: string): Promise<App> {

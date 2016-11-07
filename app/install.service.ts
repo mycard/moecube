@@ -56,6 +56,7 @@ export class InstallService {
                 input: <ReadableStream>tarProcess.stderr,
             });
             rl.on('line', (input)=> {
+                console.log(input);
             });
             tarProcess.on('exit', (code)=> {
                 if (code === 0) {
@@ -119,6 +120,21 @@ export class InstallService {
         }
     }
 
+    async getChecksumFile(app: App): Promise<Map<string,string> > {
+        let checksumMap: Map<string,string> = await this.http.get(this.checksumUri + app.id)
+            .map((response)=> {
+                let map = new Map<string,string>();
+                for (let line of response.text().split('\n')) {
+                    if (line !== "") {
+                        let [checksum,filename]=line.split('  ', 2);
+                        map.set(filename, checksum);
+                    }
+                }
+                return map;
+            }).toPromise();
+        return checksumMap;
+    }
+
     async doInstall() {
         for (let app of this.installQueue.keys()) {
             let depInstalled = app.findDependencies()
@@ -126,18 +142,7 @@ export class InstallService {
             if (depInstalled && !this.installingQueue.has(app)) {
                 this.installingQueue.add(app);
                 let options = this.installQueue.get(app);
-                let checksumMap: Map<string,string> = await this.http.get(`${this.checksumUri}${app.id}`)
-                    .map((response)=> {
-                        let map = new Map<string,string>();
-                        for (let line of response.text().split('\n')) {
-                            if (line !== "") {
-                                let [checksum,filename]=line.split('  ', 2);
-                                map.set(filename, checksum);
-                            }
-                        }
-                        return map;
-                    }).toPromise();
-
+                let checksumMap = await this.getChecksumFile(app);
                 let packagePath = path.join(options.installLibrary, 'downloading', `${app.id}.tar.xz`);
                 let destPath: string;
                 if (app.parent) {
@@ -198,28 +203,29 @@ export class InstallService {
         })
     }
 
-    async uninstall(app: App) {
+    async uninstall(app: App, restore = true) {
         if (!app.parent) {
             let children = this.appsService.findChildren(app);
             for (let child of children) {
-                if(child.isInstalled()) {
+                if (child.isInstalled()) {
                     await this.uninstall(child);
                 }
             }
         }
         let files = Array.from(app.local.files.keys()).sort().reverse();
-        console.log(files);
         for (let file of files) {
             let oldFile = file;
             if (!path.isAbsolute(file)) {
                 oldFile = path.join(app.local.path, file);
             }
-            await this.deleteFile(oldFile);
-            if (app.parent) {
-                let backFile = path.join(app.local.path, "backup", file);
-                await new Promise((resolve, reject)=> {
-                    fs.rename(backFile, oldFile, resolve);
-                });
+            if (restore) {
+                await this.deleteFile(oldFile);
+                if (app.parent) {
+                    let backFile = path.join(app.local.path, "backup", file);
+                    await new Promise((resolve, reject)=> {
+                        fs.rename(backFile, oldFile, resolve);
+                    });
+                }
             }
         }
 
