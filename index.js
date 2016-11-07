@@ -37,12 +37,12 @@ autoUpdater.on('update-downloaded', (event)=> {
 
 function handleElevate() {
     if (process.argv[1] == '-e') {
-        app.dock.hide();
-        const os = require('os');
-        const readline = require('readline');
-        process.send = (message, sendHandle, options, callback)=> process.stdout.write(JSON.stringify(message) + os.EOL, callback);
+        if (process.platform == 'darwin') {
+            app.dock.hide();
+        }
+        process.send = (message, sendHandle, options, callback)=> process.stdout.write(JSON.stringify(message) + require('os').EOL, callback);
         process.stdin.on('end', ()=> process.emit('disconnect'));
-        readline.createInterface({input: process.stdin}).on('line', (line) => process.emit('message', JSON.parse(line)));
+        require('readline').createInterface({input: process.stdin}).on('line', (line) => process.emit('message', JSON.parse(line)));
         require("./" + process.argv[2]);
         return true;
     }
