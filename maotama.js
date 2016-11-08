@@ -20,3 +20,5 @@ process.on('message', (message)=> {
 });
 
 process.on('disconnect', process.exit);
+
+process.send('initialized');

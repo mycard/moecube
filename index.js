@@ -36,14 +36,22 @@ autoUpdater.on('update-downloaded', (event)=> {
 });
 
 function handleElevate() {
-    if (process.argv[1] == '-e') {
+
+    if (process.env['ELEVATE']) {
         if (process.platform == 'darwin') {
             app.dock.hide();
         }
-        process.send = (message, sendHandle, options, callback)=> process.stdout.write(JSON.stringify(message) + require('os').EOL, callback);
-        process.stdin.on('end', ()=> process.emit('disconnect'));
-        require('readline').createInterface({input: process.stdin}).on('line', (line) => process.emit('message', JSON.parse(line)));
-        require("./" + process.argv[2]);
+        let elevate = JSON.parse(process.env['ELEVATE']);
+        let socket = require('net').connect(elevate['ipc'], function () {
+            process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
+            this.on('end', () => process.emit('disconnect'));
+            require('readline').createInterface({input: this}).on('line', (line) => process.emit('message', JSON.parse(line)));
+            process.argv = elevate['arguments'][1];
+            require("./" + elevate['arguments'][0]);
+        });
+        socket.on("error", (error)=> {
+            console.log(error);
+        });
         return true;
     }
 }
