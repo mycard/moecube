@@ -2016,7 +2016,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "ygopro_vs.exe",
+          "execute": "ygopro.exe",
           "args": [],
           "env": {}
         }

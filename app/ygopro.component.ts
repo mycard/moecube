@@ -75,8 +75,7 @@ export class YGOProComponent implements OnInit {
     app: App;
     decks: string[] = [];
     current_deck: string;
-
-    system_conf = path.join(this.app.local.path, 'system.conf');
+    system_conf;
     numfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
     textfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
 
@@ -108,10 +107,12 @@ export class YGOProComponent implements OnInit {
     connections: WebSocket[] = [];
 
     constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
-        this.refresh();
     }
 
     ngOnInit() {
+        this.system_conf = path.join(this.app.local.path, 'system.conf');
+        this.refresh();
+
         let modal = $('#game-list-modal');
 
         modal.on('show.bs.modal', (event) => {
