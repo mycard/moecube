@@ -37,11 +37,19 @@ autoUpdater.on('update-downloaded', (event)=> {
 
 function handleElevate() {
 
-    if (process.env['ELEVATE']) {
+    // for debug
+    if (process.argv[1] == '.') {
+        process.argv[1] = process.argv[2];
+        process.argv[2] = process.argv[3];
+    }
+
+    const fs = require('fs');
+    fs.writeFileSync('1.txt', JSON.stringify(process.argv));
+    if (process.argv[1] == '-e') {
         if (process.platform == 'darwin') {
             app.dock.hide();
         }
-        let elevate = JSON.parse(process.env['ELEVATE']);
+        let elevate = JSON.parse(process.argv[2]);
         let socket = require('net').connect(elevate['ipc'], function () {
             process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
             this.on('end', () => process.emit('disconnect'));
