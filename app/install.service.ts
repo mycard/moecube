@@ -121,7 +121,11 @@ export class InstallService {
     }
 
     async getChecksumFile(app: App): Promise<Map<string,string> > {
-        let checksumMap: Map<string,string> = await this.http.get(this.checksumUri + app.id)
+        let checksumUrl = this.checksumUri + app.id;
+        if (app.id === "ygopro") {
+            checksumUrl = this.checksumUri + app.id + "-" + process.platform;
+        }
+        let checksumMap: Map<string,string> = await this.http.get(checksumUrl)
             .map((response)=> {
                 let map = new Map<string,string>();
                 for (let line of response.text().split('\n')) {
@@ -144,6 +148,9 @@ export class InstallService {
                 let options = this.installQueue.get(app);
                 let checksumMap = await this.getChecksumFile(app);
                 let packagePath = path.join(options.installLibrary, 'downloading', `${app.id}.tar.xz`);
+                if (app.id === "ygopro") {
+                    packagePath = path.join(options.installLibrary, 'downloading', `${app.id}-${process.platform}.tar.xz`);
+                }
                 let destPath: string;
                 if (app.parent) {
                     let differenceSet = new Set<string>();

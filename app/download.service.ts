@@ -13,7 +13,7 @@ const Aria2 = require('aria2');
 @Injectable()
 export class DownloadService {
     aria2 = new Aria2();
-    baseURL = 'http://thief.mycard.moe/metalinks/'
+    baseURL = 'http://thief.mycard.moe/metalinks/';
     appGidMap = new Map<App,string>();
     gidAppMap = new Map<string,App>();
     eventEmitter = new EventEmitter();
@@ -106,6 +106,9 @@ export class DownloadService {
             return app;
         } else {
             let meta4link = `${this.baseURL}${id}.meta4`;
+            if (id === "ygopro") {
+                meta4link = `${this.baseURL}${id}-${process.platform}.meta4`
+            }
             let response = await this.http.get(meta4link).toPromise();
             let meta4 = btoa(response.text());
             let gid = (await this.aria2.addMetalink(meta4, {dir: path}))[0];

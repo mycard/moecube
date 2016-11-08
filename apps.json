@@ -217,9 +217,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th07"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th07"
       ]
     },
     "references": {
@@ -336,9 +339,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th075"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th075"
       ]
     },
     "references": {
@@ -455,9 +461,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th08"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th08"
       ]
     },
     "references": {
@@ -574,9 +583,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th09"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th09"
       ]
     },
     "references": {
@@ -693,9 +705,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th095"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th095"
       ]
     },
     "references": {
@@ -812,9 +827,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th1"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th1"
       ]
     },
     "references": {
@@ -931,9 +949,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th10"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th10"
       ]
     },
     "references": {
@@ -1050,9 +1071,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th105"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th105"
       ]
     },
     "references": {
@@ -1169,9 +1193,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th11"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th11"
       ]
     },
     "references": {
@@ -1288,9 +1315,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th12"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th12"
       ]
     },
     "references": {
@@ -1421,9 +1451,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th123"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th123"
       ]
     },
     "references": {
@@ -1540,9 +1573,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th2"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th2"
       ]
     },
     "references": {
@@ -1659,9 +1695,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th3"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th3"
       ]
     },
     "references": {
@@ -1778,9 +1817,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th4"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th4"
       ]
     },
     "references": {
@@ -1897,9 +1939,12 @@
       "language"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "th5"
+      ],
       "darwin": [
-        "wine"
+        "wine",
+        "th5"
       ]
     },
     "references": {
