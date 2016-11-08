@@ -43,13 +43,11 @@ function handleElevate() {
         process.argv[2] = process.argv[3];
     }
 
-    const fs = require('fs');
-    fs.writeFileSync('1.txt', JSON.stringify(process.argv));
     if (process.argv[1] == '-e') {
         if (process.platform == 'darwin') {
             app.dock.hide();
         }
-        let elevate = JSON.parse(process.argv[2]);
+        let elevate = JSON.parse(new Buffer(process.argv[2], 'base64'));
         let socket = require('net').connect(elevate['ipc'], function () {
             process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
             this.on('end', () => process.emit('disconnect'));
@@ -57,9 +55,9 @@ function handleElevate() {
             process.argv = elevate['arguments'][1];
             require("./" + elevate['arguments'][0]);
         });
-        socket.on("error", (error)=> {
-            console.log(error);
-        });
+        // socket.on("error", (error)=> {
+        //     console.log(error);
+        // });
         return true;
     }
 }

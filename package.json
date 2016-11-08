@@ -31,7 +31,7 @@
     "bootstrap": "next",
     "core-js": "latest",
     "electron-auto-updater": "latest",
-    "electron-sudo": "github:mycard/electron-sudo#6605887",
+    "electron-sudo": "github:mycard/electron-sudo#mycard",
     "font-awesome": "latest",
     "ini": "latest",
     "mkdirp": "latest",
