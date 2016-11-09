@@ -24,7 +24,7 @@ export class InstallService {
 
     installingQueue: Set<App> = new Set();
 
-    checksumUri = "http://thief.mycard.moe/checksums/";
+    checksumUri = "https://thief.mycard.moe/checksums/";
 
     constructor(private http: Http, private appsService: AppsService) {
         if (process.platform === "win32") {

@@ -13,7 +13,7 @@ const Aria2 = require('aria2');
 @Injectable()
 export class DownloadService {
     aria2 = new Aria2();
-    baseURL = 'http://thief.mycard.moe/metalinks/';
+    baseURL = 'https://thief.mycard.moe/metalinks/';
     appGidMap = new Map<App,string>();
     gidAppMap = new Map<string,App>();
     eventEmitter = new EventEmitter();

@@ -57,7 +57,7 @@
       "servers": [
         {
           "id": "wudizhanche",
-          "url": "ws://wudizhanche.mycard.moe:10800"
+          "url": "wss://wudizhanche.mycard.moe:10800"
         }
       ]
     },
