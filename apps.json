@@ -1432,7 +1432,7 @@
       "servers": [
         {
           "id": "tiramisu",
-          "url": "ws://wudizhanche.mycard.moe:10800/"
+          "url": "wss://wudizhanche.mycard.moe:10800/"
         }
       ]
     }
