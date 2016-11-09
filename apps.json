@@ -42,7 +42,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "東方紅魔郷.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -298,7 +298,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th075.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -307,7 +307,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th075.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -359,7 +359,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th075c.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -368,7 +368,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th075c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -420,7 +420,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th08.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -429,7 +429,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th08.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -481,7 +481,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th08.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -490,7 +490,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th08.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -542,7 +542,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th09.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -551,7 +551,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th09.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -603,7 +603,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th09c.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -612,7 +612,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th09c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -664,7 +664,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th095.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -673,7 +673,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th095.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -725,7 +725,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th095c.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -734,7 +734,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th095c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -908,7 +908,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th10.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -917,7 +917,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th10.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -969,7 +969,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th10chs.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -978,7 +978,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th10chs.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1030,7 +1030,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th105.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1039,7 +1039,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th105.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1091,7 +1091,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th105.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1100,7 +1100,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th105.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1152,7 +1152,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th11.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1161,7 +1161,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th11.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1213,7 +1213,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th11c.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1222,7 +1222,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th11c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1274,7 +1274,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th12.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1283,7 +1283,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th12.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1335,7 +1335,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th12c.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1344,7 +1344,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th12c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1399,7 +1399,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th123.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1408,7 +1408,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th123.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1471,7 +1471,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th123_beta.exe",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -1480,7 +1480,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th123_beta.exe",
           "args": [],
           "open": "wine",
           "env": {
