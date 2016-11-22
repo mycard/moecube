@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
-        <li *ngIf="!loginService.user" class="nav-item active">
+        <li *ngIf="!loginService.logged_in" class="nav-item active">
             <a class="nav-link" href="#">登录<span class="sr-only">(current)</span></a>
         </li>
         <!--
@@ -9,15 +9,15 @@
             <a (click)="changeFouce('store')" class="nav-link" href="#">商店</a>
         </li>
         -->
-        <li *ngIf="loginService.user" [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
+        <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
             <a (click)="currentPage='lobby'" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
         </li>
-        <li *ngIf="loginService.user" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
+        <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
             <a (click)="currentPage='community'" class="nav-link" href="#">{{'community'| translate}}</a>
         </li>
     </ul>
     <div class="navbar-right">
-        <div id="user" *ngIf="loginService.user">
+        <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
             <a href="#" (click)="loginService.logout()" class="item">切换账号</a>
@@ -30,7 +30,7 @@
         </div>
     </div>
 </nav>
-<login class="page" *ngIf="!loginService.user"></login>
-<store class="page" *ngIf="loginService.user" [hidden]="currentPage != 'store'"></store>
-<lobby class="page" *ngIf="loginService.user" [hidden]="currentPage != 'lobby'"></lobby>
-<webview id="community" class="page" *ngIf="loginService.user" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>
+<login class="page" *ngIf="!loginService.logged_in"></login>
+<store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
+<lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
+<webview id="community" class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>

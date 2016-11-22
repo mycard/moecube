@@ -21,7 +21,7 @@ export class DownloadService {
     open = this.aria2.open();
 
     constructor(private ngZone: NgZone, private http: Http) {
-        this.aria2.onDownloadComplete = (result)=> {
+        this.aria2.onDownloadComplete = (result) => {
             let app = this.gidAppMap.get(result.gid);
             if (app) {
                 this.appGidMap.delete(app);
@@ -38,22 +38,23 @@ export class DownloadService {
     }
 
     getComplete(app: App): Promise<App> {
-        if (this.appGidMap.has(app)) {
-            return new Promise((resolve, reject)=> {
-                this.eventEmitter.once(app.id, (event)=> {
-                    resolve(app);
-                })
-            });
+        if (!this.appGidMap.has(app)) {
+            throw('nyaa');
         }
+        return new Promise((resolve, reject) => {
+            this.eventEmitter.once(app.id, (event) => {
+                resolve(app);
+            })
+        });
     }
 
     getProgress(app: App): Observable<any> {
         let gid = this.appGidMap.get(app);
-        return Observable.create((observer)=> {
+        return Observable.create((observer) => {
             let interval;
-            this.ngZone.runOutsideAngular(()=> {
-                interval = setInterval(()=> {
-                    this.aria2.tellStatus(gid).then((status: any)=> {
+            this.ngZone.runOutsideAngular(() => {
+                interval = setInterval(() => {
+                    this.aria2.tellStatus(gid).then((status: any) => {
                         if (status.status === 'complete') {
                             observer.complete();
                         } else if (status.status === "active") {
@@ -64,14 +65,14 @@ export class DownloadService {
                     });
                 }, 1000);
             });
-            return ()=> {
+            return () => {
                 clearInterval(interval);
             }
         });
     }
 
     async addUris(apps: App[], path: string): Promise<App[]> {
-        let tasks = [];
+        let tasks: App[] = [];
         for (let app of apps) {
             let task = await this.addUri(app, path);
             tasks.push(task);
@@ -84,16 +85,16 @@ export class DownloadService {
     async addMetalink(metalink: string, library: string) {
         let meta4 = btoa(metalink);
         let gid = ( await this.aria2.addMetalink(meta4, {dir: library}))[0];
-        return Observable.create((observer)=> {
+        return Observable.create((observer) => {
             this.map.set(gid, observer);
             let interval;
-            this.ngZone.runOutsideAngular(()=> {
-                interval = setInterval(async()=> {
+            this.ngZone.runOutsideAngular(() => {
+                interval = setInterval(async() => {
                     let status = await this.aria2.tellStatus(gid);
                     this.map.get(gid).next(status);
                 }, 1000)
             });
-            return ()=> {
+            return () => {
                 clearInterval(interval);
             }
         });

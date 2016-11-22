@@ -6,6 +6,10 @@ import {Injectable} from "@angular/core";
 import {remote} from "electron";
 import * as path from "path";
 
+interface Library {
+    "default": boolean,path: string
+}
+
 @Injectable()
 export class SettingsService {
 
@@ -16,7 +20,7 @@ export class SettingsService {
             path: path.join(remote.app.getPath("appData"), "library")
         },
     ];
-    libraries: {"default": boolean,path: string}[];
+    libraries: Library[];
 
 
     getLibraries() {
@@ -33,11 +37,16 @@ export class SettingsService {
         return this.libraries;
     }
 
-    getDefaultLibrary() {
+    getDefaultLibrary(): Library {
         if (!this.libraries) {
             this.getLibraries()
         }
-        return this.libraries.find((item)=>item.default === true);
+        let result = this.libraries.find((item) => item.default === true);
+        if (result) {
+            return result
+        } else {
+            throw('no default library found')
+        }
     }
 
     static SETTING_LOCALE = "locale";

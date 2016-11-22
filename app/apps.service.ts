@@ -12,6 +12,10 @@ import {AppLocal} from "./app-local";
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
 
+interface Connection {
+    connection: WebSocket, address: string | null
+}
+
 @Injectable()
 export class AppsService {
 
@@ -24,7 +28,7 @@ export class AppsService {
     loadApps() {
         return this.http.get('./apps.json')
             .toPromise()
-            .then((response)=> {
+            .then((response) => {
                 let data = response.json();
                 this.apps = this.loadAppsList(data);
                 return this.apps;
@@ -51,7 +55,7 @@ export class AppsService {
             }
 
             // 去除无关语言
-            ['name', 'description'].forEach((key)=> {
+            ['name', 'description'].forEach((key) => {
                 let value = app[key][locale];
                 if (!value) {
                     value = app[key]["en-US"];
@@ -60,7 +64,7 @@ export class AppsService {
             });
 
             // 去除平台无关的内容
-            ['actions', 'dependencies', 'references', 'download', 'version'].forEach((key)=> {
+            ['actions', 'dependencies', 'references', 'download', 'version'].forEach((key) => {
                 if (app[key]) {
                     if (app[key][platform]) {
                         app[key] = app[key][platform];
@@ -75,8 +79,8 @@ export class AppsService {
         }
 
         // 设置App关系
-        for (let id of Array.from(apps.keys())) {
-            let temp = apps.get(id)["actions"];
+        for (let [id] of apps) {
+            let temp = (<App>apps.get(id))["actions"];
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -85,15 +89,15 @@ export class AppsService {
                 }
                 map.set(action, temp[action]);
             }
-            apps.get(id).actions = map;
+            (<App>apps.get(id)).actions = map;
 
-            ['dependencies', 'references', 'parent'].forEach((key)=> {
-                let app = apps.get(id);
+            ['dependencies', 'references', 'parent'].forEach((key) => {
+                let app = <App>apps.get(id);
                 let value = app[key];
                 if (value) {
                     if (Array.isArray(value)) {
                         let map = new Map<string,App>();
-                        value.forEach((appId, index, array)=> {
+                        value.forEach((appId, index, array) => {
                             map.set(appId, apps.get(appId));
                         });
                         app[key] = map;
@@ -107,8 +111,8 @@ export class AppsService {
     };
 
     findChildren(app: App): App[] {
-        let children = [];
-        for (let child of this.apps.values()) {
+        let children: App[] = [];
+        for (let [id,child] of this.apps) {
             if (child.parent === app) {
                 children.push(child);
             }
@@ -118,9 +122,9 @@ export class AppsService {
 
     runApp(app: App) {
         let children = this.findChildren(app);
-        let cwd = app.local.path;
-        let action = app.actions.get('main');
-        let args = [];
+        let cwd = (<AppLocal>app.local).path;
+        let action: any = app.actions.get('main');
+        let args: string[] = [];
         let env = {};
         for (let child of children) {
             action = child.actions.get('main');
@@ -154,17 +158,17 @@ export class AppsService {
     }
 
     browse(app: App) {
-        remote.shell.showItemInFolder(app.local.path);
+        remote.shell.showItemInFolder((<AppLocal>app.local).path);
     }
 
-    connections = new Map<App, {connection: WebSocket, address: string}>();
+    connections = new Map<App, Connection>();
     maotama;
 
     async network(app: App, server) {
         if (!this.maotama) {
-            this.maotama = new Promise((resolve, reject)=> {
+            this.maotama = new Promise((resolve, reject) => {
                 let child = sudo.fork('maotama', [], {stdio: ['inherit', 'inherit', 'inherit', 'ipc']});
-                child.once('message', ()=>resolve(child));
+                child.once('message', () => resolve(child));
                 child.once('error', reject);
                 child.once('exit', reject);
             })
@@ -177,24 +181,24 @@ export class AppsService {
             return
         }
 
-        let connection = this.connections.get(app);
+        let connection: Connection | undefined = this.connections.get(app);
         if (connection) {
             connection.connection.close();
         }
         connection = {connection: new WebSocket(server.url), address: null};
         let id;
         this.connections.set(app, connection);
-        connection.connection.onmessage = (event)=> {
+        connection.connection.onmessage = (event) => {
             console.log(event.data);
             let [action, args] = event.data.split(' ', 2);
             let [address, port] = args.split(':');
             switch (action) {
                 case 'LISTEN':
-                    connection.address = args;
+                    (<Connection>connection).address = args;
                     this.ref.tick();
                     break;
                 case 'CONNECT':
-                    id = setInterval(()=> {
+                    id = setInterval(() => {
                         child.send({
                             action: 'connect',
                             arguments: [app.network.port, port, address]
@@ -207,14 +211,14 @@ export class AppsService {
                     break;
             }
         };
-        connection.connection.onclose = (event: CloseEvent)=> {
+        connection.connection.onclose = (event: CloseEvent) => {
             if (id) {
                 clearInterval(id);
             }
             // 如果还是在界面上显示的那个连接
             if (this.connections.get(app) == connection) {
                 this.connections.delete(app);
-                if (event.code != 1000 && !connection.address) {
+                if (event.code != 1000 && !(<Connection>connection).address) {
                     alert(`出错了 ${event.code}`);
                 }
             }

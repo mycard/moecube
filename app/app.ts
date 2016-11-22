@@ -51,7 +51,7 @@ export class App {
     network: any;
     tags: string[];
     version: string;
-    local: AppLocal;
+    local: AppLocal | null;
     status: AppStatus;
 
     isInstalled(): boolean {

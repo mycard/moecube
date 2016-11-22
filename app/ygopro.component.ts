@@ -15,6 +15,7 @@ import {App} from "./app";
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
+import {AppLocal} from "./app-local";
 
 declare var $;
 
@@ -45,8 +46,8 @@ interface SystemConf {
 }
 
 interface Server {
-    id?: string
-    url?: string
+    id: string
+    url: string
     address: string
     port: number
 }
@@ -76,7 +77,7 @@ export class YGOProComponent implements OnInit {
     decks: string[] = [];
     current_deck: string;
 
-    system_conf = path.join(this.app.local.path, 'system.conf');
+    system_conf = path.join((<AppLocal>this.app.local).path, 'system.conf');
     numfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
     textfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
 
@@ -115,10 +116,10 @@ export class YGOProComponent implements OnInit {
         let modal = $('#game-list-modal');
 
         modal.on('show.bs.modal', (event) => {
-            this.connections = this.servers.map((server)=> {
+            this.connections = this.servers.map((server) => {
                 let connection = new WebSocket(server.url);
                 connection.onclose = () => {
-                    this.rooms = this.rooms.filter(room=>room.server != server)
+                    this.rooms = this.rooms.filter(room => room.server != server)
                 };
                 connection.onmessage = (event) => {
                     let message = JSON.parse(event.data);
@@ -131,10 +132,10 @@ export class YGOProComponent implements OnInit {
                             this.rooms.push(Object.assign({server: server}, this.default_options, message.data));
                             break;
                         case 'update':
-                            Object.assign(this.rooms.find(room=>room.server == server && room.id == message.data.id), this.default_options, message.data);
+                            Object.assign(this.rooms.find(room => room.server == server && room.id == message.data.id), this.default_options, message.data);
                             break;
                         case 'delete':
-                            this.rooms.splice(this.rooms.findIndex(room=>room.server == server && room.id == message.data), 1);
+                            this.rooms.splice(this.rooms.findIndex(room => room.server == server && room.id == message.data), 1);
                     }
                     this.ref.detectChanges()
                 };
@@ -159,20 +160,20 @@ export class YGOProComponent implements OnInit {
     };
 
     get_decks(): Promise<string[]> {
-        return new Promise((resolve, reject)=> {
-            fs.readdir(path.join(this.app.local.path, 'deck'), (error, files)=> {
+        return new Promise((resolve, reject) => {
+            fs.readdir(path.join((<AppLocal>this.app.local).path, 'deck'), (error, files) => {
                 if (error) {
                     resolve([])
                 } else {
-                    resolve(files.filter(file=>path.extname(file) == ".ydk").map(file=>path.basename(file, '.ydk')));
+                    resolve(files.filter(file => path.extname(file) == ".ydk").map(file => path.basename(file, '.ydk')));
                 }
             })
         })
     }
 
-    async get_font(files: string[]): Promise<string> {
+    async get_font(files: string[]): Promise<string | undefined> {
         for (let file in files) {
-            let found = await new Promise((resolve)=>fs.access(file, fs.constants.R_OK, error=>resolve(!error)));
+            let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
             if (found) {
                 return file;
             }
@@ -180,7 +181,7 @@ export class YGOProComponent implements OnInit {
     }
 
     async delete_deck(deck) {
-        await new Promise(resolve => fs.unlink(path.join(this.app.local.path, 'deck', deck + '.ydk'), resolve));
+        await new Promise(resolve => fs.unlink(path.join((<AppLocal>this.app.local).path, 'deck', deck + '.ydk'), resolve));
         return this.refresh()
     }
 
@@ -201,7 +202,7 @@ export class YGOProComponent implements OnInit {
     };
 
     load_system_conf(): Promise<SystemConf> {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
                 if (error) return reject(error);
                 resolve(ini.parse(data));
@@ -210,7 +211,7 @@ export class YGOProComponent implements OnInit {
     };
 
     save_system_conf(data: SystemConf) {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             fs.writeFile(this.system_conf, ini.stringify(data, <EncodeOptions>{whitespace: true}), (error) => {
                 if (error) return reject(error);
                 resolve(data);
@@ -245,13 +246,13 @@ export class YGOProComponent implements OnInit {
     start_game(args) {
         let win = remote.getCurrentWindow();
         win.minimize();
-        return new Promise((resolve, reject)=> {
-            let child = child_process.spawn(path.join(this.app.local.path, this.app.actions.get('main').execute), args, {cwd: this.app.local.path});
-            child.on('error', (error)=> {
+        return new Promise((resolve, reject) => {
+            let child = child_process.spawn(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
+            child.on('error', (error) => {
                 reject(error);
                 win.restore()
             });
-            child.on('exit', (code, signal)=> {
+            child.on('exit', (code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
                 resolve();
                 win.restore()
@@ -315,22 +316,22 @@ export class YGOProComponent implements OnInit {
         this.matching = this.http.post('https://mycard.moe/ygopro/match', null, {
             headers: headers,
             search: search
-        }).map(response=>response.json())
-            .subscribe((data)=> {
+        }).map(response => response.json())
+            .subscribe((data) => {
                 this.join(data['password'], {
                     address: data['address'],
                     port: data['port']
                 });
-            }, (error)=> {
+            }, (error) => {
                 alert(`匹配失败\n${error}`)
-            }, ()=> {
+            }, () => {
                 this.matching = null;
                 this.matching_arena = null;
             });
     }
 
     cancel_match() {
-        this.matching.unsubscribe();
+        (<ISubscription>this.matching).unsubscribe();
         this.matching = null;
         this.matching_arena = null;
     }

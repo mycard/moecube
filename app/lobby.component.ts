@@ -3,13 +3,14 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {LoginService} from "./login.service";
+import {LoginService, User} from "./login.service";
 import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 import {Http} from "@angular/http";
 import * as path from 'path';
 import {InstallConfig} from "./install-config";
+import {AppLocal} from "./app-local";
 
 @Component({
     selector: 'lobby',
@@ -29,9 +30,9 @@ export class LobbyComponent implements OnInit {
 
     ngOnInit() {
         this.appsService.loadApps()
-            .then((apps)=> {
+            .then((apps) => {
                 this.apps = apps;
-                this.currentApp = this.apps.get("th06");
+                this.currentApp = <App>this.apps.get("th06");
                 this.updateApp();
             })
 
@@ -41,12 +42,12 @@ export class LobbyComponent implements OnInit {
         let updateServer = "http://thief.mycard.moe/update/metalinks/";
         let checksumServer = "http://thief.mycard.moe/checksums/";
         for (let app of this.apps.values()) {
-            if (app.isInstalled() && app.version != app.local.version) {
+            if (app.isInstalled() && app.version != (<AppLocal>app.local).version) {
                 let checksumMap = await this.installService.getChecksumFile(app);
-                let filesMap = app.local.files;
-                let deleteList = [];
-                let addList = [];
-                let changeList = [];
+                let filesMap = (<AppLocal>app.local).files;
+                let deleteList: string[] = [];
+                let addList: string[] = [];
+                let changeList: string[] = [];
                 for (let [file,checksum] of filesMap) {
                     let t = checksumMap.get(file);
                     if (!t) {
@@ -60,19 +61,19 @@ export class LobbyComponent implements OnInit {
                         changeList.push(file);
                     }
                 }
-                let metalink = await this.http.post(updateServer + app.id, changeList).map((response)=>response.text())
+                let metalink = await this.http.post(updateServer + app.id, changeList).map((response) => response.text())
                     .toPromise();
                 let meta = new DOMParser().parseFromString(metalink, "text/xml");
                 let filename = meta.getElementsByTagName('file')[0].getAttribute('name');
-                let dir = path.join(path.dirname(app.local.path), "downloading");
+                let dir = path.join(path.dirname((<AppLocal>app.local).path), "downloading");
                 let a = await this.downloadService.addMetalink(metalink, dir);
 
-                await new Promise((resolve, reject)=> {
-                    a.subscribe((status)=> {
+                await new Promise((resolve, reject) => {
+                    a.subscribe((status) => {
                         console.log(status);
-                    }, (err)=> {
+                    }, (err) => {
                         reject()
-                    }, ()=> {
+                    }, () => {
                         resolve();
                     });
                 });
@@ -80,15 +81,15 @@ export class LobbyComponent implements OnInit {
                 for (let file of deleteList) {
                     await this.installService.deleteFile(file);
                 }
-                app.local.version=app.version;
-                app.local.files = checksumMap;
+                (<AppLocal>app.local).version = app.version;
+                (<AppLocal>app.local).files = checksumMap;
                 localStorage.setItem(app.id, JSON.stringify(app.local));
-                await this.installService.extract(path.join(dir, filename), app.local.path);
+                await this.installService.extract(path.join(dir, filename), (<AppLocal>app.local).path);
                 let children = this.appsService.findChildren(app);
                 for (let child of children) {
                     if (child.isInstalled()) {
                         await this.installService.uninstall(child, false);
-                        this.installService.add(child, new InstallConfig(child, path.dirname((app.local.path))));
+                        this.installService.add(child, new InstallConfig(child, path.dirname(((<AppLocal>app.local).path))));
                         await this.installService.getComplete(child);
                         console.log("282828")
                     }
@@ -103,7 +104,7 @@ export class LobbyComponent implements OnInit {
     }
 
     get grouped_apps() {
-        let contains = ["game", "music", "book"].map((value)=>Category[value]);
+        let contains = ["game", "music", "book"].map((value) => Category[value]);
         let result = {};
         for (let app of this.apps.values()) {
             if (contains.includes(app.category)) {

@@ -36,29 +36,29 @@ export class InstallService {
 
 
     createDirectory(dir: string) {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             mkdirp(dir, resolve);
         })
     }
 
     getComplete(app: App): Promise<App> {
-        return new Promise((resolve, reject)=> {
-            this.eventEmitter.once(app.id, (complete)=> {
+        return new Promise((resolve, reject) => {
+            this.eventEmitter.once(app.id, (complete) => {
                 resolve();
             });
         });
     }
 
     extract(file: string, destPath: string) {
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             let tarProcess = child_process.spawn(this.tarPath, ['xvf', file, '-C', destPath]);
             let rl = readline.createInterface({
                 input: <ReadableStream>tarProcess.stderr,
             });
-            rl.on('line', (input)=> {
+            rl.on('line', (input) => {
                 console.log(input);
             });
-            tarProcess.on('exit', (code)=> {
+            tarProcess.on('exit', (code) => {
                 if (code === 0) {
                     resolve();
                 } else {
@@ -72,26 +72,26 @@ export class InstallService {
         let action = app.actions.get('install');
         if (action) {
             let env = Object.assign({}, action.env);
-            let command = [];
+            let command: string[] = [];
             command.push(path.join(appPath, action.execute));
             command.push(...action.args);
             let open = action.open;
             if (open) {
-                let openAction = open.actions.get("main");
+                let openAction: any = open.actions.get("main");
                 env = Object.assign(env, openAction.env);
                 command.unshift(...openAction.args);
-                command.unshift(path.join(open.local.path, openAction.execute));
+                command.unshift(path.join((<AppLocal>open.local).path, openAction.execute));
             }
-            return new Promise((resolve, reject)=> {
-                let child = child_process.spawn(command.shift(), command, {
+            return new Promise((resolve, reject) => {
+                let child = child_process.spawn(<string>command.shift(), command, {
                     env: env,
                     stdio: 'inherit',
                     shell: true,
                 });
-                child.on('error', (error)=> {
+                child.on('error', (error) => {
                     console.log(error);
                 });
-                child.on('exit', (code)=> {
+                child.on('exit', (code) => {
                     if (code === 0) {
                         resolve();
                     } else {
@@ -109,11 +109,11 @@ export class InstallService {
     }
 
     async backupFiles(app: App, files: Iterable<string>) {
-        let backupPath = path.join(app.local.path, "backup");
+        let backupPath = path.join((<AppLocal>app.local).path, "backup");
         await this.createDirectory(backupPath);
         for (let file of files) {
-            await new Promise((resolve, reject)=> {
-                let oldPath = path.join(app.local.path, file);
+            await new Promise((resolve, reject) => {
+                let oldPath = path.join((<AppLocal>app.local).path, file);
                 let newPath = path.join(backupPath, file);
                 fs.rename(oldPath, newPath, resolve);
             });
@@ -122,7 +122,7 @@ export class InstallService {
 
     async getChecksumFile(app: App): Promise<Map<string,string> > {
         let checksumMap: Map<string,string> = await this.http.get(this.checksumUri + app.id)
-            .map((response)=> {
+            .map((response) => {
                 let map = new Map<string,string>();
                 for (let line of response.text().split('\n')) {
                     if (line !== "") {
@@ -138,23 +138,23 @@ export class InstallService {
     async doInstall() {
         for (let app of this.installQueue.keys()) {
             let depInstalled = app.findDependencies()
-                .every((dependency)=>dependency.isInstalled());
+                .every((dependency) => dependency.isInstalled());
             if (depInstalled && !this.installingQueue.has(app)) {
                 this.installingQueue.add(app);
-                let options = this.installQueue.get(app);
+                let options = <InstallConfig>this.installQueue.get(app);
                 let checksumMap = await this.getChecksumFile(app);
                 let packagePath = path.join(options.installLibrary, 'downloading', `${app.id}.tar.xz`);
                 let destPath: string;
                 if (app.parent) {
                     let differenceSet = new Set<string>();
-                    let parentFilesMap = app.parent.local.files;
+                    let parentFilesMap = (<AppLocal>app.parent.local).files;
                     for (let key of checksumMap.keys()) {
                         if (parentFilesMap.has(key)) {
                             differenceSet.add(key);
                         }
                     }
                     await this.backupFiles(app.parent, differenceSet);
-                    destPath = app.parent.local.path;
+                    destPath = (<AppLocal>app.parent.local).path;
                 } else {
                     destPath = path.join(options.installLibrary, app.id);
                     await this.createDirectory(destPath);
@@ -187,15 +187,15 @@ export class InstallService {
     }
 
     deleteFile(file: string): Promise<string> {
-        return new Promise((resolve, reject)=> {
-            fs.lstat(file, (err, stats)=> {
+        return new Promise((resolve, reject) => {
+            fs.lstat(file, (err, stats) => {
                 if (err) return resolve(path);
                 if (stats.isDirectory()) {
-                    fs.rmdir(file, (err)=> {
+                    fs.rmdir(file, (err) => {
                         resolve(file);
                     });
                 } else {
-                    fs.unlink(file, (err)=> {
+                    fs.unlink(file, (err) => {
                         resolve(file);
                     });
                 }
@@ -212,17 +212,17 @@ export class InstallService {
                 }
             }
         }
-        let files = Array.from(app.local.files.keys()).sort().reverse();
+        let files = Array.from((<AppLocal>app.local).files.keys()).sort().reverse();
         for (let file of files) {
             let oldFile = file;
             if (!path.isAbsolute(file)) {
-                oldFile = path.join(app.local.path, file);
+                oldFile = path.join((<AppLocal>app.local).path, file);
             }
             if (restore) {
                 await this.deleteFile(oldFile);
                 if (app.parent) {
-                    let backFile = path.join(app.local.path, "backup", file);
-                    await new Promise((resolve, reject)=> {
+                    let backFile = path.join((<AppLocal>app.local).path, "backup", file);
+                    await new Promise((resolve, reject) => {
                         fs.rename(backFile, oldFile, resolve);
                     });
                 }
@@ -230,9 +230,9 @@ export class InstallService {
         }
 
         if (app.parent) {
-            await this.deleteFile(path.join(app.local.path, "backup"));
+            await this.deleteFile(path.join((<AppLocal>app.local).path, "backup"));
         } else {
-            await this.deleteFile(app.local.path);
+            await this.deleteFile((<AppLocal>app.local).path);
         }
         app.local = null;
         localStorage.removeItem(app.id);
