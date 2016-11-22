@@ -39,8 +39,8 @@ export class LobbyComponent implements OnInit {
     }
 
     async updateApp() {
-        let updateServer = "http://thief.mycard.moe/update/metalinks/";
-        let checksumServer = "http://thief.mycard.moe/checksums/";
+        let updateServer = "https://thief.mycard.moe/update/metalinks/";
+        let checksumServer = "https://thief.mycard.moe/checksums/";
         for (let app of this.apps.values()) {
             if (app.isInstalled() && app.version != (<AppLocal>app.local).version) {
                 let checksumMap = await this.installService.getChecksumFile(app);
