@@ -36,7 +36,6 @@
           "execute": "東方紅魔郷.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -46,7 +45,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -118,7 +117,6 @@
           "execute": "th06.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -128,7 +126,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -179,7 +177,6 @@
           "execute": "th07.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -189,7 +186,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -240,7 +237,6 @@
           "execute": "th07.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -250,7 +246,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -2246,5 +2242,29 @@
       "darwin": "http://thief.mycard.moe/metalinks/directx.meta4"
     },
     "news": []
+  },
+  {
+    "id": "wine",
+    "name": {
+      "zh-CN": "wine"
+    },
+    "description": {
+      "zh-CN": "wine"
+    },
+    "version": {
+      "win32": "1.06",
+      "darwin": "1.06"
+    },
+    "category": "emulator",
+    "actions": {
+      "darwin": {
+        "main": {
+          "execute": "bin/wine.bin",
+          "args": [],
+          "env": "",
+          "open": ""
+        }
+      }
+    }
   }
 ]

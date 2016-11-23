@@ -139,6 +139,7 @@ export class AppsService {
         }
         args = args.concat(action.args);
         env = Object.assign(env, action.env);
+        console.log(execute, args, env, cwd);
         let handle = child_process.spawn(execute, args, {env: env, cwd: cwd});
 
         handle.stdout.on('data', (data) => {
