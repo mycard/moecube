@@ -761,9 +761,11 @@
       "touhou_pc98"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "np2fmgen"
+      ],
       "darwin": [
-        "wine"
+        "np2fmgen"
       ]
     },
     "references": {
@@ -782,11 +784,12 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th1.hdi",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
-          }
+          },
+          "open":"np2fmgen"
         }
       },
       "darwin": {
@@ -843,7 +846,7 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th1.hdi",
           "args": [],
           "env": {
             "LC_ALL": "ja_JP"
@@ -852,7 +855,7 @@
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th1.hdi",
           "args": [],
           "open": "wine",
           "env": {
@@ -2244,6 +2247,31 @@
     "news": []
   },
   {
+    "id": "np2fmgen",
+    "name": {
+      "zh-CN": "np2fmgen"
+    },
+    "description": {
+      "zh-CN": "np2fmgen"
+    },
+    "version": {
+      "win32": "1.06",
+      "darwin": "1.06"
+    },
+    "category": "emulator",
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "np21nt.exe",
+          "args": [],
+          "env": {}
+        }
+      },
+      "darwin": {
+      }
+    }
+  },
+  {
     "id": "wine",
     "name": {
       "zh-CN": "wine"
@@ -2257,6 +2285,8 @@
     },
     "category": "emulator",
     "actions": {
+      "win32": {
+      },
       "darwin": {
         "main": {
           "execute": "bin/wine.bin",
