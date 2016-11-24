@@ -2029,7 +2029,7 @@
   {
     "id": "np2fmgen",
     "name": {
-      "zh-CN": "np2fmgen"
+      "zh-CN": "Neko Project II"
     },
     "dependencies": {
       "win32": [],
@@ -2078,7 +2078,6 @@
     "category": "emulator",
     "actions": {
       "win32": {
-
       },
       "darwin": {
         "main": {
