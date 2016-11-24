@@ -138,9 +138,10 @@ export class AppsService {
         }
         let execute = path.join(cwd, action.execute);
         if (action.open) {
+            let np2 = <App>action.open;
             let openAction: Action;
-            openAction = <Action>action.open.actions.get('main');
-            let openPath = (<AppLocal>action.open.local).path;
+            openAction = <Action>np2.actions.get('main');
+            let openPath = (<AppLocal>np2.local).path;
             if (action.open.id == 'np2fmgen') {
                 const config_file = path.join((<AppLocal>(<App>action.open).local).path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
@@ -150,12 +151,12 @@ export class AppsService {
                     });
                 });
                 const default_config = {
-                    clk_mult: '32',
+                    clk_mult: '48',
                     DIPswtch: '3e f3 7b',
                     SampleHz: '44100',
                     Latencys: '100',
                     MIX_TYPE: 'true',
-                    windtype: '1'
+                    windtype: '0'
                 };
                 config['NekoProject21'] = Object.assign({}, default_config, config['NekoProject21']);
                 config['NekoProject21']['HDD1FILE'] = path.win32.join((process.platform == 'win32' ? '' : 'Z:'), (<AppLocal>app.local).path, action.execute);
@@ -173,11 +174,13 @@ export class AppsService {
                 let wine = <App>openAction.open;
                 openPath = (<AppLocal>wine.local).path;
                 openAction = <Action>(<App>openAction.open).actions.get("main");
+                cwd = (<AppLocal>np2.local).path;
             }
             args = args.concat(openAction.args);
             args.push(action.execute);
             execute = path.join(openPath, openAction.execute);
             env = Object.assign(env, openAction.env);
+
         }
         args = args.concat(action.args);
         env = Object.assign(env, action.env);
