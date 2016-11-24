@@ -156,7 +156,7 @@ export class AppsService {
                     MIX_TYPE: 'true',
                     windtype: '1'
                 };
-                config['NekoProject21'] = Object.assign({}, config['NekoProject21'], default_config);
+                config['NekoProject21'] = Object.assign({}, default_config, config['NekoProject21']);
                 config['NekoProject21']['HDD1FILE'] = path.win32.join((process.platform == 'win32' ? '' : 'Z:'), (<AppLocal>app.local).path, action.execute);
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
