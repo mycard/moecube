@@ -64,10 +64,6 @@
       "win32": "1.09",
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th06.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th06.meta4"
-    },
     "news": [
       {
         "url": "#",
@@ -134,10 +130,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th06-lang-zh-TW.meta4"
-    },
     "news": []
   },
   {
@@ -194,10 +186,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th07.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th07.meta4"
-    },
     "news": []
   },
   {
@@ -253,10 +241,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th07-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -315,10 +299,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th075.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th075.meta4"
-    },
     "news": []
   },
   {
@@ -375,10 +355,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th075-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -437,10 +413,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th08.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th08.meta4"
-    },
     "news": []
   },
   {
@@ -497,10 +469,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th08-lang-zh-CN.meta4"
     },
     "news": []
   },
@@ -559,10 +527,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th09.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th09.meta4"
-    },
     "news": []
   },
   {
@@ -619,10 +583,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th09-langzh-TW.meta4"
     },
     "news": []
   },
@@ -681,10 +641,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th095.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th095.meta4"
-    },
     "news": []
   },
   {
@@ -742,10 +698,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th095-lang-zh-TW.meta4"
-    },
     "news": []
   },
   {
@@ -770,10 +722,8 @@
     },
     "references": {
       "win32": [
-        "th1-lang-zh-TW"
       ],
       "darwin": [
-        "th1-lang-zh-TW"
       ]
     },
     "author": "ZUN",
@@ -787,89 +737,22 @@
           "execute": "th1.hdi",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           },
-          "open":"np2fmgen"
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th07.exe",
-          "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th1.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th1.meta4"
-    },
-    "news": []
-  },
-  {
-    "id": "th1-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方灵异传 语言包 (繁体中文)"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "category": "module",
-    "parent": "th1",
-    "tags": [
-      "language"
-    ],
-    "dependencies": {
-      "win32": [
-        "th1"
-      ],
-      "darwin": [
-        "wine",
-        "th1"
-      ]
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "locales": [
-      "zh-CN"
-    ],
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th1.hdi",
-          "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen"
         }
       },
       "darwin": {
         "main": {
           "execute": "th1.hdi",
           "args": [],
-          "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
-          }
+          },
+          "open": "np2fmgen"
         }
       }
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th1-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -928,10 +811,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th10.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th10.meta4"
-    },
     "news": []
   },
   {
@@ -988,10 +867,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th10-lang-zh-CN-zh-TW.meta4"
     },
     "news": []
   },
@@ -1050,10 +925,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th105.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th105.meta4"
-    },
     "news": []
   },
   {
@@ -1110,10 +981,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th105-lang-zh-CN.meta4"
     },
     "news": []
   },
@@ -1172,10 +1039,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th11.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th11.meta4"
-    },
     "news": []
   },
   {
@@ -1232,10 +1095,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th11-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -1294,10 +1153,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th12.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th12.meta4"
-    },
     "news": []
   },
   {
@@ -1354,10 +1209,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th12-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -1419,10 +1270,6 @@
     "version": {
       "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th123.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th123.meta4"
     },
     "news": [],
     "network": {
@@ -1491,16 +1338,12 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th123-lang-zh-CN.meta4"
-    },
     "news": []
   },
   {
     "id": "th2",
     "name": {
-      "zh-CN": "东方梦时空"
+      "zh-CN": "东方封魔录"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1510,9 +1353,11 @@
       "touhou_pc98"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "np2fmgen"
+      ],
       "darwin": [
-        "wine"
+        "np2fmgen"
       ]
     },
     "references": {
@@ -1531,37 +1376,30 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th2.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "np2fmgen",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th2.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th2.meta4"
-    },
     "news": []
   },
   {
     "id": "th2-lang-zh-TW",
     "name": {
-      "zh-CN": "东方梦时空 语言包 (繁体中文)"
+      "zh-CN": "东方封魔录 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1576,7 +1414,6 @@
         "th2"
       ],
       "darwin": [
-        "wine",
         "th2"
       ]
     },
@@ -1592,37 +1429,31 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th2_cn.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th2_cn.hdi",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th2-lang-zh-TW.meta4"
     },
     "news": []
   },
   {
     "id": "th3",
     "name": {
-      "zh-CN": "东方封魔录"
+      "zh-CN": "东方梦时空"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1632,9 +1463,11 @@
       "touhou_pc98"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "np2fmgen"
+      ],
       "darwin": [
-        "wine"
+        "np2fmgen"
       ]
     },
     "references": {
@@ -1653,37 +1486,31 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th3.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th3.hdi",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th3.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th3.meta4"
     },
     "news": []
   },
   {
     "id": "th3-lang-zh-TW",
     "name": {
-      "zh-CN": "东方封魔录 语言包 (繁体中文)"
+      "zh-CN": "东方梦时空 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1698,7 +1525,6 @@
         "th3"
       ],
       "darwin": [
-        "wine",
         "th3"
       ]
     },
@@ -1714,30 +1540,24 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th3_cn.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th3_cn.hdi",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th3-lang-zh-TW.meta4"
     },
     "news": []
   },
@@ -1754,17 +1574,19 @@
       "touhou_pc98"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "np2fmgen"
+      ],
       "darwin": [
-        "wine"
+        "np2fmgen"
       ]
     },
     "references": {
       "win32": [
-        "th4-lang-zh_TW"
+        "th4-lang-zh-TW"
       ],
       "darwin": [
-        "th4-lang-zh_TW"
+        "th4-lang-zh-TW"
       ]
     },
     "author": "ZUN",
@@ -1775,35 +1597,29 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th4.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th4.hdi",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th4.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th4.meta4"
     },
     "news": []
   },
   {
-    "id": "th4-lang-zh_TW",
+    "id": "th4-lang-zh-TW",
     "name": {
       "zh-CN": "东方幻想乡 语言包 (繁体中文)"
     },
@@ -1820,7 +1636,6 @@
         "th4"
       ],
       "darwin": [
-        "wine",
         "th4"
       ]
     },
@@ -1836,30 +1651,24 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th4_cn.hdi",
           "args": [],
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th4_cn.hdi",
           "args": [],
-          "open": "wine",
-          "env": {
-            "LC_ALL": "ja_JP"
-          }
+          "open": "np2fmgen",
+          "env": {}
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th4-lang-zh_TW.meta4"
     },
     "news": []
   },
@@ -1876,17 +1685,19 @@
       "touhou_pc98"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": [
+        "np2fmgen"
+      ],
       "darwin": [
-        "wine"
+        "np2fmgen"
       ]
     },
     "references": {
       "win32": [
-        "th5-lang-zh_TW"
+        "th5-lang-zh-TW"
       ],
       "darwin": [
-        "th5-lang-zh_TW"
+        "th5-lang-zh-TW"
       ]
     },
     "author": "ZUN",
@@ -1897,20 +1708,19 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th5.hdi",
           "args": [],
+          "open": "np2fmgen",
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th5.hdi",
           "args": [],
-          "open": "wine",
+          "open": "np2fmgen",
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       }
@@ -1918,14 +1728,10 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th5.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th5.meta4"
-    },
     "news": []
   },
   {
-    "id": "th5-lang-zh_TW",
+    "id": "th5-lang-zh-TW",
     "name": {
       "zh-CN": "东方怪绮谈 语言包 (繁体中文)"
     },
@@ -1942,7 +1748,6 @@
         "th5"
       ],
       "darwin": [
-        "wine",
         "th5"
       ]
     },
@@ -1958,30 +1763,25 @@
     "actions": {
       "win32": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th5_cn.hdi",
           "args": [],
+          "open": "np2fmgen",
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
       "darwin": {
         "main": {
-          "execute": "th07.exe",
+          "execute": "th5_cn.hdi",
           "args": [],
-          "open": "wine",
+          "open": "np2fmgen",
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       }
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/th5-lang-zh_TW.meta4"
     },
     "news": []
   },
@@ -2030,10 +1830,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/ygopro-win32.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/ygopro-osx.meta4"
     },
     "news": [
       {
@@ -2094,10 +1890,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/desmume-win32.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/desmume-darwin.meta4"
-    },
     "news": []
   },
   {
@@ -2146,10 +1938,6 @@
     "version": {
       "darwin": "1.06"
     },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/ghost_trick.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/ghost_trick.meta4"
-    },
     "news": []
   },
   {
@@ -2183,10 +1971,6 @@
     },
     "version": {
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/ghost_trick-lang-zh-CN.meta4"
     },
     "news": []
   },
@@ -2239,10 +2023,6 @@
     "version": {
       "win32": "1.06",
       "darwin": "1.06"
-    },
-    "download": {
-      "win32": "http://thief.mycard.moe/metalinks/directx.meta4",
-      "darwin": "http://thief.mycard.moe/metalinks/directx.meta4"
     },
     "news": []
   },
