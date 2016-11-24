@@ -137,10 +137,12 @@ export class AppsService {
         }
         let execute = path.join(cwd, action.execute);
         if (action.open) {
+            let openAction: Action;
+            openAction = <Action>action.open.actions.get('main');
             if (action.open.id == 'np2fmgen') {
                 const config_file = path.join((<AppLocal>(<App>action.open).local).path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
-                    let config = fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
+                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
                         if (error) return reject(error);
                         resolve(ini.parse(data));
                     });
@@ -156,8 +158,10 @@ export class AppsService {
                         }
                     })
                 });
+                args.push(openAction.execute);
+                args = args.concat(openAction.args);
+                openAction = <Action>(<App>openAction.open).actions.get("main");
             }
-            let openAction = <Action>action.open.actions.get('main');
             args = args.concat(openAction.args);
             args.push(action.execute);
             execute = path.join((<AppLocal>action.open.local).path, openAction.execute);

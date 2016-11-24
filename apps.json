@@ -2031,6 +2031,12 @@
     "name": {
       "zh-CN": "np2fmgen"
     },
+    "dependencies": {
+      "win32": [],
+      "darwin": [
+        "wine"
+      ]
+    },
     "description": {
       "zh-CN": "np2fmgen"
     },
@@ -2048,6 +2054,12 @@
         }
       },
       "darwin": {
+        "main": {
+          "execute": "np21nt.exe",
+          "args": [],
+          "env": {},
+          "open": "wine"
+        }
       }
     }
   },
@@ -2066,13 +2078,13 @@
     "category": "emulator",
     "actions": {
       "win32": {
+
       },
       "darwin": {
         "main": {
           "execute": "bin/wine.bin",
           "args": [],
-          "env": "",
-          "open": ""
+          "env": ""
         }
       }
     }
