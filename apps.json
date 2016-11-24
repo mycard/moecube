@@ -281,7 +281,6 @@
           "execute": "th075.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -291,7 +290,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -338,7 +337,6 @@
           "execute": "th075c.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -348,7 +346,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -395,7 +393,6 @@
           "execute": "th08.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -405,7 +402,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -452,7 +449,6 @@
           "execute": "th08.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -462,7 +458,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -492,10 +488,10 @@
     },
     "references": {
       "win32": [
-        "th09-langzh-TW"
+        "th09-lang-zh-TW"
       ],
       "darwin": [
-        "th09-langzh-TW"
+        "th09-lang-zh-TW"
       ]
     },
     "author": "ZUN",
@@ -509,7 +505,6 @@
           "execute": "th09.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -519,7 +514,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -530,7 +525,7 @@
     "news": []
   },
   {
-    "id": "th09-langzh-TW",
+    "id": "th09-lang-zh-TW",
     "name": {
       "zh-CN": "东方花映冢 (繁体中文)"
     },
@@ -566,7 +561,6 @@
           "execute": "th09c.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -576,7 +570,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -623,7 +617,6 @@
           "execute": "th095.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -633,7 +626,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -680,7 +673,6 @@
           "execute": "th095c.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -690,7 +682,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -793,7 +785,6 @@
           "execute": "th10.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -803,7 +794,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -850,7 +841,6 @@
           "execute": "th10chs.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -860,7 +850,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -907,7 +897,6 @@
           "execute": "th105.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -917,7 +906,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -964,7 +953,6 @@
           "execute": "th105.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -974,7 +962,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -1021,7 +1009,6 @@
           "execute": "th11.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1031,7 +1018,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -1078,7 +1065,6 @@
           "execute": "th11c.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1088,7 +1074,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -1135,7 +1121,6 @@
           "execute": "th12.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1145,7 +1130,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -1192,7 +1177,6 @@
           "execute": "th12c.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1202,7 +1186,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -1252,7 +1236,6 @@
           "execute": "th123.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1262,7 +1245,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "ja_JP.UTF-8"
           }
         }
       }
@@ -1320,7 +1303,6 @@
           "execute": "th123_beta.exe",
           "args": [],
           "env": {
-            "LC_ALL": "ja_JP"
           }
         }
       },
@@ -1330,7 +1312,7 @@
           "args": [],
           "open": "wine",
           "env": {
-            "LC_ALL": "ja_JP"
+            "LANG": "zh_CN.UTF-8"
           }
         }
       }
@@ -2078,13 +2060,12 @@
     "category": "emulator",
     "actions": {
       "win32": {
-
       },
       "darwin": {
         "main": {
           "execute": "bin/wine.bin",
           "args": [],
-          "env": ""
+          "env": {}
         }
       }
     }
