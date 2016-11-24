@@ -9,6 +9,7 @@ import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
+import {platform} from "os";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -146,9 +147,17 @@ export class AppsService {
                         if (error) return reject(error);
                         resolve(ini.parse(data));
                     });
-
                 });
-                config['NekoProject21']['HDD1FILE'] = path.win32.join((<AppLocal>app.local).path, action.execute);
+                const default_config = {
+                    clk_mult: '32',
+                    DIPswtch: '3e f3 7b',
+                    SampleHz: '44100',
+                    Latencys: '100',
+                    MIX_TYPE: 'true',
+                    windtype: '1'
+                };
+                config['NekoProject21'] = Object.assign({}, config['NekoProject21'], default_config);
+                config['NekoProject21']['HDD1FILE'] = path.win32.join((process.platform == 'win32' ? '' : 'Z:'), (<AppLocal>app.local).path, action.execute);
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
