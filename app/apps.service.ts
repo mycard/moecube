@@ -146,7 +146,7 @@ export class AppsService {
                     });
 
                 });
-                config['NekoProject21']['HDD1FILE'] = path.win32.join("Z:", (<AppLocal>app.local).path, action.execute);
+                config['NekoProject21']['HDD1FILE'] = path.win32.join((<AppLocal>app.local).path, action.execute);
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
