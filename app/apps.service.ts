@@ -127,7 +127,9 @@ export class AppsService {
         let args: string[] = [];
         let env = {};
         for (let child of children) {
-            action = child.actions.get('main');
+            if(child.isInstalled()) {
+                action = child.actions.get('main');
+            }
         }
         let execute = path.join(cwd, action.execute);
         if (action.open) {
