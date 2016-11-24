@@ -122,7 +122,7 @@ export class AppsService {
         return children;
     }
 
-    async runApp(app: App, action_name='main') {
+    async runApp(app: App, action_name = 'main') {
         let children = this.findChildren(app);
         let cwd = (<AppLocal>app.local).path;
         let action: Action = <Action>app.actions.get(action_name);
@@ -137,10 +137,26 @@ export class AppsService {
             }
         }
         let execute = path.join(cwd, action.execute);
-        if(app.id == 'th123'){
+        if (app.id == 'th123') {
             let th105 = <App>app.references.get('th105');
-            if(th105.isInstalled()){
-                const config_file = path.join((<AppLocal>app.local).path, 'np21nt.ini');
+            if (th105.isInstalled()) {
+                const config_file = path.join((<AppLocal>app.local).path, 'configex123.ini');
+                let config = await new Promise((resolve, reject) => {
+                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
+                        if (error) return reject(error);
+                        resolve(ini.parse(data));
+                    });
+                });
+                config['th105path'] = {path: (<AppLocal>th105.local).path};
+                await new Promise((resolve, reject) => {
+                    fs.writeFile(config_file, ini.stringify(config), (error) => {
+                        if (error) {
+                            reject(error)
+                        } else {
+                            resolve()
+                        }
+                    })
+                });
             }
         }
 
@@ -166,7 +182,7 @@ export class AppsService {
                     windtype: '0'
                 };
                 config['NekoProject21'] = Object.assign({}, default_config, config['NekoProject21']);
-                config['NekoProject21']['HDD1FILE'] = path.win32.join((process.platform == 'win32' ? '' : 'Z:'), (<AppLocal>app.local).path, action.execute);
+                config['NekoProject21']['HDD1FILE'] = path.win32.join(process.platform == 'win32' ? '' : 'Z:', (<AppLocal>app.local).path, action.execute);
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {

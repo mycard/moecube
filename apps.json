@@ -1416,9 +1416,11 @@
     },
     "references": {
       "win32": [
+        "th105",
         "th123-lang-zh-CN"
       ],
       "darwin": [
+        "th105",
         "th123-lang-zh-CN"
       ]
     },
@@ -2318,7 +2320,9 @@
         "main": {
           "execute": "bin/wine.bin",
           "args": [],
-          "env": {}
+          "env": {
+            "WINEDEBUG": "-all"
+          }
         }
       }
     }
