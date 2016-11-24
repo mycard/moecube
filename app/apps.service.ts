@@ -140,6 +140,7 @@ export class AppsService {
         if (action.open) {
             let openAction: Action;
             openAction = <Action>action.open.actions.get('main');
+            let openPath = (<AppLocal>action.open.local).path;
             if (action.open.id == 'np2fmgen') {
                 const config_file = path.join((<AppLocal>(<App>action.open).local).path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
@@ -169,11 +170,13 @@ export class AppsService {
                 });
                 args.push(openAction.execute);
                 args = args.concat(openAction.args);
+                let wine = <App>openAction.open;
+                openPath = (<AppLocal>wine.local).path;
                 openAction = <Action>(<App>openAction.open).actions.get("main");
             }
             args = args.concat(openAction.args);
             args.push(action.execute);
-            execute = path.join((<AppLocal>action.open.local).path, openAction.execute);
+            execute = path.join(openPath, openAction.execute);
             env = Object.assign(env, openAction.env);
         }
         args = args.concat(action.args);
