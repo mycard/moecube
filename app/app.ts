@@ -20,6 +20,12 @@ export enum Category {
 //     uninstalling,
 //     waiting,
 // }
+export interface Action {
+    execute: string;
+    args: string[];
+    env: {};
+    open?: App
+}
 
 export class AppStatus {
     progress: number;
@@ -42,11 +48,11 @@ export class App {
     homepage: string;
     category: Category;
     parent: App;
-    actions: Map<string,{execute: string, args: string[], env: {}, open: App}>;
+    actions: Map<string,Action>;
     references: Map<string,App>;
     dependencies: Map<string,App>;
     locales: string[];
-    download:  string;           // meta4 url
+    download: string;           // meta4 url
     news: {title: string, url: string, image: string}[];
     network: any;
     tags: string[];
@@ -82,7 +88,7 @@ export class App {
             let set = new Set();
             for (let dependency of this.dependencies.values()) {
                 dependency.findDependencies()
-                    .forEach((value)=> {
+                    .forEach((value) => {
                         set.add(value);
                     });
                 set.add(dependency);

@@ -1,13 +1,14 @@
 import {Injectable, ApplicationRef} from "@angular/core";
 import {Http} from "@angular/http";
-import {App, AppStatus} from "./app";
+import {App, AppStatus, Action} from "./app";
 import {SettingsService} from "./settings.sevices";
+import * as fs from "fs";
 import * as path from "path";
 import * as child_process from "child_process";
 import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
-
+import * as ini from "ini";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -120,23 +121,46 @@ export class AppsService {
         return children;
     }
 
-    runApp(app: App) {
+    async runApp(app: App) {
         let children = this.findChildren(app);
         let cwd = (<AppLocal>app.local).path;
-        let action: any = app.actions.get('main');
+        let action: Action = <Action>app.actions.get('main');
         let args: string[] = [];
         let env = {};
         for (let child of children) {
-            if(child.isInstalled()) {
-                action = child.actions.get('main');
+            if (child.isInstalled()) {
+                let _action = child.actions.get('main');
+                if (_action) {
+                    action = _action
+                }
             }
         }
         let execute = path.join(cwd, action.execute);
         if (action.open) {
-            let openAction = action.open.actions.get('main');
+            if (action.open.id == 'np2fmgen') {
+                const config_file = path.join((<AppLocal>(<App>action.open).local).path, 'np21nt.ini');
+                let config = await new Promise((resolve, reject) => {
+                    let config = fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
+                        if (error) return reject(error);
+                        resolve(ini.parse(data));
+                    });
+
+                });
+                config['NekoProject21']['HDD1FILE'] = path.win32.join("Z:", (<AppLocal>app.local).path, action.execute);
+                await new Promise((resolve, reject) => {
+                    fs.writeFile(config_file, ini.stringify(config), (error) => {
+                        if (error) {
+                            reject(error)
+                        } else {
+                            resolve()
+                        }
+                    })
+                });
+            }
+            let openAction = <Action>action.open.actions.get('main');
             args = args.concat(openAction.args);
             args.push(action.execute);
-            execute = path.join(action.open.local.path, openAction.execute);
+            execute = path.join((<AppLocal>action.open.local).path, openAction.execute);
             env = Object.assign(env, openAction.env);
         }
         args = args.concat(action.args);
