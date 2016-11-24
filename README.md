@@ -31,5 +31,5 @@ unzip -o aria2-1.28.0-win-32bit-build1.zip aria2-1.28.0-win-32bit-build1/aria2c.
 mv aria2-1.28.0-win-32bit-build1/aria2c.exe bin
 rm -rf aria2-1.28.0-win-32bit-build1 aria2-1.27.1-win-32bit-build1.zip
 curl -L 'http://downloads.sourceforge.net/project/msys2/REPOS/MSYS2/i686/bsdtar-3.2.1-1-i686.pkg.tar.xz' | tar --strip-components=2 -C bin -Jxf - usr/bin/bsdtar.exe
-curl -L 'http://downloads.sourceforge.net/project/msys2/Base/i686/msys2-base-i686-20161025.tar.xz' | tar --strip-components=3 -C bin -Jxf - msys32/usr/bin/msys-2.0.dll msys32/usr/bin/msys-bz2-1.dll msys32/usr/bin/msys-gcc_s-1.dll msys32/usr/bin/msys-iconv-2.dll msys32/usr/bin/msys-lzma-5.dll msys32/usr/bin/msys-lzo2-2.dll msys32/usr/bin/msys-nettle-6.dll msys32/usr/bin/msys-xml2-2.dll msys32/usr/bin/msys-z.dll
+curl -L 'http://downloads.sourceforge.net/project/msys2/Base/i686/msys2-base-i686-20161025.tar.xz' | tar --strip-components=3 -C bin -Jxf - msys32/usr/bin/msys-2.0.dll msys32/usr/bin/msys-bz2-1.dll msys32/usr/bin/msys-gcc_s-1.dll msys32/usr/bin/msys-iconv-2.dll msys32/usr/bin/msys-lzma-5.dll msys32/usr/bin/msys-lzo2-2.dll msys32/usr/bin/msys-nettle-6.dll msys32/usr/bin/msys-xml2-2.dll msys32/usr/bin/msys-z.dll msys32/usr/bin/sha256sum.exe
 ```

@@ -13,7 +13,7 @@
           value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
 <div *ngIf="currentApp.status.status==='ready' && (currentApp.id != 'ygopro')">
     <button (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行</button>
-    <button type="button" data-toggle="modal" data-target="#settings-modal" class="btn btn-secondary">设置</button>
+    <button *ngIf="currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">设置</button>
     <!--<button (click)="appsService.browse(currentApp)" type="button" class="btn btn-secondary">游览本地文件</button>-->
 
     <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
@@ -119,51 +119,51 @@
     </button>
 </div>
 
-<div class="modal fade" id="settings-modal" tabindex="-1">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">{{'settings'|translate}}</h4>
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#general"> {{'general'|translate}} </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#updates"> {{'updates'|translate}} </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#local-files"> {{'local files'|translate}} </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-body">
-                <div class="tab-content">
-                    <div id="general" role="tabpanel" class="tab-pane fade active">
+<!--<div class="modal fade" id="settings-modal" tabindex="-1">-->
+    <!--<div class="modal-dialog" role="document">-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                    <!--<span aria-hidden="true">&times;</span>-->
+                <!--</button>-->
+                <!--<h4 class="modal-title">{{'settings'|translate}}</h4>-->
+                <!--<ul class="nav nav-tabs">-->
+                    <!--<li class="nav-item">-->
+                        <!--<a class="nav-link active" data-toggle="tab" href="#general"> {{'general'|translate}} </a>-->
+                    <!--</li>-->
+                    <!--<li class="nav-item">-->
+                        <!--<a class="nav-link" data-toggle="tab" href="#updates"> {{'updates'|translate}} </a>-->
+                    <!--</li>-->
+                    <!--<li class="nav-item">-->
+                        <!--<a class="nav-link" data-toggle="tab" href="#local-files"> {{'local files'|translate}} </a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="modal-body">-->
+                <!--<div class="tab-content">-->
+                    <!--<div id="general" role="tabpanel" class="tab-pane fade active">-->
 
-                    </div>
-                    <div id="updates" role="tabpanel" class="tab-pane fade">
+                    <!--</div>-->
+                    <!--<div id="updates" role="tabpanel" class="tab-pane fade">-->
 
-                    </div>
-                    <div id="local-files" role="tabpanel" class="tab-pane fade">
-                        <div class="list-inline">
-                            <button type="button" [disabled]="!currentApp.isInstalled()" (click)="uninstall()">
-                                {{'uninstall'|translate}}
-                            </button>
-                            <i *ngIf="uninstalling" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
+                    <!--</div>-->
+                    <!--<div id="local-files" role="tabpanel" class="tab-pane fade">-->
+                        <!--<div class="list-inline">-->
+                            <!--<button type="button" [disabled]="!currentApp.isInstalled()" (click)="uninstall()">-->
+                                <!--{{'uninstall'|translate}}-->
+                            <!--</button>-->
+                            <!--<i *ngIf="uninstalling" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>-->
+                            <!--<span class="sr-only">Loading...</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div>-->
 
-            </div>
-        </div>
-    </div>
-</div><!-- Modal -->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>&lt;!&ndash; Modal &ndash;&gt;-->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
      *ngIf="installConfig">
     <div class="modal-dialog" role="document">

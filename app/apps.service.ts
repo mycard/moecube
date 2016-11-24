@@ -122,21 +122,28 @@ export class AppsService {
         return children;
     }
 
-    async runApp(app: App) {
+    async runApp(app: App, action_name='main') {
         let children = this.findChildren(app);
         let cwd = (<AppLocal>app.local).path;
-        let action: Action = <Action>app.actions.get('main');
+        let action: Action = <Action>app.actions.get(action_name);
         let args: string[] = [];
         let env = {};
         for (let child of children) {
             if (child.isInstalled()) {
-                let _action = child.actions.get('main');
+                let _action = child.actions.get(action_name);
                 if (_action) {
                     action = _action
                 }
             }
         }
         let execute = path.join(cwd, action.execute);
+        if(app.id == 'th123'){
+            let th105 = <App>app.references.get('th105');
+            if(th105.isInstalled()){
+                const config_file = path.join((<AppLocal>app.local).path, 'np21nt.ini');
+            }
+        }
+
         if (action.open) {
             let np2 = <App>action.open;
             let openAction: Action;
@@ -173,14 +180,13 @@ export class AppsService {
                 args = args.concat(openAction.args);
                 let wine = <App>openAction.open;
                 openPath = (<AppLocal>wine.local).path;
-                openAction = <Action>(<App>openAction.open).actions.get("main");
+                openAction = <Action>(<App>openAction.open).actions.get('main');
                 cwd = (<AppLocal>np2.local).path;
             }
             args = args.concat(openAction.args);
             args.push(action.execute);
             execute = path.join(openPath, openAction.execute);
             env = Object.assign(env, openAction.env);
-
         }
         args = args.concat(action.args);
         env = Object.assign(env, action.env);

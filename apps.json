@@ -37,6 +37,12 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
@@ -47,18 +53,16 @@
           "env": {
             "LANG": "ja_JP.UTF-8"
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
         }
       }
-    },
-    "network": {
-      "protocol": "maotama",
-      "port": 10800,
-      "servers": [
-        {
-          "id": "wudizhanche",
-          "url": "wss://wudizhanche.mycard.moe:10800"
-        }
-      ]
     },
     "version": {
       "win32": "1.09",
@@ -114,11 +118,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th06.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -170,11 +188,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -226,11 +258,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th07.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -282,11 +328,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "config.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th075.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "config.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -338,6 +398,12 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "configCN.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
@@ -348,10 +414,19 @@
           "env": {
             "LANG": "zh_CN.UTF-8"
           }
+        },
+        "custom": {
+          "execute": "configCN.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
         }
       }
     },
     "version": {
+      "win32": "1.06",
       "darwin": "1.06"
     },
     "news": []
@@ -394,11 +469,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th08.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -450,11 +539,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th08.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -506,11 +609,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th09.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -562,11 +679,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th09c.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -618,11 +749,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th095.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -674,6 +819,12 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
@@ -684,62 +835,14 @@
           "env": {
             "LANG": "zh_CN.UTF-8"
           }
-        }
-      }
-    },
-    "version": {
-      "darwin": "1.06"
-    },
-    "news": []
-  },
-  {
-    "id": "th1",
-    "name": {
-      "zh-CN": "东方灵异传"
-    },
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "category": "game",
-    "tags": [
-      "touhou_pc98"
-    ],
-    "dependencies": {
-      "win32": [
-        "np2fmgen"
-      ],
-      "darwin": [
-        "np2fmgen"
-      ]
-    },
-    "references": {
-      "win32": [
-      ],
-      "darwin": [
-      ]
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "locales": [
-      "zh-CN"
-    ],
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "th1.hdi",
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
           "args": [],
+          "open": "wine",
           "env": {
-          },
-          "open": "np2fmgen"
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "th1.hdi",
-          "args": [],
-          "env": {
-          },
-          "open": "np2fmgen"
+            "LANG": "zh_CN.UTF-8"
+          }
         }
       }
     },
@@ -786,11 +889,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th10.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -842,11 +959,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom_chs.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th10chs.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom_chs.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -914,7 +1045,17 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "network": {
+      "protocol": "maotama",
+      "port": 10800,
+      "servers": [
+        {
+          "id": "tiramisu",
+          "url": "wss://wudizhanche.mycard.moe:10800/"
+        }
+      ]
+    }
   },
   {
     "id": "th105-lang-zh-CN",
@@ -1010,11 +1151,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th11.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1066,11 +1221,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom_c.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th11c.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom_c.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1122,11 +1291,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th12.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "ja_JP.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1178,11 +1361,25 @@
           "args": [],
           "env": {
           }
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
+          "args": [],
+          "env": {
+          }
         }
       },
       "darwin": {
         "main": {
           "execute": "th12c.exe",
+          "args": [],
+          "open": "wine",
+          "env": {
+            "LANG": "zh_CN.UTF-8"
+          }
+        },
+        "custom": {
+          "execute": "custom_cn.exe",
           "args": [],
           "open": "wine",
           "env": {
@@ -1314,6 +1511,62 @@
           "env": {
             "LANG": "zh_CN.UTF-8"
           }
+        }
+      }
+    },
+    "version": {
+      "darwin": "1.06"
+    },
+    "news": []
+  },
+  {
+    "id": "th1",
+    "name": {
+      "zh-CN": "东方灵异传"
+    },
+    "description": {
+      "zh-CN": "fxt desc"
+    },
+    "category": "game",
+    "tags": [
+      "touhou_pc98"
+    ],
+    "dependencies": {
+      "win32": [
+        "np2fmgen"
+      ],
+      "darwin": [
+        "np2fmgen"
+      ]
+    },
+    "references": {
+      "win32": [
+      ],
+      "darwin": [
+      ]
+    },
+    "author": "ZUN",
+    "homepage": "http://www.myacg.cc",
+    "locales": [
+      "zh-CN"
+    ],
+    "actions": {
+      "win32": {
+        "main": {
+          "execute": "th1.hdi",
+          "args": [],
+          "env": {
+          },
+          "open": "np2fmgen"
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "th1.hdi",
+          "args": [],
+          "env": {
+          },
+          "open": "np2fmgen"
         }
       }
     },

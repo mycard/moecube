@@ -42,7 +42,7 @@ export class AppDetailComponent implements OnInit {
     }
 
     get libraries(): string[] {
-        return this.settingsService.getLibraries().map((item)=>item.path);
+        return this.settingsService.getLibraries().map((item) => item.path);
     }
 
     get news() {
@@ -97,7 +97,7 @@ export class AppDetailComponent implements OnInit {
         let options = this.installConfig;
 
         let dependencies = currentApp.findDependencies();
-        let apps = dependencies.concat(currentApp).filter((app)=>!app.isInstalled());
+        let apps = dependencies.concat(currentApp).filter((app) => !app.isInstalled());
 
         for (let reference of options.references) {
             if (reference.install) {
@@ -110,24 +110,24 @@ export class AppDetailComponent implements OnInit {
         try {
             let downloadApps = await this.downloadService.addUris(apps, downloadPath);
             this.downloadService.getProgress(currentApp)
-                .subscribe((progress)=> {
+                .subscribe((progress) => {
                         currentApp.status.status = "downloading";
                         currentApp.status.progress = progress.progress;
                         currentApp.status.total = progress.total;
                         this.ref.detectChanges();
                     },
-                    (error)=> {
+                    (error) => {
                     },
-                    ()=> {
+                    () => {
                         // 避免安装过快
                         if (currentApp.status.status === "downloading") {
                             currentApp.status.status = "waiting";
                             this.ref.detectChanges();
                         }
                     });
-            await Promise.all(downloadApps.map((app)=> {
+            await Promise.all(downloadApps.map((app) => {
                 return this.downloadService.getComplete(app)
-                    .then((completeApp: App)=> {
+                    .then((completeApp: App) => {
                         return this.installService.add(completeApp, options);
                     });
             }));
@@ -150,6 +150,10 @@ export class AppDetailComponent implements OnInit {
 
     runApp(app: App) {
         this.appsService.runApp(app);
+    }
+
+    custom(app: App) {
+        this.appsService.runApp(app, 'custom');
     }
 
     copy(text) {
