@@ -65,6 +65,10 @@ export class App {
         return !!this.local;
     }
 
+    runable() {
+        return [Category.game].includes(this.category);
+    }
+
     constructor(app) {
         this.id = app.id;
         this.name = app.name;

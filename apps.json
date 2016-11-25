@@ -69,22 +69,13 @@
       "darwin": "1.06"
     },
     "news": [
-      {
-        "url": "#",
-        "title": "红魔乡新闻",
-        "text": "周刊照片杂志（写真週刊誌）「FLASH」的吉祥物「写写丸」（しゃしゃまる）。该杂志的记者也常以「写写丸」的名义进行体验取材、突击取材等。"
-      },
-      {
-        "url": "#",
-        "title": "红魔乡新闻2"
-      }
     ],
     "conference": "touhou"
   },
   {
     "id": "th06-lang-zh-TW",
     "name": {
-      "zh-CN": "东方红魔乡 语言包(繁体中文)"
+      "zh-CN": "东方红魔乡 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -225,7 +216,7 @@
   {
     "id": "th07-lang-zh-TW",
     "name": {
-      "zh-CN": "东方妖妖梦 语言包(繁体中文)"
+      "zh-CN": "东方妖妖梦 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -366,7 +357,7 @@
   {
     "id": "th075-lang-zh-TW",
     "name": {
-      "zh-CN": "东方萃梦想 语言包(繁体中文)"
+      "zh-CN": "东方萃梦想 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -508,7 +499,7 @@
   {
     "id": "th08-lang-zh-CN",
     "name": {
-      "zh-CN": "东方永夜抄 语言包(简体中文)"
+      "zh-CN": "东方永夜抄 语言包 (简体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -649,7 +640,7 @@
   {
     "id": "th09-lang-zh-TW",
     "name": {
-      "zh-CN": "东方花映冢 (繁体中文)"
+      "zh-CN": "东方花映冢 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -790,7 +781,7 @@
   {
     "id": "th095-lang-zh-TW",
     "name": {
-      "zh-CN": "东方文花帖 (繁体中文)"
+      "zh-CN": "东方文花帖 语言包 (繁体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -931,7 +922,7 @@
   {
     "id": "th10-lang-zh-CN-zh-TW",
     "name": {
-      "zh-CN": "东方风神录 语言包 (简体中文, 繁体中文)"
+      "zh-CN": "东方风神录 语言包 (简体中文)"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -2206,7 +2197,7 @@
   {
     "id": "ghost_trick-lang-zh-CN",
     "name": {
-      "zh-CN": "幽灵诡计 语言包(简体中文)"
+      "zh-CN": "幽灵诡计 语言包 (简体中文)"
     },
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."

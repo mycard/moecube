@@ -17,6 +17,10 @@ progress {
     width: 100%;
 }
 
+.dependency {
+    margin-right: 0.8em;
+}
+
 #news h3 {
     font-size: 1.5rem;
 }
