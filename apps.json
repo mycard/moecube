@@ -78,7 +78,8 @@
         "url": "#",
         "title": "红魔乡新闻2"
       }
-    ]
+    ],
+    "conference": "touhou"
   },
   {
     "id": "th06-lang-zh-TW",
@@ -218,7 +219,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th07-lang-zh-TW",
@@ -358,7 +360,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th075-lang-zh-TW",
@@ -499,7 +502,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th08-lang-zh-CN",
@@ -639,7 +643,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th09-lang-zh-TW",
@@ -779,7 +784,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th095-lang-zh-TW",
@@ -919,7 +925,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th10-lang-zh-CN-zh-TW",
@@ -1055,7 +1062,8 @@
           "url": "wss://wudizhanche.mycard.moe:10800/"
         }
       ]
-    }
+    },
+    "conference": "th105"
   },
   {
     "id": "th105-lang-zh-CN",
@@ -1181,7 +1189,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th11-lang-zh-TW",
@@ -1321,7 +1330,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou"
   },
   {
     "id": "th12-lang-zh-TW",
@@ -1463,7 +1473,8 @@
           "url": "wss://wudizhanche.mycard.moe:10800/"
         }
       ]
-    }
+    },
+    "conference": "th123"
   },
   {
     "id": "th123-lang-zh-CN",
@@ -1575,7 +1586,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou-pc98"
   },
   {
     "id": "th2",
@@ -1631,7 +1643,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou-pc98"
   },
   {
     "id": "th2-lang-zh-TW",
@@ -1742,7 +1755,8 @@
       "win32": "1.06",
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou-pc98"
   },
   {
     "id": "th3-lang-zh-TW",
@@ -1853,7 +1867,8 @@
       "win32": "1.06",
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou-pc98"
   },
   {
     "id": "th4-lang-zh-TW",
@@ -1965,7 +1980,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "touhou-pc98"
   },
   {
     "id": "th5-lang-zh-TW",
@@ -2081,7 +2097,8 @@
         "title": "News Title2",
         "text": "聚集的祈愿将成为新生的闪耀之星，化作光芒闪耀的道路吧！"
       }
-    ]
+    ],
+    "conference": "ygopro_china_north"
   },
   {
     "id": "desmume",
@@ -2137,7 +2154,7 @@
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
     },
-    "category": "emulator",
+    "category": "game",
     "tags": [
       "yugioh"
     ],
@@ -2175,7 +2192,8 @@
     "version": {
       "darwin": "1.06"
     },
-    "news": []
+    "news": [],
+    "conference": "ds"
   },
   {
     "id": "ghost_trick-lang-zh-CN",
