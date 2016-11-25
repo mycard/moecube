@@ -75,13 +75,6 @@
 
 
 <div *ngIf="currentApp.isInstalled()">
-    <h2>本地文件</h2>
-    <button (click)="appsService.browse(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
-    <button type="button" class="btn btn-secondary">校验完整性</button>
-    <button (click)="uninstall(currentApp)" type="button" class="btn btn-secondary">
-        {{'uninstall'|translate}}
-    </button>
-
     <div *ngIf="mods">
         <h2>{{'mods'|translate}}</h2>
         <table class="table table-striped">
@@ -104,8 +97,8 @@
                             class="btn btn-primary btn-sm">安装
                     </button>
                     <progress *ngIf="mod.status.status==='downloading'"
-                            class="progress progress-striped progress-animated"
-                            value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
+                              class="progress progress-striped progress-animated"
+                              value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
                     <div *ngIf="mod.status.status==='waiting'">
                         等待安装...
                     </div>
@@ -114,6 +107,12 @@
             </tbody>
         </table>
     </div>
+    <h2>本地文件</h2>
+    <button (click)="appsService.browse(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
+    <button type="button" class="btn btn-secondary">校验完整性</button>
+    <button (click)="uninstall(currentApp)" type="button" class="btn btn-secondary">
+        {{'uninstall'|translate}}
+    </button>
 </div>
 
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
