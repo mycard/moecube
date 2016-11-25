@@ -97,12 +97,16 @@ export class AppDetailComponent implements OnInit {
         let options = this.installConfig;
 
         let dependencies = currentApp.findDependencies();
-        let apps = dependencies.concat(currentApp).filter((app) => !app.isInstalled());
+        let apps = dependencies.concat(currentApp).filter((app) => {
+            return !app.isInstalled()
+        });
 
         for (let reference of options.references) {
-            if (reference.install) {
+            if (reference.install && !reference.app.isInstalled()) {
                 apps.push(reference.app);
-                apps.push(...reference.app.findDependencies())
+                apps.push(...reference.app.findDependencies().filter((app) => {
+                    return !app.isInstalled()
+                }))
             }
         }
 
