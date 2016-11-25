@@ -113,36 +113,44 @@ export class AppDetailComponent implements OnInit {
         let downloadPath = path.join(this.installConfig.installLibrary, "downloading");
         try {
             let downloadApps = await this.downloadService.addUris(apps, downloadPath);
-            this.downloadService.getProgress(currentApp)
-                .subscribe((progress) => {
-                        currentApp.status.status = "downloading";
-                        currentApp.status.progress = progress.progress;
-                        currentApp.status.total = progress.total;
-                        this.ref.detectChanges();
-                    },
-                    (error) => {
-                    },
-                    () => {
-                        // 避免安装过快
-                        if (currentApp.status.status === "downloading") {
-                            currentApp.status.status = "waiting";
+            for(let app of apps) {
+                this.downloadService.getProgress(app)
+                    .subscribe((progress) => {
+                            app.status.status = "downloading";
+                            app.status.progress = progress.progress;
+                            app.status.total = progress.total;
                             this.ref.detectChanges();
-                        }
-                    });
+                        },
+                        (error) => {
+                        },
+                        () => {
+                            // 避免安装过快
+                            if (app.status.status === "downloading") {
+                                app.status.status = "waiting";
+                                this.ref.detectChanges();
+                            }
+                        });
+
+            }
             await Promise.all(downloadApps.map((app) => {
                 return this.downloadService.getComplete(app)
                     .then((completeApp: App) => {
                         return this.installService.add(completeApp, options);
                     });
             }));
+            for(let app of apps){
+                new Promise(async (resolve,reject)=>{
+                    await this.installService.getComplete(app);
+                    app.status.status='ready';
+                    resolve();
+                })
+            }
             await this.installService.getComplete(currentApp);
             currentApp.status.status = "ready";
             this.ref.detectChanges();
         } catch (e) {
             new Notification(currentApp.name, {body: "下载失败"});
         }
-
-
     }
 
     selectDir() {
