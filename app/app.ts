@@ -59,6 +59,7 @@ export class App {
     version: string;
     local: AppLocal | null;
     status: AppStatus;
+    conference: string | undefined;
 
     isInstalled(): boolean {
         return !!this.local;
@@ -81,6 +82,7 @@ export class App {
         this.network = app.network;
         this.tags = app.tags;
         this.version = app.version;
+        this.conference = app.conference;
     }
 
     findDependencies(): App[] {

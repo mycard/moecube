@@ -1,16 +1,18 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ElementRef, ViewChild} from "@angular/core";
 import {AppsService} from "./apps.service";
 import {LoginService, User} from "./login.service";
 import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
-import {Http} from "@angular/http";
+import {Http, URLSearchParams} from "@angular/http";
 import * as path from 'path';
 import {InstallConfig} from "./install-config";
 import {AppLocal} from "./app-local";
+import {UrlResolver} from "@angular/compiler";
+import WebViewElement = Electron.WebViewElement;
 
 @Component({
     selector: 'lobby',
@@ -19,23 +21,38 @@ import {AppLocal} from "./app-local";
 
 })
 export class LobbyComponent implements OnInit {
-    candy_url: string;
+    @ViewChild('candy')
+    candy?: ElementRef;
+    candy_url: URL;
     currentApp: App;
     private apps: Map<string,App>;
 
     constructor(private appsService: AppsService, private loginService: LoginService, private downloadService: DownloadService,
                 private installService: InstallService, private http: Http) {
-        this.candy_url = './candy/index.html?jid=' + this.loginService.user.username + '@mycard.moe&password=' + this.loginService.user.external_id + '&nickname=' + this.loginService.user.username + '&autojoin=ygopro_china_north@conference.mycard.moe'
     }
 
-    ngOnInit() {
-        this.appsService.loadApps()
-            .then((apps) => {
-                this.apps = apps;
-                this.currentApp = <App>this.apps.get("th06");
-                this.updateApp();
-            })
+    async ngOnInit() {
+        this.apps = await this.appsService.loadApps();
+        this.chooseApp(Array.from(this.apps.values()).find(app => app.isInstalled()) || <App>this.apps.get("ygopro"));
 
+        // 初始化聊天室
+        let url = new URL('candy/index.html', location.href);
+        let params: URLSearchParams = url['searchParams']; // TypeScrpt 缺了 url.searchParams 的定义
+        params.set('jid', this.loginService.user.username + '@mycard.moe');
+        params.set('password', this.loginService.user.external_id.toString());
+        params.set('nickname', this.loginService.user.username);
+        params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
+        this.candy_url = url;
+
+        // 尝试更新应用
+        this.updateApp();
+    }
+
+    chooseApp(app: App) {
+        this.currentApp = app;
+        if (this.candy && this.currentApp.conference) {
+            (<WebViewElement>this.candy.nativeElement).send('join', this.currentApp.conference + '@conference.mycard.moe');
+        }
     }
 
     async updateApp() {
@@ -99,9 +116,6 @@ export class LobbyComponent implements OnInit {
         }
     }
 
-    chooseApp(app: App) {
-        this.currentApp = app;
-    }
 
     get grouped_apps() {
         let contains = ["game", "music", "book"].map((value) => Category[value]);
@@ -123,5 +137,3 @@ export class LobbyComponent implements OnInit {
         return result
     }
 }
-
-
