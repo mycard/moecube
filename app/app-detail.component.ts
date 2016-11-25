@@ -32,11 +32,11 @@ export class AppDetailComponent implements OnInit {
     ngOnInit() {
     }
 
-    updateInstallConfig() {
-        this.installConfig = new InstallConfig(this.currentApp);
+    updateInstallConfig(app: App) {
+        this.installConfig = new InstallConfig(app);
         this.installConfig.installLibrary = this.settingsService.getDefaultLibrary().path;
         this.installConfig.references = [];
-        for (let reference of this.currentApp.references.values()) {
+        for (let reference of app.references.values()) {
             this.installConfig.references.push(new InstallConfig(reference))
         }
     }
@@ -49,71 +49,47 @@ export class AppDetailComponent implements OnInit {
         return this.currentApp.news;
     }
 
-    get mods() {
-        // let contains = ["optional", "language", "emulator"];
-        //
-        // let currentApp = this.appsService.currentApp;
-        // if (currentApp) {
-        //     if (currentApp.references[process.platform] && currentApp.references[process.platform].length > 0) {
-        //         let refs = currentApp.references[process.platform];
-        //         refs = refs.filter((ref)=> {
-        //             return contains.includes(ref.type);
-        //         });
-        //         refs = refs.map((ref)=> {
-        //             let tmp = Object.create(ref);
-        //             switch (tmp.type) {
-        //                 case "optional":
-        //                     tmp.type = "选项";
-        //                     break;
-        //                 case "language":
-        //                     tmp.type = "语言";
-        //                     break;
-        //                 default:
-        //                     break;
-        //             }
-        //             //console.log(tmp.type);
-        //             return tmp;
-        //         });
-        //         return refs;
-
-        //return this.currentApp.references[process.platform];
-        // }
-        // }
-        return [];
+    get mods(): App[] {
+        return this.appsService.findChildren(this.currentApp);
     }
 
+    async installMod(mod: App) {
+        this.updateInstallConfig(mod);
+        await this.install(mod);
+
+    }
 
     async uninstall(app: App) {
         if (confirm("确认删除？")) {
             await this.installService.uninstall(app);
-            this.currentApp.status.status = "init";
+            app.status.status = "init";
         }
     }
 
-    async install() {
+    async install(targetApp: App) {
         $('#install-modal').modal('hide');
 
-        let currentApp = this.currentApp;
         let options = this.installConfig;
 
-        let dependencies = currentApp.findDependencies();
-        let apps = dependencies.concat(currentApp).filter((app) => {
+        let dependencies = targetApp.findDependencies();
+        let apps = dependencies.concat(targetApp).filter((app) => {
             return !app.isInstalled()
         });
-
-        for (let reference of options.references) {
-            if (reference.install && !reference.app.isInstalled()) {
-                apps.push(reference.app);
-                apps.push(...reference.app.findDependencies().filter((app) => {
-                    return !app.isInstalled()
-                }))
+        if (options) {
+            for (let reference of options.references) {
+                if (reference.install && !reference.app.isInstalled()) {
+                    apps.push(reference.app);
+                    apps.push(...reference.app.findDependencies().filter((app) => {
+                        return !app.isInstalled()
+                    }))
+                }
             }
         }
 
         let downloadPath = path.join(this.installConfig.installLibrary, "downloading");
         try {
             let downloadApps = await this.downloadService.addUris(apps, downloadPath);
-            for(let app of apps) {
+            for (let app of apps) {
                 this.downloadService.getProgress(app)
                     .subscribe((progress) => {
                             app.status.status = "downloading";
@@ -138,18 +114,18 @@ export class AppDetailComponent implements OnInit {
                         return this.installService.add(completeApp, options);
                     });
             }));
-            for(let app of apps){
-                new Promise(async (resolve,reject)=>{
+            for (let app of apps) {
+                new Promise(async(resolve, reject) => {
                     await this.installService.getComplete(app);
-                    app.status.status='ready';
+                    app.status.status = 'ready';
                     resolve();
                 })
             }
-            await this.installService.getComplete(currentApp);
-            currentApp.status.status = "ready";
+            await this.installService.getComplete(targetApp);
+            targetApp.status.status = "ready";
             this.ref.detectChanges();
         } catch (e) {
-            new Notification(currentApp.name, {body: "下载失败"});
+            new Notification(targetApp.name, {body: "下载失败"});
         }
     }
 
