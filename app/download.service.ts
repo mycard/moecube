@@ -107,7 +107,7 @@ export class DownloadService {
             return app;
         } else {
             let meta4link = `${this.baseURL}${id}.meta4`;
-            if (id === "ygopro") {
+            if (["ygopro", 'desmume'].includes(id)) {
                 meta4link = `${this.baseURL}${id}-${process.platform}.meta4`
             }
             let response = await this.http.get(meta4link).toPromise();

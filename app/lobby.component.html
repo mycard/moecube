@@ -25,6 +25,12 @@
                 <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
             </li>
         </ul>
+        <span *ngIf="grouped_apps.runtime_installed">已安装的运行库</span>
+        <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.runtime_installed" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
     </div>
     <app-detail *ngIf="currentApp" [currentApp]="currentApp"></app-detail>
     <roster></roster>

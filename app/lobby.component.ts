@@ -119,20 +119,27 @@ export class LobbyComponent implements OnInit {
 
     get grouped_apps() {
         let contains = ["game", "music", "book"].map((value) => Category[value]);
-        let result = {};
+        let result = {runtime: []};
         for (let app of this.apps.values()) {
+            let tag;
             if (contains.includes(app.category)) {
-                let tag;
                 if (app.isInstalled()) {
                     tag = 'installed';
                 } else {
                     tag = app.tags[0];
                 }
-                if (!result[tag]) {
-                    result[tag] = []
+            } else {
+                if (app.isInstalled()) {
+                    tag = 'runtime_installed';
+                } else {
+                    tag = 'runtime';
                 }
-                result[tag].push(app)
+
             }
+            if (!result[tag]) {
+                result[tag] = []
+            }
+            result[tag].push(app)
         }
         return result
     }

@@ -122,7 +122,7 @@ export class InstallService {
 
     async getChecksumFile(app: App): Promise<Map<string,string> > {
         let checksumUrl = this.checksumUri + app.id;
-        if (app.id === "ygopro") {
+        if (["ygopro", 'desmume'].includes(app.id)) {
             checksumUrl = this.checksumUri + app.id + "-" + process.platform;
         }
         let checksumMap: Map<string,string> = await this.http.get(checksumUrl)
@@ -148,7 +148,7 @@ export class InstallService {
                 let options = <InstallConfig>this.installQueue.get(app);
                 let checksumMap = await this.getChecksumFile(app);
                 let packagePath = path.join(options.installLibrary, 'downloading', `${app.id}.tar.xz`);
-                if (app.id === "ygopro") {
+                if (["ygopro", 'desmume'].includes(app.id)) {
                     packagePath = path.join(options.installLibrary, 'downloading', `${app.id}-${process.platform}.tar.xz`);
                 }
                 let destPath: string;

@@ -2159,12 +2159,20 @@
       "yugioh"
     ],
     "dependencies": {
-      "win32": [],
-      "darwin": []
+      "win32": [
+        "desmume"
+      ],
+      "darwin": [
+        "desmume"
+      ]
     },
     "references": {
-      "win32": [],
-      "darwin": []
+      "win32": [
+        "ghost_trick-lang-zh-CN"
+      ],
+      "darwin": [
+        "ghost_trick-lang-zh-CN"
+      ]
     },
     "author": "Fluorohydride",
     "homepage": "https://github.com/Fluorohydride/ygopro",
@@ -2208,21 +2216,42 @@
       "yugioh"
     ],
     "dependencies": {
-      "win32": [],
-      "darwin": []
+      "win32": [
+        "desmume",
+        "ghost_trick"
+      ],
+      "darwin": [
+        "desmume",
+        "ghost_trick"
+      ]
     },
     "references": {
       "win32": [],
       "darwin": []
     },
+    "parent": "ghost_trick",
     "author": "Fluorohydride",
     "homepage": "https://github.com/Fluorohydride/ygopro",
     "locales": [
       "zh-CN"
     ],
     "actions": {
-      "win32": {},
-      "darwin": {}
+      "win32": {
+        "main": {
+          "execute": "5017 - Ghost Trick (J).nds",
+          "args": [],
+          "env": {},
+          "open": "desmume"
+        }
+      },
+      "darwin": {
+        "main": {
+          "execute": "5017 - Ghost Trick (J).nds",
+          "args": [],
+          "env": {},
+          "open": "desmume"
+        }
+      }
     },
     "version": {
       "darwin": "1.06"
