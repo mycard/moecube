@@ -90,22 +90,28 @@ export class AppDetailComponent implements OnInit {
         try {
             let downloadApps = await this.downloadService.addUris(apps, downloadPath);
             for (let app of apps) {
-                this.downloadService.getProgress(app)
-                    .subscribe((progress) => {
-                            app.status.status = "downloading";
-                            app.status.progress = progress.progress;
-                            app.status.total = progress.total;
-                            this.ref.detectChanges();
-                        },
-                        (error) => {
-                        },
-                        () => {
-                            // 避免安装过快
-                            if (app.status.status === "downloading") {
-                                app.status.status = "waiting";
+
+                await new Promise((resolve, reject) => {
+                    this.downloadService.getProgress(app)
+                        .subscribe((progress) => {
+                                app.status.status = "downloading";
+                                app.status.progress = progress.progress;
+                                app.status.total = progress.total;
                                 this.ref.detectChanges();
-                            }
-                        });
+                                resolve();
+                            },
+                            (error) => {
+                                reject(`download error: ${error}`);
+                            },
+                            () => {
+                                // 避免安装过快
+                                if (app.status.status === "downloading") {
+                                    app.status.status = "waiting";
+                                    this.ref.detectChanges();
+                                }
+                            });
+                });
+
 
             }
             await Promise.all(downloadApps.map((app) => {

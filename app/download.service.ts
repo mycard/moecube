@@ -59,6 +59,7 @@ export class DownloadService {
                         } else if (status.status === "active") {
                             observer.next({total: status.totalLength, progress: status.completedLength})
                         } else if (status.status === "error") {
+                            console.log("error", status.errorCode);
                             observer.error(status.errorCode)
                         }
                     });
