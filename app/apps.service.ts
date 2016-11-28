@@ -59,7 +59,7 @@ export class AppsService {
             ['name', 'description'].forEach((key) => {
                 let value = app[key][locale];
                 if (!value) {
-                    value = app[key]["en-US"];
+                    value = app[key]["zh-CN"];
                 }
                 app[key] = value;
             });
