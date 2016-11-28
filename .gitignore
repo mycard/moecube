@@ -1,6 +1,7 @@
 /bin/
 /app/*.js
 /app/*.js.map
+/app/*.metadata.json
 /node_modules/
 /dist/
 /cache/

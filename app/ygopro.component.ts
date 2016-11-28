@@ -67,9 +67,10 @@ interface Room {
 }
 
 @Component({
+    moduleId: module.id,
     selector: 'ygopro',
-    templateUrl: 'app/ygopro.component.html',
-    styleUrls: ['app/ygopro.component.css'],
+    templateUrl: 'ygopro.component.html',
+    styleUrls: ['ygopro.component.css'],
 })
 export class YGOProComponent implements OnInit {
     @Input()

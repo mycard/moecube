@@ -10,17 +10,17 @@
         </li>
         -->
         <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
-            <a (click)="currentPage='lobby'" class="nav-link" href="#">{{'library'| translate}}<span class="sr-only">(current)</span></a>
+            <a i18n (click)="currentPage='lobby'" class="nav-link" href="#">游戏</a>
         </li>
         <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
-            <a (click)="currentPage='community'" class="nav-link" href="#">{{'community'| translate}}</a>
+            <a i18n (click)="currentPage='community'" class="nav-link" href="#">社区</a>
         </li>
     </ul>
     <div class="navbar-right">
         <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
-            <a href="#" (click)="loginService.logout()" class="item">切换账号</a>
+            <a i18n href="#" (click)="loginService.logout()" class="item">切换账号</a>
         </div>
         <div id="window-buttons" *ngIf="platform != 'darwin'">
             <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
@@ -33,5 +33,4 @@
 <login class="page" *ngIf="!loginService.logged_in"></login>
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
-<webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'"
-         src="https://ygobbs.com"></webview>
+<webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>

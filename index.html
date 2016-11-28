@@ -19,6 +19,7 @@
     <!-- 2. Configure SystemJS -->
     <script src="systemjs.config.js"></script>
     <script>
+        document.locale = require('electron').remote.app.getLocale();
         System.import('app')
     </script>
 </head>

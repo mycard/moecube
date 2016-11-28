@@ -1,7 +1,6 @@
 /**
  * Created by weijian on 2016/10/24.
  */
-
 import {Injectable} from "@angular/core";
 import {remote} from "electron";
 import * as path from "path";

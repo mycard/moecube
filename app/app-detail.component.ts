@@ -4,18 +4,18 @@ import {InstallConfig} from "./install-config";
 import {SettingsService} from "./settings.sevices";
 import {App} from "./app";
 import {DownloadService} from "./download.service";
-import {clipboard, remote, ipcRenderer} from "electron";
+import {clipboard, remote} from "electron";
 import * as path from "path";
-import * as child_process from "child_process";
 import {InstallService} from "./install.service";
 
 declare var Notification;
 declare var $;
 
 @Component({
+    moduleId: module.id,
     selector: 'app-detail',
-    templateUrl: 'app/app-detail.component.html',
-    styleUrls: ['app/app-detail.component.css'],
+    templateUrl: 'app-detail.component.html',
+    styleUrls: ['app-detail.component.css'],
 })
 export class AppDetailComponent implements OnInit {
     @Input()

@@ -1,7 +1,6 @@
 /**
  * Created by weijian on 2016/10/26.
  */
-
 import {Injectable, NgZone} from "@angular/core";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";

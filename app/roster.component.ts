@@ -3,9 +3,10 @@
  */
 import {Component} from "@angular/core";
 @Component({
+    moduleId: module.id,
     selector: 'roster',
-    templateUrl: 'app/roster.component.html',
-    styleUrls: ['app/roster.component.css'],
+    templateUrl: 'roster.component.html',
+    styleUrls: ['roster.component.css'],
 })
 export class RosterComponent {
 }

@@ -3,21 +3,21 @@
  */
 import {Component, OnInit, ElementRef, ViewChild} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {LoginService, User} from "./login.service";
+import {LoginService} from "./login.service";
 import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 import {Http, URLSearchParams} from "@angular/http";
-import * as path from 'path';
+import * as path from "path";
 import {InstallConfig} from "./install-config";
 import {AppLocal} from "./app-local";
-import {UrlResolver} from "@angular/compiler";
 import WebViewElement = Electron.WebViewElement;
 
 @Component({
+    moduleId: module.id,
     selector: 'lobby',
-    templateUrl: 'app/lobby.component.html',
-    styleUrls: ['app/lobby.component.css'],
+    templateUrl: 'lobby.component.html',
+    styleUrls: ['lobby.component.css'],
 
 })
 export class LobbyComponent implements OnInit {

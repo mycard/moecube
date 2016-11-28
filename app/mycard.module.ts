@@ -11,14 +11,13 @@ import {RosterComponent} from "./roster.component";
 import {CommunityComponent} from "./community.component";
 import {YGOProComponent} from "./ygopro.component";
 import {AppsService} from "./apps.service";
-import {TranslateModule} from "ng2-translate";
 import {SettingsService} from "./settings.sevices";
 import {LoginService} from "./login.service";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, TranslateModule.forRoot()],
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
     declarations: [
         MyCardComponent, LoginComponent, StoreComponent, LobbyComponent,
         CommunityComponent, AppDetailComponent, RosterComponent, YGOProComponent,

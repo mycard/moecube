@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="zh-CN" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a" datatype="html">
+        <source>安装</source>
+        <target>Install</target>
+      </trans-unit>
+      <trans-unit id="e6194d8a9c8da57b667847cd80f1da563f2c2b1e" datatype="html">
+        <source>导入</source>
+        <target>Import</target>
+      </trans-unit>
+      <trans-unit id="2fe99d94b20d6f8aba7814d8657037ec9d69d36c" datatype="html">
+        <source>正在安装...</source>
+        <target>Installing...</target>
+      </trans-unit>
+      <trans-unit id="e5ee7e692c816893b6fd2f9375e6d8303cd794cd" datatype="html">
+        <source>等待安装...</source>
+        <target>Pending...</target>
+      </trans-unit>
+      <trans-unit id="d3852e0147360b29d0d6076e95dd1ad0098a60db" datatype="html">
+        <source>运行</source>
+        <target>Start</target>
+      </trans-unit>
+      <trans-unit id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd" datatype="html">
+        <source>设置</source>
+        <target>Custom</target>
+      </trans-unit>
+      <trans-unit id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b" datatype="html">
+        <source>联机</source>
+        <target>Networking</target>
+      </trans-unit>
+      <trans-unit id="5eadb60473a54773298ee679a4ce6a19d9c2f31c" datatype="html">
+        <source>复制</source>
+        <target>Copy</target>
+      </trans-unit>
+      <trans-unit id="95d5e106e679433bec012420b1ab9334c294bc7e" datatype="html">
+        <source>选择服务器</source>
+        <target>server</target>
+      </trans-unit>
+      <trans-unit id="63346eb53d54138db02c1713ae58f73bb1b8786f" datatype="html">
+        <source>新闻</source>
+        <target>News</target>
+      </trans-unit>
+      <trans-unit id="b1c134df688af90e436e49f6d3e9f6960f9497c6" datatype="html">
+        <source>了解更多</source>
+        <target>More Info</target>
+      </trans-unit>
+      <trans-unit id="3ebbe3f1c691ec3184ac8c7a5f360706501e6b50" datatype="html">
+        <source>名称</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="d58ff4f339ad18d82b08fb0615ba8c1cf373a4a2" datatype="html">
+        <source>操作</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="e090f6d9d8129a7b8b92387f05f37eb4b44c0b4e" datatype="html">
+        <source>卸载</source>
+        <target>Uninstall</target>
+      </trans-unit>
+      <trans-unit id="8d0792a89fc399aafb40cc1228cb8c04a2056883" datatype="html">
+        <source>本地文件</source>
+        <target>Local Files</target>
+      </trans-unit>
+      <trans-unit id="628c76783ac32e6c8b2ea9134397b8cb82a82cd6" datatype="html">
+        <source>浏览本地文件</source>
+        <target>Browse</target>
+      </trans-unit>
+      <trans-unit id="6d582ed48c57c91fc7cf10f36f3869cd33808d1d" datatype="html">
+        <source>校验完整性</source>
+        <target>Verify integrity</target>
+      </trans-unit>
+      <trans-unit id="4809edca33b1a07d7d6e8905287d3825e676f2c8" datatype="html">
+        <source>安装 <x id="INTERPOLATION"/></source>
+        <target>Install <x id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit id="f8e60167c7a0871ccf40ed2a0750311411dfd665" datatype="html">
+        <source>即将开始安装 <x id="INTERPOLATION"/></source>
+        <target>Preparing Install <x id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit id="63a6c9b023e9e9f8ddfba70b0e24931008fa2510" datatype="html">
+        <source>安装位置</source>
+        <target>Path</target>
+      </trans-unit>
+      <trans-unit id="0b96c54bf810c6deb2c32253bf16b86d3c90da94" datatype="html">
+        <source>快捷方式</source>
+        <target>Shortcuts</target>
+      </trans-unit>
+      <trans-unit id="8aa0a41ee6809b972d3904d96607ba5e6dc48fd9" datatype="html">
+        <source>创建 LaunchPad 快捷方式</source>
+        <target>Create Launchpad Shortcut</target>
+      </trans-unit>
+      <trans-unit id="da32e99069864644f0419f67858d93815e029b02" datatype="html">
+        <source>创建开始菜单快捷方式</source>
+        <target>Create Start Menu Shortcut</target>
+      </trans-unit>
+      <trans-unit id="d8a2d9a9f8854ad118381e6e30a41dc1959a4f0b" datatype="html">
+        <source>创建桌面快捷方式</source>
+        <target>Create Desktop Shortcut</target>
+      </trans-unit>
+      <trans-unit id="2ba33dd61b1ac70666322680f248e5336b3ee69a" datatype="html">
+        <source>依赖：</source>
+        <target>Dependencies</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

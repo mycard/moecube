@@ -9,7 +9,6 @@ import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
-import {platform} from "os";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');

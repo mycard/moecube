@@ -8,9 +8,10 @@ import * as querystring from "querystring";
 import * as url from "url";
 
 @Component({
+    moduleId: module.id,
     selector: 'login',
-    templateUrl: 'app/login.component.html',
-    styleUrls: ['app/login.component.css'],
+    templateUrl: 'login.component.html',
+    styleUrls: ['login.component.css'],
 })
 export class LoginComponent {
     url;
