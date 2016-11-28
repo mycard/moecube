@@ -12,15 +12,14 @@
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="libs.min.js"></script>
     <script type="text/javascript" src="candy.min.js"></script>
-
 </head>
 <body>
 <div id="candy"></div>
 <script type="text/javascript">
     const {remote, ipcRenderer} = require('electron');
+    //    remote.getCurrentWebContents().openDevTools();
     require('electron-cookies'); // https://github.com/hstove/electron-cookies
 
-    //    remote.getCurrentWebContents().openDevTools();
     ipcRenderer.on('join', (event, message) => {
         Candy.Core.Action.Jabber.Room.Join(message);
         Candy.View.Pane.Chat.setActiveTab(message);
