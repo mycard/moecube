@@ -1,7 +1,8 @@
 import {Component, Renderer, ChangeDetectorRef, OnInit} from "@angular/core";
 import {TranslateService} from "ng2-translate";
-import {remote} from "electron";
+import {ipcRenderer, remote} from "electron";
 import {LoginService} from "./login.service";
+const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
 
 
 @Component({
@@ -34,7 +35,23 @@ export class MyCardComponent implements OnInit {
         // the lang to use, if the lang isn't available, it will use the current loader to get them
         translate.use(remote.app.getLocale());
 
-        this.currentWindow.on('maximize', ()=>ref.detectChanges());
-        this.currentWindow.on('unmaximize', ()=>ref.detectChanges());
+        this.currentWindow.on('maximize', () => ref.detectChanges());
+        this.currentWindow.on('unmaximize', () => ref.detectChanges());
+
+        autoUpdater.on('error', (error) => {
+            console.log('autoUpdater', 'error', error.message)
+        });
+        autoUpdater.on('checking-for-update', () => {
+            console.log('autoUpdater', 'checking-for-update')
+        });
+        autoUpdater.on('update-available', () => {
+            console.log('autoUpdater', 'update-available')
+        });
+        autoUpdater.on('update-not-available', () => {
+            console.log('autoUpdater', 'update-not-available')
+        });
+        autoUpdater.on('update-downloaded', (event) => {
+            console.log('autoUpdater', 'update-downloaded')
+        });
     }
 }

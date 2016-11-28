@@ -83,7 +83,7 @@ export class DownloadService {
     map: Map<string,any> = new Map();
 
     async addMetalink(metalink: string, library: string) {
-        let meta4 = btoa(metalink);
+        let meta4 = new Buffer((metalink)).toString('base64');
         let gid = ( await this.aria2.addMetalink(meta4, {dir: library}))[0];
         return Observable.create((observer) => {
             this.map.set(gid, observer);
@@ -111,7 +111,7 @@ export class DownloadService {
                 meta4link = `${this.baseURL}${id}-${process.platform}.meta4`
             }
             let response = await this.http.get(meta4link).toPromise();
-            let meta4 = btoa(response.text());
+            let meta4 = new Buffer(response.text()).toString('base64');
             let gid = (await this.aria2.addMetalink(meta4, {dir: path}))[0];
             this.appGidMap.set(app, gid);
             this.gidAppMap.set(gid, app);

@@ -12,13 +12,25 @@ if (process.platform == 'darwin') {
     }
 }
 
-autoUpdater.on('error', (event)=>console.log('error', event));
-autoUpdater.on('checking-for-update', (event)=>console.log('checking-for-update'));
-autoUpdater.on('update-available', (event)=>console.log('update-available'));
-autoUpdater.on('update-not-available', (event)=>console.log('update-not-available'));
+global.autoUpdater = autoUpdater;
+
+autoUpdater.on('error', (event) => {
+    console.log('autoUpdater', 'error', event);
+});
+autoUpdater.on('checking-for-update', () => {
+    console.log('autoUpdater', 'checking-for-update');
+});
+autoUpdater.on('update-available', () => {
+    console.log('autoUpdater', 'update-available');
+});
+autoUpdater.on('update-not-available', () => {
+    console.log('autoUpdater', 'update-not-available');
+});
 
 let updateWindow;
-autoUpdater.on('update-downloaded', (event)=> {
+autoUpdater.on('update-downloaded', (event) => {
+    console.log('autoUpdater', 'update-downloaded', event);
+
     updateWindow = new BrowserWindow({
         width: 640,
         height: 480,
@@ -114,9 +126,9 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', ()=> {
-    autoUpdater.checkForUpdates();
-    createWindow()
+app.on('ready', () => {
+    createWindow();
+    setTimeout(autoUpdater.checkForUpdates, 2000);
 });
 
 // Quit when all windows are closed.
@@ -135,7 +147,7 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-app.on('quit', ()=> {
+app.on('quit', () => {
     // windows 在非 detach 模式下会自动退出子进程
     if (process.platform != 'win32') {
         aria2c.kill()

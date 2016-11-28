@@ -23,14 +23,15 @@
             <a href="#" (click)="loginService.logout()" class="item">切换账号</a>
         </div>
         <div id="window-buttons" *ngIf="platform != 'darwin'">
-            <i (click)="currentWindow.minimize()" class="fa fa-minus" aria-hidden="true"></i>
-            <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" aria-hidden="true"></i>
-            <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" aria-hidden="true"></i>
-            <i (click)="window.close()" class="fa fa-times" aria-hidden="true"></i>
+            <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
+            <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand"></i>
+            <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone"></i>
+            <i (click)="window.close()" class="fa fa-times"></i>
         </div>
     </div>
 </nav>
 <login class="page" *ngIf="!loginService.logged_in"></login>
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
-<webview id="community" class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>
+<webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'"
+         src="https://ygobbs.com"></webview>

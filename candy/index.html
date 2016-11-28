@@ -20,15 +20,15 @@
     const {remote, ipcRenderer} = require('electron');
     require('electron-cookies'); // https://github.com/hstove/electron-cookies
 
-//    remote.getCurrentWebContents().openDevTools();
+    //    remote.getCurrentWebContents().openDevTools();
     ipcRenderer.on('join', (event, message) => {
         Candy.Core.Action.Jabber.Room.Join(message);
         Candy.View.Pane.Chat.setActiveTab(message);
     });
 
     // fix
-    Base64.encode = btoa.bind(window);
-    Base64.decode = atob.bind(window);
+    Base64.encode = (data) => new Buffer(data).toString('base64');
+    Base64.decode = (data) => new Buffer(data, 'base64').toString();
 
     // candy init
     const params = new URLSearchParams(location.search);

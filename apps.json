@@ -2043,9 +2043,7 @@
     ],
     "dependencies": {
       "win32": [],
-      "darwin": [
-        "wine"
-      ]
+      "darwin": []
     },
     "references": {
       "win32": [],

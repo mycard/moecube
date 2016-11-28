@@ -76,9 +76,9 @@ export class YGOProComponent implements OnInit {
     app: App;
     decks: string[] = [];
     current_deck: string;
-    system_conf;
-    numfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
-    textfont = {'darwin': ['/System/Library/Fonts/PingFang.ttc']};
+    system_conf: string;
+    numfont: string[];
+    textfont: string[];
 
     windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
@@ -108,6 +108,16 @@ export class YGOProComponent implements OnInit {
     connections: WebSocket[] = [];
 
     constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
+        switch (process.platform) {
+            case 'darwin':
+                this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
+                this.textfont = ['/System/Library/Fonts/PingFang.ttc'];
+                break;
+            case 'win32':
+                this.numfont = [path.join(process.env['SystemRoot'], 'Fonts', 'arialbd.ttf')];
+                this.textfont = [path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')];
+                break;
+        }
     }
 
     ngOnInit() {
@@ -173,8 +183,10 @@ export class YGOProComponent implements OnInit {
     }
 
     async get_font(files: string[]): Promise<string | undefined> {
-        for (let file in files) {
+        for (let file of files) {
+            console.log(file);
             let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
+            console.log(found);
             if (found) {
                 return file;
             }
@@ -188,14 +200,14 @@ export class YGOProComponent implements OnInit {
 
     async fix_fonts(data) {
         if (!await this.get_font([data.numfont])) {
-            let font = await this.get_font(this.numfont[process.platform]);
+            let font = await this.get_font(this.numfont);
             if (font) {
                 data['numfont'] = font
             }
         }
 
         if (!await this.get_font([data.textfont.split(' ', 2)[0]])) {
-            let font = await this.get_font(this.textfont[process.platform]);
+            let font = await this.get_font(this.textfont);
             if (font) {
                 data['textfont'] = `${font} 14`
             }
@@ -247,6 +259,7 @@ export class YGOProComponent implements OnInit {
     start_game(args) {
         let win = remote.getCurrentWindow();
         win.minimize();
+        console.log(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
         return new Promise((resolve, reject) => {
             let child = child_process.spawn(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
             child.on('error', (error) => {
@@ -310,7 +323,7 @@ export class YGOProComponent implements OnInit {
 
     request_match(arena = 'entertain') {
         let headers = new Headers();
-        headers.append("Authorization", "Basic " + btoa(this.loginService.user.username + ":" + this.loginService.user.external_id));
+        headers.append("Authorization", "Basic " + new Buffer(this.loginService.user.username + ":" + this.loginService.user.external_id).toString('base64'));
         let search = new URLSearchParams();
         search.set("arena", arena);
         this.matching_arena = arena;
