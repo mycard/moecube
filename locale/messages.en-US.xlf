@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="zh-CN" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c" datatype="html">
+        <source>游戏</source>
+        <target>Library</target>
+      </trans-unit>
+      <trans-unit id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b" datatype="html">
+        <source>社区</source>
+        <target>Community</target>
+      </trans-unit>
+      <trans-unit id="8422ff34db177236e8f54d415b07c972284c36bf" datatype="html">
+        <source>切换账号</source>
+        <target>Change Account</target>
+      </trans-unit>
       <trans-unit id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a" datatype="html">
         <source>安装</source>
         <target>Install</target>
