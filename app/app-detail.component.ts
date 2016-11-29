@@ -8,8 +8,8 @@ import {clipboard, remote} from "electron";
 import * as path from "path";
 import {InstallService} from "./install.service";
 
-declare var Notification;
-declare var $;
+declare const Notification: any;
+declare const $: any;
 
 @Component({
     moduleId: module.id,
@@ -150,7 +150,7 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
-    copy(text) {
+    copy(text: string) {
         clipboard.writeText(text);
     }
 

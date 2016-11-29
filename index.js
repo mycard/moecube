@@ -7,7 +7,7 @@ const path = require('path');
 
 if (process.platform == 'darwin') {
     try {
-        autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update");
+        autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
     } catch (err) {
     }
 }

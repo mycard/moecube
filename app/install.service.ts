@@ -42,7 +42,7 @@ export class InstallService {
 
     getComplete(app: App): Promise<App> {
         return new Promise((resolve, reject) => {
-            this.eventEmitter.once(app.id, (complete) => {
+            this.eventEmitter.once(app.id, (complete: any) => {
                 resolve();
             });
         });
@@ -124,7 +124,7 @@ export class InstallService {
         if (["ygopro", 'desmume'].includes(app.id)) {
             checksumUrl = this.checksumUri + app.id + "-" + process.platform;
         }
-        let checksumMap: Map<string,string> = await this.http.get(checksumUrl)
+        return this.http.get(checksumUrl)
             .map((response) => {
                 let map = new Map<string,string>();
                 for (let line of response.text().split('\n')) {
@@ -135,7 +135,6 @@ export class InstallService {
                 }
                 return map;
             }).toPromise();
-        return checksumMap;
     }
 
     async doInstall() {

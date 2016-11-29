@@ -1,7 +1,3 @@
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
-}
-
 :host {
     height: 100%;
     display: flex;

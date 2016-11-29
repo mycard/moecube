@@ -14,7 +14,7 @@ import * as url from "url";
     styleUrls: ['login.component.css'],
 })
 export class LoginComponent {
-    url;
+    url: string;
     return_sso_url = 'https://mycard.moe/login_callback'; // 这个url不会真的被使用，可以填写不存在的
 
     constructor(private loginService: LoginService) {
@@ -36,7 +36,7 @@ export class LoginComponent {
         }
     }
 
-    return_sso(return_url) {
+    return_sso(return_url: string) {
         if (!return_url.startsWith(this.return_sso_url)) {
             return;
         }

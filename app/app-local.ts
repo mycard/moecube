@@ -8,7 +8,7 @@ export class AppLocal {
     files: Map<string,string>;
     action: Map<string,{execute: string, args: string[], env: {}, open: App}>;
 
-    update(local) {
+    update(local: any) {
         this.path = local.path;
         this.version = local.version;
         let files = new Map<string,string>();
@@ -19,7 +19,7 @@ export class AppLocal {
     }
 
     toJSON() {
-        let t = {};
+        let t: any = {};
         for (let [k,v] of this.files) {
             t[k] = v;
         }

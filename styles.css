@@ -1,16 +1,7 @@
-/* Master Styles */
-h1 {
-    color: #369;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 250%;
-}
-
-h2, h3 {
-    color: #444;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
+html, body {
+    height: 100%;
 }
 
 body {
-    margin: 2em;
+    font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
 }

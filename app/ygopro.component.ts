@@ -17,7 +17,7 @@ import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
 import {AppLocal} from "./app-local";
 
-declare var $;
+declare const $: any;
 
 interface SystemConf {
     use_d3d: string
@@ -47,7 +47,7 @@ interface SystemConf {
 
 interface Server {
     id?: string
-    url: string
+    url?: string
     address: string
     port: number
 }
@@ -56,6 +56,7 @@ interface Room {
     id?: string
     title?: string
     server?: Server
+    private?: boolean
     mode: number,
     rule: number,
     start_lp: number,
@@ -127,9 +128,9 @@ export class YGOProComponent implements OnInit {
 
         let modal = $('#game-list-modal');
 
-        modal.on('show.bs.modal', (event) => {
+        modal.on('show.bs.modal', () => {
             this.connections = this.servers.map((server) => {
-                let connection = new WebSocket(server.url);
+                let connection = new WebSocket(<string>server.url);
                 connection.onclose = () => {
                     this.rooms = this.rooms.filter(room => room.server != server)
                 };
@@ -138,7 +139,7 @@ export class YGOProComponent implements OnInit {
                     //console.log(message)
                     switch (message.event) {
                         case 'init':
-                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map(data => Object.assign({server: server}, this.default_options, data)));
+                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map((data: any) => Object.assign({server: server}, this.default_options, data)));
                             break;
                         case 'create':
                             this.rooms.push(Object.assign({server: server}, this.default_options, message.data));
@@ -155,7 +156,7 @@ export class YGOProComponent implements OnInit {
             });
         });
 
-        modal.on('hide.bs.modal', (event) => {
+        modal.on('hide.bs.modal', () => {
             for (let connection of this.connections) {
                 connection.close();
             }
@@ -194,12 +195,12 @@ export class YGOProComponent implements OnInit {
         }
     }
 
-    async delete_deck(deck) {
+    async delete_deck(deck: string) {
         await new Promise(resolve => fs.unlink(path.join((<AppLocal>this.app.local).path, 'deck', deck + '.ydk'), resolve));
         return this.refresh()
     }
 
-    async fix_fonts(data) {
+    async fix_fonts(data: SystemConf) {
         if (!await this.get_font([data.numfont])) {
             let font = await this.get_font(this.numfont);
             if (font) {
@@ -233,12 +234,12 @@ export class YGOProComponent implements OnInit {
         })
     };
 
-    async join(name, server) {
+    async join(name: string, server: Server) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = this.current_deck;
         system_conf.lastip = server.address;
-        system_conf.lastport = server.port;
+        system_conf.lastport = server.port.toString();
         system_conf.roompass = name;
         system_conf.nickname = this.loginService.user.username;
         await this.save_system_conf(system_conf);
@@ -253,11 +254,11 @@ export class YGOProComponent implements OnInit {
         return this.start_game(['-d']);
     }
 
-    join_windbot(name) {
+    join_windbot(name: string) {
         return this.join('AI#' + name, this.servers[0])
     }
 
-    start_game(args) {
+    start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
         console.log(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
@@ -275,13 +276,13 @@ export class YGOProComponent implements OnInit {
         })
     };
 
-    create_room(options) {
+    create_room(options: Room) {
         let options_buffer = new Buffer(6);
         // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
         options_buffer.writeUInt8((options.private ? 2 : 1) << 4, 1);
-        options_buffer.writeUInt8(parseInt(options.rule) << 5 | parseInt(options.mode) << 3 | (options.enable_priority ? 1 << 2 : 0) | (options.no_check_deck ? 1 << 1 : 0) | (options.no_shuffle_deck ? 1 : 0), 2);
-        options_buffer.writeUInt16LE(parseInt(options.start_lp), 3);
-        options_buffer.writeUInt8(parseInt(options.start_hand) << 4 | parseInt(options.draw_count), 5);
+        options_buffer.writeUInt8(options.rule << 5 | options.mode << 3 | (options.enable_priority ? 1 << 2 : 0) | (options.no_check_deck ? 1 << 1 : 0) | (options.no_shuffle_deck ? 1 : 0), 2);
+        options_buffer.writeUInt16LE(options.start_lp, 3);
+        options_buffer.writeUInt8(options.start_hand << 4 | options.draw_count, 5);
         let checksum = 0;
         for (let i = 1; i < options_buffer.length; i++) {
             checksum -= options_buffer.readUInt8(i)
@@ -293,30 +294,30 @@ export class YGOProComponent implements OnInit {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
 
-        let password = options_buffer.toString('base64') + options.title.replace(/\s/, String.fromCharCode(0xFEFF));
+        let password = options_buffer.toString('base64') + (<string>options.title).replace(/\s/, String.fromCharCode(0xFEFF));
         let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
     }
 
-    join_room(room) {
+    join_room(room: Room) {
         let options_buffer = new Buffer(6);
         options_buffer.writeUInt8(3 << 4, 1);
         let checksum = 0;
-        for (var i = 1; i < options_buffer.length; i++) {
+        for (let i = 1; i < options_buffer.length; i++) {
             checksum -= options_buffer.readUInt8(i)
         }
         options_buffer.writeUInt8(checksum & 0xFF, 0);
 
         let secret = this.loginService.user.external_id % 65535 + 1;
-        for (i = 0; i < options_buffer.length; i += 2) {
+        for (let i = 0; i < options_buffer.length; i += 2) {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
 
 
         let password = options_buffer.toString('base64') + room.id;
 
-        this.join(password, room.server);
+        this.join(password, <Server>room.server);
     }
 
     matching: ISubscription | null;

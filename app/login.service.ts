@@ -28,7 +28,7 @@ export class LoginService {
         }
     }
 
-    login(user) {
+    login(user: User) {
         this.user = user;
         this.logged_in = true;
         localStorage.setItem('login', JSON.stringify(user));

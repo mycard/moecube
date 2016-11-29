@@ -6,6 +6,8 @@ import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {EventEmitter} from "events";
 import {App} from "./app";
+import {Observer} from "rxjs";
+import Timer = NodeJS.Timer;
 const Aria2 = require('aria2');
 
 
@@ -20,7 +22,7 @@ export class DownloadService {
     open = this.aria2.open();
 
     constructor(private ngZone: NgZone, private http: Http) {
-        this.aria2.onDownloadComplete = (result) => {
+        this.aria2.onDownloadComplete = (result: any) => {
             let app = this.gidAppMap.get(result.gid);
             if (app) {
                 this.appGidMap.delete(app);
@@ -41,7 +43,7 @@ export class DownloadService {
             throw('nyaa');
         }
         return new Promise((resolve, reject) => {
-            this.eventEmitter.once(app.id, (event) => {
+            this.eventEmitter.once(app.id, (event: Event) => {
                 resolve(app);
             })
         });
@@ -49,8 +51,8 @@ export class DownloadService {
 
     getProgress(app: App): Observable<any> {
         let gid = this.appGidMap.get(app);
-        return Observable.create((observer) => {
-            let interval;
+        return Observable.create((observer: Observer<any>) => {
+            let interval: Timer;
             this.ngZone.runOutsideAngular(() => {
                 interval = setInterval(() => {
                     this.aria2.tellStatus(gid).then((status: any) => {
@@ -85,9 +87,9 @@ export class DownloadService {
     async addMetalink(metalink: string, library: string) {
         let meta4 = new Buffer((metalink)).toString('base64');
         let gid = ( await this.aria2.addMetalink(meta4, {dir: library}))[0];
-        return Observable.create((observer) => {
+        return Observable.create((observer: Observer<any>) => {
             this.map.set(gid, observer);
-            let interval;
+            let interval: Timer;
             this.ngZone.runOutsideAngular(() => {
                 interval = setInterval(async() => {
                     let status = await this.aria2.tellStatus(gid);

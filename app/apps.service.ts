@@ -5,10 +5,12 @@ import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
 import * as path from "path";
 import * as child_process from "child_process";
+import {ChildProcess} from "child_process";
 import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
+import Timer = NodeJS.Timer;
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -229,9 +231,9 @@ export class AppsService {
     }
 
     connections = new Map<App, Connection>();
-    maotama;
+    maotama: Promise<ChildProcess>;
 
-    async network(app: App, server) {
+    async network(app: App, server: any) {
         if (!this.maotama) {
             this.maotama = new Promise((resolve, reject) => {
                 let child = sudo.fork('maotama', [], {stdio: ['inherit', 'inherit', 'inherit', 'ipc']});
@@ -240,7 +242,7 @@ export class AppsService {
                 child.once('exit', reject);
             })
         }
-        let child;
+        let child: ChildProcess;
         try {
             child = await this.maotama;
         } catch (error) {
@@ -253,7 +255,7 @@ export class AppsService {
             connection.connection.close();
         }
         connection = {connection: new WebSocket(server.url), address: null};
-        let id;
+        let id: Timer | null;
         this.connections.set(app, connection);
         connection.connection.onmessage = (event) => {
             console.log(event.data);
@@ -273,8 +275,10 @@ export class AppsService {
                     }, 200);
                     break;
                 case 'CONNECTED':
-                    clearInterval(id);
-                    id = null;
+                    if (id) {
+                        clearInterval(id);
+                        id = null;
+                    }
                     break;
             }
         };

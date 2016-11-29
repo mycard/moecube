@@ -1,14 +1,14 @@
 import {AppLocal} from "./app-local";
 
 export enum Category {
-    game, // 游戏
-    music, // 音乐
-    book, // 图书
-    runtime, // 运行库
-    emulator, // 模拟器
-    language, // 语言包
-    expansion, // 资料片
-    module, // 创意工坊
+    game,
+    music,
+    book,
+    runtime,
+    emulator,
+    language,
+    expansion,
+    module
 }
 
 // export enum Status{
@@ -69,7 +69,7 @@ export class App {
         return [Category.game].includes(this.category);
     }
 
-    constructor(app) {
+    constructor(app: any) {
         this.id = app.id;
         this.name = app.name;
         this.description = app.description;

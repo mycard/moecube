@@ -86,9 +86,9 @@ export class LobbyComponent implements OnInit {
                 let a = await this.downloadService.addMetalink(metalink, dir);
 
                 await new Promise((resolve, reject) => {
-                    a.subscribe((status) => {
+                    a.subscribe((status: any) => {
                         console.log(status);
-                    }, (err) => {
+                    }, (err: any) => {
                         reject()
                     }, () => {
                         resolve();
@@ -121,7 +121,7 @@ export class LobbyComponent implements OnInit {
         let contains = ["game", "music", "book"].map((value) => Category[value]);
         let result = {runtime: []};
         for (let app of this.apps.values()) {
-            let tag;
+            let tag: string;
             if (contains.includes(app.category)) {
                 if (app.isInstalled()) {
                     tag = 'installed';
