@@ -5,6 +5,9 @@
     padding: 1rem;
 }
 
+.main {
+    margin-bottom: 1rem;
+}
 .list-group {
     width: 20rem;
 }

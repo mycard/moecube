@@ -40,7 +40,7 @@
       </trans-unit>
       <trans-unit id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b" datatype="html">
         <source>联机</source>
-        <target>Networking</target>
+        <target>Network</target>
       </trans-unit>
       <trans-unit id="5eadb60473a54773298ee679a4ce6a19d9c2f31c" datatype="html">
         <source>复制</source>
@@ -48,7 +48,7 @@
       </trans-unit>
       <trans-unit id="95d5e106e679433bec012420b1ab9334c294bc7e" datatype="html">
         <source>选择服务器</source>
-        <target>server</target>
+        <target>Select Server</target>
       </trans-unit>
       <trans-unit id="63346eb53d54138db02c1713ae58f73bb1b8786f" datatype="html">
         <source>新闻</source>
