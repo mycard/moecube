@@ -76,3 +76,7 @@
 .float-left {
     float: left;
 }
+
+.actions {
+    margin-bottom: 1em;
+}

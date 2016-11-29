@@ -6,12 +6,12 @@
 <div i18n *ngIf="currentApp.status.status === 'installing'">正在安装...</div>
 <div i18n *ngIf="currentApp.status.status==='waiting'">等待安装...</div>
 <progress *ngIf="currentApp.status.status === 'downloading'" class="progress progress-striped progress-animated" value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
-<div class="main" *ngIf="currentApp.status.status==='ready' && (currentApp.id != 'ygopro')">
+<div class="actions" *ngIf="currentApp.status.status==='ready' && (currentApp.id != 'ygopro')">
     <button i18n *ngIf="currentApp.runable()" (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行</button>
     <button i18n *ngIf="currentApp.runable() && currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">设置</button>
     <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
         <div class="input-group">
-            <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control">
+            <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
             <div class="input-group-btn">
                 <button i18n *ngIf="!appsService.connections.get(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">联机</button>
                 <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">复制</button>
@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<ygopro class="main" *ngIf="currentApp.status.status==='ready'&& (currentApp.id == 'ygopro')" [app]="currentApp"></ygopro>
+<ygopro *ngIf="currentApp.status.status==='ready'&& (currentApp.id == 'ygopro')" [app]="currentApp"></ygopro>
 <h2 i18n *ngIf="news && news.length">新闻</h2>
 <div id="news" *ngFor="let item of news">
     <h3>{{item.title}}</h3>
