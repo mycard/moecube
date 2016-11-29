@@ -2,14 +2,16 @@
 
 const {ipcMain, app, BrowserWindow} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
+const isDev = require('electron-is-dev');
 const child_process = require('child_process');
 const path = require('path');
 
-if (process.platform == 'darwin') {
-    try {
-        autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
-    } catch (err) {
-    }
+if (!process.env['NODE_ENV']) {
+    process.env['NODE_ENV'] = isDev ? 'development' : 'production'
+}
+
+if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
+    autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
 }
 
 global.autoUpdater = autoUpdater;
@@ -82,10 +84,18 @@ function createAria2c() {
     let aria2c_path;
     switch (process.platform) {
         case 'win32':
-            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
+            if (process.env['NODE_ENV'] == 'production') {
+                aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
+            } else {
+                aria2c_path = path.join('bin', 'aria2c.exe');
+            }
             break;
         case 'darwin':
-            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
+            if (process.env['NODE_ENV'] == 'production') {
+                aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
+            } else {
+                aria2c_path = path.join('bin', 'aria2c');
+            }
             break;
         default:
             throw 'unsupported platform';
@@ -112,7 +122,9 @@ function createWindow() {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (process.env['NODE_ENV'] == 'development') {
+        mainWindow.webContents.openDevTools();
+    }
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -128,7 +140,9 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
     createWindow();
-    setTimeout(autoUpdater.checkForUpdates, 2000);
+    if (process.env['NODE_ENV'] == 'production') {
+        setTimeout(autoUpdater.checkForUpdates, 2000);
+    }
 });
 
 // Quit when all windows are closed.

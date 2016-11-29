@@ -27,12 +27,15 @@ export class InstallService {
 
     constructor(private http: Http, private appsService: AppsService) {
         if (process.platform === "win32") {
-            this.tarPath = path.join(process.resourcesPath, 'bin', 'bsdtar.exe');
+            if (process.env['NODE_ENV'] == 'production') {
+                this.tarPath = path.join(process.resourcesPath, 'bin', 'bsdtar.exe');
+            } else {
+                this.tarPath = path.join('bin', 'bsdtar.exe');
+            }
         } else {
             this.tarPath = "bsdtar"
         }
     }
-
 
     createDirectory(dir: string) {
         return new Promise((resolve, reject) => {
