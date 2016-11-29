@@ -19,9 +19,9 @@ environment:
   npm_config_build_from_source: true
 
 cache:
-  - node_modules
-  - '%APPDATA%\npm-cache'
-  - '%USERPROFILE%\.electron'
+  - node_modules -> package.json
+  - '%APPDATA%\npm-cache' -> package.json
+  - '%USERPROFILE%\.electron' -> package.json
 
 shallow_clone: true
 
