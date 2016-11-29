@@ -20,8 +20,8 @@ environment:
 
 cache:
   - node_modules -> package.json
-  - '%APPDATA%\npm-cache' -> package.json
-  - '%USERPROFILE%\.electron' -> package.json
+  - '%APPDATA%\npm-cache -> package.json'
+  - '%USERPROFILE%\.electron -> package.json'
 
 shallow_clone: true
 
