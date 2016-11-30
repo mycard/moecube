@@ -8,7 +8,7 @@ dist: trusty
 sudo: required
 
 env:
-  npm_config_target: 1.4.5
+  npm_config_target: `npm show electron version`
   npm_config_arch: x64
   npm_config_target_arch: x64
   npm_config_disturl: https://atom.io/download/atom-shell
@@ -29,6 +29,7 @@ cache:
   - $HOME/.cache
 
 before_install:
+  - env
   - openssl aes-256-cbc -K $encrypted_9f35b7f09ebe_key -iv $encrypted_9f35b7f09ebe_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
   - chmod 600 $HOME/.ssh/id_ecdsa
 
