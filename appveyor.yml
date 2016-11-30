@@ -44,6 +44,7 @@ install:
   - ps: Install-Product node
   - npm show electron version > %temp%\electron-version.txt
   - set /p npm_config_target= < %temp%\electron-version.txt
+  - set
   - npm install
   - npm prune
 
