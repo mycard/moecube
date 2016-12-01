@@ -81,13 +81,13 @@
                     </select></div>
                 <h4 i18n>快捷方式</h4>
                 <div class="checkbox">
+                    <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installConfig.createShortcut">
                     <label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>
                     <label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>
-                    <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installConfig.createShortcut">
                 </div>
                 <div class="checkbox">
-                    <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                     <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installConfig.createDesktopShortcut">
+                    <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                 </div>
                 <h4 *ngIf="installConfig.references.length">扩展内容</h4>
                 <div *ngFor="let reference of installConfig.references"><label>

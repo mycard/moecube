@@ -13,7 +13,7 @@ System.config({
         app: 'app',
 
         // systemjs plugins
-        'text': 'npm:systemjs-text-plugin.js',
+        'text': 'npm:systemjs-plugin-text/text.js',
 
         // angular bundles
         '@angular/core': 'npm:@angular/core/bundles/core.umd.js',

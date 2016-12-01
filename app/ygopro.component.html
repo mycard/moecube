@@ -1,23 +1,23 @@
 <form class="form-inline actions">
     <div class="form-group">
-        <label for="exampleSelect1">卡组</label>
+        <label i18n for="exampleSelect1">卡组</label>
         <select class="form-control" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
             <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-secondary" (click)="edit_deck(current_deck)">编辑</button>
-    <button type="submit" (click)="delete_deck(current_deck)" class="btn btn-secondary">删除</button>
-    <button type="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
+    <button i18n type="submit" class="btn btn-secondary" (click)="edit_deck(current_deck)">编辑</button>
+    <button i18n type="submit" (click)="delete_deck(current_deck)" class="btn btn-secondary">删除</button>
+    <button i18n types="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
 </form>
 
 <div class="actions">
-    <button (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" [disabled]="matching" type="button" class="btn btn-primary">竞技匹配</button>
-    <button (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary">取消等待</button>
-    <button (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" [disabled]="matching" type="button" class="btn btn-secondary">娱乐匹配</button>
-    <button (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary">取消等待</button>
-    <button [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
-    <button [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
+    <button i18n (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" [disabled]="matching" type="button" class="btn btn-primary">竞技匹配</button>
+    <button i18n (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary">取消等待</button>
+    <button i18n (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" [disabled]="matching" type="button" class="btn btn-secondary">娱乐匹配</button>
+    <button i18n (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary">取消等待</button>
+    <button i18n [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
+    <button i18n [disabled]="matching" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
+    <button i18n type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 
 <div class="modal fade" id="game-create-windbot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -30,13 +30,13 @@
                 <h4 class="modal-title" id="myModalLabel1">单人模式</h4>
             </div>
             <div class="modal-body">
-                <label>选择对手</label>
+                <label i18n>选择对手</label>
                 <div id="windbot" class="list-group">
                     <a *ngFor="let name of windbot" href="#" class="list-group-item" (click)="join_windbot(name)">{{name}}</a>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
@@ -49,54 +49,54 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">创建房间</h4>
+                <h4 class="modal-title" i18n id="myModalLabel">创建房间</h4>
             </div>
             <form id="game-create" (submit)="create_room(room)">
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="game-create-title" class="col-sm-2 form-control-label">游戏标题</label>
+                        <label for="game-create-title" i18n class="col-sm-2 form-control-label">游戏标题</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="game-create-title" name="title" [(ngModel)]="room.title">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="game-create-rule" class="col-sm-2 form-control-label">卡片允许</label>
+                        <label i18n for="game-create-rule" class="col-sm-2 form-control-label">卡片允许</label>
                         <div class="col-sm-10">
                             <select class="form-control" id="game-create-rule" name="rule" [(ngModel)]="room.rule">
-                                <option value="0">OCG</option>
-                                <option value="1">TCG</option>
-                                <option value="2">OCG & TCG</option>
-                                <option value="3">专有卡禁止</option>
+                                <option i18n value="0">OCG</option>
+                                <option i18n value="1">TCG</option>
+                                <option i18n value="2">OCG & TCG</option>
+                                <option i18n value="3">专有卡禁止</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="game-create-mode" class="col-sm-2 form-control-label">决斗模式</label>
+                        <label for="game-create-mode" i18n class="col-sm-2 form-control-label">决斗模式</label>
                         <div class="col-sm-10">
                             <select class="form-control" id="game-create-mode" name="mode" [(ngModel)]="room.mode">
-                                <option value="0">单局模式</option>
-                                <option value="1">比赛模式</option>
-                                <option value="2">TAG</option>
+                                <option i18n value="0">单局模式</option>
+                                <option i18n value="1">比赛模式</option>
+                                <option i18n value="2">TAG</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 form-control-label">额外选项</label>
+                        <label i18n class="col-sm-2 form-control-label">额外选项</label>
                         <div class="col-sm-5">
                             <div class="row">
-                                <label for="game-create-start-lp" class="col-sm-6 form-control-label">初始 LP</label>
+                                <label i18n for="game-create-start-lp" class="col-sm-6 form-control-label">初始 LP</label>
                                 <div class="col-sm-6">
                                     <input name="start_lp" type="number" value="8000" min="1" max="65536" class="form-control form-control-sm game-create-extra" id="game-create-start-lp" [(ngModel)]="room.start_lp">
                                 </div>
                             </div>
                             <div class="row">
-                                <label for="game-create-start-hand" class="col-sm-6 form-control-label">初始手牌数</label>
+                                <label i18n for="game-create-start-hand" class="col-sm-6 form-control-label">初始手牌数</label>
                                 <div class="col-sm-6">
                                     <input name="start_hand" type="number" value="5" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-start-hand" [(ngModel)]="room.start_hand">
                                 </div>
                             </div>
                             <div class="row">
-                                <label for="game-create-draw-count" class="col-sm-6 form-control-label">每回合抽卡</label>
+                                <label i18n for="game-create-draw-count" class="col-sm-6 form-control-label">每回合抽卡</label>
                                 <div class="col-sm-6">
                                     <input name="draw_count" type="number" value="1" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-draw-count" [(ngModel)]="room.draw_count">
                                 </div>
@@ -104,18 +104,13 @@
                         </div>
                         <div class="col-sm-5">
                             <div class="checkbox">
-                                <label>
-                                    <input name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">允许启动效果优先权
-                                </label>
+                                <label i18n>允许启动效果优先权</label><input name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">
                             </div>
                             <div class="checkbox">
-                                <label> <input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">不检查卡组
-                                </label>
+                                <label i18n>不检查卡组</label><input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">
                             </div>
                             <div class="checkbox">
-                                <label>
-                                    <input name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">开局不洗卡组
-                                </label>
+                                <label i18n>开局不洗卡组</label><input name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">
                             </div>
                         </div>
                     </div>
@@ -131,10 +126,9 @@
                     </div>-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-list-modal">查看房间
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">创建</button>
+                    <button i18n type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-list-modal">查看房间</button>
+                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button i18n type="submit" class="btn btn-primary">创建</button>
                 </div>
             </form>
         </div>
@@ -146,10 +140,10 @@
             <table class="table table-striped table-hover">
                 <thead class="modal-header">
                 <tr>
-                    <th class="title">游戏标题</th>
-                    <th class="users">玩家</th>
-                    <th class="mode">决斗模式</th>
-                    <th class="extra">额外选项</th>
+                    <th i18n class="title">游戏标题</th>
+                    <th i18n class="users">玩家</th>
+                    <th i18n class="mode">决斗模式</th>
+                    <th i18n class="extra">额外选项</th>
                 </tr>
                 </thead>
                 <tbody class="modal-body">
@@ -162,12 +156,12 @@
                     <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.mode]}}</td>
                     <td class="extra">
                         <span *ngIf="room.rule != default_options.rule">{{{'0': 'OCG', '1': 'TCG', '2': 'O/T', '3': '专有卡禁止'}[room.rule]}}</span>
-                        <span *ngIf="room.start_lp != default_options.start_lp">{{room.start_lp}} LP</span>
-                        <span *ngIf="room.start_hand != default_options.start_hand">{{room.start_hand}} 初始</span>
-                        <span *ngIf="room.draw_count != default_options.draw_count">{{room.draw_count}} 抽卡</span>
-                        <span *ngIf="room.enable_priority != default_options.enable_priority">优先权</span>
-                        <span *ngIf="room.no_check_deck != default_options.no_check_deck">不检查</span>
-                        <span *ngIf="room.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
+                        <span i18n *ngIf="room.start_lp != default_options.start_lp">{{room.start_lp}} LP</span>
+                        <span i18n *ngIf="room.start_hand != default_options.start_hand">{{room.start_hand}} 初始</span>
+                        <span i18n *ngIf="room.draw_count != default_options.draw_count">{{room.draw_count}} 抽卡</span>
+                        <span i18n *ngIf="room.enable_priority != default_options.enable_priority">优先权</span>
+                        <span i18n *ngIf="room.no_check_deck != default_options.no_check_deck">不检查</span>
+                        <span i18n *ngIf="room.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
                     </td>
                 </tbody>
             </table>
@@ -175,9 +169,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-create-modal">创建房间
-                </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

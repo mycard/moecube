@@ -1,119 +1,271 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="zh-CN" datatype="plaintext" original="ng2.template">
-    <body>
-      <trans-unit id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c" datatype="html">
-        <source>游戏</source>
-        <target>Library</target>
-      </trans-unit>
-      <trans-unit id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b" datatype="html">
-        <source>社区</source>
-        <target>Community</target>
-      </trans-unit>
-      <trans-unit id="8422ff34db177236e8f54d415b07c972284c36bf" datatype="html">
-        <source>切换账号</source>
-        <target>Change Account</target>
-      </trans-unit>
-      <trans-unit id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a" datatype="html">
-        <source>安装</source>
-        <target>Install</target>
-      </trans-unit>
-      <trans-unit id="e6194d8a9c8da57b667847cd80f1da563f2c2b1e" datatype="html">
-        <source>导入</source>
-        <target>Import</target>
-      </trans-unit>
-      <trans-unit id="2fe99d94b20d6f8aba7814d8657037ec9d69d36c" datatype="html">
-        <source>正在安装...</source>
-        <target>Installing...</target>
-      </trans-unit>
-      <trans-unit id="e5ee7e692c816893b6fd2f9375e6d8303cd794cd" datatype="html">
-        <source>等待安装...</source>
-        <target>Pending...</target>
-      </trans-unit>
-      <trans-unit id="d3852e0147360b29d0d6076e95dd1ad0098a60db" datatype="html">
-        <source>运行</source>
-        <target>Start</target>
-      </trans-unit>
-      <trans-unit id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd" datatype="html">
-        <source>设置</source>
-        <target>Custom</target>
-      </trans-unit>
-      <trans-unit id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b" datatype="html">
-        <source>联机</source>
-        <target>Network</target>
-      </trans-unit>
-      <trans-unit id="5eadb60473a54773298ee679a4ce6a19d9c2f31c" datatype="html">
-        <source>复制</source>
-        <target>Copy</target>
-      </trans-unit>
-      <trans-unit id="95d5e106e679433bec012420b1ab9334c294bc7e" datatype="html">
-        <source>选择服务器</source>
-        <target>Select Server</target>
-      </trans-unit>
-      <trans-unit id="63346eb53d54138db02c1713ae58f73bb1b8786f" datatype="html">
-        <source>新闻</source>
-        <target>News</target>
-      </trans-unit>
-      <trans-unit id="b1c134df688af90e436e49f6d3e9f6960f9497c6" datatype="html">
-        <source>了解更多</source>
-        <target>More Info</target>
-      </trans-unit>
-      <trans-unit id="3ebbe3f1c691ec3184ac8c7a5f360706501e6b50" datatype="html">
-        <source>名称</source>
-        <target>Name</target>
-      </trans-unit>
-      <trans-unit id="d58ff4f339ad18d82b08fb0615ba8c1cf373a4a2" datatype="html">
-        <source>操作</source>
-        <target>Action</target>
-      </trans-unit>
-      <trans-unit id="e090f6d9d8129a7b8b92387f05f37eb4b44c0b4e" datatype="html">
-        <source>卸载</source>
-        <target>Uninstall</target>
-      </trans-unit>
-      <trans-unit id="8d0792a89fc399aafb40cc1228cb8c04a2056883" datatype="html">
-        <source>本地文件</source>
-        <target>Local Files</target>
-      </trans-unit>
-      <trans-unit id="628c76783ac32e6c8b2ea9134397b8cb82a82cd6" datatype="html">
-        <source>浏览本地文件</source>
-        <target>Browse</target>
-      </trans-unit>
-      <trans-unit id="6d582ed48c57c91fc7cf10f36f3869cd33808d1d" datatype="html">
-        <source>校验完整性</source>
-        <target>Verify integrity</target>
-      </trans-unit>
-      <trans-unit id="4809edca33b1a07d7d6e8905287d3825e676f2c8" datatype="html">
-        <source>安装 <x id="INTERPOLATION"/></source>
-        <target>Install <x id="INTERPOLATION"/></target>
-      </trans-unit>
-      <trans-unit id="f8e60167c7a0871ccf40ed2a0750311411dfd665" datatype="html">
-        <source>即将开始安装 <x id="INTERPOLATION"/></source>
-        <target>Preparing Install <x id="INTERPOLATION"/></target>
-      </trans-unit>
-      <trans-unit id="63a6c9b023e9e9f8ddfba70b0e24931008fa2510" datatype="html">
-        <source>安装位置</source>
-        <target>Path</target>
-      </trans-unit>
-      <trans-unit id="0b96c54bf810c6deb2c32253bf16b86d3c90da94" datatype="html">
-        <source>快捷方式</source>
-        <target>Shortcuts</target>
-      </trans-unit>
-      <trans-unit id="8aa0a41ee6809b972d3904d96607ba5e6dc48fd9" datatype="html">
-        <source>创建 LaunchPad 快捷方式</source>
-        <target>Create Launchpad Shortcut</target>
-      </trans-unit>
-      <trans-unit id="da32e99069864644f0419f67858d93815e029b02" datatype="html">
-        <source>创建开始菜单快捷方式</source>
-        <target>Create Start Menu Shortcut</target>
-      </trans-unit>
-      <trans-unit id="d8a2d9a9f8854ad118381e6e30a41dc1959a4f0b" datatype="html">
-        <source>创建桌面快捷方式</source>
-        <target>Create Desktop Shortcut</target>
-      </trans-unit>
-      <trans-unit id="2ba33dd61b1ac70666322680f248e5336b3ee69a" datatype="html">
-        <source>依赖：</source>
-        <target>Dependencies</target>
-      </trans-unit>
-    </body>
-  </file>
+    <file source-language="zh-CN" datatype="plaintext" original="ng2.template">
+        <body>
+            <trans-unit id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c" datatype="html">
+                <source>游戏</source>
+                <target>Library</target>
+            </trans-unit>
+            <trans-unit id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b" datatype="html">
+                <source>社区</source>
+                <target>Community</target>
+            </trans-unit>
+            <trans-unit id="8422ff34db177236e8f54d415b07c972284c36bf" datatype="html">
+                <source>切换账号</source>
+                <target>Change Account</target>
+            </trans-unit>
+            <trans-unit id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a" datatype="html">
+                <source>安装</source>
+                <target>Install</target>
+            </trans-unit>
+            <trans-unit id="e6194d8a9c8da57b667847cd80f1da563f2c2b1e" datatype="html">
+                <source>导入</source>
+                <target>Import</target>
+            </trans-unit>
+            <trans-unit id="2fe99d94b20d6f8aba7814d8657037ec9d69d36c" datatype="html">
+                <source>正在安装...</source>
+                <target>Installing...</target>
+            </trans-unit>
+            <trans-unit id="e5ee7e692c816893b6fd2f9375e6d8303cd794cd" datatype="html">
+                <source>等待安装...</source>
+                <target>Pending...</target>
+            </trans-unit>
+            <trans-unit id="d3852e0147360b29d0d6076e95dd1ad0098a60db" datatype="html">
+                <source>运行</source>
+                <target>Start</target>
+            </trans-unit>
+            <trans-unit id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd" datatype="html">
+                <source>设置</source>
+                <target>Custom</target>
+            </trans-unit>
+            <trans-unit id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b" datatype="html">
+                <source>联机</source>
+                <target>Network</target>
+            </trans-unit>
+            <trans-unit id="5eadb60473a54773298ee679a4ce6a19d9c2f31c" datatype="html">
+                <source>复制</source>
+                <target>Copy</target>
+            </trans-unit>
+            <trans-unit id="95d5e106e679433bec012420b1ab9334c294bc7e" datatype="html">
+                <source>选择服务器</source>
+                <target>Select Server</target>
+            </trans-unit>
+            <trans-unit id="63346eb53d54138db02c1713ae58f73bb1b8786f" datatype="html">
+                <source>新闻</source>
+                <target>News</target>
+            </trans-unit>
+            <trans-unit id="b1c134df688af90e436e49f6d3e9f6960f9497c6" datatype="html">
+                <source>了解更多</source>
+                <target>More Info</target>
+            </trans-unit>
+            <trans-unit id="3ebbe3f1c691ec3184ac8c7a5f360706501e6b50" datatype="html">
+                <source>名称</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="d58ff4f339ad18d82b08fb0615ba8c1cf373a4a2" datatype="html">
+                <source>操作</source>
+                <target>Action</target>
+            </trans-unit>
+            <trans-unit id="e090f6d9d8129a7b8b92387f05f37eb4b44c0b4e" datatype="html">
+                <source>卸载</source>
+                <target>Uninstall</target>
+            </trans-unit>
+            <trans-unit id="8d0792a89fc399aafb40cc1228cb8c04a2056883" datatype="html">
+                <source>本地文件</source>
+                <target>Local Files</target>
+            </trans-unit>
+            <trans-unit id="628c76783ac32e6c8b2ea9134397b8cb82a82cd6" datatype="html">
+                <source>浏览本地文件</source>
+                <target>Browse</target>
+            </trans-unit>
+            <trans-unit id="6d582ed48c57c91fc7cf10f36f3869cd33808d1d" datatype="html">
+                <source>校验完整性</source>
+                <target>Verify integrity</target>
+            </trans-unit>
+            <trans-unit id="4809edca33b1a07d7d6e8905287d3825e676f2c8" datatype="html">
+                <source>安装 <x id="INTERPOLATION"/></source>
+                <target>Install <x id="INTERPOLATION"/></target>
+            </trans-unit>
+            <trans-unit id="f8e60167c7a0871ccf40ed2a0750311411dfd665" datatype="html">
+                <source>即将开始安装 <x id="INTERPOLATION"/></source>
+                <target>Preparing Install <x id="INTERPOLATION"/></target>
+            </trans-unit>
+            <trans-unit id="63a6c9b023e9e9f8ddfba70b0e24931008fa2510" datatype="html">
+                <source>安装位置</source>
+                <target>Path</target>
+            </trans-unit>
+            <trans-unit id="0b96c54bf810c6deb2c32253bf16b86d3c90da94" datatype="html">
+                <source>快捷方式</source>
+                <target>Shortcuts</target>
+            </trans-unit>
+            <trans-unit id="8aa0a41ee6809b972d3904d96607ba5e6dc48fd9" datatype="html">
+                <source>创建 LaunchPad 快捷方式</source>
+                <target>Create Launchpad Shortcut</target>
+            </trans-unit>
+            <trans-unit id="da32e99069864644f0419f67858d93815e029b02" datatype="html">
+                <source>创建开始菜单快捷方式</source>
+                <target>Create Start Menu Shortcut</target>
+            </trans-unit>
+            <trans-unit id="d8a2d9a9f8854ad118381e6e30a41dc1959a4f0b" datatype="html">
+                <source>创建桌面快捷方式</source>
+                <target>Create Desktop Shortcut</target>
+            </trans-unit>
+            <trans-unit id="2ba33dd61b1ac70666322680f248e5336b3ee69a" datatype="html">
+                <source>依赖：</source>
+                <target>Dependencies</target>
+            </trans-unit>
+            <trans-unit datatype="html" id="def237147323023c1f5ce0579345da19d4707fdb">
+                <source>卡组</source>
+                <target>Deck</target>
+            </trans-unit>
+            <trans-unit id="a842d4536fdee499a55c753c50810254347ced32" datatype="html">
+                <source>编辑</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="08254f4ac965519b9a0befb43fd82bd6fa72a7af" datatype="html">
+                <source>删除</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="a9f9a37033c904e50f9920798cf02b0f3ccd8270" datatype="html">
+                <source>刷新</source>
+                <target>Refresh</target>
+            </trans-unit>
+            <trans-unit id="86738bd5d32223ffbb690a7c71360ddf8e7b1b2e" datatype="html">
+                <source>竞技匹配</source>
+                <target>Ranked Match</target>
+            </trans-unit>
+            <trans-unit id="37869c115276c5df476f1f5aae75c099ffb35b59" datatype="html">
+                <source>取消等待</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="0bf938a69dc640aba46428d1cbbd2fef34c88daa" datatype="html">
+                <source>娱乐匹配</source>
+                <target>Unranked Match</target>
+            </trans-unit>
+            <trans-unit id="19923836b1ae79614782426a7a001d8ccfa27b5c" datatype="html">
+                <source>创建房间</source>
+                <target>Custom Game</target>
+            </trans-unit>
+            <trans-unit id="c54a3c40a2766446dd03b0af75f64055aa404855" datatype="html">
+                <source>房间列表</source>
+                <target>Game List</target>
+            </trans-unit>
+            <trans-unit id="3768b60a7e2625bb1fc2db37eb8c6b8e4bd99101" datatype="html">
+                <source>单人模式</source>
+                <target>Simgle Mode</target>
+            </trans-unit>
+            <trans-unit id="1e64bb9c96dfc2b9cb03179dd0c9f992e0645e5f" datatype="html">
+                <source>选择对手</source>
+                <target>Select Opponent</target>
+            </trans-unit>
+            <trans-unit id="f6f3be110e7043e3cfe71a7bd75b8b3be79bff5d" datatype="html">
+                <source>取消</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="e35d1bf7c735e8df55a62046cd2d9f820bf5bffd" datatype="html">
+                <source>游戏标题</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="4b911deaa4defd0803635012281f3dd1112aabd1" datatype="html">
+                <source>卡片允许</source>
+                <target>Rule</target>
+            </trans-unit>
+            <trans-unit id="93d3b6bb4f3a66efd8c49f9063f6c8d6a9e959bf" datatype="html">
+                <source>OCG</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="150cb34526cf737163beb63ab76e4809ac1367dd" datatype="html">
+                <source>TCG</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="be6d109c359b1d11b261280915e6b1706ca3ed9b" datatype="html">
+                <source>OCG &amp; TCG</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="2a3f48f9ea5e6aae92e249ac2b279dbc07a6127d" datatype="html">
+                <source>专有卡禁止</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="d62a2717a0381d996785271c61177711777ba63c" datatype="html">
+                <source>决斗模式</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="e436a4a0da03320dc61ba35bfab390ab85a23d0c" datatype="html">
+                <source>单局模式</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="2cf71acc936cf244cc5862b28efe461e91cb137d" datatype="html">
+                <source>比赛模式</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="c2ed31e132c305b995382adce0f95ccdabadaa21" datatype="html">
+                <source>TAG</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="d4038dd5d0e9d5139d425fc7bea40e40d965cc5b" datatype="html">
+                <source>额外选项</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="01cfbee3f1d69f5adae299b7b8c8d75034aef53b" datatype="html">
+                <source>初始 LP</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="0d72e50857f1d2504e08f7886d4c9d35a46e3ed9" datatype="html">
+                <source>初始手牌数</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="88cc5676c5322fd55c1df94ab487359100e6f9dd" datatype="html">
+                <source>每回合抽卡</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="e405d8c7feb2bed82f3f0667657fa4ab668ae015" datatype="html">
+                <source>允许启动效果优先权</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="6e7470ddf4c35f6fab39b6ebeadb1780701a5469" datatype="html">
+                <source>不检查卡组</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="0320acff078b039f2220bb385586cd2e24392bbb" datatype="html">
+                <source>开局不洗卡组</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="c17e9385db80e1881f37dda25d109b115a2843b3" datatype="html">
+                <source>查看房间</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="f8ae23b4314929573cf0e815ccc12d70486dd74f" datatype="html">
+                <source>创建</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="3872a823a98042e4730861ab6f9344239d9deeb6" datatype="html">
+                <source>玩家</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="4baa1360b4d635000fc5e14a6e7376f46ace0bd9" datatype="html">
+                <source><x id="INTERPOLATION"/> LP</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="1939517ea2b4ff337ce2847302fbcc6f1217d269" datatype="html">
+                <source><x id="INTERPOLATION"/> 初始</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="a19d6d5a2c74d9df73936a17b5c71b2069051b49" datatype="html">
+                <source><x id="INTERPOLATION"/> 抽卡</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="be32d8fb22f36c3b2c1530e91f2ca07d108c8abe" datatype="html">
+                <source>优先权</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="b5be173f96718dfa737f1da31d9ffab5b803561e" datatype="html">
+                <source>不检查</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="517c8b6e5361bc32d7458a1e8b2bdbf09abb6f01" datatype="html">
+                <source>不洗卡</source>
+                <target/>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>
