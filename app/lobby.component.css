@@ -28,6 +28,10 @@ a {
     padding: 10px 20px 10px 20px;
 }
 
+a:focus, a:hover {
+    text-decoration: none;
+}
+
 .active {
     background-color: #428bca;
 }

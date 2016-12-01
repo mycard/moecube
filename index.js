@@ -1,6 +1,6 @@
 'use strict';
 
-const {ipcMain, app, BrowserWindow} = require('electron');
+const {ipcMain, app, shell, BrowserWindow} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
 const isDev = require('electron-is-dev');
 const child_process = require('child_process');
@@ -35,6 +35,14 @@ global.autoUpdater = autoUpdater;
 if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
     autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
 }
+// else{
+//     setTimeout(()=>{
+//         autoUpdater.emit('checking-for-update')
+//     }, 5000)
+//     setTimeout(()=>{
+//         autoUpdater.emit('error', '1')
+//     }, 6000)
+// }
 autoUpdater.on('error', (event) => {
     console.log('autoUpdater', 'error', event);
 });
@@ -130,6 +138,11 @@ function createWindow() {
 
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+    mainWindow.webContents.on('new-window', function(e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
 
     // Open the DevTools.
     if (process.env['NODE_ENV'] == 'development') {

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-inverse" [class.darwin]="platform == 'darwin'">
+<nav id="navbar" class="navbar navbar-dark bg-inverse">
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
         <li *ngIf="!loginService.logged_in" class="nav-item active">
@@ -17,12 +17,18 @@
         </li>
     </ul>
     <div class="navbar-right">
+        <div id="update-status">
+            <i #error [hidden]="update_status != 'error'" (click)="update_retry()" class="fa fa-exclamation-circle" data-toggle="tooltip" title="更新出错，点击重试"></i>
+            <i #checking_for_update [hidden]="update_status != 'checking-for-update'" class="fa fa-spinner fa-pulse fa-spin" data-toggle="tooltip" title="正在检查更新"></i>
+            <i #update_available [hidden]="update_status != 'update-available'" class="fa fa-refresh fa-spin" data-toggle="tooltip" title="正在下载更新"></i>
+            <i #update_downloaded [hidden]="update_status != 'update-downloaded'" (click)="update_install()" class="fa fa-angle-double-up" data-toggle="tooltip" title="下载更新完成，点击安装"></i>
+        </div>
         <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
             <a i18n href="#" (click)="loginService.logout()" class="item">切换账号</a>
         </div>
-        <div id="window-buttons" *ngIf="platform != 'darwin'">
+        <div id="window-buttons">
             <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
             <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand"></i>
             <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone"></i>

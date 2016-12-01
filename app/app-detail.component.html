@@ -1,5 +1,5 @@
 <h1>{{currentApp.name}}</h1>
-<div *ngIf="currentApp.status.status === 'init'">
+<div class="actions" *ngIf="currentApp.status.status === 'init'">
     <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallConfig(currentApp)" data-target="#install-modal">安装</button>
     <button i18n type="button" class="btn btn-secondary">导入</button>
 </div>
@@ -29,7 +29,7 @@
 <div id="news" *ngFor="let item of news">
     <h3>{{item.title}}</h3>
     <p>{{item.text}}</p>
-    <a i18n *ngIf="item.url" [href]="item.url">了解更多</a>
+    <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
 </div>
 <div *ngIf="currentApp.isInstalled()">
     <div *ngIf="mods && mods.length">

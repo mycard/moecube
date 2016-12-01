@@ -7,9 +7,15 @@
                 <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
             </li>
         </ul>
-        <span *ngIf="grouped_apps.yugioh">游戏王</span>
-        <ul *ngIf="grouped_apps.yugioh" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.yugioh" [class.active]="app===currentApp">
+        <span *ngIf="grouped_apps.recommend">推荐</span>
+        <ul *ngIf="grouped_apps.recommend" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.recommend" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+        <span *ngIf="grouped_apps.mysterious">迷之物体</span>
+        <ul *ngIf="grouped_apps.mysterious" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.mysterious" [class.active]="app===currentApp">
                 <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
             </li>
         </ul>
