@@ -89,8 +89,18 @@ export class App {
         return this.status.status === "downloading";
     }
 
-    runable() {
+    runable(): boolean {
         return [Category.game].includes(this.category);
+    }
+
+    progressMessage(): string | undefined {
+        if (this.isDownloading()) {
+            return '1M/s'
+        } else if (this.isInstalling()) {
+            return 'マニュアル/index.html'
+        } else if (this.isWaiting()) {
+            return 'wine, Neko Project II'
+        }
     }
 
     constructor(app: any) {

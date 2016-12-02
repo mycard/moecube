@@ -1,39 +1,32 @@
 <h1>{{currentApp.name}}</h1>
 <!--应用未安装-->
 <div class="actions" *ngIf="!currentApp.isInstalled()">
-    <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">
-        安装
-    </button>
+    <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">安装</button>
     <button i18n type="button" class="btn btn-secondary">导入</button>
 </div>
 
 <!--应用变更中-->
 <div class="actions" *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
-    <div *ngIf="currentApp.isDownloading()">
-        <span>正在下载</span><span *ngIf="currentApp.status.total">{{currentApp.status.progress/currentApp.status.total}}%</span>
+    <div>
+        <span *ngIf="currentApp.isDownloading()">正在下载</span>
+        <span *ngIf="currentApp.isInstalling()">正在安装...</span>
+        <span *ngIf="currentApp.isWaiting()">等待安装...</span>
+        <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
+        <span>{{currentApp.progressMessage()}}</span>
     </div>
-    <div i18n *ngIf="currentApp.isInstalling()">正在安装...</div>
-    <div i18n *ngIf="currentApp.isWaiting()">等待安装...</div>
     <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
 </div>
 
 <!--应用ready-->
 <div class="actions" *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
-    <button i18n *ngIf="currentApp.runable()" (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行
-    </button>
-    <button i18n *ngIf="currentApp.runable() && currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">
-        设置
-    </button>
+    <button i18n *ngIf="currentApp.runable()" (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行</button>
+    <button i18n *ngIf="currentApp.runable() && currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">设置</button>
     <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
         <div class="input-group">
             <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
             <div class="input-group-btn">
-                <button i18n *ngIf="!appsService.connections.get(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">
-                    联机
-                </button>
-                <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">
-                    复制
-                </button>
+                <button i18n *ngIf="!appsService.connections.get(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">联机</button>
+                <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">复制</button>
                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" style="height: 38px;"></button>
                 <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
                     <h6 i18n class="dropdown-header">选择服务器</h6>
@@ -69,9 +62,7 @@
                     <button i18n type="button" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
                 </td>
                 <td *ngIf="!mod.isInstalled()">
-                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">
-                        安装
-                    </button>
+                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">安装</button>
                     <progress *ngIf="mod.status.status==='downloading'" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
                     <div i18n *ngIf="mod.status.status==='waiting'">等待安装...</div>
                 </td>
