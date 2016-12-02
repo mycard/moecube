@@ -44,7 +44,8 @@
     <p>{{item.text}}</p>
     <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
 </div>
-<div *ngIf="currentApp.isInstalled()">
+
+<div *ngIf="currentApp.isReady()">
     <div *ngIf="mods && mods.length">
         <table class="table table-striped">
             <thead class="thead-inverse">
