@@ -2039,7 +2039,7 @@
     },
     "category": "game",
     "tags": [
-      "yugioh"
+      "recommend"
     ],
     "dependencies": {
       "win32": [],
@@ -2075,7 +2075,7 @@
     },
     "news": [
       {
-        "url": "#",
+        "url": "https://ygobbs.com",
         "image": "http://pic.4j4j.cn/upload/pic/20140327/af650cf463.jpg",
         "title": "News Title",
         "text": "喵喵喵喵"
@@ -2145,7 +2145,7 @@
     },
     "category": "game",
     "tags": [
-      "yugioh"
+      "mysterious"
     ],
     "dependencies": {
       "win32": [

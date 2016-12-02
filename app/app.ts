@@ -70,7 +70,23 @@ export class App {
     conference: string | undefined;
 
     isInstalled(): boolean {
-        return !!this.local;
+        return this.status.status != 'init';
+    }
+
+    isReady(): boolean {
+        return this.status.status == 'ready';
+    }
+
+    isInstalling(): boolean {
+        return this.status.status == 'installing';
+    }
+
+    isWaiting(): boolean {
+        return this.status.status == 'waiting';
+    }
+
+    isDownloading(): boolean {
+        return this.status.status === "downloading";
     }
 
     runable() {

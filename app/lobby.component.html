@@ -1,19 +1,31 @@
 <!-- Begin page content -->
 <div id="main">
+
     <div id="apps" *ngIf="apps">
         <span *ngIf="grouped_apps.installed">已安装</span>
         <ul *ngIf="grouped_apps.installed" class="nav nav-sidebar">
             <li *ngFor="let app of grouped_apps.installed" [class.active]="app===currentApp">
+                <i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
+                <div *ngIf="!app.isReady() && app.status.total" class="progress">
+                    <div class="pie" [class.second-half]="app.status.progress/app.status.total>0.5">
+                        <div class="left-side half-circle" [style.transform]="'rotate('+(app.status.progress/app.status.total).toString()+'turn)'"></div>
+                        <div class="right-side half-circle"></div>
+                    </div>
+                    <div class="shadow"></div>
+                </div>
                 <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
-                <progress *ngIf="app.status.status === 'downloading'"
-                          class="progress progress-striped progress-animated"
-                          value="{{app.status.progress}}"
-                          max="{{app.status.total}}"></progress>
+
             </li>
         </ul>
-        <span *ngIf="grouped_apps.yugioh">游戏王</span>
-        <ul *ngIf="grouped_apps.yugioh" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.yugioh" [class.active]="app===currentApp">
+        <span *ngIf="grouped_apps.recommend">推荐</span>
+        <ul *ngIf="grouped_apps.recommend" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.recommend" [class.active]="app===currentApp">
+                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+            </li>
+        </ul>
+        <span *ngIf="grouped_apps.mysterious">迷之物体</span>
+        <ul *ngIf="grouped_apps.mysterious" class="nav nav-sidebar">
+            <li *ngFor="let app of grouped_apps.mysterious" [class.active]="app===currentApp">
                 <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
                 <progress *ngIf="app.status.status === 'downloading'"
                           class="progress progress-striped progress-animated"
@@ -47,4 +59,5 @@
     <app-detail *ngIf="currentApp" [currentApp]="currentApp"></app-detail>
     <roster></roster>
 </div>
+
 <webview *ngIf="currentApp" #candy id="candy" [src]="candy_url" nodeintegration></webview>

@@ -1,32 +1,3 @@
-:host {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-nav {
-    -webkit-app-region: drag;
-    padding-right: 0;
-    flex-shrink: 0;
-}
-
-nav a, nav i, nav img {
-    -webkit-app-region: no-drag;
-}
-
-nav.darwin {
-    padding-left: 80px;
-}
-
-.navbar-right {
-    float: right
-}
-
-.navbar-right > div, #user > .item {
-    float: left;
-    margin: 0 0.5rem;
-}
-
 .page {
     flex-grow: 1;
     /*margin-bottom: 60px;*/
@@ -50,25 +21,19 @@ nav.darwin {
     text-decoration: none;
 }
 
-.item:hover {
+#update-status > i {
+    line-height: 1.5;
+    color: #eceeef;
+    padding-top: .425rem;
+    padding-bottom: .425rem;
+}
+
+.item:hover, li > a:hover {
     color: #fff;
 }
 
 a {
     cursor: default;
-}
-
-#window-buttons > i {
-    color: rgba(255, 255, 255, .75);
-    margin: .5rem;
-}
-
-li > a:hover, #window-buttons > i:hover {
-    color: #fff;
-}
-
-.navbar {
-    border-radius: initial;
 }
 
 /* https://github.com/electron/electron/issues/7661#event-827104990 */

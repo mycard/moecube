@@ -1,19 +1,48 @@
 'use strict';
 
-const {ipcMain, app, BrowserWindow} = require('electron');
+const {ipcMain, app, shell, BrowserWindow} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
+const isDev = require('electron-is-dev');
 const child_process = require('child_process');
 const path = require('path');
 
-if (process.platform == 'darwin') {
-    try {
-        autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
-    } catch (err) {
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow;
+
+// 单实例
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) {
+            mainWindow.restore()
+        }
+        mainWindow.focus()
     }
+})
+if (shouldQuit) {
+    app.quit()
 }
 
-global.autoUpdater = autoUpdater;
+// 调试模式
+if (!process.env['NODE_ENV']) {
+    process.env['NODE_ENV'] = isDev ? 'development' : 'production'
+}
 
+// 自动更新
+let updateWindow;
+global.autoUpdater = autoUpdater;
+if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
+    autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
+}
+// else{
+//     setTimeout(()=>{
+//         autoUpdater.emit('checking-for-update')
+//     }, 5000)
+//     setTimeout(()=>{
+//         autoUpdater.emit('error', '1')
+//     }, 6000)
+// }
 autoUpdater.on('error', (event) => {
     console.log('autoUpdater', 'error', event);
 });
@@ -26,27 +55,22 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-not-available', () => {
     console.log('autoUpdater', 'update-not-available');
 });
-
-let updateWindow;
 autoUpdater.on('update-downloaded', (event) => {
     console.log('autoUpdater', 'update-downloaded', event);
-
     updateWindow = new BrowserWindow({
         width: 640,
         height: 480,
     });
-
     updateWindow.loadURL(`file://${__dirname}/update.html`);
-
     updateWindow.on('closed', function () {
         updateWindow = null
     });
-
     ipcMain.on('update', (event, arg) => {
         autoUpdater.quitAndInstall()
     })
 });
 
+// 处理提权
 function handleElevate() {
 
     // for debug
@@ -73,32 +97,36 @@ function handleElevate() {
         return true;
     }
 }
-
 if (handleElevate()) {
     return;
 }
 
+// Aria2c
 function createAria2c() {
     let aria2c_path;
     switch (process.platform) {
         case 'win32':
-            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
+            if (process.env['NODE_ENV'] == 'production') {
+                aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
+            } else {
+                aria2c_path = path.join('bin', 'aria2c.exe');
+            }
             break;
         case 'darwin':
-            aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
+            if (process.env['NODE_ENV'] == 'production') {
+                aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
+            } else {
+                aria2c_path = path.join('bin', 'aria2c');
+            }
             break;
         default:
             throw 'unsupported platform';
     }
     return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', "--continue", "--split=10", "--min-split-size=1M", "--max-connection-per-server=10"], {stdio: 'ignore'});
 }
-
 const aria2c = createAria2c();
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
-
+// 主窗口
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -111,8 +139,15 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+    mainWindow.webContents.on('new-window', function(e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (process.env['NODE_ENV'] == 'development') {
+        mainWindow.webContents.openDevTools();
+    }
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -128,7 +163,9 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
     createWindow();
-    setTimeout(autoUpdater.checkForUpdates, 2000);
+    if (process.env['NODE_ENV'] == 'production') {
+        setTimeout(autoUpdater.checkForUpdates, 2000);
+    }
 });
 
 // Quit when all windows are closed.

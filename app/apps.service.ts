@@ -146,6 +146,7 @@ export class AppsService {
             let apps: App[] = [];
             let dependencies = app.findDependencies();
             apps.push(...dependencies, app);
+            console.log(apps);
             let downloadPath = path.join(option.installLibrary, 'downloading');
             let tasks: Promise<any>[] = [];
             for (let a of apps) {

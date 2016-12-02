@@ -5,3 +5,46 @@ html, body {
 body {
     font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
 }
+
+mycard {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.darwin #window-buttons {
+    display: none;
+}
+
+#window-buttons > i {
+    color: rgba(255, 255, 255, .75);
+    margin: .5rem;
+}
+
+#window-buttons > i:hover {
+    color: #fff;
+}
+
+#navbar {
+    -webkit-app-region: drag;
+    padding-right: 0;
+    flex-shrink: 0;
+    border-radius: initial;
+}
+
+#navbar a, #navbar i, #navbar img {
+    -webkit-app-region: no-drag;
+}
+
+#navbar .navbar-right {
+    float: right
+}
+
+#navbar .navbar-right > div, #user > .item {
+    float: left;
+    margin: 0 0.5rem;
+}
+
+.darwin #navbar {
+    padding-left: 80px;
+}

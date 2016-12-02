@@ -23,11 +23,32 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <script>
-        System.import('app')
+        System.import('app').catch((error) => {
+            $('#loading').hide();
+            $('#failed').removeAttr('hidden');
+            $('#error').removeAttr('hidden').text(error);
+        });
     </script>
 </head>
 
 <body>
-<mycard>Loading...</mycard>
+<mycard>
+    <nav id="navbar" class="navbar navbar-dark bg-inverse">
+        <a class="navbar-brand" href="#">MyCard</a>
+        <div class="navbar-right">
+            <div id="window-buttons">
+                <i onclick="window.close()" class="fa fa-times"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div id="loading">MyCard <span id="version"></span> Loading...</div>
+    <div id="failed" hidden>发生了错误，请复制以下错误信息并联系 support@mycard.moe</div>
+    <pre id="error" hidden></pre>
+</mycard>
+<script>
+    document.body.classList.add(process.platform);
+    document.getElementById('version').innerHTML = require('electron').remote.app.getVersion();
+</script>
 </body>
 </html>
