@@ -11,6 +11,9 @@ import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
 import Timer = NodeJS.Timer;
+import {DownloadService} from "./download.service";
+import {InstallOption} from "./install-option";
+import {InstallService} from "./install.service";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -24,9 +27,9 @@ export class AppsService {
 
     private apps: Map<string,App>;
 
-    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,) {
+    constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,
+                private downloadService: DownloadService, private installService: InstallService) {
     }
-
 
     loadApps() {
         return this.http.get('./apps.json')
@@ -67,7 +70,7 @@ export class AppsService {
             });
 
             // 去除平台无关的内容
-            ['actions', 'dependencies', 'references', 'download', 'version'].forEach((key) => {
+            ['actions', 'dependencies', 'references', 'version'].forEach((key) => {
                 if (app[key]) {
                     if (app[key][platform]) {
                         app[key] = app[key][platform];
@@ -112,6 +115,56 @@ export class AppsService {
         }
         return apps;
     };
+
+    async install(app: App, option: InstallOption) {
+        const addDownloadTask = async(app: App, dir: string) => {
+            let metalinkUrl = app.download;
+            if (app.id === "ygopro") {
+                metalinkUrl="https://thief.mycard.moe/metalinks/ygopro-"+process.platform+".meta4";
+            }
+            let metalink = await this.http.get(metalinkUrl).map((response) => {
+                return response.text()
+            }).toPromise();
+            app.status.status = "downloading";
+            let downloadId = await this.downloadService.addMetalink(metalink, dir);
+            let observable = this.downloadService.downloadProgress(downloadId);
+            return new Promise((resolve, reject) => {
+                observable.subscribe((task) => {
+                    app.status.progress = task.completedLength;
+                    app.status.total = task.totalLength;
+                    this.ref.tick();
+                }, (error) => {
+                    reject(error);
+                }, async() => {
+                    app.status.status = "waiting";
+                    let files = await this.downloadService.getFile(downloadId);
+                    resolve({app: app, files: files});
+                })
+            });
+        };
+        try {
+            let apps: App[] = [];
+            let dependencies = app.findDependencies();
+            apps.push(...dependencies, app);
+            let downloadPath = path.join(option.installLibrary, 'downloading');
+            let tasks: Promise<any>[] = [];
+            for (let a of apps) {
+                tasks.push(addDownloadTask(a, downloadPath));
+            }
+            let downloadResults = await Promise.all(tasks);
+            for (let result of downloadResults) {
+                console.log(result);
+                let o = new InstallOption(result.app, option.installLibrary);
+                o.downloadFiles = result.files;
+                this.installService.push({app: result.app, option: o});
+            }
+            // this.installService.push({app: app, option: option})
+
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
+    }
 
     findChildren(app: App): App[] {
         let children: App[] = [];

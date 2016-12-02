@@ -9,7 +9,7 @@ import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 import {Http, URLSearchParams} from "@angular/http";
 import * as path from "path";
-import {InstallConfig} from "./install-config";
+import {InstallOption} from "./install-option";
 import {AppLocal} from "./app-local";
 import WebViewElement = Electron.WebViewElement;
 
@@ -85,16 +85,6 @@ export class LobbyComponent implements OnInit {
                 let dir = path.join(path.dirname((<AppLocal>app.local).path), "downloading");
                 let a = await this.downloadService.addMetalink(metalink, dir);
 
-                await new Promise((resolve, reject) => {
-                    a.subscribe((status: any) => {
-                        console.log(status);
-                    }, (err: any) => {
-                        reject()
-                    }, () => {
-                        resolve();
-                    });
-                });
-
                 for (let file of deleteList) {
                     await this.installService.deleteFile(file);
                 }
@@ -106,7 +96,7 @@ export class LobbyComponent implements OnInit {
                 for (let child of children) {
                     if (child.isInstalled()) {
                         await this.installService.uninstall(child, false);
-                        this.installService.add(child, new InstallConfig(child, path.dirname(((<AppLocal>app.local).path))));
+                        // this.installService.add(child, new InstallOption(child, path.dirname(((<AppLocal>app.local).path))));
                         await this.installService.getComplete(child);
                         console.log("282828")
                     }

@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, ChangeDetectorRef} from "@angular/core";
 import {AppsService} from "./apps.service";
-import {InstallConfig} from "./install-config";
+import {InstallOption} from "./install-option";
 import {SettingsService} from "./settings.sevices";
 import {App} from "./app";
 import {DownloadService} from "./download.service";
@@ -22,7 +22,7 @@ export class AppDetailComponent implements OnInit {
     currentApp: App;
     platform = process.platform;
 
-    installConfig: InstallConfig;
+    installOption: InstallOption;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private installService: InstallService,
@@ -32,13 +32,13 @@ export class AppDetailComponent implements OnInit {
     ngOnInit() {
     }
 
-    updateInstallConfig(app: App) {
-        this.installConfig = new InstallConfig(app);
-        this.installConfig.installLibrary = this.settingsService.getDefaultLibrary().path;
-        this.installConfig.references = [];
-        for (let reference of app.references.values()) {
-            this.installConfig.references.push(new InstallConfig(reference))
-        }
+    updateInstallOption(app: App) {
+        this.installOption = new InstallOption(app);
+        this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
+        // this.installOption.references = [];
+        // for (let reference of app.references.values()) {
+        //     this.installOption.references.push(new InstallOption(reference))
+        // }
     }
 
     get libraries(): string[] {
@@ -54,7 +54,7 @@ export class AppDetailComponent implements OnInit {
     }
 
     async installMod(mod: App) {
-        this.updateInstallConfig(mod);
+        this.updateInstallOption(mod);
         await this.install(mod);
 
     }
@@ -69,68 +69,23 @@ export class AppDetailComponent implements OnInit {
     async install(targetApp: App) {
         $('#install-modal').modal('hide');
 
-        let options = this.installConfig;
+        let options = this.installOption;
 
-        let dependencies = targetApp.findDependencies();
-        let apps = dependencies.concat(targetApp).filter((app) => {
-            return !app.isInstalled()
-        });
-        if (options) {
-            for (let reference of options.references) {
-                if (reference.install && !reference.app.isInstalled()) {
-                    apps.push(reference.app);
-                    apps.push(...reference.app.findDependencies().filter((app) => {
-                        return !app.isInstalled()
-                    }))
-                }
-            }
-        }
+        // if (options) {
+        //     for (let reference of options.references) {
+        //         if (reference.install && !reference.app.isInstalled()) {
+        //             apps.push(reference.app);
+        //             apps.push(...reference.app.findDependencies().filter((app) => {
+        //                 return !app.isInstalled()
+        //             }))
+        //         }
+        //     }
+        // }
 
-        let downloadPath = path.join(this.installConfig.installLibrary, "downloading");
         try {
-            let downloadApps = await this.downloadService.addUris(apps, downloadPath);
-            for (let app of apps) {
-
-                await new Promise((resolve, reject) => {
-                    this.downloadService.getProgress(app)
-                        .subscribe((progress) => {
-                                app.status.status = "downloading";
-                                app.status.progress = progress.progress;
-                                app.status.total = progress.total;
-                                this.ref.detectChanges();
-                                resolve();
-                            },
-                            (error) => {
-                                reject(`download error: ${error}`);
-                            },
-                            () => {
-                                // 避免安装过快
-                                if (app.status.status === "downloading") {
-                                    app.status.status = "waiting";
-                                    this.ref.detectChanges();
-                                }
-                            });
-                });
-
-
-            }
-            await Promise.all(downloadApps.map((app) => {
-                return this.downloadService.getComplete(app)
-                    .then((completeApp: App) => {
-                        return this.installService.add(completeApp, options);
-                    });
-            }));
-            for (let app of apps) {
-                new Promise(async(resolve, reject) => {
-                    await this.installService.getComplete(app);
-                    app.status.status = 'ready';
-                    resolve();
-                })
-            }
-            await this.installService.getComplete(targetApp);
-            targetApp.status.status = "ready";
-            this.ref.detectChanges();
+            this.appsService.install(this.currentApp, options);
         } catch (e) {
+            console.error(e);
             new Notification(targetApp.name, {body: "下载失败"});
         }
     }
@@ -138,7 +93,7 @@ export class AppDetailComponent implements OnInit {
     selectDir() {
         let dir = remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory']});
         console.log(dir);
-        // this.appsService.installConfig.installDir = dir[0];
+        // this.appsService.installOption.installDir = dir[0];
         return dir[0];
     }
 

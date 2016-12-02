@@ -11,7 +11,7 @@ export enum Category {
     module
 }
 
-// export enum Status{
+// export enum DownloadStatus{
 //     downloading,
 //     init,
 //     installing,
@@ -34,25 +34,33 @@ export class AppStatus {
 }
 export class App {
     id: string;
-    _name: string;          // i18n
-    get name() {
-        return this._name;
-    }
-
-    set name(a) {
-        this._name = a;
-    }
+    name: string;          // i18n
 
     description: string;   //i18n
     author: string;             // English Only
     homepage: string;
     category: Category;
     parent: App;
+
+    get download(): string {
+        let downloadUrl = "https://thief.mycard.moe/metalinks/";
+        return downloadUrl + this.id + ".meta4";
+    }
+
+    get checksum(): string {
+        let checksumUrl = "https://thief.mycard.moe/checksum/";
+        return checksumUrl + this.id;
+    }
+
+    get update(): string {
+        let updateUrl = "https://thief.mycard.moe/update/";
+        return updateUrl + this.id;
+    }
+
     actions: Map<string,Action>;
     references: Map<string,App>;
     dependencies: Map<string,App>;
     locales: string[];
-    download: string;           // meta4 url
     news: {title: string, url: string, image: string}[];
     network: any;
     tags: string[];
@@ -81,7 +89,6 @@ export class App {
         this.parent = app.parent;
         this.references = app.references;
         this.locales = app.locales;
-        this.download = app.download;
         this.news = app.news;
         this.network = app.network;
         this.tags = app.tags;

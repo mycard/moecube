@@ -1,123 +1,152 @@
 /**
  * Created by weijian on 2016/10/26.
  */
-import {Injectable, NgZone} from "@angular/core";
+import {Injectable, NgZone, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
-import {EventEmitter} from "events";
 import {App} from "./app";
 import {Observer} from "rxjs";
 import Timer = NodeJS.Timer;
 const Aria2 = require('aria2');
 
+const MAX_LIST_NUM = 1000;
+const ARIA2_INTERVAL = 1000;
+
+export interface DownloadStatus {
+    completedLength: string;
+    downloadSpeed: string;
+    gid: string;
+    status: string;
+    totalLength: string;
+    errorCode: string;
+    errorMessage: string;
+}
 
 @Injectable()
 export class DownloadService {
     aria2 = new Aria2();
-    baseURL = 'https://thief.mycard.moe/metalinks/';
-    appGidMap = new Map<App,string>();
-    gidAppMap = new Map<string,App>();
-    eventEmitter = new EventEmitter();
-
     open = this.aria2.open();
+    updateEmitter = new EventEmitter<string>();
+    progressList: Map<string,(Observable<any>)> = new Map();
+    taskList: Map<string,DownloadStatus> = new Map();
+
+    map: Map<string,string[]> = new Map();
 
     constructor(private ngZone: NgZone, private http: Http) {
-        this.aria2.onDownloadComplete = (result: any) => {
-            let app = this.gidAppMap.get(result.gid);
-            if (app) {
-                this.appGidMap.delete(app);
-                this.gidAppMap.delete(result.gid);
-                this.eventEmitter.emit(app.id, 'complete');
-                //
-            }
-
-            if (this.map.get(result.gid)) {
-                this.map.get(result.gid).complete();
-                this.map.delete(result.gid);
-            }
-        }
+        ngZone.runOutsideAngular(async() => {
+            await this.open;
+            setInterval(async() => {
+                let activeList = await this.aria2.tellActive();
+                let waitList = await this.aria2.tellWaiting(0, MAX_LIST_NUM);
+                let stoppedList = await this.aria2.tellStopped(0, MAX_LIST_NUM);
+                for (let item of activeList) {
+                    this.taskList.set(item.gid, item);
+                }
+                for (let item of waitList) {
+                    this.taskList.set(item.gid, item);
+                }
+                for (let item of stoppedList) {
+                    this.taskList.set(item.gid, item);
+                }
+                this.updateEmitter.emit("updated");
+            }, ARIA2_INTERVAL);
+        })
     }
 
-    getComplete(app: App): Promise<App> {
-        if (!this.appGidMap.has(app)) {
-            throw('nyaa');
+    private createId(): string {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
         }
-        return new Promise((resolve, reject) => {
-            this.eventEmitter.once(app.id, (event: Event) => {
-                resolve(app);
-            })
-        });
+
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
     }
 
-    getProgress(app: App): Observable<any> {
-        let gid = this.appGidMap.get(app);
-        return Observable.create((observer: Observer<any>) => {
-            let interval: Timer;
-            this.ngZone.runOutsideAngular(() => {
-                interval = setInterval(() => {
-                    this.aria2.tellStatus(gid).then((status: any) => {
-                        if (status.status === 'complete') {
-                            observer.complete();
-                        } else if (status.status === "active") {
-                            observer.next({total: status.totalLength, progress: status.completedLength})
-                        } else if (status.status === "error") {
-                            console.log("error", status.errorCode);
-                            observer.error(status.errorCode)
+    downloadProgress(id: string): Observable<any> {
+        let progress = this.progressList.get(id);
+        if (progress) {
+            return progress;
+        } else {
+            return Observable.create((observer: Observer<any>) => {
+                let status = '';
+                let completedLength = 0;
+                let totalLength = 0;
+                let gidList = this.map.get(id) !;
+                this.updateEmitter.subscribe((value: string) => {
+                    let statusList = new Array(gidList.length);
+                    let newCompletedLength = 0;
+                    let newTotalLength = 0;
+                    for (let [index,gid] of gidList.entries()) {
+                        let task = this.taskList.get(gid)!;
+                        statusList[index] = task.status;
+                        newCompletedLength += parseInt(task.completedLength);
+                        newTotalLength += parseInt(task.totalLength);
+                    }
+                    if (newCompletedLength !== completedLength || newTotalLength !== totalLength) {
+                        completedLength = newCompletedLength;
+                        totalLength = newTotalLength;
+                        observer.next({status: status, completedLength: completedLength, totalLength: totalLength});
+                    }
+                    status = statusList.reduce((value, current) => {
+                        if (value === "complete" && current === "complete") {
+                            return "complete";
+                        }
+                        if (current != "complete" && current != "active") {
+                            return "error";
                         }
                     });
-                }, 1000);
-            });
-            return () => {
-                clearInterval(interval);
-            }
-        });
-    }
+                    if (status === "complete") {
+                        observer.complete();
+                    } else if (status == "error") {
+                        observer.error("Download Error");
+                    }
+                    return () => {
 
-    async addUris(apps: App[], path: string): Promise<App[]> {
-        let tasks: App[] = [];
-        for (let app of apps) {
-            let task = await this.addUri(app, path);
-            tasks.push(task);
+                    }
+                }, () => {
+
+                }, () => {
+
+                })
+            });
+
         }
-        return tasks;
     }
 
-    map: Map<string,any> = new Map();
-
-    async addMetalink(metalink: string, library: string) {
-        let meta4 = new Buffer((metalink)).toString('base64');
-        let gid = ( await this.aria2.addMetalink(meta4, {dir: library}))[0];
-        return Observable.create((observer: Observer<any>) => {
-            this.map.set(gid, observer);
-            let interval: Timer;
-            this.ngZone.runOutsideAngular(() => {
-                interval = setInterval(async() => {
-                    let status = await this.aria2.tellStatus(gid);
-                    this.map.get(gid).next(status);
-                }, 1000)
-            });
-            return () => {
-                clearInterval(interval);
-            }
-        });
+    async getFile(id: string): Promise<string[]> {
+        let gids = this.map.get(id)!;
+        console.log('gids ', gids);
+        let files: string[] = [];
+        for (let gid of gids) {
+            let file = await this.aria2.getFiles(gid);
+            files.push(file[0].path);
+        }
+        return files;
     }
 
-    async addUri(app: App, path: string): Promise<App> {
-        let id = app.id;
+    async addMetalink(metalink: string, library: string): Promise<string> {
+        let encodedMeta4 = new Buffer((metalink)).toString('base64');
+        let gidList = await this.aria2.addMetalink(encodedMeta4, {dir: library});
+        let taskId = this.createId();
+        this.map.set(taskId, gidList);
+        return taskId;
+    }
+
+    async addUri(url: string, destination: string): Promise<string> {
         await this.open;
-        if (this.appGidMap.has(app)) {
-            return app;
-        } else {
-            let meta4link = `${this.baseURL}${id}.meta4`;
-            if (["ygopro", 'desmume'].includes(id)) {
-                meta4link = `${this.baseURL}${id}-${process.platform}.meta4`
-            }
-            let response = await this.http.get(meta4link).toPromise();
-            let meta4 = new Buffer(response.text()).toString('base64');
-            let gid = (await this.aria2.addMetalink(meta4, {dir: path}))[0];
-            this.appGidMap.set(app, gid);
-            this.gidAppMap.set(gid, app);
-            return app;
+        let id = await this.aria2.addUri([url], {dir: destination});
+        return id;
+    }
+
+    async pause(id: string): Promise<void> {
+        await this.open;
+        try {
+            await this.aria2.pause(id)
+        } catch (e) {
+
         }
     }
+
 }
