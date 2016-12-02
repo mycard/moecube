@@ -30,7 +30,19 @@ export interface Action {
 export class AppStatus {
     progress: number;
     total: number;
-    status: string;
+    private _status: string;
+    get status(): string {
+        return this._status
+    }
+
+    set status(status: string) {
+        this.progress = 0;
+        this.total = 0;
+        this.progressMessage = '';
+        this._status = status;
+    }
+
+    progressMessage: string;
 }
 export class App {
     id: string;
@@ -94,13 +106,7 @@ export class App {
     }
 
     progressMessage(): string | undefined {
-        if (this.isDownloading()) {
-            return '1M/s'
-        } else if (this.isInstalling()) {
-            return 'マニュアル/index.html'
-        } else if (this.isWaiting()) {
-            return 'wine, Neko Project II'
-        }
+        return this.status.progressMessage;
     }
 
     constructor(app: any) {

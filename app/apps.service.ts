@@ -120,7 +120,7 @@ export class AppsService {
         const addDownloadTask = async(app: App, dir: string) => {
             let metalinkUrl = app.download;
             if (app.id === "ygopro") {
-                metalinkUrl="https://thief.mycard.moe/metalinks/ygopro-"+process.platform+".meta4";
+                metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + ".meta4";
             }
             let metalink = await this.http.get(metalinkUrl).map((response) => {
                 return response.text()
@@ -130,8 +130,24 @@ export class AppsService {
             let observable = this.downloadService.downloadProgress(downloadId);
             return new Promise((resolve, reject) => {
                 observable.subscribe((task) => {
+                    if (task.totalLength) {
+                        app.status.total = task.totalLength;
+                    } else {
+                        app.status.total = 0;
+                    }
                     app.status.progress = task.completedLength;
-                    app.status.total = task.totalLength;
+
+                    console.log(task);
+
+                    if (task.downloadSpeed) {
+                        let currentSpeed = parseInt(task.downloadSpeed);
+                        const speedUnit = ["Byte/s", "KB/s", "MB/s", "GB/s", "TB/s"];
+                        let currentUnit = Math.floor(Math.log(currentSpeed) / Math.log(1024));
+                        console.log(currentSpeed, currentUnit);
+                        app.status.progressMessage = (currentSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
+                    }else{
+                        app.status.progressMessage='';
+                    }
                     this.ref.tick();
                 }, (error) => {
                     reject(error);
@@ -146,7 +162,6 @@ export class AppsService {
             let apps: App[] = [];
             let dependencies = app.findDependencies();
             apps.push(...dependencies, app);
-            console.log(apps);
             let downloadPath = path.join(option.installLibrary, 'downloading');
             let tasks: Promise<any>[] = [];
             for (let a of apps) {

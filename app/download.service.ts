@@ -73,21 +73,31 @@ export class DownloadService {
                 let status = '';
                 let completedLength = 0;
                 let totalLength = 0;
+                let downloadSpeed = 0;
+
                 let gidList = this.map.get(id) !;
                 this.updateEmitter.subscribe((value: string) => {
                     let statusList = new Array(gidList.length);
                     let newCompletedLength = 0;
                     let newTotalLength = 0;
+                    let newDownloadSpeed = 0;
                     for (let [index,gid] of gidList.entries()) {
                         let task = this.taskList.get(gid)!;
                         statusList[index] = task.status;
                         newCompletedLength += parseInt(task.completedLength);
                         newTotalLength += parseInt(task.totalLength);
+                        newDownloadSpeed += parseInt(task.downloadSpeed);
                     }
                     if (newCompletedLength !== completedLength || newTotalLength !== totalLength) {
                         completedLength = newCompletedLength;
                         totalLength = newTotalLength;
-                        observer.next({status: status, completedLength: completedLength, totalLength: totalLength});
+                        downloadSpeed = newDownloadSpeed;
+                        observer.next({
+                            status: status,
+                            completedLength: completedLength,
+                            totalLength: totalLength,
+                            downloadSpeed: downloadSpeed
+                        });
                     }
                     status = statusList.reduce((value, current) => {
                         if (value === "complete" && current === "complete") {
