@@ -12,7 +12,7 @@
     "pack": "tsc && build --dir",
     "dist": "tsc && build",
     "tsc": "tsc",
-    "i18n": "ng-xi18n"
+    "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf"
   },
   "dependencies": {
     "@angular/common": "latest",
@@ -39,7 +39,7 @@
     "reflect-metadata": "latest",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "mycard/systemjs#mycard",
-    "systemjs-plugin-text":"latest",
+    "systemjs-plugin-text": "latest",
     "tether": "latest",
     "zone.js": "^0.6.26"
   },
