@@ -1,20 +1,39 @@
 <h1>{{currentApp.name}}</h1>
-<div *ngIf="currentApp.status.status === 'init'">
-    <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">安装</button>
+<!--应用未安装-->
+<div class="actions" *ngIf="!currentApp.isInstalled()">
+    <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">
+        安装
+    </button>
     <button i18n type="button" class="btn btn-secondary">导入</button>
 </div>
-<div i18n *ngIf="currentApp.status.status === 'installing'">正在安装...</div>
-<div i18n *ngIf="currentApp.status.status==='waiting'">等待安装...</div>
-<progress *ngIf="currentApp.status.status === 'downloading'||currentApp.status.status==='installing'" class="progress progress-striped progress-animated" value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
-<div class="actions" *ngIf="currentApp.status.status==='ready' && (currentApp.id != 'ygopro')">
-    <button i18n *ngIf="currentApp.runable()" (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行</button>
-    <button i18n *ngIf="currentApp.runable() && currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">设置</button>
+
+<!--应用变更中-->
+<div class="actions" *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
+    <div *ngIf="currentApp.isDownloading()">
+        <span>正在下载</span><span *ngIf="currentApp.status.total">{{currentApp.status.progress/currentApp.status.total}}%</span>
+    </div>
+    <div i18n *ngIf="currentApp.isInstalling()">正在安装...</div>
+    <div i18n *ngIf="currentApp.isWaiting()">等待安装...</div>
+    <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
+</div>
+
+<!--应用ready-->
+<div class="actions" *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
+    <button i18n *ngIf="currentApp.runable()" (click)="runApp(currentApp)" type="button" class="btn btn-primary">运行
+    </button>
+    <button i18n *ngIf="currentApp.runable() && currentApp.actions.get('custom')" (click)="custom(currentApp)" type="button" class="btn btn-secondary">
+        设置
+    </button>
     <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
         <div class="input-group">
             <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
             <div class="input-group-btn">
-                <button i18n *ngIf="!appsService.connections.get(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">联机</button>
-                <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">复制</button>
+                <button i18n *ngIf="!appsService.connections.get(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">
+                    联机
+                </button>
+                <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">
+                    复制
+                </button>
                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" style="height: 38px;"></button>
                 <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
                     <h6 i18n class="dropdown-header">选择服务器</h6>
@@ -24,16 +43,16 @@
         </div>
     </div>
 </div>
-<ygopro *ngIf="currentApp.status.status==='ready'&& (currentApp.id == 'ygopro')" [app]="currentApp"></ygopro>
+<ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp"></ygopro>
+
 <h2 i18n *ngIf="news && news.length">新闻</h2>
 <div id="news" *ngFor="let item of news">
     <h3>{{item.title}}</h3>
     <p>{{item.text}}</p>
-    <a i18n *ngIf="item.url" [href]="item.url">了解更多</a>
+    <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
 </div>
 <div *ngIf="currentApp.isInstalled()">
     <div *ngIf="mods && mods.length">
-        <h2>扩展内容</h2>
         <table class="table table-striped">
             <thead class="thead-inverse">
             <tr>
@@ -50,7 +69,9 @@
                     <button i18n type="button" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
                 </td>
                 <td *ngIf="!mod.isInstalled()">
-                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">安装</button>
+                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">
+                        安装
+                    </button>
                     <progress *ngIf="mod.status.status==='downloading'" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
                     <div i18n *ngIf="mod.status.status==='waiting'">等待安装...</div>
                 </td>
@@ -63,6 +84,8 @@
     <button i18n type="button" class="btn btn-secondary">校验完整性</button>
     <button i18n (click)="uninstall(currentApp)" type="button" class="btn btn-secondary">卸载</button>
 </div>
+
+<!--安装modal-->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
     <div class="modal-dialog" role="document">
         <form id="install-form" class="modal-content" (ngSubmit)="install(currentApp)" #theForm="ngForm">
@@ -81,17 +104,17 @@
                     </select></div>
                 <h4 i18n>快捷方式</h4>
                 <div class="checkbox">
+                    <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">
                     <label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>
                     <label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>
-                    <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">
                 </div>
                 <div class="checkbox">
-                    <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                     <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">
+                    <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                 </div>
                 <!--<h4 *ngIf="installOption.references.length">扩展内容</h4>-->
                 <!--<div *ngFor="let reference of installOption.references"><label>-->
-                    <!--<input type="checkbox" [(ngModel)]="reference.install" name="references" value="{{reference.app.id}}"> {{reference.app.name}}-->
+                <!--<input type="checkbox" [(ngModel)]="reference.install" name="references" value="{{reference.app.id}}"> {{reference.app.name}}-->
                 <!--</label></div>-->
                 <div *ngIf="currentApp.findDependencies().length">
                     <span i18n>依赖：</span>

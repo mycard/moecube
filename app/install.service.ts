@@ -41,7 +41,11 @@ export class InstallService {
 
     constructor(private http: Http, private ref: ApplicationRef) {
         if (process.platform === "win32") {
-            this.tarPath = path.join(process.resourcesPath, 'bin', 'bsdtar.exe');
+            if (process.env['NODE_ENV'] == 'production') {
+                this.tarPath = path.join(process.resourcesPath, 'bin', 'bsdtar.exe');
+            } else {
+                this.tarPath = path.join('bin', 'bsdtar.exe');
+            }
         } else {
             this.tarPath = "bsdtar"
         }
@@ -81,54 +85,55 @@ export class InstallService {
             try {
                 let app = task.app;
                 let option = task.option;
-                if (!app.isInstalled()) {
-                    let checksumFile = await this.getChecksumFile(app);
-                    if (app.parent) {
-                        let conflictFiles = new Set<string>();
-                        let parentFilesMap = app.parent.local!.files;
-                        for (let key of checksumFile.keys()) {
-                            if (parentFilesMap.has(key)) {
-                                conflictFiles.add(key);
-                            }
-                        }
-                        if (conflictFiles.size > 0) {
-                            let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
-                            this.backupFiles(option.installDir, backupPath, conflictFiles);
+                // if (!app.isInstalled()) {
+                let checksumFile = await this.getChecksumFile(app);
+                console.log(checksumFile);
+                if (app.parent) {
+                    let conflictFiles = new Set<string>();
+                    let parentFilesMap = app.parent.local!.files;
+                    for (let key of checksumFile.keys()) {
+                        if (parentFilesMap.has(key)) {
+                            conflictFiles.add(key);
                         }
                     }
-                    let allFiles = new Set(checksumFile.keys());
-                    app.status.status = "installing";
-                    app.status.total = allFiles.size;
-                    app.status.progress = 0;
-                    let timeNow = new Date().getTime();
-                    for (let file of option.downloadFiles) {
-                        await this.createDirectory(option.installDir);
-                        await new Promise((resolve, reject) => {
-                            this.extract(file, option.installDir).subscribe(
-                                (lastItem: string) => {
-                                    console.log(app.status.progress, app.status.total, lastItem);
-                                    app.status.progress += 1;
-                                    if (new Date().getTime() - timeNow > 500) {
-                                        timeNow = new Date().getTime();
-                                        this.ref.tick();
-                                    }
-                                },
-                                (error) => {
-                                    reject(error);
-                                },
-                                () => {
-                                    resolve();
-                                });
-                        });
+                    if (conflictFiles.size > 0) {
+                        let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
+                        this.backupFiles(option.installDir, backupPath, conflictFiles);
                     }
-                    let local = new AppLocal();
-                    local.path = option.installDir;
-                    local.files = checksumFile;
-                    local.version = app.version;
-                    app.local = local;
-                    this.saveAppLocal(app);
-                    app.status.status = "ready";
                 }
+                let allFiles = new Set(checksumFile.keys());
+                app.status.status = "installing";
+                app.status.total = allFiles.size;
+                app.status.progress = 0;
+                let timeNow = new Date().getTime();
+                for (let file of option.downloadFiles) {
+                    await this.createDirectory(option.installDir);
+                    await new Promise((resolve, reject) => {
+                        this.extract(file, option.installDir).subscribe(
+                            (lastItem: string) => {
+                                console.log(app.status.progress, app.status.total, lastItem);
+                                app.status.progress += 1;
+                                if (new Date().getTime() - timeNow > 500) {
+                                    timeNow = new Date().getTime();
+                                    this.ref.tick();
+                                }
+                            },
+                            (error) => {
+                                reject(error);
+                            },
+                            () => {
+                                resolve();
+                            });
+                    });
+                }
+                let local = new AppLocal();
+                local.path = option.installDir;
+                local.files = checksumFile;
+                local.version = app.version;
+                app.local = local;
+                this.saveAppLocal(app);
+                app.status.status = "ready";
+                // }
             } catch (e) {
                 throw e;
             }
