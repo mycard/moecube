@@ -14,6 +14,7 @@ import Timer = NodeJS.Timer;
 import {DownloadService} from "./download.service";
 import {InstallOption} from "./install-option";
 import {InstallService} from "./install.service";
+import {ComparableSet} from "./shared/ComparableSet";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -116,6 +117,62 @@ export class AppsService {
         return apps;
     };
 
+    // async update(app: App) {
+    //     const updateServer = "https://thief.mycard.moe/update/metalinks/";
+    //
+    //     if (app.isReady() && app.local!.version != app.version) {
+    //         let checksumMap = await this.installService.getChecksumFile(app)
+    //
+    //         let latestFiles = new ComparableSet();
+    //
+    //     }
+    //
+    //     if (app.isInstalled() && app.version != (<AppLocal>app.local).version) {
+    //         let checksumMap = await this.installService.getChecksumFile(app);
+    //         let filesMap = (<AppLocal>app.local).files;
+    //         let deleteList: string[] = [];
+    //         let addList: string[] = [];
+    //         let changeList: string[] = [];
+    //         for (let [file,checksum] of filesMap) {
+    //             let t = checksumMap.get(file);
+    //             if (!t) {
+    //                 deleteList.push(file);
+    //             } else if (t !== checksum) {
+    //                 changeList.push(file);
+    //             }
+    //         }
+    //         for (let file of checksumMap.keys()) {
+    //             if (!filesMap.has(file)) {
+    //                 changeList.push(file);
+    //             }
+    //         }
+    //         let metalink = await this.http.post(updateServer + app.id, changeList).map((response) => response.text())
+    //             .toPromise();
+    //         let meta = new DOMParser().parseFromString(metalink, "text/xml");
+    //         let filename = meta.getElementsByTagName('file')[0].getAttribute('name');
+    //         let dir = path.join(path.dirname((<AppLocal>app.local).path), "downloading");
+    //         let a = await this.downloadService.addMetalink(metalink, dir);
+    //
+    //         for (let file of deleteList) {
+    //             await this.installService.deleteFile(file);
+    //         }
+    //         (<AppLocal>app.local).version = app.version;
+    //         (<AppLocal>app.local).files = checksumMap;
+    //         localStorage.setItem(app.id, JSON.stringify(app.local));
+    //         await this.installService.extract(path.join(dir, filename), (<AppLocal>app.local).path);
+    //         let children = this.appsService.findChildren(app);
+    //         for (let child of children) {
+    //             if (child.isInstalled()) {
+    //                 await this.installService.uninstall(child, false);
+    //                 // this.installService.add(child, new InstallOption(child, path.dirname(((<AppLocal>app.local).path))));
+    //                 await this.installService.getComplete(child);
+    //                 console.log("282828")
+    //             }
+    //         }
+    //
+    //     }
+    // }
+
     async install(app: App, option: InstallOption) {
         const addDownloadTask = async(app: App, dir: string) => {
             let metalinkUrl = app.download;
@@ -145,8 +202,8 @@ export class AppsService {
                         let currentUnit = Math.floor(Math.log(currentSpeed) / Math.log(1024));
                         console.log(currentSpeed, currentUnit);
                         app.status.progressMessage = (currentSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
-                    }else{
-                        app.status.progressMessage='';
+                    } else {
+                        app.status.progressMessage = '';
                     }
                     this.ref.tick();
                 }, (error) => {
@@ -160,7 +217,9 @@ export class AppsService {
         };
         try {
             let apps: App[] = [];
-            let dependencies = app.findDependencies();
+            let dependencies = app.findDependencies().filter((dependency) => {
+                return !dependency.isInstalled();
+            });
             apps.push(...dependencies, app);
             let downloadPath = path.join(option.installLibrary, 'downloading');
             let tasks: Promise<any>[] = [];
@@ -174,8 +233,6 @@ export class AppsService {
                 o.downloadFiles = result.files;
                 this.installService.push({app: result.app, option: o});
             }
-            // this.installService.push({app: app, option: option})
-
         } catch (e) {
             console.log(e);
             throw e;

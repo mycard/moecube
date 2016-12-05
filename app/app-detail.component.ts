@@ -71,19 +71,8 @@ export class AppDetailComponent implements OnInit {
 
         let options = this.installOption;
 
-        // if (options) {
-        //     for (let reference of options.references) {
-        //         if (reference.install && !reference.app.isInstalled()) {
-        //             apps.push(reference.app);
-        //             apps.push(...reference.app.findDependencies().filter((app) => {
-        //                 return !app.isInstalled()
-        //             }))
-        //         }
-        //     }
-        // }
-
         try {
-            this.appsService.install(this.currentApp, options);
+            await this.appsService.install(targetApp, options);
         } catch (e) {
             console.error(e);
             new Notification(targetApp.name, {body: "下载失败"});

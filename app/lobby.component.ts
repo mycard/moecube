@@ -43,9 +43,6 @@ export class LobbyComponent implements OnInit {
         params.set('nickname', this.loginService.user.username);
         params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
         this.candy_url = url;
-
-        // 尝试更新应用
-        this.updateApp();
     }
 
     chooseApp(app: App) {
@@ -55,56 +52,7 @@ export class LobbyComponent implements OnInit {
         }
     }
 
-    async updateApp() {
-        let updateServer = "https://thief.mycard.moe/update/metalinks/";
-        let checksumServer = "https://thief.mycard.moe/checksums/";
-        for (let app of this.apps.values()) {
-            if (app.isInstalled() && app.version != (<AppLocal>app.local).version) {
-                let checksumMap = await this.installService.getChecksumFile(app);
-                let filesMap = (<AppLocal>app.local).files;
-                let deleteList: string[] = [];
-                let addList: string[] = [];
-                let changeList: string[] = [];
-                for (let [file,checksum] of filesMap) {
-                    let t = checksumMap.get(file);
-                    if (!t) {
-                        deleteList.push(file);
-                    } else if (t !== checksum) {
-                        changeList.push(file);
-                    }
-                }
-                for (let file of checksumMap.keys()) {
-                    if (!filesMap.has(file)) {
-                        changeList.push(file);
-                    }
-                }
-                let metalink = await this.http.post(updateServer + app.id, changeList).map((response) => response.text())
-                    .toPromise();
-                let meta = new DOMParser().parseFromString(metalink, "text/xml");
-                let filename = meta.getElementsByTagName('file')[0].getAttribute('name');
-                let dir = path.join(path.dirname((<AppLocal>app.local).path), "downloading");
-                let a = await this.downloadService.addMetalink(metalink, dir);
 
-                for (let file of deleteList) {
-                    await this.installService.deleteFile(file);
-                }
-                (<AppLocal>app.local).version = app.version;
-                (<AppLocal>app.local).files = checksumMap;
-                localStorage.setItem(app.id, JSON.stringify(app.local));
-                await this.installService.extract(path.join(dir, filename), (<AppLocal>app.local).path);
-                let children = this.appsService.findChildren(app);
-                for (let child of children) {
-                    if (child.isInstalled()) {
-                        await this.installService.uninstall(child, false);
-                        // this.installService.add(child, new InstallOption(child, path.dirname(((<AppLocal>app.local).path))));
-                        await this.installService.getComplete(child);
-                        console.log("282828")
-                    }
-                }
-
-            }
-        }
-    }
 
 
     get grouped_apps() {

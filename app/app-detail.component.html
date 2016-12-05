@@ -59,13 +59,13 @@
             <tr *ngFor="let mod of mods; let i = index">
                 <th scope="row">{{i + 1}}</th>
                 <td>{{mod.name}}</td>
-                <td *ngIf="mod.isInstalled()">
+                <td *ngIf="mod.isReady()">
                     <button i18n type="button" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
                 </td>
                 <td *ngIf="!mod.isInstalled()">
-                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">安装</button>
-                    <progress *ngIf="mod.status.status==='downloading'" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
-                    <div i18n *ngIf="mod.status.status==='waiting'">等待安装...</div>
+                    <button i18n (click)="installMod(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
+                    <progress *ngIf="mod.isDownloading()" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
+                    <div i18n *ngIf="mod.isWaiting()">等待安装...</div>
                 </td>
             </tr>
             </tbody>
