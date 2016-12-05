@@ -10,6 +10,7 @@
     <div>
         <span *ngIf="currentApp.isDownloading()">正在下载</span>
         <span *ngIf="currentApp.isInstalling()">正在安装...</span>
+        <span *ngIf="currentApp.isUninstalling()">正在卸载...</span>
         <span *ngIf="currentApp.isWaiting()">等待安装...</span>
         <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
         <span>{{currentApp.progressMessage()}}</span>
@@ -59,13 +60,15 @@
             <tr *ngFor="let mod of mods; let i = index">
                 <th scope="row">{{i + 1}}</th>
                 <td>{{mod.name}}</td>
-                <td *ngIf="mod.isInstalled()">
+                <td *ngIf="mod.isReady()">
                     <button i18n type="button" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
                 </td>
                 <td *ngIf="!mod.isInstalled()">
-                    <button i18n (click)="installMod(mod)" type="button" *ngIf="mod.status.status==='init'" class="btn btn-primary btn-sm">安装</button>
-                    <progress *ngIf="mod.status.status==='downloading'" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
-                    <div i18n *ngIf="mod.status.status==='waiting'">等待安装...</div>
+                    <button i18n (click)="installMod(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
+                </td>
+                <td *ngIf="mod.isInstalled()&&!mod.isReady()">
+                    <progress class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
+                    <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
                 </td>
             </tr>
             </tbody>
@@ -91,8 +94,9 @@
                 <p i18n>即将开始安装 {{currentApp.name}}</p>
                 <h4 i18n>安装位置</h4>
                 <div class="form-group">
-                    <select class="form-control" name="installPath" [(ngModel)]="installOption.installLibrary" title="path">
+                    <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
                         <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
                     </select></div>
                 <h4 i18n>快捷方式</h4>
                 <div class="checkbox">
@@ -104,10 +108,10 @@
                     <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">
                     <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                 </div>
-                <!--<h4 *ngIf="installOption.references.length">扩展内容</h4>-->
-                <!--<div *ngFor="let reference of installOption.references"><label>-->
-                <!--<input type="checkbox" [(ngModel)]="reference.install" name="references" value="{{reference.app.id}}"> {{reference.app.name}}-->
-                <!--</label></div>-->
+                <h4 *ngIf="references.length>0">扩展内容</h4>
+                <div *ngFor="let reference of references"><label>
+                    <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
+                </label></div>
                 <div *ngIf="currentApp.findDependencies().length">
                     <span i18n>依赖：</span>
                     <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>

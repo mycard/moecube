@@ -83,10 +83,12 @@ export class DownloadService {
                     let newDownloadSpeed = 0;
                     for (let [index,gid] of gidList.entries()) {
                         let task = this.taskList.get(gid)!;
-                        statusList[index] = task.status;
-                        newCompletedLength += parseInt(task.completedLength);
-                        newTotalLength += parseInt(task.totalLength);
-                        newDownloadSpeed += parseInt(task.downloadSpeed);
+                        if (task) {
+                            statusList[index] = task.status;
+                            newCompletedLength += parseInt(task.completedLength);
+                            newTotalLength += parseInt(task.totalLength);
+                            newDownloadSpeed += parseInt(task.downloadSpeed);
+                        }
                     }
                     if (newCompletedLength !== completedLength || newTotalLength !== totalLength) {
                         completedLength = newCompletedLength;

@@ -10,10 +10,11 @@ import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
+import Timer = NodeJS.Timer;
 import {DownloadService} from "./download.service";
 import {InstallOption} from "./install-option";
 import {InstallService} from "./install.service";
-import Timer = NodeJS.Timer;
+import {ComparableSet} from "./shared/ComparableSet";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -116,6 +117,62 @@ export class AppsService {
         return apps;
     };
 
+    // async update(app: App) {
+    //     const updateServer = "https://thief.mycard.moe/update/metalinks/";
+    //
+    //     if (app.isReady() && app.local!.version != app.version) {
+    //         let checksumMap = await this.installService.getChecksumFile(app)
+    //
+    //         let latestFiles = new ComparableSet();
+    //
+    //     }
+    //
+    //     if (app.isInstalled() && app.version != (<AppLocal>app.local).version) {
+    //         let checksumMap = await this.installService.getChecksumFile(app);
+    //         let filesMap = (<AppLocal>app.local).files;
+    //         let deleteList: string[] = [];
+    //         let addList: string[] = [];
+    //         let changeList: string[] = [];
+    //         for (let [file,checksum] of filesMap) {
+    //             let t = checksumMap.get(file);
+    //             if (!t) {
+    //                 deleteList.push(file);
+    //             } else if (t !== checksum) {
+    //                 changeList.push(file);
+    //             }
+    //         }
+    //         for (let file of checksumMap.keys()) {
+    //             if (!filesMap.has(file)) {
+    //                 changeList.push(file);
+    //             }
+    //         }
+    //         let metalink = await this.http.post(updateServer + app.id, changeList).map((response) => response.text())
+    //             .toPromise();
+    //         let meta = new DOMParser().parseFromString(metalink, "text/xml");
+    //         let filename = meta.getElementsByTagName('file')[0].getAttribute('name');
+    //         let dir = path.join(path.dirname((<AppLocal>app.local).path), "downloading");
+    //         let a = await this.downloadService.addMetalink(metalink, dir);
+    //
+    //         for (let file of deleteList) {
+    //             await this.installService.deleteFile(file);
+    //         }
+    //         (<AppLocal>app.local).version = app.version;
+    //         (<AppLocal>app.local).files = checksumMap;
+    //         localStorage.setItem(app.id, JSON.stringify(app.local));
+    //         await this.installService.extract(path.join(dir, filename), (<AppLocal>app.local).path);
+    //         let children = this.appsService.findChildren(app);
+    //         for (let child of children) {
+    //             if (child.isInstalled()) {
+    //                 await this.installService.uninstall(child, false);
+    //                 // this.installService.add(child, new InstallOption(child, path.dirname(((<AppLocal>app.local).path))));
+    //                 await this.installService.getComplete(child);
+    //                 console.log("282828")
+    //             }
+    //         }
+    //
+    //     }
+    // }
+
     async install(app: App, option: InstallOption) {
         const addDownloadTask = async(app: App, dir: string) => {
             let metalinkUrl = app.download;
@@ -158,27 +215,30 @@ export class AppsService {
                 })
             });
         };
-        try {
-            let apps: App[] = [];
-            let dependencies = app.findDependencies();
-            apps.push(...dependencies, app);
-            let downloadPath = path.join(option.installLibrary, 'downloading');
-            let tasks: Promise<any>[] = [];
-            for (let a of apps) {
-                tasks.push(addDownloadTask(a, downloadPath));
+        if (!app.isInstalled()) {
+            try {
+                let apps: App[] = [];
+                let dependencies = app.findDependencies().filter((dependency) => {
+                    return !dependency.isInstalled();
+                });
+                apps.push(...dependencies, app);
+                let downloadPath = path.join(option.installLibrary, 'downloading');
+                let tasks: Promise<any>[] = [];
+                for (let a of apps) {
+                    tasks.push(addDownloadTask(a, downloadPath));
+                }
+                let downloadResults = await Promise.all(tasks);
+                for (let result of downloadResults) {
+                    console.log(result);
+                    let o = new InstallOption(result.app, option.installLibrary);
+                    o.downloadFiles = result.files;
+                    this.installService.push({app: result.app, option: o});
+                }
+            } catch (e) {
+                app.status.status = 'init';
+                console.log(e);
+                throw e;
             }
-            let downloadResults = await Promise.all(tasks);
-            for (let result of downloadResults) {
-                console.log(result);
-                let o = new InstallOption(result.app, option.installLibrary);
-                o.downloadFiles = result.files;
-                this.installService.push({app: result.app, option: o});
-            }
-            // this.installService.push({app: app, option: option})
-
-        } catch (e) {
-            console.log(e);
-            throw e;
         }
     }
 
@@ -231,12 +291,12 @@ export class AppsService {
         }
 
         if (action.open) {
-            let np2 = <App>action.open;
+            let np2 = action.open;
             let openAction: Action;
-            openAction = <Action>np2.actions.get('main');
-            let openPath = (<AppLocal>np2.local).path;
+            openAction = np2.actions.get('main')!;
+            let openPath = np2.local!.path;
             if (action.open.id == 'np2fmgen') {
-                const config_file = path.join((<AppLocal>(<App>action.open).local).path, 'np21nt.ini');
+                const config_file = path.join(action.open!.local!.path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
                     fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
                         if (error) return reject(error);
@@ -252,7 +312,7 @@ export class AppsService {
                     windtype: '0'
                 };
                 config['NekoProject21'] = Object.assign({}, default_config, config['NekoProject21']);
-                config['NekoProject21']['HDD1FILE'] = path.win32.join(process.platform == 'win32' ? '' : 'Z:', (<AppLocal>app.local).path, action.execute);
+                config['NekoProject21']['HDD1FILE'] = path.win32.join(process.platform == 'win32' ? '' : 'Z:', app.local!.path, action.execute);
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
@@ -262,12 +322,15 @@ export class AppsService {
                         }
                     })
                 });
-                args.push(openAction.execute);
-                args = args.concat(openAction.args);
-                let wine = <App>openAction.open;
-                openPath = (<AppLocal>wine.local).path;
-                openAction = <Action>(<App>openAction.open).actions.get('main');
-                cwd = (<AppLocal>np2.local).path;
+
+                if (process.platform != 'win32') {
+                    args.push(openAction.execute);
+                    args = args.concat(openAction.args);
+                    let wine = openAction.open!;
+                    openPath = wine.local!.path;
+                    openAction = openAction!.open!.actions.get('main')!;
+                }
+                cwd = np2.local!.path;
             }
             args = args.concat(openAction.args);
             args.push(action.execute);

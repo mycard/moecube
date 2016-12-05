@@ -6,7 +6,9 @@ import {App} from "./app";
 import {DownloadService} from "./download.service";
 import {clipboard, remote} from "electron";
 import * as path from "path";
+import * as fs from 'fs';
 import {InstallService} from "./install.service";
+import mkdirp = require("mkdirp");
 
 declare const Notification: any;
 declare const $: any;
@@ -23,22 +25,61 @@ export class AppDetailComponent implements OnInit {
     platform = process.platform;
 
     installOption: InstallOption;
+    availableLibraries: string[] = [];
+    references: App[];
+    referencesInstall: {[id: string]: boolean};
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private installService: InstallService,
                 private ref: ChangeDetectorRef) {
     }
 
+//     public File[] listRoots() {
+//     int ds = listRoots0();
+//     int n = 0;
+//     for (int i = 0; i < 26; i++) {
+//         if (((ds >> i) & 1) != 0) {
+//             if (!access((char)('A' + i) + ":" + slash))
+//                 ds &= ~(1 << i);
+//             else
+//                 n++;
+//         }
+//     }
+//     File[] fs = new File[n];
+//     int j = 0;
+//     char slash = this.slash;
+//     for (int i = 0; i < 26; i++) {
+//         if (((ds >> i) & 1) != 0)
+//             fs[j++] = new File((char)('A' + i) + ":" + slash);
+//     }
+//     return fs;
+// }
     ngOnInit() {
+        let volume = 'A';
+        for (let i = 0; i < 26; i++) {
+            new Promise((resolve, reject) => {
+                let currentVolume = String.fromCharCode(volume.charCodeAt(0) + i) + ":";
+                fs.access(currentVolume, (err) => {
+                    if (!err) {
+                        //判断是否已经存在Library
+                        if (this.libraries.every((library) => !library.startsWith(currentVolume))) {
+                            this.availableLibraries.push(currentVolume);
+                        }
+                    }
+                })
+            })
+        }
     }
 
     updateInstallOption(app: App) {
         this.installOption = new InstallOption(app);
         this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
-        // this.installOption.references = [];
-        // for (let reference of app.references.values()) {
-        //     this.installOption.references.push(new InstallOption(reference))
-        // }
+        this.references = Array.from(app.references.values());
+        console.log(this.references);
+        this.referencesInstall = {};
+        for (let reference of this.references) {
+            this.referencesInstall[reference.id] = true;
+        }
     }
 
     get libraries(): string[] {
@@ -71,22 +112,36 @@ export class AppDetailComponent implements OnInit {
 
         let options = this.installOption;
 
-        // if (options) {
-        //     for (let reference of options.references) {
-        //         if (reference.install && !reference.app.isInstalled()) {
-        //             apps.push(reference.app);
-        //             apps.push(...reference.app.findDependencies().filter((app) => {
-        //                 return !app.isInstalled()
-        //             }))
-        //         }
-        //     }
-        // }
-
         try {
-            this.appsService.install(this.currentApp, options);
+            await this.appsService.install(targetApp, options);
+            if (this.references.length > 0) {
+                for (let [id,isInstalled] of Object.entries(this.referencesInstall)) {
+                    if (isInstalled) {
+                        let reference = targetApp.references.get(id)!;
+                        await  this.appsService.install(reference, options);
+                    }
+                }
+            }
         } catch (e) {
             console.error(e);
             new Notification(targetApp.name, {body: "下载失败"});
+        }
+    }
+
+    async selectLibrary() {
+        if (this.installOption.installLibrary.startsWith('create_')) {
+            let volume = this.installOption.installLibrary.slice(7);
+            let library = path.join(volume, "MyCardLibrary");
+            try {
+                await this.installService.createDirectory(library);
+                this.installOption.installLibrary = library;
+                this.settingsService.addLibrary(library, true);
+            } catch (e) {
+                this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
+                alert("无法创建指定目录");
+            }
+        } else {
+            this.settingsService.setDefaultLibrary({path: this.installOption.installLibrary, "default": true})
         }
     }
 

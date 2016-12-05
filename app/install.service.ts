@@ -12,7 +12,7 @@ import * as fs from "fs";
 import {EventEmitter} from "events";
 import {AppLocal} from "./app-local";
 import {Http} from "@angular/http";
-import {AppsService} from "./apps.service";
+import {ComparableSet} from "./shared/ComparableSet"
 import ReadableStream = NodeJS.ReadableStream;
 import {Observable, Observer} from "rxjs/Rx";
 
@@ -33,7 +33,8 @@ export class InstallService {
     installingId: string = '';
     eventEmitter: EventEmitter = new EventEmitter();
 
-    checksumUri = "https://thief.mycard.moe/checksums/";
+    readonly checksumURL = "https://thief.mycard.moe/checksums/";
+    readonly updateServerURL = 'https://thief.mycard.moe/update/metalinks';
 
     installQueue: Map<string,InstallTask> = new Map();
 
@@ -90,19 +91,18 @@ export class InstallService {
                 });
                 if (readyForInstall) {
                     let option = task.option;
+                    let installDir = option.installDir;
                     // if (!app.isInstalled()) {
                     let checksumFile = await this.getChecksumFile(app);
                     if (app.parent) {
-                        let conflictFiles = new Set<string>();
-                        let parentFilesMap = app.parent.local!.files;
-                        for (let key of checksumFile.keys()) {
-                            if (parentFilesMap.has(key)) {
-                                conflictFiles.add(key);
-                            }
-                        }
+                        // mod需要安装到parent路径
+                        installDir = app.parent.local!.path;
+                        let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+                        let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
+                        let conflictFiles = appFiles.intersection(parentFiles);
                         if (conflictFiles.size > 0) {
                             let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
-                            this.backupFiles(option.installDir, backupPath, conflictFiles);
+                            await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
                         }
                     }
                     let allFiles = new Set(checksumFile.keys());
@@ -111,17 +111,14 @@ export class InstallService {
                     app.status.progress = 0;
                     // let timeNow = new Date().getTime();
                     for (let file of option.downloadFiles) {
-                        await this.createDirectory(option.installDir);
+                        await this.createDirectory(installDir);
                         let interval = setInterval(() => {
                         }, 500);
                         await new Promise((resolve, reject) => {
-                            this.extract(file, option.installDir).subscribe(
+                            this.extract(file, installDir).subscribe(
                                 (lastItem: string) => {
                                     app.status.progress += 1;
                                     app.status.progressMessage = lastItem;
-                                    // if (new Date().getTime() - timeNow > 500) {
-                                    //     timeNow = new Date().getTime();
-                                    // }
                                 },
                                 (error) => {
                                     reject(error);
@@ -132,9 +129,9 @@ export class InstallService {
                         });
                         clearInterval(interval);
                     }
-                    await this.postInstall(app, option.installDir);
+                    await this.postInstall(app, installDir);
                     let local = new AppLocal();
-                    local.path = option.installDir;
+                    local.path = installDir;
                     local.files = checksumFile;
                     local.version = app.version;
                     app.local = local;
@@ -230,21 +227,35 @@ export class InstallService {
         }
     }
 
-    async backupFiles(dir: string, backupPath: string, files: Iterable<string>) {
-        await this.createDirectory(backupPath);
+    async backupFiles(dir: string, backupDir: string, files: Iterable<string>) {
         for (let file of files) {
-            await new Promise((resolve, reject) => {
-                let oldPath = path.join(dir, file);
-                let newPath = path.join(backupPath, file);
-                fs.rename(oldPath, newPath, resolve);
+            await new Promise(async(resolve, reject) => {
+                let srcPath = path.join(dir, file);
+                let backupPath = path.join(backupDir, file);
+                await this.createDirectory(path.dirname(backupPath));
+                fs.unlink(backupPath, (err) => {
+                    fs.rename(srcPath, backupPath, resolve);
+                });
             });
         }
     }
 
+    async restoreFiles(dir: string, backupDir: string, files: Iterable<string>) {
+        for (let file of files) {
+            await new Promise((resolve, reject) => {
+                let backupPath = path.join(backupDir, file);
+                let srcPath = path.join(dir, file);
+                fs.unlink(srcPath, (err) => {
+                    fs.rename(backupPath, srcPath, resolve);
+                })
+            })
+        }
+    }
+
     async getChecksumFile(app: App): Promise<Map<string,string> > {
-        let checksumUrl = this.checksumUri + app.id;
+        let checksumUrl = this.checksumURL + app.id;
         if (["ygopro", 'desmume'].includes(app.id)) {
-            checksumUrl = this.checksumUri + app.id + "-" + process.platform;
+            checksumUrl = this.checksumURL + app.id + "-" + process.platform;
         }
         return this.http.get(checksumUrl)
             .map((response) => {
@@ -280,39 +291,33 @@ export class InstallService {
         })
     }
 
-    async uninstall(app: App, restore = true) {
-        if (!app.parent) {
-            // let children = this.appsService.findChildren(app);
-            // for (let child of children) {
-            //     if (child.isInstalled()) {
-            //         await this.uninstall(child);
-            //     }
-            // }
-        }
-        let files = Array.from((<AppLocal>app.local).files.keys()).sort().reverse();
-        for (let file of files) {
-            let oldFile = file;
-            if (!path.isAbsolute(file)) {
-                oldFile = path.join((<AppLocal>app.local).path, file);
+    async uninstall(app: App) {
+        if (app.isReady()) {
+            app.status.status = "uninstalling";
+            let appDir = app.local!.path;
+            let files = Array.from(app.local!.files.keys()).sort().reverse();
+
+            app.status.total = files.length;
+
+            for (let file of files) {
+                app.status.progress += 1;
+                await this.deleteFile(path.join(appDir, file));
             }
-            if (restore) {
-                await this.deleteFile(oldFile);
-                if (app.parent) {
-                    let backFile = path.join((<AppLocal>app.local).path, "backup", file);
-                    await new Promise((resolve, reject) => {
-                        fs.rename(backFile, oldFile, resolve);
-                    });
+
+            if (app.parent) {
+                let backupDir = path.join(path.dirname(appDir), "backup", app.parent.id)
+                let fileSet = new ComparableSet(files);
+                let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+                let difference = parentSet.intersection(fileSet);
+                if (difference) {
+                    this.restoreFiles(appDir, backupDir, Array.from(difference))
                 }
             }
+            app.local = null;
+            localStorage.removeItem(app.id);
         }
 
-        if (app.parent) {
-            await this.deleteFile(path.join((<AppLocal>app.local).path, "backup"));
-        } else {
-            await this.deleteFile((<AppLocal>app.local).path);
-        }
-        app.local = null;
-        localStorage.removeItem(app.id);
     }
+
 
 }
