@@ -10,10 +10,10 @@ import {remote} from "electron";
 import "rxjs/Rx";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
-import Timer = NodeJS.Timer;
 import {DownloadService} from "./download.service";
 import {InstallOption} from "./install-option";
 import {InstallService} from "./install.service";
+import Timer = NodeJS.Timer;
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -145,8 +145,8 @@ export class AppsService {
                         let currentUnit = Math.floor(Math.log(currentSpeed) / Math.log(1024));
                         console.log(currentSpeed, currentUnit);
                         app.status.progressMessage = (currentSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
-                    }else{
-                        app.status.progressMessage='';
+                    } else {
+                        app.status.progressMessage = '';
                     }
                     this.ref.tick();
                 }, (error) => {
@@ -358,7 +358,7 @@ export class AppsService {
             // 如果还是在界面上显示的那个连接
             if (this.connections.get(app) == connection) {
                 this.connections.delete(app);
-                if (event.code != 1000 && !(<Connection>connection).address) {
+                if (event.code != 1000 && !connection!.address) {
                     alert(`出错了 ${event.code}`);
                 }
             }

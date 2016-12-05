@@ -261,9 +261,12 @@ export class YGOProComponent implements OnInit {
     start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
-        console.log(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
+        console.log(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {cwd: this.app.local!.path});
         return new Promise((resolve, reject) => {
-            let child = child_process.spawn(path.join((<AppLocal>this.app.local).path, (<any>this.app.actions.get('main')).execute), args, {cwd: (<AppLocal>this.app.local).path});
+            let child = child_process.spawn(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {
+                cwd: this.app.local!.path,
+                stdio: 'inherit'
+            });
             child.on('error', (error) => {
                 reject(error);
                 win.restore()

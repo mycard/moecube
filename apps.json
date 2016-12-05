@@ -1411,8 +1411,7 @@
         "directx"
       ],
       "darwin": [
-        "wine",
-        "directx"
+        "wine"
       ]
     },
     "references": {
