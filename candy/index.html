@@ -26,8 +26,11 @@
     require('electron-cookies'); // https://github.com/hstove/electron-cookies
 
     ipcRenderer.on('join', (event, message) => {
-        Candy.Core.Action.Jabber.Room.Join(message);
-        Candy.View.Pane.Chat.setActiveTab(message);
+        if (Candy.View.Pane.Chat.rooms[message]) {
+            Candy.View.Pane.Room.show(message);
+        } else {
+            Candy.Core.Action.Jabber.Room.Join(message);
+        }
     });
 
     // fix
@@ -37,13 +40,13 @@
     // candy init
     const params = new URLSearchParams(location.search);
 
-    Candy.View.Template.Login.form = '<form method="post" id="login-form" class="login-form">' + '<input type="hidden" id="nickname" name="nickname" value="' + params.nickname + '"/>' + '{{#displayUsername}}<input type="hidden" id="username" name="username" value="' + params.jid + '"/>' + '{{#displayDomain}} <span class="at-symbol">@</span> ' + '<select id="domain" name="domain">{{#domains}}<option value="{{domain}}">{{domain}}</option>{{/domains}}</select>' + "{{/displayDomain}}" + "{{/displayUsername}}" + '{{#presetJid}}<input type="hidden" id="username" name="username" value="{{presetJid}}"/>{{/presetJid}}' + '{{#displayPassword}}<input type="hidden" id="password" name="password" value="' + params.password + '"/>{{/displayPassword}}' + '<input type="submit" class="button" value="{{_loginSubmit}}" /></form>'
+    Candy.View.Template.Login.form = '<form method="post" id="login-form" class="login-form">' + '<input type="hidden" id="nickname" name="nickname" value="' + params.nickname + '"/>' + '{{#displayUsername}}<input type="hidden" id="username" name="username" value="' + params.jid + '"/>' + '{{#displayDomain}} <span class="at-symbol">@</span> ' + '<select id="domain" name="domain">{{#domains}}<option value="{{domain}}">{{domain}}</option>{{/domains}}</select>' + "{{/displayDomain}}" + "{{/displayUsername}}" + '{{#presetJid}}<input type="hidden" id="username" name="username" value="{{presetJid}}"/>{{/presetJid}}' + '{{#displayPassword}}<input type="hidden" id="password" name="password" value="' + params.password + '"/>{{/displayPassword}}' + '<input type="submit" class="button" value="{{_loginSubmit}}" /></form>';;
 
     Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
     Candy.init('wss://chat.mycard.moe:5280/websocket', {
         core: {
             debug: false,
-            autojoin: [params.get('autojoin')],
+            autojoin: params.get('autojoin') && [params.get('autojoin')],
             resource: 'mycard-' + Math.random().toString().split('.')[1]
         },
         view: {assets: 'res/', language: 'cn'}

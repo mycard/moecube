@@ -8,9 +8,6 @@ import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 import {Http, URLSearchParams} from "@angular/http";
-import * as path from "path";
-import {InstallOption} from "./install-option";
-import {AppLocal} from "./app-local";
 import WebViewElement = Electron.WebViewElement;
 
 @Component({
@@ -33,7 +30,7 @@ export class LobbyComponent implements OnInit {
 
     async ngOnInit() {
         this.apps = await this.appsService.loadApps();
-        this.chooseApp(Array.from(this.apps.values()).find(app => app.isInstalled()) || <App>this.apps.get("ygopro"));
+        this.chooseApp(Array.from(this.apps.values()).find(app => app.isInstalled()) || this.apps.get("ygopro")!);
 
         // 初始化聊天室
         let url = new URL('candy/index.html', location.href);
@@ -41,7 +38,9 @@ export class LobbyComponent implements OnInit {
         params.set('jid', this.loginService.user.username + '@mycard.moe');
         params.set('password', this.loginService.user.external_id.toString());
         params.set('nickname', this.loginService.user.username);
-        params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
+        if (this.currentApp.conference) {
+            params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
+        }
         this.candy_url = url;
     }
 
@@ -51,9 +50,6 @@ export class LobbyComponent implements OnInit {
             (<WebViewElement>this.candy.nativeElement).send('join', this.currentApp.conference + '@conference.mycard.moe');
         }
     }
-
-
-
 
     get grouped_apps() {
         let contains = ["game", "music", "book"].map((value) => Category[value]);
