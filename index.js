@@ -1,5 +1,32 @@
 'use strict';
 
+// 处理提权
+function handleElevate() {
+    // for debug
+    if (process.argv[1] == '.') {
+        process.argv[1] = process.argv[2];
+        process.argv[2] = process.argv[3];
+    }
+
+    if (process.argv[1] == '-e') {
+        if (process.platform == 'darwin') {
+            app.dock.hide();
+        }
+        let elevate = JSON.parse(new Buffer(process.argv[2], 'base64').toString());
+        require('net').connect(elevate['ipc'], function () {
+            process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
+            this.on('end', () => process.emit('disconnect'));
+            require('readline').createInterface({input: this}).on('line', (line) => process.emit('message', JSON.parse(line)));
+            process.argv = elevate['arguments'][1];
+            require("./" + elevate['arguments'][0]);
+        });
+        return true;
+    }
+}
+if (handleElevate()) {
+    return;
+}
+
 const {ipcMain, app, shell, BrowserWindow} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
 const isDev = require('electron-is-dev');
@@ -19,7 +46,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
         }
         mainWindow.focus()
     }
-})
+});
 if (shouldQuit) {
     app.quit()
 }
@@ -69,37 +96,6 @@ autoUpdater.on('update-downloaded', (event) => {
         autoUpdater.quitAndInstall()
     })
 });
-
-// 处理提权
-function handleElevate() {
-
-    // for debug
-    if (process.argv[1] == '.') {
-        process.argv[1] = process.argv[2];
-        process.argv[2] = process.argv[3];
-    }
-
-    if (process.argv[1] == '-e') {
-        if (process.platform == 'darwin') {
-            app.dock.hide();
-        }
-        let elevate = JSON.parse(new Buffer(process.argv[2], 'base64'));
-        let socket = require('net').connect(elevate['ipc'], function () {
-            process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
-            this.on('end', () => process.emit('disconnect'));
-            require('readline').createInterface({input: this}).on('line', (line) => process.emit('message', JSON.parse(line)));
-            process.argv = elevate['arguments'][1];
-            require("./" + elevate['arguments'][0]);
-        });
-        // socket.on("error", (error)=> {
-        //     console.log(error);
-        // });
-        return true;
-    }
-}
-if (handleElevate()) {
-    return;
-}
 
 // Aria2c
 function createAria2c() {
