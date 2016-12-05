@@ -382,10 +382,11 @@ export class AppsService {
             return
         }
 
-        let connection: Connection | undefined = this.connections.get(app);
+        let connection = this.connections.get(app);
         if (connection) {
             connection.connection.close();
         }
+        console.log(server.url);
         connection = {connection: new WebSocket(server.url), address: null};
         let id: Timer | null;
         this.connections.set(app, connection);
@@ -395,7 +396,7 @@ export class AppsService {
             let [address, port] = args.split(':');
             switch (action) {
                 case 'LISTEN':
-                    (<Connection>connection).address = args;
+                    connection!.address = args;
                     this.ref.tick();
                     break;
                 case 'CONNECT':
