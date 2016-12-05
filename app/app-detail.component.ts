@@ -24,6 +24,9 @@ export class AppDetailComponent implements OnInit {
 
     installOption: InstallOption;
 
+    references: App[];
+    referencesInstall: {[id: string]: boolean};
+
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private installService: InstallService,
                 private ref: ChangeDetectorRef) {
@@ -35,10 +38,12 @@ export class AppDetailComponent implements OnInit {
     updateInstallOption(app: App) {
         this.installOption = new InstallOption(app);
         this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
-        // this.installOption.references = [];
-        // for (let reference of app.references.values()) {
-        //     this.installOption.references.push(new InstallOption(reference))
-        // }
+        this.references = Array.from(app.references.values());
+        console.log(this.references);
+        this.referencesInstall = {};
+        for (let reference of this.references) {
+            this.referencesInstall[reference.id] = true;
+        }
     }
 
     get libraries(): string[] {
@@ -73,6 +78,14 @@ export class AppDetailComponent implements OnInit {
 
         try {
             await this.appsService.install(targetApp, options);
+            if (this.references.length > 0) {
+                for (let [id,isInstalled] of Object.entries(this.referencesInstall)) {
+                    if (isInstalled) {
+                        let reference = targetApp.references.get(id)!;
+                        await  this.appsService.install(reference, options);
+                    }
+                }
+            }
         } catch (e) {
             console.error(e);
             new Notification(targetApp.name, {body: "下载失败"});

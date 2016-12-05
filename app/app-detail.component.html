@@ -10,6 +10,7 @@
     <div>
         <span *ngIf="currentApp.isDownloading()">正在下载</span>
         <span *ngIf="currentApp.isInstalling()">正在安装...</span>
+        <span *ngIf="currentApp.isUninstalling()">正在卸载...</span>
         <span *ngIf="currentApp.isWaiting()">等待安装...</span>
         <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
         <span>{{currentApp.progressMessage()}}</span>
@@ -64,8 +65,10 @@
                 </td>
                 <td *ngIf="!mod.isInstalled()">
                     <button i18n (click)="installMod(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
-                    <progress *ngIf="mod.isDownloading()" class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
-                    <div i18n *ngIf="mod.isWaiting()">等待安装...</div>
+                </td>
+                <td *ngIf="mod.isInstalled()&&!mod.isReady()">
+                    <progress class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
+                    <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
                 </td>
             </tr>
             </tbody>
@@ -104,10 +107,10 @@
                     <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">
                     <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
                 </div>
-                <!--<h4 *ngIf="installOption.references.length">扩展内容</h4>-->
-                <!--<div *ngFor="let reference of installOption.references"><label>-->
-                <!--<input type="checkbox" [(ngModel)]="reference.install" name="references" value="{{reference.app.id}}"> {{reference.app.name}}-->
-                <!--</label></div>-->
+                <h4 *ngIf="references.length>0">扩展内容</h4>
+                <div *ngFor="let reference of references"><label>
+                    <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
+                </label></div>
                 <div *ngIf="currentApp.findDependencies().length">
                     <span i18n>依赖：</span>
                     <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>

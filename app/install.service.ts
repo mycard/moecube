@@ -293,11 +293,15 @@ export class InstallService {
 
     async uninstall(app: App) {
         if (app.isReady()) {
+            app.status.status = "uninstalling";
             let appDir = app.local!.path;
             let files = Array.from(app.local!.files.keys()).sort().reverse();
 
+            app.status.total = files.length;
+
             for (let file of files) {
-                this.deleteFile(path.join(appDir, file));
+                app.status.progress += 1;
+                await this.deleteFile(path.join(appDir, file));
             }
 
             if (app.parent) {
