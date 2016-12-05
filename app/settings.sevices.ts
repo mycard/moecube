@@ -36,6 +36,28 @@ export class SettingsService {
         return this.libraries;
     }
 
+    addLibrary(libraryPath: string, isDefault: boolean) {
+
+        let libraries = this.getLibraries();
+        if (isDefault) {
+            libraries.forEach((l) => {
+                l.default = false;
+            });
+        }
+        libraries.push({"default": isDefault, path: libraryPath});
+        this.libraries = libraries;
+        localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
+    }
+
+    setDefaultLibrary(library: Library) {
+        let libraries = this.getLibraries();
+        libraries.forEach((l) => {
+            l.default = library.path == l.path;
+        });
+        this.libraries = libraries;
+        localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
+    }
+
     getDefaultLibrary(): Library {
         if (!this.libraries) {
             this.getLibraries()

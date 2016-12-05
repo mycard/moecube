@@ -6,7 +6,9 @@ import {App} from "./app";
 import {DownloadService} from "./download.service";
 import {clipboard, remote} from "electron";
 import * as path from "path";
+import * as fs from 'fs';
 import {InstallService} from "./install.service";
+import mkdirp = require("mkdirp");
 
 declare const Notification: any;
 declare const $: any;
@@ -23,7 +25,7 @@ export class AppDetailComponent implements OnInit {
     platform = process.platform;
 
     installOption: InstallOption;
-
+    availableLibraries: string[] = [];
     references: App[];
     referencesInstall: {[id: string]: boolean};
 
@@ -32,7 +34,41 @@ export class AppDetailComponent implements OnInit {
                 private ref: ChangeDetectorRef) {
     }
 
+//     public File[] listRoots() {
+//     int ds = listRoots0();
+//     int n = 0;
+//     for (int i = 0; i < 26; i++) {
+//         if (((ds >> i) & 1) != 0) {
+//             if (!access((char)('A' + i) + ":" + slash))
+//                 ds &= ~(1 << i);
+//             else
+//                 n++;
+//         }
+//     }
+//     File[] fs = new File[n];
+//     int j = 0;
+//     char slash = this.slash;
+//     for (int i = 0; i < 26; i++) {
+//         if (((ds >> i) & 1) != 0)
+//             fs[j++] = new File((char)('A' + i) + ":" + slash);
+//     }
+//     return fs;
+// }
     ngOnInit() {
+        let volume = 'A';
+        for (let i = 0; i < 26; i++) {
+            new Promise((resolve, reject) => {
+                let currentVolume = String.fromCharCode(volume.charCodeAt(0) + i) + ":";
+                fs.access(currentVolume, (err) => {
+                    if (!err) {
+                        //判断是否已经存在Library
+                        if (this.libraries.every((library) => !library.startsWith(currentVolume))) {
+                            this.availableLibraries.push(currentVolume);
+                        }
+                    }
+                })
+            })
+        }
     }
 
     updateInstallOption(app: App) {
@@ -89,6 +125,23 @@ export class AppDetailComponent implements OnInit {
         } catch (e) {
             console.error(e);
             new Notification(targetApp.name, {body: "下载失败"});
+        }
+    }
+
+    async selectLibrary() {
+        if (this.installOption.installLibrary.startsWith('create_')) {
+            let volume = this.installOption.installLibrary.slice(7);
+            let library = path.join(volume, "MyCardLibrary");
+            try {
+                await this.installService.createDirectory(library);
+                this.installOption.installLibrary = library;
+                this.settingsService.addLibrary(library, true);
+            } catch (e) {
+                this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
+                alert("无法创建指定目录");
+            }
+        } else {
+            this.settingsService.setDefaultLibrary({path: this.installOption.installLibrary, "default": true})
         }
     }
 

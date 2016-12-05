@@ -94,8 +94,9 @@
                 <p i18n>即将开始安装 {{currentApp.name}}</p>
                 <h4 i18n>安装位置</h4>
                 <div class="form-group">
-                    <select class="form-control" name="installPath" [(ngModel)]="installOption.installLibrary" title="path">
+                    <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
                         <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
                     </select></div>
                 <h4 i18n>快捷方式</h4>
                 <div class="checkbox">
