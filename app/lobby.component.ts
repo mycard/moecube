@@ -8,6 +8,7 @@ import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
 import {InstallService} from "./install.service";
 import {Http, URLSearchParams} from "@angular/http";
+import {shell} from "electron";
 import WebViewElement = Electron.WebViewElement;
 
 @Component({
@@ -76,5 +77,9 @@ export class LobbyComponent implements OnInit {
             result[tag].push(app)
         }
         return result
+    }
+
+    openExternal(url: string) {
+        shell.openExternal(url);
     }
 }

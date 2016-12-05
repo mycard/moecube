@@ -60,4 +60,4 @@
     <roster></roster>
 </div>
 
-<webview *ngIf="currentApp" #candy id="candy" [src]="candy_url" nodeintegration></webview>
+<webview *ngIf="currentApp" #candy id="candy" [src]="candy_url" (new-window)="openExternal($event.url)" nodeintegration></webview>
