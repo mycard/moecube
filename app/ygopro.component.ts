@@ -123,14 +123,14 @@ export class YGOProComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.system_conf = path.join((<AppLocal>this.app.local).path, 'system.conf');
+        this.system_conf = path.join(this.app.local!.path, 'system.conf');
         this.refresh();
 
         let modal = $('#game-list-modal');
 
         modal.on('show.bs.modal', () => {
             this.connections = this.servers.map((server) => {
-                let connection = new WebSocket(<string>server.url);
+                let connection = new WebSocket(server.url!);
                 connection.onclose = () => {
                     this.rooms = this.rooms.filter(room => room.server != server)
                 };
@@ -174,7 +174,7 @@ export class YGOProComponent implements OnInit {
 
     get_decks(): Promise<string[]> {
         return new Promise((resolve, reject) => {
-            fs.readdir(path.join((<AppLocal>this.app.local).path, 'deck'), (error, files) => {
+            fs.readdir(path.join(this.app.local!.path, 'deck'), (error, files) => {
                 if (error) {
                     resolve([])
                 } else {
@@ -196,7 +196,7 @@ export class YGOProComponent implements OnInit {
     }
 
     async delete_deck(deck: string) {
-        await new Promise(resolve => fs.unlink(path.join((<AppLocal>this.app.local).path, 'deck', deck + '.ydk'), resolve));
+        await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
         return this.refresh()
     }
 
@@ -297,7 +297,7 @@ export class YGOProComponent implements OnInit {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
 
-        let password = options_buffer.toString('base64') + (<string>options.title).replace(/\s/, String.fromCharCode(0xFEFF));
+        let password = options_buffer.toString('base64') + (options.title!).replace(/\s/, String.fromCharCode(0xFEFF));
         let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
@@ -320,7 +320,7 @@ export class YGOProComponent implements OnInit {
 
         let password = options_buffer.toString('base64') + room.id;
 
-        this.join(password, <Server>room.server);
+        this.join(password, room.server!);
     }
 
     matching: ISubscription | null;
@@ -350,7 +350,7 @@ export class YGOProComponent implements OnInit {
     }
 
     cancel_match() {
-        (<ISubscription>this.matching).unsubscribe();
+        this.matching!.unsubscribe();
         this.matching = null;
         this.matching_arena = null;
     }
