@@ -32,7 +32,7 @@
             <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
             <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand"></i>
             <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone"></i>
-            <i (click)="window.close()" class="fa fa-times"></i>
+            <i (click)="currentWindow.hide()" class="fa fa-times"></i>
         </div>
     </div>
 </nav>

@@ -155,7 +155,7 @@ function createWindow() {
 }
 
 function createTray() {
-    let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.png'));
+    let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
     tray.on('click', (event) => {
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
