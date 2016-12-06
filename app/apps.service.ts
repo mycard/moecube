@@ -11,12 +11,12 @@ import "rxjs/Rx";
 import * as readline from "readline";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
-import Timer = NodeJS.Timer;
 import {DownloadService} from "./download.service";
 import {InstallOption} from "./install-option";
 import {ComparableSet} from "./shared/ComparableSet";
-import mkdirp = require("mkdirp");
 import {Observable, Observer} from "rxjs/Rx";
+import Timer = NodeJS.Timer;
+import mkdirp = require("mkdirp");
 import ReadableStream = NodeJS.ReadableStream;
 
 const Aria2 = require('aria2');
@@ -345,6 +345,7 @@ export class AppsService {
                 };
                 config['NekoProject21'] = Object.assign({}, default_config, config['NekoProject21']);
                 config['NekoProject21']['HDD1FILE'] = path.win32.join(process.platform == 'win32' ? '' : 'Z:', app.local!.path, action.execute);
+                config['NekoProject21']['fontfile'] = path.win32.join(process.platform == 'win32' ? '' : 'Z:', app.local!.path, 'font.bmp');
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
@@ -712,7 +713,7 @@ export class AppsService {
             return child.isInstalled();
         });
         if (hasInstalledChild) {
-           throw "无法卸载，还有依赖此程序的游戏。"
+            throw "无法卸载，还有依赖此程序的游戏。"
         }
 
         if (app.isReady()) {
