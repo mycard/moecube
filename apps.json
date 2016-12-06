@@ -861,7 +861,7 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": ["directx"],
       "darwin": [
         "wine"
       ]
@@ -1002,7 +1002,7 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": ["directx"],
       "darwin": [
         "wine"
       ]
@@ -1125,7 +1125,7 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": ["directx"],
       "darwin": [
         "wine"
       ]
@@ -1266,7 +1266,7 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": [],
+      "win32": ["directx"],
       "darwin": [
         "wine"
       ]
