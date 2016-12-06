@@ -95,8 +95,9 @@ export class AppDetailComponent implements OnInit {
     }
 
     async installMod(mod: App) {
-        this.updateInstallOption(mod);
-        await this.install(mod);
+
+        let option = new InstallOption(mod, path.dirname(mod.parent.local!.path));
+        await this.install(mod, option, {});
 
     }
 
@@ -107,19 +108,16 @@ export class AppDetailComponent implements OnInit {
         }
     }
 
-    async install(targetApp: App) {
+    async install(targetApp: App, options: InstallOption, referencesInstall: {[id: string]: boolean}) {
         $('#install-modal').modal('hide');
-
-        let options = this.installOption;
 
         try {
             await this.appsService.install(targetApp, options);
-            if (this.references.length > 0) {
-                for (let [id,isInstalled] of Object.entries(this.referencesInstall)) {
-                    if (isInstalled) {
-                        let reference = targetApp.references.get(id)!;
-                        await  this.appsService.install(reference, options);
-                    }
+            for (let [id,install] of Object.entries(referencesInstall)) {
+                if (install) {
+                    let reference = targetApp.references.get(id)!;
+                    console.log("reference install ", id, targetApp, targetApp.references, reference);
+                    await this.appsService.install(reference, options);
                 }
             }
         } catch (e) {
