@@ -7,7 +7,6 @@ import {DownloadService} from "./download.service";
 import {clipboard, remote} from "electron";
 import * as path from "path";
 import * as fs from 'fs';
-import mkdirp = require("mkdirp");
 
 declare const Notification: any;
 declare const $: any;
@@ -32,30 +31,10 @@ export class AppDetailComponent implements OnInit {
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
     }
 
-//     public File[] listRoots() {
-//     int ds = listRoots0();
-//     int n = 0;
-//     for (int i = 0; i < 26; i++) {
-//         if (((ds >> i) & 1) != 0) {
-//             if (!access((char)('A' + i) + ":" + slash))
-//                 ds &= ~(1 << i);
-//             else
-//                 n++;
-//         }
-//     }
-//     File[] fs = new File[n];
-//     int j = 0;
-//     char slash = this.slash;
-//     for (int i = 0; i < 26; i++) {
-//         if (((ds >> i) & 1) != 0)
-//             fs[j++] = new File((char)('A' + i) + ":" + slash);
-//     }
-//     return fs;
-// }
-    ngOnInit() {
+    async ngOnInit() {
         let volume = 'A';
         for (let i = 0; i < 26; i++) {
-            new Promise((resolve, reject) => {
+            await new Promise((resolve, reject) => {
                 let currentVolume = String.fromCharCode(volume.charCodeAt(0) + i) + ":";
                 fs.access(currentVolume, (err) => {
                     if (!err) {
@@ -64,6 +43,7 @@ export class AppDetailComponent implements OnInit {
                             this.availableLibraries.push(currentVolume);
                         }
                     }
+                    resolve()
                 })
             })
         }
@@ -103,7 +83,6 @@ export class AppDetailComponent implements OnInit {
         if (confirm("确认删除？")) {
             try {
                 await this.appsService.uninstall(app);
-                app.status.status = "init";
             } catch (e) {
                 alert(e);
             }

@@ -81,6 +81,11 @@ export class App {
     status: AppStatus;
     conference: string | undefined;
 
+    reset() {
+        this.status.status = 'init';
+        this.local = null;
+        localStorage.removeItem(this.id);
+    }
     isInstalled(): boolean {
         return this.status.status != 'init';
     }

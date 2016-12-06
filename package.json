@@ -1,6 +1,6 @@
 {
   "name": "mycard",
-  "version": "3.0.0-dev.13",
+  "version": "3.0.0-dev.14",
   "description": "mycard",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
@@ -34,7 +34,6 @@
     "font-awesome": "latest",
     "ini": "latest",
     "jquery": "latest",
-    "mkdirp": "latest",
     "raw-socket": "latest",
     "reflect-metadata": "latest",
     "rxjs": "5.0.0-beta.12",
@@ -53,7 +52,6 @@
     "@types/node": "latest",
     "@types/electron": "latest",
     "@types/ini": "latest",
-    "@types/mkdirp": "latest"
   },
   "build": {
     "productName": "MyCard",

@@ -16,7 +16,7 @@ import {InstallOption} from "./install-option";
 import {ComparableSet} from "./shared/ComparableSet";
 import {Observable, Observer} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
-import mkdirp = require("mkdirp");
+// import mkdirp = require("mkdirp");
 import ReadableStream = NodeJS.ReadableStream;
 
 const Aria2 = require('aria2');
@@ -41,18 +41,10 @@ export class AppsService {
 
     private apps: Map<string,App>;
 
+    readonly tarPath = process.platform === "win32" ? path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : '', 'bin', 'bsdtar.exe') : 'bsdtar';
+
     constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,
                 private downloadService: DownloadService) {
-
-        if (process.platform === "win32") {
-            if (process.env['NODE_ENV'] == 'production') {
-                this.tarPath = path.join(process.resourcesPath, 'bin', 'bsdtar.exe');
-            } else {
-                this.tarPath = path.join('bin', 'bsdtar.exe');
-            }
-        } else {
-            this.tarPath = "bsdtar"
-        }
     }
 
     loadApps() {
@@ -81,20 +73,20 @@ export class AppsService {
             if (local) {
                 app.status.status = "ready";
             } else {
-                app.status.status = "init";
+                app.reset()
             }
 
             // 去除无关语言
-            ['name', 'description'].forEach((key) => {
+            for (let key of ['name', 'description']) {
                 let value = app[key][locale];
                 if (!value) {
                     value = app[key]["zh-CN"];
                 }
                 app[key] = value;
-            });
+            }
 
             // 去除平台无关的内容
-            ['actions', 'dependencies', 'references', 'version'].forEach((key) => {
+            for (let key of ['actions', 'dependencies', 'references', 'version']) {
                 if (app[key]) {
                     if (app[key][platform]) {
                         app[key] = app[key][platform];
@@ -103,14 +95,15 @@ export class AppsService {
                         app[key] = null;
                     }
                 }
-            });
+            }
             apps.set(item.id, app);
 
         }
 
         // 设置App关系
+        //TODO: 这里有必要重新整理一下么？
         for (let [id] of apps) {
-            let temp = (<App>apps.get(id))["actions"];
+            let temp = apps.get(id)!.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -119,23 +112,23 @@ export class AppsService {
                 }
                 map.set(action, temp[action]);
             }
-            (<App>apps.get(id)).actions = map;
+            apps.get(id)!.actions = map;
 
-            ['dependencies', 'references', 'parent'].forEach((key) => {
-                let app = <App>apps.get(id);
+            for (let key of ['dependencies', 'references', 'parent']) {
+                let app = apps.get(id)!;
                 let value = app[key];
                 if (value) {
                     if (Array.isArray(value)) {
                         let map = new Map<string,App>();
-                        value.forEach((appId, index, array) => {
+                        for (let appId of value) {
                             map.set(appId, apps.get(appId));
-                        });
+                        }
                         app[key] = map;
                     } else {
                         app[key] = apps.get(value);
                     }
                 }
-            });
+            }
         }
         return apps;
     };
@@ -197,14 +190,14 @@ export class AppsService {
     // }
 
     async install(app: App, option: InstallOption) {
+        // TODO: 重构这个函数
         const addDownloadTask = async(app: App, dir: string) => {
             let metalinkUrl = app.download;
             if (app.id === "ygopro") {
+                // TODO: 需要特化平台下载的还有个desmume
                 metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + ".meta4";
             }
-            let metalink = await this.http.get(metalinkUrl).map((response) => {
-                return response.text()
-            }).toPromise();
+            let metalink = await this.http.get(metalinkUrl).map((response) => response.text()).toPromise();
             app.status.status = "downloading";
             let downloadId = await this.downloadService.addMetalink(metalink, dir);
             let observable = this.downloadService.downloadProgress(downloadId);
@@ -265,7 +258,7 @@ export class AppsService {
             } catch (e) {
                 for (let a of apps) {
                     if (!a.isReady()) {
-                        a.status.status = 'init';
+                        a.reset()
                     }
                 }
                 console.log(e);
@@ -391,8 +384,11 @@ export class AppsService {
         remote.getCurrentWindow().minimize();
     }
 
+    // TODO: 定位到下级文件，即现在的目录之内
+    // 如果有actions.main.execuate, 定位那个execuate的顶层路径
+    // 如果没有，定位目录里面任意一个顶级文件
     browse(app: App) {
-        remote.shell.showItemInFolder((<AppLocal>app.local).path);
+        remote.shell.showItemInFolder(app.local!.path);
     }
 
     connections = new Map<App, Connection>();
@@ -464,27 +460,27 @@ export class AppsService {
         };
     }
 
-    tarPath: string;
-    installingId: string = '';
+    // tarPath: string;
+    // installingId: string = '';
     eventEmitter = new EventEmitter<void>();
 
     readonly checksumURL = "https://thief.mycard.moe/checksums/";
     readonly updateServerURL = 'https://thief.mycard.moe/update/metalinks';
 
-    installQueue: Map<string,InstallTask> = new Map();
+    // installQueue: Map<string,InstallTask> = new Map();
 
     map: Map<string,string> = new Map();
 
-    private createId(): string {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
-    }
+    // private createId(): string {
+    //     function s4() {
+    //         return Math.floor((1 + Math.random()) * 0x10000)
+    //             .toString(16)
+    //             .substring(1);
+    //     }
+    //
+    //     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    //         s4() + '-' + s4() + s4() + s4();
+    // }
 
     // installProgress(id: string): Observable<InstallStatus>|undefined {
     //     let app = this.map.get(id);
@@ -493,6 +489,7 @@ export class AppsService {
     //     }
     // }
 
+    // TODO: push改个名
     async push(task: InstallTask): Promise<void> {
         if (!task.app.readyForInstall()) {
             await new Promise((resolve, reject) => {
@@ -508,64 +505,69 @@ export class AppsService {
         await this.doInstall(task);
     }
 
+    // 调用前提：应用的依赖均已 Ready，应用处于下载完待安装的状态(waiting)。
+    // TODO: 要把Task系统去掉吗
     async doInstall(task: InstallTask) {
+        let app = task.app;
+
+        if (app.isWaiting()) {
+            console.error('doUninstall', "应用不处于等待安装状态", app);
+            throw("应用不处于等待安装状态");
+        }
+
+        if (!app.readyForInstall()) {
+            console.error('doInstall', "应用依赖不齐备", app);
+            throw("应用依赖不齐备");
+        }
+
         try {
-            let app = task.app;
-            let dependencies = app.findDependencies();
-            let readyForInstall = dependencies.every((dependency) => {
-                return dependency.isReady();
-            });
-            if (readyForInstall) {
-                let option = task.option;
-                let installDir = option.installDir;
-                // if (!app.isInstalled()) {
-                let checksumFile = await this.getChecksumFile(app);
-                if (app.parent) {
-                    // mod需要安装到parent路径
-                    installDir = app.parent.local!.path;
-                    let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
-                    let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
-                    let conflictFiles = appFiles.intersection(parentFiles);
-                    if (conflictFiles.size > 0) {
-                        let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
-                        await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
-                    }
+            let option = task.option;
+            let installDir = option.installDir;
+            let checksumFile = await this.getChecksumFile(app);
+            if (app.parent) {
+                // mod需要安装到parent路径
+                installDir = app.parent.local!.path;
+                let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+                let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
+                let conflictFiles = appFiles.intersection(parentFiles);
+                if (conflictFiles.size > 0) {
+                    let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
+                    await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
                 }
-                let allFiles = new Set(checksumFile.keys());
-                app.status.status = "installing";
-                app.status.total = allFiles.size;
-                app.status.progress = 0;
-                // let timeNow = new Date().getTime();
-                for (let file of option.downloadFiles) {
-                    await this.createDirectory(installDir);
-                    let interval = setInterval(() => {
-                    }, 500);
-                    await new Promise((resolve, reject) => {
-                        this.extract(file, installDir).subscribe(
-                            (lastItem: string) => {
-                                app.status.progress += 1;
-                                app.status.progressMessage = lastItem;
-                            },
-                            (error) => {
-                                reject(error);
-                            },
-                            () => {
-                                resolve();
-                            });
-                    });
-                    clearInterval(interval);
-                }
-                await this.postInstall(app, installDir);
-                console.log("post install success");
-                let local = new AppLocal();
-                local.path = installDir;
-                local.files = checksumFile;
-                local.version = app.version;
-                app.local = local;
-                this.saveAppLocal(app);
-                app.status.status = "ready";
             }
-            // }
+            let allFiles = new Set(checksumFile.keys());
+            app.status.status = "installing";
+            app.status.total = allFiles.size;
+            app.status.progress = 0;
+            // let timeNow = new Date().getTime();
+            for (let file of option.downloadFiles) {
+                await this.createDirectory(installDir);
+                let interval = setInterval(() => {
+                }, 500);
+                await new Promise((resolve, reject) => {
+                    this.extract(file, installDir).subscribe(
+                        (lastItem: string) => {
+                            app.status.progress += 1;
+                            app.status.progressMessage = lastItem;
+                        },
+                        (error) => {
+                            reject(error);
+                        },
+                        () => {
+                            resolve();
+                        });
+                });
+                clearInterval(interval);
+            }
+            await this.postInstall(app, installDir);
+            console.log("post install success");
+            let local = new AppLocal();
+            local.path = installDir;
+            local.files = checksumFile;
+            local.version = app.version;
+            app.local = local;
+            this.saveAppLocal(app);
+            app.status.status = "ready";
         } catch (e) {
             console.log("exception in doInstall", e);
             throw e;
@@ -576,10 +578,39 @@ export class AppsService {
 
     }
 
-    createDirectory(dir: string) {
-        return new Promise((resolve, reject) => {
-            mkdirp(dir, resolve);
-        })
+    // 移除mkdirp函数，在这里自己实现
+    // 那个路径不存在且建立目录失败、或那个路径已经存在且不是目录，reject
+    // 那个路径已经存在且是目录，返回false，那个路径不存在且成功建立目录，返回true
+    // TODO: 没测试
+    async createDirectory(dir: string): Promise<boolean> {
+        let stats: fs.Stats;
+        try {
+            stats = await new Promise<fs.Stats>((resolve, reject) => {
+                fs.stat(dir, (error, stats) => {
+                    if (error) {
+                        reject(error)
+                    } else {
+                        resolve(stats)
+                    }
+                })
+            });
+        } catch (error) { // 路径不存在，先尝试递归上级目录，再创建自己
+            await this.createDirectory(path.dirname(dir));
+            return new Promise<boolean>((resolve, reject) => {
+                fs.mkdir(dir, (error) => {
+                    if (error) {
+                        reject(error)
+                    } else {
+                        resolve(true);
+                    }
+                })
+            })
+        }
+        if (stats.isDirectory()) { // 路径存在并且已经是目录，成功返回
+            return false;
+        } else { // 路径存在并且不是目录，失败。
+            throw `#{dir} exists and is not a directory`
+        }
     }
 
     extract(file: string, dir: string): Observable<string> {
@@ -603,22 +634,25 @@ export class AppsService {
         })
     }
 
+    // TODO: 与runApp合并，通用处理所有Action。
+    // shell: true的问题是DX特化，可以用写进app.json的方式
     async postInstall(app: App, appPath: string) {
         let action = app.actions.get('install');
         if (action) {
             let env = Object.assign({}, action.env);
             let command: string[] = [];
-            command.push(path.join(appPath, action.execute));
+            command.push(action.execute);
             command.push(...action.args);
             let open = action.open;
             if (open) {
                 let openAction: any = open.actions.get("main");
                 env = Object.assign(env, openAction.env);
                 command.unshift(...openAction.args);
-                command.unshift(path.join((<AppLocal>open.local).path, openAction.execute));
+                command.unshift(openAction.execute);
             }
             return new Promise((resolve, reject) => {
-                let child = child_process.spawn(<string>command.shift(), command, {
+                let child = child_process.spawn(command.shift()!, command, {
+                    cwd: appPath,
                     env: env,
                     stdio: 'inherit',
                     shell: true,
@@ -708,6 +742,7 @@ export class AppsService {
     }
 
     async uninstall(app: App) {
+        // TODO: 级联卸载mod
         let children = this.findChildren(app);
         let hasInstalledChild = children.find((child) => {
             return child.isInstalled();
@@ -715,31 +750,44 @@ export class AppsService {
         if (hasInstalledChild) {
             throw "无法卸载，还有依赖此程序的游戏。"
         }
-
         if (app.isReady()) {
-            app.status.status = "uninstalling";
-            let appDir = app.local!.path;
-            let files = Array.from(app.local!.files.keys()).sort().reverse();
+            return this.doUninstall(app);
+        }
+    }
 
-            app.status.total = files.length;
-
-            for (let file of files) {
-                app.status.progress += 1;
-                await this.deleteFile(path.join(appDir, file));
-            }
-
-            if (app.parent) {
-                let backupDir = path.join(path.dirname(appDir), "backup", app.parent.id)
-                let fileSet = new ComparableSet(files);
-                let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
-                let difference = parentSet.intersection(fileSet);
-                if (difference) {
-                    this.restoreFiles(appDir, backupDir, Array.from(difference))
-                }
-            }
-            app.local = null;
-            localStorage.removeItem(app.id);
+    // 调用前提：应用是 Ready, 不存在依赖这个应用的其他应用
+    async doUninstall(app: App) {
+        if (!app.isReady()) {
+            console.error('doUninstall', "应用不是 Ready 状态", app);
+            throw "应用不是 Ready 状态"
+        }
+        if (this.findChildren(app).find((child) => child.isInstalled())) {
+            console.error('doUninstall', "无法卸载，还有依赖此程序的游戏。", app);
+            throw "无法卸载，还有依赖此程序的游戏。"
         }
 
+        app.status.status = "uninstalling";
+        let appDir = app.local!.path;
+        let files = Array.from(app.local!.files.keys()).sort().reverse();
+
+        app.status.total = files.length;
+
+        for (let file of files) {
+            app.status.progress += 1;
+            await this.deleteFile(path.join(appDir, file));
+        }
+
+        if (app.parent) {
+            // TODO: 建立Library模型，把拼路径的事情交给Library
+            let backupDir = path.join(path.dirname(appDir), "backup", app.parent.id);
+            let fileSet = new ComparableSet(files);
+            let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+            let difference = parentSet.intersection(fileSet);
+            if (difference) {
+                this.restoreFiles(appDir, backupDir, Array.from(difference))
+            }
+        }
+
+        app.reset()
     }
 }
