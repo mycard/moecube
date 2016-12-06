@@ -154,6 +154,23 @@ function createWindow() {
     })
 }
 
+function createTray() {
+    let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.png'));
+    tray.on('click', (event) => {
+        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    });
+    const contextMenu = Menu.buildFromTemplate([
+        // {label: '游戏', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
+        // {label: '社区', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
+        // {label: '切换账号', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
+        {
+            label: '退出', type: 'normal', click: app.quit
+        }
+    ]);
+    tray.setToolTip('MyCard');
+    tray.setContextMenu(contextMenu)
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -162,16 +179,8 @@ app.on('ready', () => {
     if (process.env['NODE_ENV'] == 'production') {
         setTimeout(autoUpdater.checkForUpdates, 2000);
     }
-    if(process.platform == 'win32'){
-        let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
-        const contextMenu = Menu.buildFromTemplate([
-            {label: 'Item1', type: 'radio'},
-            {label: 'Item2', type: 'radio'},
-            {label: 'Item3', type: 'radio', checked: true},
-            {label: 'Item4', type: 'radio'}
-        ]);
-        tray.setToolTip('MyCard');
-        tray.setContextMenu(contextMenu)
+    if (process.platform == 'win32') {
+        createTray()
     }
 });
 
