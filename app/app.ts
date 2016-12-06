@@ -100,8 +100,9 @@ export class App {
     isDownloading(): boolean {
         return this.status.status === "downloading";
     }
-    isUninstalling():boolean{
-       return this.status.status==="uninstalling";
+
+    isUninstalling(): boolean {
+        return this.status.status === "uninstalling";
     }
 
     runable(): boolean {
@@ -144,6 +145,11 @@ export class App {
             return Array.from(set);
         }
         return [];
+    }
+
+    readyForInstall(): boolean {
+        let dependencies = this.findDependencies();
+        return dependencies.every((dependency) => dependency.isReady());
     }
 
 }

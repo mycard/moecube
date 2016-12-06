@@ -3,7 +3,6 @@ import {App} from "./app";
  * Created by zh99998 on 16/9/6.
  */
 export class AppLocal {
-    library: string;
     path: string;
     version: string;
     files: Map<string,string>;

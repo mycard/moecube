@@ -216,26 +216,35 @@ export class AppsService {
             });
         };
         if (!app.isInstalled()) {
+            let apps: App[] = [];
+            let dependencies = app.findDependencies().filter((dependency) => {
+                return !dependency.isInstalled();
+            });
+            apps.push(...dependencies, app);
             try {
-                let apps: App[] = [];
-                let dependencies = app.findDependencies().filter((dependency) => {
-                    return !dependency.isInstalled();
-                });
-                apps.push(...dependencies, app);
                 let downloadPath = path.join(option.installLibrary, 'downloading');
                 let tasks: Promise<any>[] = [];
                 for (let a of apps) {
                     tasks.push(addDownloadTask(a, downloadPath));
                 }
                 let downloadResults = await Promise.all(tasks);
+                let installTasks: Promise<void>[] = [];
                 for (let result of downloadResults) {
                     console.log(result);
                     let o = new InstallOption(result.app, option.installLibrary);
                     o.downloadFiles = result.files;
-                    this.installService.push({app: result.app, option: o});
+
+                    let task = this.installService.push({app: result.app, option: o});
+                    installTasks.push(task);
                 }
+                await Promise.all(installTasks);
+
             } catch (e) {
-                app.status.status = 'init';
+                for (let a of apps) {
+                    if (!a.isReady()) {
+                        a.status.status = 'init';
+                    }
+                }
                 console.log(e);
                 throw e;
             }

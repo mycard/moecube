@@ -1,7 +1,7 @@
 /**
  * Created by weijian on 2016/11/2.
  */
-import {Injectable, ApplicationRef} from "@angular/core";
+import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
 import {App, Category} from "./app";
 import {InstallOption} from "./install-option";
 import * as path from "path";
@@ -9,7 +9,6 @@ import * as child_process from "child_process";
 import * as mkdirp from "mkdirp";
 import * as readline from "readline";
 import * as fs from "fs";
-import {EventEmitter} from "events";
 import {AppLocal} from "./app-local";
 import {Http} from "@angular/http";
 import {ComparableSet} from "./shared/ComparableSet"
@@ -31,7 +30,7 @@ export interface InstallStatus {
 export class InstallService {
     tarPath: string;
     installingId: string = '';
-    eventEmitter: EventEmitter = new EventEmitter();
+    eventEmitter = new EventEmitter<void>();
 
     readonly checksumURL = "https://thief.mycard.moe/checksums/";
     readonly updateServerURL = 'https://thief.mycard.moe/update/metalinks';
@@ -70,100 +69,93 @@ export class InstallService {
     //     }
     // }
 
-    push(task: InstallTask): string {
-        let id = this.createId();
-        this.installQueue.set(id, task);
-        if (this.installQueue.size > 0 && this.installingId == '') {
-            this.doInstall();
+    async push(task: InstallTask): Promise<void> {
+        if (!task.app.readyForInstall()) {
+            await new Promise((resolve, reject) => {
+                this.eventEmitter.subscribe(() => {
+                    if (task.app.readyForInstall()) {
+                        resolve();
+                    } else if (task.app.findDependencies().find((dependency: App) => !dependency.isInstalled())) {
+                        reject("Dependencies failed");
+                    }
+                });
+            });
         }
-        return id;
+        await this.doInstall(task);
     }
 
-    async doInstall() {
-        if (this.installQueue.size > 0 && this.installingId == '') {
-            let [id,task] = this.installQueue.entries().next().value!;
-            this.installingId = id;
-            try {
-                let app = task.app;
-                let dependencies = app.findDependencies();
-                let readyForInstall = dependencies.every((dependency) => {
-                    return dependency.isReady();
-                });
-                if (readyForInstall) {
-                    let option = task.option;
-                    let installDir = option.installDir;
-                    // if (!app.isInstalled()) {
-                    let checksumFile = await this.getChecksumFile(app);
-                    if (app.parent) {
-                        // mod需要安装到parent路径
-                        installDir = app.parent.local!.path;
-                        let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
-                        let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
-                        let conflictFiles = appFiles.intersection(parentFiles);
-                        if (conflictFiles.size > 0) {
-                            let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
-                            await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
-                        }
+    async doInstall(task: InstallTask) {
+        try {
+            let app = task.app;
+            let dependencies = app.findDependencies();
+            let readyForInstall = dependencies.every((dependency) => {
+                return dependency.isReady();
+            });
+            if (readyForInstall) {
+                let option = task.option;
+                let installDir = option.installDir;
+                // if (!app.isInstalled()) {
+                let checksumFile = await this.getChecksumFile(app);
+                if (app.parent) {
+                    // mod需要安装到parent路径
+                    installDir = app.parent.local!.path;
+                    let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+                    let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
+                    let conflictFiles = appFiles.intersection(parentFiles);
+                    if (conflictFiles.size > 0) {
+                        let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
+                        await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
                     }
-                    let allFiles = new Set(checksumFile.keys());
-                    app.status.status = "installing";
-                    app.status.total = allFiles.size;
-                    app.status.progress = 0;
-                    // let timeNow = new Date().getTime();
-                    for (let file of option.downloadFiles) {
-                        await this.createDirectory(installDir);
-                        let interval = setInterval(() => {
-                        }, 500);
-                        await new Promise((resolve, reject) => {
-                            this.extract(file, installDir).subscribe(
-                                (lastItem: string) => {
-                                    app.status.progress += 1;
-                                    app.status.progressMessage = lastItem;
-                                },
-                                (error) => {
-                                    reject(error);
-                                },
-                                () => {
-                                    resolve();
-                                });
-                        });
-                        clearInterval(interval);
-                    }
-                    await this.postInstall(app, installDir);
-                    let local = new AppLocal();
-                    local.path = installDir;
-                    local.files = checksumFile;
-                    local.version = app.version;
-                    app.local = local;
-                    this.saveAppLocal(app);
-                    app.status.status = "ready";
                 }
-                // }
-            } catch (e) {
-                throw e;
-            }
-            finally {
-                this.installQueue.delete(id);
-                this.installingId = '';
-                if (this.installQueue.size > 0) {
-                    this.doInstall();
+                let allFiles = new Set(checksumFile.keys());
+                app.status.status = "installing";
+                app.status.total = allFiles.size;
+                app.status.progress = 0;
+                // let timeNow = new Date().getTime();
+                for (let file of option.downloadFiles) {
+                    await this.createDirectory(installDir);
+                    let interval = setInterval(() => {
+                    }, 500);
+                    await new Promise((resolve, reject) => {
+                        this.extract(file, installDir).subscribe(
+                            (lastItem: string) => {
+                                app.status.progress += 1;
+                                app.status.progressMessage = lastItem;
+                            },
+                            (error) => {
+                                reject(error);
+                            },
+                            () => {
+                                resolve();
+                            });
+                    });
+                    clearInterval(interval);
                 }
+                await this.postInstall(app, installDir);
+                console.log("post install success");
+                let local = new AppLocal();
+                local.path = installDir;
+                local.files = checksumFile;
+                local.version = app.version;
+                app.local = local;
+                this.saveAppLocal(app);
+                app.status.status = "ready";
             }
+            // }
+        } catch (e) {
+            console.log("exception in doInstall", e);
+            throw e;
         }
+        finally {
+            this.eventEmitter.emit();
+        }
+
     }
 
     createDirectory(dir: string) {
         return new Promise((resolve, reject) => {
             mkdirp(dir, resolve);
         })
-    }
-
-    getComplete(app: App): Promise<App> {
-        return new Promise((resolve, reject) => {
-            this.eventEmitter.once(app.id, (complete: any) => {
-                resolve();
-            });
-        });
     }
 
     extract(file: string, dir: string): Observable<string> {
@@ -208,13 +200,13 @@ export class InstallService {
                     shell: true,
                 });
                 child.on('error', (error) => {
-                    console.log(error);
+                    reject(error);
                 });
                 child.on('exit', (code) => {
                     if (code === 0) {
-                        resolve();
+                        resolve(code);
                     } else {
-                        reject();
+                        reject(code);
                     }
                 })
             })
