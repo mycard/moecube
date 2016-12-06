@@ -27,7 +27,7 @@ if (handleElevate()) {
     return;
 }
 
-const {ipcMain, app, shell, BrowserWindow} = require('electron');
+const {ipcMain, app, shell, BrowserWindow, Menu, Tray} = require('electron');
 const {autoUpdater} = require("electron-auto-updater");
 const isDev = require('electron-is-dev');
 const child_process = require('child_process');
@@ -135,7 +135,7 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    mainWindow.webContents.on('new-window', function(e, url) {
+    mainWindow.webContents.on('new-window', function (e, url) {
         e.preventDefault();
         shell.openExternal(url);
     });
@@ -162,11 +162,26 @@ app.on('ready', () => {
     if (process.env['NODE_ENV'] == 'production') {
         setTimeout(autoUpdater.checkForUpdates, 2000);
     }
+    if(process.platform == 'win32'){
+        let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
+        const contextMenu = Menu.buildFromTemplate([
+            {label: 'Item1', type: 'radio'},
+            {label: 'Item2', type: 'radio'},
+            {label: 'Item3', type: 'radio', checked: true},
+            {label: 'Item4', type: 'radio'}
+        ]);
+        tray.setToolTip('MyCard');
+        tray.setContextMenu(contextMenu)
+    }
 });
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-    app.quit()
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 });
 
 app.on('activate', function () {

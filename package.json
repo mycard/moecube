@@ -69,7 +69,8 @@
       }
     ],
     "extraResources": [
-      "bin"
+      "bin",
+      "images"
     ],
     "win": {
       "target": [
