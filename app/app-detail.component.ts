@@ -7,7 +7,6 @@ import {DownloadService} from "./download.service";
 import {clipboard, remote} from "electron";
 import * as path from "path";
 import * as fs from 'fs';
-import {InstallService} from "./install.service";
 import mkdirp = require("mkdirp");
 
 declare const Notification: any;
@@ -30,8 +29,7 @@ export class AppDetailComponent implements OnInit {
     referencesInstall: {[id: string]: boolean};
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
-                private  downloadService: DownloadService, private installService: InstallService,
-                private ref: ChangeDetectorRef) {
+                private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
     }
 
 //     public File[] listRoots() {
@@ -103,8 +101,12 @@ export class AppDetailComponent implements OnInit {
 
     async uninstall(app: App) {
         if (confirm("确认删除？")) {
-            await this.installService.uninstall(app);
-            app.status.status = "init";
+            try {
+                await this.appsService.uninstall(app);
+                app.status.status = "init";
+            } catch (e) {
+                alert(e);
+            }
         }
     }
 
@@ -131,7 +133,7 @@ export class AppDetailComponent implements OnInit {
             let volume = this.installOption.installLibrary.slice(7);
             let library = path.join(volume, "MyCardLibrary");
             try {
-                await this.installService.createDirectory(library);
+                await this.appsService.createDirectory(library);
                 this.installOption.installLibrary = library;
                 this.settingsService.addLibrary(library, true);
             } catch (e) {
