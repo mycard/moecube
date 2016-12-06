@@ -14,7 +14,6 @@ import {AppsService} from "./apps.service";
 import {SettingsService} from "./settings.sevices";
 import {LoginService} from "./login.service";
 import {DownloadService} from "./download.service";
-import {InstallService} from "./install.service";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
@@ -25,7 +24,6 @@ import {InstallService} from "./install.service";
     bootstrap: [MyCardComponent],
     providers: [
         AppsService, SettingsService, LoginService, DownloadService,
-        InstallService
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })

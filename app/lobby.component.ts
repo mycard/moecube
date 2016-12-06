@@ -6,7 +6,6 @@ import {AppsService} from "./apps.service";
 import {LoginService} from "./login.service";
 import {App, Category} from "./app";
 import {DownloadService} from "./download.service";
-import {InstallService} from "./install.service";
 import {Http, URLSearchParams} from "@angular/http";
 import {shell} from "electron";
 import WebViewElement = Electron.WebViewElement;
@@ -25,8 +24,7 @@ export class LobbyComponent implements OnInit {
     currentApp: App;
     private apps: Map<string,App>;
 
-    constructor(private appsService: AppsService, private loginService: LoginService, private downloadService: DownloadService,
-                private installService: InstallService, private http: Http) {
+    constructor(private appsService: AppsService, private loginService: LoginService) {
     }
 
     async ngOnInit() {
