@@ -180,7 +180,7 @@ function createTray() {
 app.on('ready', () => {
     createWindow();
     if (process.env['NODE_ENV'] == 'production') {
-        setTimeout(autoUpdater.checkForUpdates, 2000);
+        setTimeout(autoUpdater.checkForUpdates.bind(autoUpdater), 2000);
     }
     if (process.platform == 'win32') {
         createTray()

@@ -16,7 +16,7 @@ export class SettingsService {
     static defaultLibraries = [
         {
             "default": true,
-            path: path.join(remote.app.getPath("appData"), "library")
+            path: path.join(remote.app.getPath("appData"), "MyCardLibrary")
         },
     ];
     libraries: Library[];
