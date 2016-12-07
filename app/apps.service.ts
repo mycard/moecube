@@ -11,7 +11,7 @@ import "rxjs/Rx";
 import * as readline from "readline";
 import {AppLocal} from "./app-local";
 import * as ini from "ini";
-import {DownloadService} from "./download.service";
+import {DownloadService, DownloadStatus} from "./download.service";
 import {InstallOption} from "./install-option";
 import {ComparableSet} from "./shared/ComparableSet";
 import {Observable, Observer} from "rxjs/Rx";
@@ -21,7 +21,14 @@ import ReadableStream = NodeJS.ReadableStream;
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
-
+const Logger = {
+    info: (...message: any[]) => {
+        console.log("AppService [INFO]: ", ...message);
+    },
+    error: (...message: any[]) => {
+        console.error("AppService [ERROR]: ", ...message);
+    }
+};
 interface InstallTask {
     app: App;
     option: InstallOption;
@@ -126,9 +133,9 @@ export class AppsService {
         }
 
         // 设置App关系
-        //TODO: 这里有必要重新整理一下么？
-        for (let [id, app] of apps) {
-            let temp = app.actions;
+
+        for (let [id,app] of apps) {
+            let temp=app.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -197,46 +204,26 @@ export class AppsService {
             }
             await this.doInstall(task);
         };
-        // TODO: 重构这个函数
-        const addDownloadTask = async(app: App, dir: string) => {
+        const addDownloadTask = async(app: App, dir: string): Promise<{app: App,files: string[]} > => {
             let metalinkUrl = app.download;
             if (app.id === "ygopro") {
-                // TODO: 需要特化平台下载的还有个desmume
                 metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + ".meta4";
             }
-            let metalink = await this.http.get(metalinkUrl).map((response) => response.text()).toPromise();
+            if (app.id === "desmume") {
+                metalinkUrl = "https://thief.mycard.moe/metalinks/desmume-" + process.platform + ".meta4";
+            }
             app.status.status = "downloading";
+            let metalink = await this.http.get(metalinkUrl).map((response) => response.text()).toPromise();
             let downloadId = await this.downloadService.addMetalink(metalink, dir);
-            let observable = this.downloadService.downloadProgress(downloadId);
-            return new Promise((resolve, reject) => {
-                observable.subscribe((task) => {
-                    if (task.totalLength) {
-                        app.status.total = task.totalLength;
-                    } else {
-                        app.status.total = 0;
-                    }
-                    app.status.progress = task.completedLength;
-
-                    console.log(task);
-
-                    if (task.downloadSpeed) {
-                        let currentSpeed = parseInt(task.downloadSpeed);
-                        const speedUnit = ["Byte/s", "KB/s", "MB/s", "GB/s", "TB/s"];
-                        let currentUnit = Math.floor(Math.log(currentSpeed) / Math.log(1024));
-                        console.log(currentSpeed, currentUnit);
-                        app.status.progressMessage = (currentSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
-                    } else {
-                        app.status.progressMessage = '';
-                    }
-                    this.ref.tick();
-                }, (error) => {
-                    reject(error);
-                }, async() => {
-                    app.status.status = "waiting";
-                    let files = await this.downloadService.getFile(downloadId);
-                    resolve({app: app, files: files});
-                })
+            await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
+                app.status.progress = status.completedLength;
+                app.status.total = status.totalLength;
+                app.status.progressMessage = status.downloadSpeedText;
+                this.ref.tick();
             });
+            let files = await this.downloadService.getFiles(downloadId);
+            app.status.status = "waiting";
+            return {app: app, files: files}
         };
         if (!app.isInstalled()) {
             let apps: App[] = [];
@@ -247,16 +234,16 @@ export class AppsService {
             try {
                 let downloadPath = path.join(option.installLibrary, 'downloading');
                 let tasks: Promise<any>[] = [];
+                Logger.info("Start to Download", apps);
                 for (let a of apps) {
                     tasks.push(addDownloadTask(a, downloadPath));
                 }
                 let downloadResults = await Promise.all(tasks);
+                Logger.info("Download Complete", downloadResults);
                 let installTasks: Promise<void>[] = [];
                 for (let result of downloadResults) {
-                    console.log(result);
                     let o = new InstallOption(result.app, option.installLibrary);
                     o.downloadFiles = result.files;
-
                     let task = tryToInstall({app: result.app, option: o});
                     installTasks.push(task);
                 }
@@ -268,7 +255,6 @@ export class AppsService {
                         a.reset()
                     }
                 }
-                console.log(e);
                 throw e;
             }
         }
@@ -277,7 +263,7 @@ export class AppsService {
     findChildren(app: App): App[] {
         let children: App[] = [];
         for (let [id,child] of this.apps) {
-            if (child.parent === app) {
+            if (child.parent === app || child.dependencies && child.dependencies.has(app.id)) {
                 children.push(child);
             }
         }
@@ -421,7 +407,6 @@ export class AppsService {
         if (connection) {
             connection.connection.close();
         }
-        // console.log(server.url);
         connection = {connection: new WebSocket(server.url), address: null};
         let id: Timer | null;
         this.connections.set(app, connection);
@@ -484,7 +469,7 @@ export class AppsService {
         let app = task.app;
 
         if (!app.isWaiting()) {
-            console.error('doUninstall', "应用不处于等待安装状态", JSON.stringify(app));
+            console.error('doUninstall', "应用不处于等待安装状态", app);
             throw("应用不处于等待安装状态");
         }
 
@@ -689,9 +674,8 @@ export class AppsService {
                 for (let line of response.text().split('\n')) {
                     if (line !== "") {
                         let [checksum,filename]=line.split('  ', 2);
-                        if (filename.endsWith("\\") || filename.endsWith("/")) {
-                            map.set(filename, "");
-                        }
+                        // checksum文件里没有文件夹，这里添加上
+                        map.set(path.dirname(filename), "");
                         map.set(filename, checksum);
                     }
                 }
@@ -718,16 +702,19 @@ export class AppsService {
     }
 
     async uninstall(app: App) {
-        // TODO: 级联卸载mod
         let children = this.findChildren(app);
         let hasInstalledChild = children.find((child) => {
-            return child.isInstalled();
+            return child.isInstalled() && child.parent != app;
         });
         if (hasInstalledChild) {
             throw "无法卸载，还有依赖此程序的游戏。"
-        }
-        if (app.isReady()) {
-            return this.doUninstall(app);
+        } else if (app.isReady()) {
+            for (let child of children) {
+                if (child.parent === app && child.isReady()) {
+                    await this.doUninstall(child);
+                }
+            }
+            return await this.doUninstall(app);
         }
     }
 
@@ -760,7 +747,7 @@ export class AppsService {
             let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
             let difference = parentSet.intersection(fileSet);
             if (difference) {
-                this.restoreFiles(appDir, backupDir, Array.from(difference))
+                await this.restoreFiles(appDir, backupDir, Array.from(difference))
             }
         }
 
