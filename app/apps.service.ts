@@ -71,11 +71,13 @@ export class AppsService {
     }
 
     async migreate_default_library() {
-        let default_library = this.settingsService.getDefaultLibrary();
-        if (default_library.path == path.join(remote.app.getPath("appData"), "library")) {
-            default_library.path = path.join(remote.app.getPath("appData"), "MyCardLibrary")
+        let libraries = this.settingsService.getLibraries();
+        for (let library of libraries) {
+            if (library.path == path.join(remote.app.getPath("appData"), "library")) {
+                library.path = path.join(remote.app.getPath("appData"), "MyCardLibrary")
+            }
         }
-        this.settingsService.setDefaultLibrary(default_library);
+        localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
     }
 
     loadAppsList = (data: any): Map<string,App> => {
