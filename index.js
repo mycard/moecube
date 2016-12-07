@@ -10,7 +10,7 @@ function handleElevate() {
 
     if (process.argv[1] == '-e') {
         if (process.platform == 'darwin') {
-            app.dock.hide();
+            require('electron').app.dock.hide();
         }
         let elevate = JSON.parse(new Buffer(process.argv[2], 'base64').toString());
         require('net').connect(elevate['ipc'], function () {
@@ -74,18 +74,23 @@ if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
 //     }, 6000)
 // }
 autoUpdater.on('error', (event) => {
+    global.update_status = 'error';
     console.log('autoUpdater', 'error', event);
 });
 autoUpdater.on('checking-for-update', () => {
+    global.update_status = 'checking-for-update';
     console.log('autoUpdater', 'checking-for-update');
 });
 autoUpdater.on('update-available', () => {
+    global.update_status = 'update-available';
     console.log('autoUpdater', 'update-available');
 });
 autoUpdater.on('update-not-available', () => {
+    global.update_status = 'update-not-available';
     console.log('autoUpdater', 'update-not-available');
 });
 autoUpdater.on('update-downloaded', (event) => {
+    global.update_status = 'update-downloaded';
     console.log('autoUpdater', 'update-downloaded', event);
     updateWindow = new BrowserWindow({
         width: 640,
@@ -180,7 +185,7 @@ function createTray() {
 app.on('ready', () => {
     createWindow();
     if (process.env['NODE_ENV'] == 'production') {
-        setTimeout(autoUpdater.checkForUpdates.bind(autoUpdater), 2000);
+        autoUpdater.checkForUpdates()
     }
     if (process.platform == 'win32') {
         createTray()
