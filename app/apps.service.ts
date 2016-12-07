@@ -1,6 +1,6 @@
 import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
-import {App, AppStatus, Action} from "./app";
+import {App, AppStatus, Action, Category} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
 import * as path from "path";
@@ -77,12 +77,14 @@ export class AppsService {
             }
 
             // 去除无关语言
-            for (let key of ['name', 'description']) {
-                let value = app[key][locale];
-                if (!value) {
-                    value = app[key]["zh-CN"];
+            for (let key of ['name', 'description', 'news']) {
+                if (app[key]) {
+                    let value = app[key][locale];
+                    if (!value) {
+                        value = app[key]["zh-CN"];
+                    }
+                    app[key] = value;
                 }
-                app[key] = value;
             }
 
             // 去除平台无关的内容
@@ -102,8 +104,8 @@ export class AppsService {
 
         // 设置App关系
         //TODO: 这里有必要重新整理一下么？
-        for (let [id] of apps) {
-            let temp = apps.get(id)!.actions;
+        for (let [id, app] of apps) {
+            let temp = app.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -112,10 +114,9 @@ export class AppsService {
                 }
                 map.set(action, temp[action]);
             }
-            apps.get(id)!.actions = map;
+            app.actions = map;
 
             for (let key of ['dependencies', 'references', 'parent']) {
-                let app = apps.get(id)!;
                 let value = app[key];
                 if (value) {
                     if (Array.isArray(value)) {
@@ -128,6 +129,26 @@ export class AppsService {
                         app[key] = apps.get(value);
                     }
                 }
+            }
+
+            // 为语言包置一个默认的名字
+            // 这里简易做个 i18n 的 hack
+            const lang = {
+                'en-US': {
+                    'en-US': 'English',
+                    'zh-CN': 'Simplified Chinese',
+                    'zh-TW': 'Traditional Chinese',
+                    'language_pack': 'Language'
+                },
+                'zh-CN': {
+                    'en-US': '英文',
+                    'zh-CN': '简体中文',
+                    'zh-TW': '繁体中文',
+                    'language_pack': '语言包'
+                }
+            };
+            if (!app.name && app.category == Category.module && app.tags.includes('language') && app.parent) {
+                app.name = `${app.parent.name} ${lang[locale].language_pack} (${app.locales.map((l) => lang[locale][l]).join(', ')})`
             }
         }
         return apps;

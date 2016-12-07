@@ -10,7 +10,7 @@ function handleElevate() {
 
     if (process.argv[1] == '-e') {
         if (process.platform == 'darwin') {
-            app.dock.hide();
+            require('electron').app.dock.hide();
         }
         let elevate = JSON.parse(new Buffer(process.argv[2], 'base64').toString());
         require('net').connect(elevate['ipc'], function () {

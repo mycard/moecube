@@ -52,7 +52,7 @@ export class App {
     author: string;             // English Only
     homepage: string;
     category: Category;
-    parent: App;
+    parent?: App;
 
     get download(): string {
         let downloadUrl = "https://thief.mycard.moe/metalinks/";

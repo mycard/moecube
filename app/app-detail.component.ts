@@ -74,7 +74,7 @@ export class AppDetailComponent implements OnInit {
 
     async installMod(mod: App) {
 
-        let option = new InstallOption(mod, path.dirname(mod.parent.local!.path));
+        let option = new InstallOption(mod, path.dirname(mod.parent!.local!.path));
         await this.install(mod, option, {});
 
     }
