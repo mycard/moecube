@@ -55,7 +55,7 @@ export class AppsService {
 
     async migrate() {
         await this.migrate_v2_ygopro();
-        await this.migreate_default_library();
+        await this.migreate_library();
     }
 
     async migrate_v2_ygopro() {
@@ -70,7 +70,7 @@ export class AppsService {
         }
     }
 
-    async migreate_default_library() {
+    async migreate_library() {
         let libraries = this.settingsService.getLibraries();
         for (let library of libraries) {
             if (library.path == path.join(remote.app.getPath("appData"), "library")) {
