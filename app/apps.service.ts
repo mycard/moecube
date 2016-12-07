@@ -347,19 +347,9 @@ export class AppsService {
         remote.getCurrentWindow().minimize();
     }
 
-    // TODO: 定位到下级文件，即现在的目录之内
-    // 如果有actions.main.execuate, 定位那个execuate的顶层路径
-    // 如果没有，定位目录里面任意一个顶级文件
     browse(app: App) {
         if (app.local) {
-            let appPath = app.local.path;
-            fs.readdir(appPath, (err, files) => {
-                if (!err) {
-                    remote.shell.showItemInFolder(appPath + "/.");
-                } else {
-                    console.log("Browser Window Error:", appPath, err);
-                }
-            });
+            remote.shell.showItemInFolder(app.local.path + "/.");
         }
     }
 
@@ -387,7 +377,7 @@ export class AppsService {
         if (connection) {
             connection.connection.close();
         }
-        console.log(server.url);
+        // console.log(server.url);
         connection = {connection: new WebSocket(server.url), address: null};
         let id: Timer | null;
         this.connections.set(app, connection);
