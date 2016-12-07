@@ -1,6 +1,6 @@
 import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
-import {App, AppStatus, Action} from "./app";
+import {App, AppStatus, Action, Category} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
 import * as path from "path";
@@ -54,14 +54,37 @@ export class AppsService {
                 private downloadService: DownloadService) {
     }
 
-    loadApps() {
-        return this.http.get('./apps.json')
-            .toPromise()
-            .then((response) => {
-                let data = response.json();
-                this.apps = this.loadAppsList(data);
-                return this.apps;
-            });
+    async loadApps() {
+        let data = await this.http.get('./apps.json').map((response) => response.json()).toPromise();
+        this.apps = this.loadAppsList(data);
+        return this.apps;
+    }
+
+    async migrate() {
+        await this.migrate_v2_ygopro();
+        await this.migreate_library();
+    }
+
+    async migrate_v2_ygopro() {
+        // 导入萌卡 v2 的 YGOPRO
+        try {
+            const legacy_ygopro_path = require(path.join('db.json')).local.ygopro.path;
+            if (legacy_ygopro_path) {
+                // 导入YGOPRO
+            }
+        } catch (error) {
+
+        }
+    }
+
+    async migreate_library() {
+        let libraries = this.settingsService.getLibraries();
+        for (let library of libraries) {
+            if (library.path == path.join(remote.app.getPath("appData"), "library")) {
+                library.path = path.join(remote.app.getPath("appData"), "MyCardLibrary")
+            }
+        }
+        localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
     }
 
     loadAppsList = (data: any): Map<string,App> => {
@@ -84,12 +107,14 @@ export class AppsService {
             }
 
             // 去除无关语言
-            for (let key of ['name', 'description']) {
-                let value = app[key][locale];
-                if (!value) {
-                    value = app[key]["zh-CN"];
+            for (let key of ['name', 'description', 'news']) {
+                if (app[key]) {
+                    let value = app[key][locale];
+                    if (!value) {
+                        value = app[key]["zh-CN"];
+                    }
+                    app[key] = value;
                 }
-                app[key] = value;
             }
 
             // 去除平台无关的内容
@@ -108,8 +133,9 @@ export class AppsService {
         }
 
         // 设置App关系
-        for (let [id] of apps) {
-            let temp = apps.get(id)!.actions;
+
+        for (let [id,app] of apps) {
+            let temp=app.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
@@ -118,10 +144,9 @@ export class AppsService {
                 }
                 map.set(action, temp[action]);
             }
-            apps.get(id)!.actions = map;
+            app.actions = map;
 
             for (let key of ['dependencies', 'references', 'parent']) {
-                let app = apps.get(id)!;
                 let value = app[key];
                 if (value) {
                     if (Array.isArray(value)) {
@@ -134,6 +159,26 @@ export class AppsService {
                         app[key] = apps.get(value);
                     }
                 }
+            }
+
+            // 为语言包置一个默认的名字
+            // 这里简易做个 i18n 的 hack
+            const lang = {
+                'en-US': {
+                    'en-US': 'English',
+                    'zh-CN': 'Simplified Chinese',
+                    'zh-TW': 'Traditional Chinese',
+                    'language_pack': 'Language'
+                },
+                'zh-CN': {
+                    'en-US': '英文',
+                    'zh-CN': '简体中文',
+                    'zh-TW': '繁体中文',
+                    'language_pack': '语言包'
+                }
+            };
+            if (!app.name && app.category == Category.module && app.tags.includes('language') && app.parent) {
+                app.name = `${app.parent.name} ${lang[locale].language_pack} (${app.locales.map((l) => lang[locale][l]).join(', ')})`
             }
         }
         return apps;
@@ -332,18 +377,9 @@ export class AppsService {
         remote.getCurrentWindow().minimize();
     }
 
-    // 如果有actions.main.execuate, 定位那个execuate的顶层路径
-    // 如果没有，定位目录里面任意一个顶级文件
     browse(app: App) {
         if (app.local) {
-            let appPath = app.local.path;
-            fs.readdir(appPath, (err, files) => {
-                if (!err) {
-                    remote.shell.showItemInFolder(appPath + "/.");
-                } else {
-                    Logger.error("Browser Window Error:", appPath, err);
-                }
-            });
+            remote.shell.showItemInFolder(app.local.path + "/.");
         }
     }
 
@@ -371,7 +407,6 @@ export class AppsService {
         if (connection) {
             connection.connection.close();
         }
-        console.log(server.url);
         connection = {connection: new WebSocket(server.url), address: null};
         let id: Timer | null;
         this.connections.set(app, connection);

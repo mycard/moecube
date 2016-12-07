@@ -14,7 +14,7 @@ declare const $: any;
 export class MyCardComponent implements OnInit {
     currentPage: string = "lobby";
 
-    update_status: string | undefined;
+    update_status: string | undefined = remote.getGlobal('update_status');
     update_error: string | undefined;
     currentWindow = remote.getCurrentWindow();
     window = window;

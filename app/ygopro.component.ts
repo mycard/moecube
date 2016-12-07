@@ -2,7 +2,6 @@
  * Created by zh99998 on 16/9/2.
  */
 import {Component, OnInit, ChangeDetectorRef, Input} from "@angular/core";
-import {AppsService} from "./apps.service";
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
@@ -15,7 +14,7 @@ import {App} from "./app";
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
-import {AppLocal} from "./app-local";
+import {SettingsService} from "./settings.sevices";
 
 declare const $: any;
 
@@ -109,7 +108,7 @@ export class YGOProComponent implements OnInit {
 
     connections: WebSocket[] = [];
 
-    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private settingsService: SettingsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -117,7 +116,7 @@ export class YGOProComponent implements OnInit {
                 break;
             case 'win32':
                 this.numfont = [path.join(process.env['SystemRoot'], 'Fonts', 'arialbd.ttf')];
-                this.textfont = [path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')];
+                this.textfont = [path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttc'), path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttf'), path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')];
                 break;
         }
     }
@@ -208,7 +207,7 @@ export class YGOProComponent implements OnInit {
             }
         }
 
-        if (!await this.get_font([data.textfont.split(' ', 2)[0]])) {
+        if (data.textfont == 'c:/windows/fonts/simsun.ttc 14' || !await this.get_font([data.textfont.split(' ', 2)[0]])) {
             let font = await this.get_font(this.textfont);
             if (font) {
                 data['textfont'] = `${font} 14`
@@ -258,10 +257,51 @@ export class YGOProComponent implements OnInit {
         return this.join('AI#' + name, this.servers[0])
     }
 
-    start_game(args: string[]) {
+    async start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
-        console.log(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {cwd: this.app.local!.path});
+        let locale = this.settingsService.getLocale();
+        if (localStorage.getItem('ygopro-locale') != locale) {
+            console.log(`try convert ygopro locale to ${locale}`)
+            try {
+                await new Promise((resolve, reject) => {
+                    let source = fs.createReadStream(path.join(this.app.local!.path, 'locales', locale, 'strings.conf'));
+                    source.on('open', (error: Error) => {
+                        let destination = fs.createWriteStream(path.join(this.app.local!.path, 'strings.conf'));
+                        source.pipe(destination);
+                        destination.on('error', (error: Error) => {
+                            reject(error)
+                        });
+                        destination.on('close', () => {
+                            resolve()
+                        })
+                    });
+                    source.on('error', (error: Error) => {
+                        reject(error)
+                    });
+                });
+                await new Promise((resolve, reject) => {
+                    let source = fs.createReadStream(path.join(this.app.local!.path, 'locales', locale, 'cards.cdb'));
+                    source.on('open', (error: Error) => {
+                        let destination = fs.createWriteStream(path.join(this.app.local!.path, 'cards.cdb'));
+                        source.pipe(destination);
+                        destination.on('error', (error: Error) => {
+                            reject(error)
+                        });
+                        destination.on('close', () => {
+                            resolve()
+                        })
+                    });
+                    source.on('error', (error: Error) => {
+                        reject(error)
+                    });
+                });
+                localStorage.setItem('ygopro-locale', locale)
+                console.log(`convert ygopro locale to ${locale} success`)
+            } catch (error) {
+                console.error(`convert ygopro locale to ${locale} failed`, error)
+            }
+        }
         return new Promise((resolve, reject) => {
             let child = child_process.spawn(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {
                 cwd: this.app.local!.path,

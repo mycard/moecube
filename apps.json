@@ -2,7 +2,8 @@
   {
     "id": "th06",
     "name": {
-      "zh-CN": "东方红魔乡"
+      "zh-CN": "东方红魔乡",
+      "en-US": "The Embodiment of Scarlet Devil"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -28,7 +29,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -74,9 +75,6 @@
   },
   {
     "id": "th06-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方红魔乡 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -101,7 +99,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -145,7 +143,8 @@
   {
     "id": "th07",
     "name": {
-      "zh-CN": "东方妖妖梦"
+      "zh-CN": "东方妖妖梦",
+      "en-US": "Perfect Cherry Blossom"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -171,7 +170,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -215,9 +214,6 @@
   },
   {
     "id": "th07-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方妖妖梦 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -242,7 +238,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -286,7 +282,8 @@
   {
     "id": "th075",
     "name": {
-      "zh-CN": "东方萃梦想"
+      "zh-CN": "东方萃梦想",
+      "en-US": "Immaterial and Missing Power"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -312,7 +309,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -356,9 +353,6 @@
   },
   {
     "id": "th075-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方萃梦想 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -383,7 +377,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -428,7 +422,8 @@
   {
     "id": "th08",
     "name": {
-      "zh-CN": "东方永夜抄"
+      "zh-CN": "东方永夜抄",
+      "en-US": "Imperishable Night"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -454,7 +449,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -498,9 +493,6 @@
   },
   {
     "id": "th08-lang-zh-CN",
-    "name": {
-      "zh-CN": "东方永夜抄 语言包 (简体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -569,7 +561,8 @@
   {
     "id": "th09",
     "name": {
-      "zh-CN": "东方花映冢"
+      "zh-CN": "东方花映冢",
+      "en-US": "Phantasmagoria of Flower View"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -595,7 +588,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -639,9 +632,6 @@
   },
   {
     "id": "th09-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方花映冢 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -666,7 +656,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -710,7 +700,8 @@
   {
     "id": "th095",
     "name": {
-      "zh-CN": "东方文花帖"
+      "zh-CN": "东方文花帖",
+      "en-US": "Shoot the Bullet"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -736,7 +727,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -780,9 +771,6 @@
   },
   {
     "id": "th095-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方文花帖 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -807,7 +795,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -851,7 +839,8 @@
   {
     "id": "th10",
     "name": {
-      "zh-CN": "东方风神录"
+      "zh-CN": "东方风神录",
+      "en-US": "Mountain of Faith"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -861,7 +850,9 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": ["directx"],
+      "win32": [
+        "directx"
+      ],
       "darwin": [
         "wine"
       ]
@@ -877,7 +868,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -921,9 +912,6 @@
   },
   {
     "id": "th10-lang-zh-CN-zh-TW",
-    "name": {
-      "zh-CN": "东方风神录 语言包 (简体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -948,7 +936,8 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-CN",
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -992,7 +981,8 @@
   {
     "id": "th105",
     "name": {
-      "zh-CN": "东方绯想天"
+      "zh-CN": "东方绯想天",
+      "en-US": "Scarlet Weather Rhapsody"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1002,7 +992,9 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": ["directx"],
+      "win32": [
+        "directx"
+      ],
       "darwin": [
         "wine"
       ]
@@ -1018,7 +1010,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1058,9 +1050,6 @@
   },
   {
     "id": "th105-lang-zh-CN",
-    "name": {
-      "zh-CN": "东方绯想天 语言包 (简体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1115,7 +1104,8 @@
   {
     "id": "th11",
     "name": {
-      "zh-CN": "东方地灵殿"
+      "zh-CN": "东方地灵殿",
+      "en-US": "Subterranean Animism"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1125,7 +1115,9 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": ["directx"],
+      "win32": [
+        "directx"
+      ],
       "darwin": [
         "wine"
       ]
@@ -1141,7 +1133,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1185,9 +1177,6 @@
   },
   {
     "id": "th11-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方地灵殿 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1212,7 +1201,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -1256,7 +1245,8 @@
   {
     "id": "th12",
     "name": {
-      "zh-CN": "东方星莲船"
+      "zh-CN": "东方星莲船",
+      "en-US": "Undefined Fantastic Object"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1266,7 +1256,9 @@
       "touhou"
     ],
     "dependencies": {
-      "win32": ["directx"],
+      "win32": [
+        "directx"
+      ],
       "darwin": [
         "wine"
       ]
@@ -1282,7 +1274,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1326,9 +1318,6 @@
   },
   {
     "id": "th12-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方星莲船 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1353,7 +1342,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -1397,7 +1386,8 @@
   {
     "id": "th123",
     "name": {
-      "zh-CN": "东方非想天则"
+      "zh-CN": "东方非想天则",
+      "en-US": "Touhou Hisōtensoku"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1427,7 +1417,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1468,9 +1458,6 @@
   },
   {
     "id": "th123-lang-zh-CN",
-    "name": {
-      "zh-CN": "东方非想天则 语言包 (简体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1525,7 +1512,8 @@
   {
     "id": "th1",
     "name": {
-      "zh-CN": "东方灵异传"
+      "zh-CN": "东方灵异传",
+      "en-US": "Highly Responsive to Prayers"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1551,7 +1539,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1582,7 +1570,8 @@
   {
     "id": "th2",
     "name": {
-      "zh-CN": "东方封魔录"
+      "zh-CN": "东方封魔录",
+      "en-US": "Story of Eastern Wonderland"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1610,7 +1599,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1638,9 +1627,6 @@
   },
   {
     "id": "th2-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方封魔录 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1664,7 +1650,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -1693,7 +1679,8 @@
   {
     "id": "th3",
     "name": {
-      "zh-CN": "东方梦时空"
+      "zh-CN": "东方梦时空",
+      "en-US": "Phantasmagoria of Dim. Dream"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1721,7 +1708,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1750,9 +1737,6 @@
   },
   {
     "id": "th3-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方梦时空 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1776,7 +1760,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -1805,7 +1789,8 @@
   {
     "id": "th4",
     "name": {
-      "zh-CN": "东方幻想乡"
+      "zh-CN": "东方幻想乡",
+      "en-US": "Lotus Land Story"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1833,7 +1818,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1862,9 +1847,6 @@
   },
   {
     "id": "th4-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方幻想乡 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -1888,7 +1870,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -1917,7 +1899,8 @@
   {
     "id": "th5",
     "name": {
-      "zh-CN": "东方怪绮谈"
+      "zh-CN": "东方怪绮谈",
+      "en-US": "Mystic Square"
     },
     "description": {
       "zh-CN": "fxt desc"
@@ -1945,7 +1928,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -1975,9 +1958,6 @@
   },
   {
     "id": "th5-lang-zh-TW",
-    "name": {
-      "zh-CN": "东方怪绮谈 语言包 (繁体中文)"
-    },
     "description": {
       "zh-CN": "fxt desc"
     },
@@ -2001,7 +1981,7 @@
     "author": "ZUN",
     "homepage": "http://www.myacg.cc",
     "locales": [
-      "zh-CN"
+      "zh-TW"
     ],
     "actions": {
       "win32": {
@@ -2051,7 +2031,9 @@
     "author": "Fluorohydride",
     "homepage": "https://github.com/Fluorohydride/ygopro",
     "locales": [
-      "zh-CN"
+      "zh-CN",
+      "en-US",
+      "ja-JP"
     ],
     "actions": {
       "win32": {
@@ -2073,20 +2055,30 @@
       "win32": "1.033.C-7",
       "darwin": "1.033.C-7"
     },
-    "news": [
-      {
-        "url": "https://ygobbs.com",
-        "image": "http://pic.4j4j.cn/upload/pic/20140327/af650cf463.jpg",
-        "title": "News Title",
-        "text": "喵喵喵喵"
-      },
-      {
-        "url": "https://ygobbs.com/t/7%E6%9C%8825%E6%97%A5-MyCard%E5%B7%B2%E6%9B%B4%E6%96%B0INOV910%E7%AD%89%E6%96%B0%E5%8D%A1%EF%BC%8C1033A%E7%A8%8B%E5%BA%8F%E3%80%82%E5%86%85%E5%B8%A6%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BB%A5%E5%8F%8A%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%E3%80%82/80143",
-        "image": "http://image.tianjimedia.com/uploadImages/2012/159/1EF112986273.jpg",
-        "title": "News Title2",
-        "text": "聚集的祈愿将成为新生的闪耀之星，化作光芒闪耀的道路吧！"
-      }
-    ],
+    "news": {
+      "zh-CN": [
+        {
+          "url": "https://ygobbs.com",
+          "image": "http://pic.4j4j.cn/upload/pic/20140327/af650cf463.jpg",
+          "title": "这是一个新闻",
+          "text": "喵喵喵喵"
+        },
+        {
+          "url": "https://ygobbs.com/t/7%E6%9C%8825%E6%97%A5-MyCard%E5%B7%B2%E6%9B%B4%E6%96%B0INOV910%E7%AD%89%E6%96%B0%E5%8D%A1%EF%BC%8C1033A%E7%A8%8B%E5%BA%8F%E3%80%82%E5%86%85%E5%B8%A6%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BB%A5%E5%8F%8A%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3%E3%80%82/80143",
+          "image": "http://image.tianjimedia.com/uploadImages/2012/159/1EF112986273.jpg",
+          "title": "这是另一个新闻",
+          "text": "聚集的祈愿将成为新生的闪耀之星，化作光芒闪耀的道路吧！"
+        }
+      ],
+      "en-US": [
+        {
+          "url": "https://ygobbs.com",
+          "image": "http://pic.4j4j.cn/upload/pic/20140327/af650cf463.jpg",
+          "title": "News Title",
+          "text": "nyanyayna"
+        }
+      ]
+    },
     "conference": "ygopro_china_north"
   },
   {
@@ -2111,9 +2103,6 @@
     },
     "author": "Fluorohydride",
     "homepage": "https://github.com/Fluorohydride/ygopro",
-    "locales": [
-      "zh-CN"
-    ],
     "actions": {
       "win32": {
         "main": {
@@ -2138,7 +2127,8 @@
   {
     "id": "ghost_trick",
     "name": {
-      "zh-CN": "幽灵诡计"
+      "zh-CN": "幽灵诡计",
+      "en-US": "Ghost Trick"
     },
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
@@ -2194,9 +2184,6 @@
   },
   {
     "id": "ghost_trick-lang-zh-CN",
-    "name": {
-      "zh-CN": "幽灵诡计 语言包 (简体中文)"
-    },
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
     },
@@ -2250,7 +2237,8 @@
   {
     "id": "directx",
     "name": {
-      "zh-CN": "DirectX 最终用户运行时"
+      "zh-CN": "DirectX 最终用户运行时",
+      "en-US": "DirectX End-User Runtime"
     },
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
@@ -2271,9 +2259,6 @@
     },
     "author": "Fluorohydride",
     "homepage": "https://github.com/Fluorohydride/ygopro",
-    "locales": [
-      "zh-CN"
-    ],
     "actions": {
       "win32": {
         "install": {
@@ -2339,7 +2324,7 @@
   {
     "id": "wine",
     "name": {
-      "zh-CN": "wine"
+      "zh-CN": "Wine"
     },
     "description": {
       "zh-CN": "wine"
