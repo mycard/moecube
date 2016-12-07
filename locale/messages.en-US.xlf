@@ -17,6 +17,36 @@
                 <target>Change Account</target>
 
             </trans-unit>
+            <trans-unit datatype="html" id="1761e51e36b01ae1e0012914bd58aa2a741d0401">
+                <source>已安装</source>
+                <target>Installed</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="69f3fab778e92fcec3a8c38d53d771a36e6d5230">
+                <source>推荐</source>
+                <target>Recommend</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="fc570ecca13755cb4a92e7513fbd55c2d412f23c">
+                <source>迷之物体</source>
+                <target>Something</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="0873cd6df2d1f1016e02526aa9ba32415c1a11d8">
+                <source>东方 Project</source>
+                <target>Touhou Project</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="785db32107cc0b47564b05381a1d782021d77c67">
+                <source>东方旧作</source>
+                <target>Touhou old series</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="817376261844eb7eb0c035ed0e3fce744a96b6d9">
+                <source>已安装的运行库</source>
+                <target>Installed Runtime Library</target>
+
+            </trans-unit>
             <trans-unit datatype="html" id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a">
                 <source>安装</source>
                 <target>Install</target>
@@ -27,9 +57,19 @@
                 <target>Import</target>
 
             </trans-unit>
+            <trans-unit datatype="html" id="8bb533b37ee18bf8d09df19b4d7234b38f134909">
+                <source>正在下载</source>
+                <target>Downloading...</target>
+
+            </trans-unit>
             <trans-unit datatype="html" id="2fe99d94b20d6f8aba7814d8657037ec9d69d36c">
                 <source>正在安装...</source>
                 <target>Installing...</target>
+
+            </trans-unit>
+            <trans-unit datatype="html" id="bea72fe35b7b9933e126b6ee3a6828c307ccc3d4">
+                <source>正在卸载...</source>
+                <target>UnInstalling...</target>
 
             </trans-unit>
             <trans-unit datatype="html" id="e5ee7e692c816893b6fd2f9375e6d8303cd794cd">
@@ -103,12 +143,18 @@
 
             </trans-unit>
             <trans-unit datatype="html" id="4809edca33b1a07d7d6e8905287d3825e676f2c8">
-                <source>安装 <x id="INTERPOLATION"/></source>
-                <target>Install <x id="INTERPOLATION"/></target>
+                <source>安装
+                    <x id="INTERPOLATION"/>
+                </source>
+                <target>Install
+                    <x id="INTERPOLATION"/>
+                </target>
 
             </trans-unit>
             <trans-unit datatype="html" id="f8e60167c7a0871ccf40ed2a0750311411dfd665">
-                <source>即将开始安装 <x id="INTERPOLATION"/></source>
+                <source>即将开始安装
+                    <x id="INTERPOLATION"/>
+                </source>
                 <target>Preparing Installation
                     <x id="INTERPOLATION"/>
                 </target>
@@ -137,11 +183,6 @@
             <trans-unit datatype="html" id="d8a2d9a9f8854ad118381e6e30a41dc1959a4f0b">
                 <source>创建桌面快捷方式</source>
                 <target>Create Desktop Shortcut</target>
-
-            </trans-unit>
-            <trans-unit datatype="html" id="2af1068491573803bc4756c4f94a689155370d9c">
-                <source>扩展内容</source>
-                <target>Expansion</target>
 
             </trans-unit>
             <trans-unit datatype="html" id="2ba33dd61b1ac70666322680f248e5336b3ee69a">
@@ -310,7 +351,10 @@
 
             </trans-unit>
             <trans-unit datatype="html" id="4baa1360b4d635000fc5e14a6e7376f46ace0bd9">
-                <source><x id="INTERPOLATION"/> LP</source>
+                <source>
+                    <x id="INTERPOLATION"/>
+                    LP
+                </source>
                 <target>
                     <x id="INTERPOLATION"/>
                     LP
@@ -318,7 +362,10 @@
 
             </trans-unit>
             <trans-unit datatype="html" id="1939517ea2b4ff337ce2847302fbcc6f1217d269">
-                <source><x id="INTERPOLATION"/> 初始</source>
+                <source>
+                    <x id="INTERPOLATION"/>
+                    初始
+                </source>
                 <target>
                     <x id="INTERPOLATION"/>
                     Starting
@@ -326,7 +373,10 @@
 
             </trans-unit>
             <trans-unit datatype="html" id="a19d6d5a2c74d9df73936a17b5c71b2069051b49">
-                <source><x id="INTERPOLATION"/> 抽卡</source>
+                <source>
+                    <x id="INTERPOLATION"/>
+                    抽卡
+                </source>
                 <target>
                     <x id="INTERPOLATION"/>
                     Draw
