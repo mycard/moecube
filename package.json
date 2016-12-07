@@ -51,7 +51,7 @@
     "typescript": "latest",
     "@types/node": "latest",
     "@types/electron": "latest",
-    "@types/ini": "latest",
+    "@types/ini": "latest"
   },
   "build": {
     "productName": "MyCard",

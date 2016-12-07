@@ -138,6 +138,21 @@ export class AppsService {
     }
 
     async install(app: App, option: InstallOption) {
+
+        const tryToInstall = async(task: InstallTask): Promise<void> => {
+            if (!task.app.readyForInstall()) {
+                await new Promise((resolve, reject) => {
+                    this.eventEmitter.subscribe(() => {
+                        if (task.app.readyForInstall()) {
+                            resolve();
+                        } else if (task.app.findDependencies().find((dependency: App) => !dependency.isInstalled())) {
+                            reject("Dependencies failed");
+                        }
+                    });
+                });
+            }
+            await this.doInstall(task);
+        };
         // TODO: 重构这个函数
         const addDownloadTask = async(app: App, dir: string) => {
             let metalinkUrl = app.download;
@@ -198,7 +213,7 @@ export class AppsService {
                     let o = new InstallOption(result.app, option.installLibrary);
                     o.downloadFiles = result.files;
 
-                    let task = this.push({app: result.app, option: o});
+                    let task = tryToInstall({app: result.app, option: o});
                     installTasks.push(task);
                 }
                 await Promise.all(installTasks);
@@ -336,7 +351,16 @@ export class AppsService {
     // 如果有actions.main.execuate, 定位那个execuate的顶层路径
     // 如果没有，定位目录里面任意一个顶级文件
     browse(app: App) {
-        remote.shell.showItemInFolder(app.local!.path);
+        if (app.local) {
+            let appPath = app.local.path;
+            fs.readdir(appPath, (err, files) => {
+                if (!err) {
+                    remote.shell.showItemInFolder(appPath + "/.");
+                } else {
+                    console.log("Browser Window Error:", appPath, err);
+                }
+            });
+        }
     }
 
     connections = new Map<App, Connection>();
@@ -419,47 +443,14 @@ export class AppsService {
 
     map: Map<string,string> = new Map();
 
-    // private createId(): string {
-    //     function s4() {
-    //         return Math.floor((1 + Math.random()) * 0x10000)
-    //             .toString(16)
-    //             .substring(1);
-    //     }
-    //
-    //     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-    //         s4() + '-' + s4() + s4() + s4();
-    // }
-
-    // installProgress(id: string): Observable<InstallStatus>|undefined {
-    //     let app = this.map.get(id);
-    //     if (app) {
-    //
-    //     }
-    // }
-
-    // TODO: push改个名
-    async push(task: InstallTask): Promise<void> {
-        if (!task.app.readyForInstall()) {
-            await new Promise((resolve, reject) => {
-                this.eventEmitter.subscribe(() => {
-                    if (task.app.readyForInstall()) {
-                        resolve();
-                    } else if (task.app.findDependencies().find((dependency: App) => !dependency.isInstalled())) {
-                        reject("Dependencies failed");
-                    }
-                });
-            });
-        }
-        await this.doInstall(task);
-    }
 
     // 调用前提：应用的依赖均已 Ready，应用处于下载完待安装的状态(waiting)。
     // TODO: 要把Task系统去掉吗
     async doInstall(task: InstallTask) {
         let app = task.app;
 
-        if (app.isWaiting()) {
-            console.error('doUninstall', "应用不处于等待安装状态", app);
+        if (!app.isWaiting()) {
+            console.error('doUninstall', "应用不处于等待安装状态", JSON.stringify(app));
             throw("应用不处于等待安装状态");
         }
 
