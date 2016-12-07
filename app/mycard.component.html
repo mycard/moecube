@@ -39,4 +39,4 @@
 <login class="page" *ngIf="!loginService.logged_in"></login>
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
-<webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com"></webview>
+<webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com" (new-window)="openExternal($event.url)"></webview>

@@ -1,5 +1,5 @@
 import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} from "@angular/core";
-import {remote} from "electron";
+import {remote, shell} from "electron";
 import {LoginService} from "./login.service";
 const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
 declare const $: any;
@@ -88,5 +88,9 @@ export class MyCardComponent implements OnInit {
         if (element) {
             $(element.nativeElement).tooltip({placement: 'bottom', container: 'body'})
         }
+    }
+
+    openExternal(url: string) {
+        shell.openExternal(url);
     }
 }

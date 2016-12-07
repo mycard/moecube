@@ -9,6 +9,7 @@ import {DownloadService} from "./download.service";
 import {Http, URLSearchParams} from "@angular/http";
 import {shell} from "electron";
 import WebViewElement = Electron.WebViewElement;
+import {SettingsService} from "./settings.sevices";
 
 @Component({
     moduleId: module.id,
@@ -24,7 +25,7 @@ export class LobbyComponent implements OnInit {
     currentApp: App;
     private apps: Map<string,App>;
 
-    constructor(private appsService: AppsService, private loginService: LoginService) {
+    constructor(private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService) {
     }
 
     async ngOnInit() {
@@ -38,6 +39,13 @@ export class LobbyComponent implements OnInit {
         params.set('jid', this.loginService.user.username + '@mycard.moe');
         params.set('password', this.loginService.user.external_id.toString());
         params.set('nickname', this.loginService.user.username);
+        switch(this.settingsService.getLocale()){
+            case 'zh-CN':
+                params.set('language', 'cn');
+                break;
+            default:
+                params.set('language', 'en');
+        }
         if (this.currentApp.conference) {
             params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
         }

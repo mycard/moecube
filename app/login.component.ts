@@ -6,6 +6,7 @@ import {LoginService} from "./login.service";
 import * as crypto from "crypto";
 import * as querystring from "querystring";
 import * as url from "url";
+import {shell} from "electron";
 
 @Component({
     moduleId: module.id,
@@ -46,4 +47,7 @@ export class LoginComponent {
         this.loginService.login(user);
     }
 
+    openExternal(url: string) {
+        shell.openExternal(url);
+    }
 }

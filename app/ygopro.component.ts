@@ -121,9 +121,9 @@ export class YGOProComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.system_conf = path.join(this.app.local!.path, 'system.conf');
-        this.refresh();
+        await this.refresh();
 
         let modal = $('#game-list-modal');
 
@@ -262,7 +262,7 @@ export class YGOProComponent implements OnInit {
         win.minimize();
         let locale = this.settingsService.getLocale();
         if (localStorage.getItem('ygopro-locale') != locale) {
-            console.log(`try convert ygopro locale to ${locale}`)
+            console.log(`try convert ygopro locale to ${locale}`);
             try {
                 await new Promise((resolve, reject) => {
                     let source = fs.createReadStream(path.join(this.app.local!.path, 'locales', locale, 'strings.conf'));
@@ -296,7 +296,7 @@ export class YGOProComponent implements OnInit {
                         reject(error)
                     });
                 });
-                localStorage.setItem('ygopro-locale', locale)
+                localStorage.setItem('ygopro-locale', locale);
                 console.log(`convert ygopro locale to ${locale} success`)
             } catch (error) {
                 console.error(`convert ygopro locale to ${locale} failed`, error)
@@ -311,8 +311,9 @@ export class YGOProComponent implements OnInit {
                 reject(error);
                 win.restore()
             });
-            child.on('exit', (code, signal) => {
+            child.on('exit', async(code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
+                await this.refresh();
                 resolve();
                 win.restore()
             })
