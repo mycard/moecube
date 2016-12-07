@@ -176,6 +176,11 @@
         <target>Create Desktop Shortcut</target>
         
       </trans-unit>
+      <trans-unit datatype="html" id="2af1068491573803bc4756c4f94a689155370d9c">
+        <source>扩展内容</source>
+        <target>Expantion</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="2ba33dd61b1ac70666322680f248e5336b3ee69a">
         <source>依赖：</source>
         <target>Dependencies</target>
