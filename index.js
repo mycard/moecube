@@ -44,7 +44,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
         if (mainWindow.isMinimized()) {
             mainWindow.restore()
         }
-        if(!mainWindow.isVisible()){
+        if (!mainWindow.isVisible()) {
             mainWindow.show();
         }
         mainWindow.focus()
@@ -172,6 +172,11 @@ function createTray() {
         // {label: '游戏', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
         // {label: '社区', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
         // {label: '切换账号', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
+        {
+            label: '显示主界面', type: 'normal', click: () => {
+                mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+            }
+        },
         {
             label: '退出', type: 'normal', click: app.quit
         }
