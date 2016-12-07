@@ -47,14 +47,35 @@ export class AppsService {
                 private downloadService: DownloadService) {
     }
 
-    loadApps() {
-        return this.http.get('./apps.json')
-            .toPromise()
-            .then((response) => {
-                let data = response.json();
-                this.apps = this.loadAppsList(data);
-                return this.apps;
-            });
+    async loadApps() {
+        let data = await this.http.get('./apps.json').map((response) => response.json()).toPromise();
+        this.apps = this.loadAppsList(data);
+        return this.apps;
+    }
+
+    async migrate() {
+        await this.migrate_v2_ygopro();
+        await this.migreate_default_library();
+    }
+
+    async migrate_v2_ygopro() {
+        // 导入萌卡 v2 的 YGOPRO
+        try {
+            const legacy_ygopro_path = require(path.join('db.json')).local.ygopro.path;
+            if (legacy_ygopro_path) {
+                // 导入YGOPRO
+            }
+        } catch (error) {
+
+        }
+    }
+
+    async migreate_default_library() {
+        let default_library = this.settingsService.getDefaultLibrary();
+        if (default_library.path == path.join(remote.app.getPath("appData"), "library")) {
+            default_library.path = path.join(remote.app.getPath("appData"), "MyCardLibrary")
+        }
+        this.settingsService.setDefaultLibrary(default_library);
     }
 
     loadAppsList = (data: any): Map<string,App> => {
