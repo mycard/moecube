@@ -2187,9 +2187,9 @@
     "description": {
       "zh-CN": "A script engine for \"yu-gi-oh!\" and sample gui."
     },
-    "category": "emulator",
+    "category": "module",
     "tags": [
-      "yugioh"
+      "language"
     ],
     "dependencies": {
       "win32": [

@@ -104,13 +104,16 @@
                         </div>
                         <div class="col-sm-5">
                             <div class="checkbox">
-                                <label i18n>允许启动效果优先权</label><input name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">
+                                <input id="enable_priority" name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">
+                                <label i18n for="enable_priority">允许启动效果优先权</label>
                             </div>
                             <div class="checkbox">
-                                <label i18n>不检查卡组</label><input name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">
+                                <input id="no_check_deck" name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">
+                                <label i18n for="no_check_deck">不检查卡组</label>
                             </div>
                             <div class="checkbox">
-                                <label i18n>开局不洗卡组</label><input name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">
+                                <input id="no_shuffle_deck" name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">
+                                <label for="no_shuffle_deck" i18n>开局不洗卡组</label>
                             </div>
                         </div>
                     </div>

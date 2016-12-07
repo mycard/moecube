@@ -162,9 +162,9 @@ function createWindow() {
     })
 }
 
+let tray;
 function createTray() {
-    console.log('create tray begin');
-    let tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
+    tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
     tray.on('click', (event) => {
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
@@ -183,23 +183,19 @@ function createTray() {
     ]);
     tray.setToolTip('MyCard');
     tray.setContextMenu(contextMenu);
-    console.log('create tray finish');
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    console.log('create window');
     createWindow();
     if (process.platform == 'win32') {
-        console.log('before create tray');
         createTray()
     }
     if (process.env['NODE_ENV'] == 'production') {
         autoUpdater.checkForUpdates()
     }
-    console.log('update');
 });
 
 // Quit when all windows are closed.
