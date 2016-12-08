@@ -260,48 +260,6 @@ export class YGOProComponent implements OnInit {
     async start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
-        let locale = this.settingsService.getLocale();
-        if (localStorage.getItem('ygopro-locale') != locale) {
-            console.log(`try convert ygopro locale to ${locale}`);
-            try {
-                await new Promise((resolve, reject) => {
-                    let source = fs.createReadStream(path.join(this.app.local!.path, 'locales', locale, 'strings.conf'));
-                    source.on('open', (error: Error) => {
-                        let destination = fs.createWriteStream(path.join(this.app.local!.path, 'strings.conf'));
-                        source.pipe(destination);
-                        destination.on('error', (error: Error) => {
-                            reject(error)
-                        });
-                        destination.on('close', () => {
-                            resolve()
-                        })
-                    });
-                    source.on('error', (error: Error) => {
-                        reject(error)
-                    });
-                });
-                await new Promise((resolve, reject) => {
-                    let source = fs.createReadStream(path.join(this.app.local!.path, 'locales', locale, 'cards.cdb'));
-                    source.on('open', (error: Error) => {
-                        let destination = fs.createWriteStream(path.join(this.app.local!.path, 'cards.cdb'));
-                        source.pipe(destination);
-                        destination.on('error', (error: Error) => {
-                            reject(error)
-                        });
-                        destination.on('close', () => {
-                            resolve()
-                        })
-                    });
-                    source.on('error', (error: Error) => {
-                        reject(error)
-                    });
-                });
-                localStorage.setItem('ygopro-locale', locale);
-                console.log(`convert ygopro locale to ${locale} success`)
-            } catch (error) {
-                console.error(`convert ygopro locale to ${locale} failed`, error)
-            }
-        }
         return new Promise((resolve, reject) => {
             let child = child_process.spawn(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {
                 cwd: this.app.local!.path,

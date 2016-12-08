@@ -588,9 +588,6 @@ export class AppsService {
             app.local = local;
             this.saveAppLocal(app);
             app.status.status = "ready";
-            if (app.id == 'ygopro') {
-                localStorage.removeItem('ygopro-locale')
-            }
         } catch (e) {
             console.log("exception in doInstall", e);
             throw e;
