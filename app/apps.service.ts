@@ -61,16 +61,78 @@ export class AppsService {
     }
 
     async migrate() {
+        await this.bundle();
         await this.migrate_v2_ygopro();
         await this.migreate_library();
     }
 
+    async bundle() {
+        try {
+            const bundle = require(path.join(remote.app.getPath('appData'), 'mycard', 'bundle.json'));
+            // 示例：
+            // [
+            //     {
+            //         "app": "th105",
+            //         "createShortcut": false,
+            //         "createDesktopShortcut": false,
+            //         "install": true,
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th105",
+            //         "installLibrary": "D:\\MyCardLibrary"
+            //     },
+            //     {
+            //         "app": "th105-lang-zh-CN",
+            //         "createShortcut": false,
+            //         "createDesktopShortcut": false,
+            //         "install": true,
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th105",
+            //         "installLibrary": "D:\\MyCardLibrary"
+            //     },
+            //     {
+            //         "app": "th123",
+            //         "createShortcut": false,
+            //         "createDesktopShortcut": true,
+            //         "install": true,
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th123",
+            //         "installLibrary": "D:\\MyCardLibrary"
+            //     },
+            //     {
+            //         "app": "th123-lang-zh-CN",
+            //         "createShortcut": false,
+            //         "createDesktopShortcut": false,
+            //         "install": true,
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th123",
+            //         "installLibrary": "D:\\MyCardLibrary"
+            //     },
+            //     {
+            //         "app": "directx",
+            //         "createShortcut": false,
+            //         "createDesktopShortcut": false,
+            //         "install": true,
+            //         "installDir": "D:\\MyCardLibrary\\apps\\directx",
+            //         "installLibrary": "D:\\MyCardLibrary"
+            //     },
+            // ]
+
+            // {
+            //     library: "D:\\MyCardLibrary",
+            //     apps: ["th105", "th105-lang-zh-CN", "th123", "th123-lang-zh-CN", "directx"]
+            // }
+            // 文件在 D:\MyCardLibrary\cache\th105.tar.xz, D:\MyCardLibrary\cache\th105-lang-zh-CN.tar.xz ...
+            // TODO: 安装那些app，不需要下载。安装成功后删除 bundle.json
+        } catch (error) {
+
+        }
+    }
+
     async migrate_v2_ygopro() {
         // 导入萌卡 v2 的 YGOPRO
+        if (this.apps.get('ygopro')!.isInstalled()) {
+            return
+        }
         try {
-            const legacy_ygopro_path = require(path.join('db.json')).local.ygopro.path;
+            const legacy_ygopro_path = require(path.join(remote.app.getPath('appData'), 'mycard', 'db.json')).local.ygopro.path;
             if (legacy_ygopro_path) {
-                // 导入YGOPRO
+                // TODO: 导入YGOPRO
             }
         } catch (error) {
 
@@ -135,7 +197,7 @@ export class AppsService {
         // 设置App关系
 
         for (let [id,app] of apps) {
-            let temp=app.actions;
+            let temp = app.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
                 let openId = temp[action]["open"];
