@@ -1,6 +1,6 @@
 import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
-import {App, AppStatus, Action, Category} from "./app";
+import {App, AppStatus, Action} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
 import * as path from "path";
@@ -239,7 +239,7 @@ export class AppsService {
                     'language_pack': '语言包'
                 }
             };
-            if (!app.name && app.category == Category.module && app.tags.includes('language') && app.parent) {
+            if (!app.name && app.parent && app.isLanguage()) {
                 app.name = `${app.parent.name} ${lang[locale].language_pack} (${app.locales.map((l) => lang[locale][l]).join(', ')})`
             }
         }

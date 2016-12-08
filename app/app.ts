@@ -81,11 +81,16 @@ export class App {
     status: AppStatus;
     conference: string | undefined;
 
+    isLanguage() {
+        return this.category == Category.module && this.tags.includes('language');
+    }
+
     reset() {
         this.status.status = 'init';
         this.local = null;
         localStorage.removeItem(this.id);
     }
+
     isInstalled(): boolean {
         return this.status.status != 'init';
     }

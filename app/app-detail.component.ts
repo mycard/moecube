@@ -6,7 +6,7 @@ import {App} from "./app";
 import {DownloadService} from "./download.service";
 import {clipboard, remote} from "electron";
 import * as path from "path";
-import * as fs from 'fs';
+import * as fs from "fs";
 
 declare const Notification: any;
 declare const $: any;
@@ -56,7 +56,13 @@ export class AppDetailComponent implements OnInit {
         console.log(this.references);
         this.referencesInstall = {};
         for (let reference of this.references) {
-            this.referencesInstall[reference.id] = true;
+            if (reference.isLanguage()) {
+                // 对于语言包，只有在语言包的locales比游戏本身的更加合适的时候才默认勾选
+                // 这里先偷个懒，中文环境勾选中文语言包，非中文环境勾选非中文语言包
+                this.referencesInstall[reference.id] = reference.locales[0].startsWith('zh') == this.settingsService.getLocale().startsWith('zh')
+            } else {
+                this.referencesInstall[reference.id] = true;
+            }
         }
     }
 
