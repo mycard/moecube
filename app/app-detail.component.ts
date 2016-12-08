@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ChangeDetectorRef} from "@angular/core";
+import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges} from "@angular/core";
 import {AppsService} from "./apps.service";
 import {InstallOption} from "./install-option";
 import {SettingsService} from "./settings.sevices";
@@ -31,7 +31,7 @@ export class AppDetailComponent implements OnInit {
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         let volume = 'A';
         for (let i = 0; i < 26; i++) {
             await new Promise((resolve, reject) => {

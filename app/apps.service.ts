@@ -248,6 +248,68 @@ export class AppsService {
 
     async update(app: App) {
         const updateServer = "https://thief.mycard.moe/update/metalinks/";
+        if (app.isReady() && app.local!.version !== app.version) {
+            app.status.status = "updating";
+            let updateMetalink = updateServer + app.id;
+            if (app.id === "ygopro" || app.id === "desmume") {
+                updateMetalink = updateMetalink + '-' + process.platform;
+            }
+            Logger.info("Checking updating: ", app);
+            let latestFiles = await this.getChecksumFile(app);
+            let localFiles = app.local!.files;
+            let changedFiles: string[] = [];
+            let deletedFiles: string[] = [];
+            for (let [file,checksum] of latestFiles) {
+                if (!localFiles.has(file)) {
+                    changedFiles.push(file);
+                }
+            }
+            for (let [file,checksum] of localFiles) {
+                if (latestFiles.has(file)) {
+                    if (latestFiles.get(file) !== checksum) {
+                        changedFiles.push(file);
+                    }
+                } else {
+                    deletedFiles.push(file);
+                }
+            }
+
+            if (changedFiles.length > 0) {
+                Logger.info("Found files changed: ", changedFiles);
+                let metalink = await this.http.post(updateMetalink, changedFiles).map((response) => response.text()).toPromise();
+                let library = path.dirname(app.local!.path);
+                let downloadId = await this.downloadService.addMetalink(metalink, library);
+                await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
+                    app.status.progress = status.completedLength;
+                    app.status.total = status.totalLength;
+                    app.status.progressMessage = status.downloadSpeedText;
+                    this.ref.tick();
+                });
+                let downloadFiles = await this.downloadService.getFiles(downloadId);
+                for (let downloadFile of downloadFiles) {
+                    await new Promise((resolve, reject) => {
+                        this.extract(downloadFile, app.local!.path).subscribe(() => {
+
+                        }, (error) => {
+                            reject(error);
+                        }, () => {
+                            resolve();
+                        });
+                    });
+                }
+            }
+            if (deletedFiles.length > 0) {
+                Logger.info("Found files deleted: ", deletedFiles);
+                for (let deletedFile of deletedFiles) {
+                    await this.deleteFile(path.join(app.local!.path, deletedFile));
+                }
+            }
+            app.local!.version = app.version;
+            app.local!.files = latestFiles;
+            this.saveAppLocal(app);
+            app.status.status = "ready";
+            Logger.info("Update Finished: ", app);
+        }
     }
 
     async install(app: App, option: InstallOption) {
@@ -635,6 +697,7 @@ export class AppsService {
 
     extract(file: string, dir: string): Observable<string> {
         return Observable.create((observer: Observer<string>) => {
+            Logger.info("Start to extract... Command Line: " + this.tarPath, file, dir);
             let tarProcess = child_process.spawn(this.tarPath, ['xvf', file, '-C', dir]);
             let rl = readline.createInterface({
                 input: <ReadableStream>tarProcess.stderr,

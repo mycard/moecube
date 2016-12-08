@@ -31,6 +31,9 @@ export class LobbyComponent implements OnInit {
     async ngOnInit() {
         this.apps = await this.appsService.loadApps();
         await this.appsService.migrate();
+        for(let app of this.apps.values()) {
+            this.appsService.update(app);
+        }
         this.chooseApp(Array.from(this.apps.values()).find(app => app.isInstalled()) || this.apps.get("ygopro")!);
 
         // 初始化聊天室
