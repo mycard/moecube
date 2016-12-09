@@ -11,6 +11,7 @@
     "start": "tsc && electron .",
     "pack": "tsc && build --dir",
     "dist": "tsc && build",
+    "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js",
     "tsc": "tsc",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf"
   },
@@ -45,13 +46,17 @@
   "devDependencies": {
     "@angular/compiler-cli": "latest",
     "@angular/platform-server": "latest",
+    "@types/electron": "latest",
+    "@types/ini": "latest",
+    "@types/node": "latest",
     "electron": "latest",
     "electron-builder": "latest",
     "electron-rebuild": "latest",
-    "typescript": "latest",
-    "@types/node": "latest",
-    "@types/electron": "latest",
-    "@types/ini": "latest"
+    "rollup": "latest",
+    "rollup-plugin-commonjs": "latest",
+    "rollup-plugin-node-resolve": "latest",
+    "rollup-plugin-uglify": "latest",
+    "typescript": "latest"
   },
   "build": {
     "productName": "MyCard",

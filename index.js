@@ -94,9 +94,13 @@ autoUpdater.on('update-downloaded', (event) => {
     console.log('autoUpdater', 'update-downloaded', event);
     updateWindow = new BrowserWindow({
         width: 640,
-        height: 480,
+        height: 360,
     });
     updateWindow.loadURL(`file://${__dirname}/update.html`);
+    updateWindow.webContents.on('new-window', function (e, url) {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
     updateWindow.on('closed', function () {
         updateWindow = null
     });
@@ -174,8 +178,8 @@ function createTray() {
         // {label: '切换账号', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
         {
             label: '显示主界面', type: 'normal', click: () => {
-                mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-            }
+            mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+        }
         },
         {
             label: '退出', type: 'normal', click: app.quit
