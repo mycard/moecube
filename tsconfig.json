@@ -14,5 +14,9 @@
     "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": [
+    "node_modules/*",
+    "**/*-aot.ts"
+  ]
 }
