@@ -2,6 +2,10 @@
 /app/**/*.js
 /app/**/*.js.map
 /app/*.metadata.json
+/app/*.shim.ts
+/app/*.ngfactory.ts
+/aot
+!/aot/index.html
 /node_modules/
 /dist/
 /cache/
