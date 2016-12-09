@@ -267,39 +267,29 @@ export class AppsService {
         });
     }
 
-    async verifyFiles(app: App) {
-        if (app.isReady()) {
-            app.status.status = "updating";
-            Logger.info("Start to verify files: ", app);
-            let lastedFile = await this.getChecksumFile(app);
-
-            let changedList: string[] = [];
-
-            for (let [file,checksum] of lastedFile) {
-                let absolutePath = path.join(app.local!.path, file);
-                await new Promise((resolve, reject) => {
-                    fs.access(absolutePath, fs.constants.F_OK, (err) => {
-                        if (err) {
-                            changedList.push(file);
-                        }
-                        resolve();
-                    });
-                });
-                if (checksum !== "") {
-                    let c = await this.sha256sum(file);
-                    if (c !== checksum) {
-                        changedList.push(file);
+    async verifyFiles(app: App, checksumFiles: Map<string,string>): Promise<Map<string,string>> {
+        let result = new Map<string,string>();
+        for (let [file,checksum] of checksumFiles) {
+            let filePath = path.join(app.local!.path, file);
+            // 如果文件不存在，随便生成一个checksum
+            await new Promise((resolve, reject) => {
+                fs.access(filePath, fs.constants.F_OK, async(err: Error) => {
+                    if (err) {
+                        result.set(file, Math.random().toString());
+                    } else if (checksum === "") {
+                        result.set(file, "");
+                    } else {
+                        let sha256sum = await this.sha256sum(filePath);
+                        result.set(file, sha256sum);
                     }
-                }
-            }
-            await this.doUpdate(app, changedList);
-
-            app.status.status = "ready";
+                    resolve();
+                });
+            });
         }
-
+        return result;
     }
 
-    async update(app: App) {
+    async update(app: App, verify = false) {
         let readyToUpdate: boolean = false;
         // 已经安装的mod
         let mods = this.findChildren(app).filter((mod) => {
@@ -307,91 +297,112 @@ export class AppsService {
         });
         // 如果是不是mod，那么要所有已经安装mod都ready
         // 如果是mod，那么要parent ready
-        if (app.parent && app.parent.isReady()) {
+        if (app.parent && app.parent.isReady() && app.isReady()) {
             readyToUpdate = true;
         } else {
-            readyToUpdate = mods.every((mod) => {
-                return mod.isReady();
-            })
+            readyToUpdate = app.isReady() && mods.every((mod) => mod.isReady());
         }
-        if (readyToUpdate && app.local!.version !== app.version) {
+        if (readyToUpdate && (app.local!.version !== app.version || verify)) {
             app.status.status = "updating";
-            Logger.info("Checking updating: ", app);
-            let latestFiles = await this.getChecksumFile(app);
-            let localFiles = app.local!.files;
-            let changedFiles: Set<string> = new Set<string>();
-            let deletedFiles: Set<string> = new Set<string>();
-            for (let [file,checksum] of latestFiles) {
-                if (!localFiles.has(file)) {
-                    changedFiles.add(file);
-                }
-            }
-            for (let [file,checksum] of localFiles) {
-                if (latestFiles.has(file)) {
-                    if (latestFiles.get(file) !== checksum) {
-                        changedFiles.add(file);
-                    }
+            try {
+                Logger.info("Checking updating: ", app);
+                let latestFiles = await this.getChecksumFile(app);
+                let localFiles: Map<string,string>;
+                if (verify) {
+                    localFiles = await this.verifyFiles(app, latestFiles);
                 } else {
-                    deletedFiles.add(file);
+                    localFiles = app.local!.files;
                 }
-            }
-            let backupFiles: string[] = [];
-            let restoreFiles: string[] = [];
-            if (app.parent) {
-                let parentFiles = app.parent.local!.files;
-                // 添加的文件和parent冲突，且不是目录,就添加到conflict列表
-                for (let changedFile of changedFiles) {
-                    if (parentFiles.has(changedFile) && parentFiles.get(changedFile) !== "") {
-                        backupFiles.push(changedFile);
+                let addedFiles: Set<string> = new Set<string>();
+                let changedFiles: Set<string> = new Set<string>();
+                let deletedFiles: Set<string> = new Set<string>();
+                // 遍历寻找新增加的文件
+                for (let [file,checksum] of latestFiles) {
+                    if (!localFiles.has(file)) {
+                        changedFiles.add(file);
+                        addedFiles.add(file);
                     }
                 }
-                //如果要删除的文件parent里也有就恢复这个文件
-                for (let deletedFile of deletedFiles) {
-                    restoreFiles.push(deletedFile);
+                // 遍历寻找旧版本与新版本不一样的文件和新版本比旧版少了的文件
+                for (let [file,checksum] of localFiles) {
+                    if (latestFiles.has(file)) {
+                        if (latestFiles.get(file) !== checksum) {
+                            changedFiles.add(file);
+                        }
+                    } else {
+                        deletedFiles.add(file);
+                    }
                 }
-
-                let backupDir = path.join(path.dirname(app.local!.path), "backup", app.parent.id);
-                await this.backupFiles(app.local!.path, backupDir, backupFiles);
-                await this.restoreFiles(app.local!.path, backupDir, restoreFiles);
-            } else {
-                for (let mod of mods) {
-                    // 如果changed列表与已经安装的mod有冲突，就push到back列表里
-                    for (let changedFile of changedFiles) {
-                        if (mod.local!.files.has(changedFile)) {
-                            backupFiles.push(changedFile);
+                let backupFiles: string[] = [];
+                let restoreFiles: string[] = [];
+                if (app.parent) {
+                    let parentFiles = app.parent.local!.files;
+                    // 新增加的文件和parent冲突，且不是目录,就添加backup到
+                    // 改变的文件不做备份
+                    for (let addedFile of addedFiles) {
+                        if (parentFiles.has(addedFile) && parentFiles.get(addedFile) !== "") {
+                            backupFiles.push(addedFile);
                         }
                     }
-                    // 如果要删除的文件,mod里面存在，就不要删除这个文件
+                    //如果要删除的文件parent里也有就恢复这个文件
                     for (let deletedFile of deletedFiles) {
-                        if (mod.local!.files.has(deletedFile)) {
-                            deletedFiles.delete(deletedFile);
+                        restoreFiles.push(deletedFile);
+                    }
+
+                    let backupDir = path.join(path.dirname(app.local!.path), "backup", app.parent.id);
+                    await this.backupFiles(app.local!.path, backupDir, backupFiles);
+                    await this.restoreFiles(app.local!.path, backupDir, restoreFiles);
+                } else {
+                    for (let mod of mods) {
+                        // 更新时，冲突文件在backup目录里，需要更新backup目录里的文件
+                        // 如果changed列表与已经安装的mod有冲突，就push到backup列表里
+                        // 然后先把当前的mod文件被分到mods_backup目录再解压更新，把文件备份到backup，最后从mods_backup里恢复mods文件
+
+                        // 校验时，认为mod的文件正确，把冲突文件从changed列表里面删除掉
+
+                        for (let changedFile of changedFiles) {
+                            if (mod.local!.files.has(changedFile)) {
+                                if (!verify) {
+                                    backupFiles.push(changedFile);
+                                } else {
+                                    changedFiles.delete(changedFile);
+                                }
+                            }
+                        }
+                        let backupToDelete: string[] = [];
+                        // 如果要删除的文件,mod里面存在，就删除backup目录里的文件
+                        for (let deletedFile of deletedFiles) {
+                            if (mod.local!.files.has(deletedFile)) {
+                                backupToDelete.push(deletedFile);
+                            }
+                        }
+                        let backupDir = path.join(path.dirname(app.local!.path), "mods_backup", app.id);
+                        await this.backupFiles(app.local!.path, backupDir, backupFiles);
+                        for (let file of backupToDelete) {
+                            await this.deleteFile(path.join(app.local!.path, file))
                         }
                     }
-                    let backupDir = path.join(path.dirname(app.local!.path), "mods_backup", app.id);
                 }
+                await this.doUpdate(app, changedFiles, deletedFiles);
+                Logger.info("Update extract finished");
+                //如果不是mod，就先把自己目录里最新的冲突文件backup到backup目录
+                //再把mods_backup里面的文件恢复到游戏目录
+                if (!app.parent) {
+                    Logger.info("Start to restore files...");
+                    let modsBackupDir = path.join(path.dirname(app.local!.path), "mods_backup", app.id);
+                    let appBackupDir = path.join(path.dirname(app.local!.path), "backup", app.id);
+                    await this.backupFiles(app.local!.path, appBackupDir, backupFiles);
+                    await this.restoreFiles(app.local!.path, modsBackupDir, backupFiles);
+                }
+                app.local!.version = app.version;
+                app.local!.files = latestFiles;
+                this.saveAppLocal(app);
+                app.status.status = "ready";
+                Logger.info("Update Finished: ", app);
+            } catch (e) {
+                Logger.error("Update Failed: ",e);
+                app.status.status = "ready";
             }
-
-            // 筛选更新文件中与mod冲突的部分
-            for (let mod of installedMods) {
-                changedFiles.forEach((changedFile) => {
-                    if (mod.local!.files.has(changedFile)) {
-                        conflictFiles.add(changedFile);
-                    }
-                });
-                deletedFiles.forEach((deletedFile) => {
-                    if (mod.local!.files.has(deletedFile)) {
-                        deletedFiles.delete(deletedFile);
-                    }
-                })
-            }
-            await this.doUpdate(app, changedFiles, deletedFiles);
-            app.local!.version = app.version;
-            app.local!.files = latestFiles;
-            this.saveAppLocal(app);
-            app.status.status = "ready";
-
-            installedMods.forEach((mod) => mod.status.status = "ready");
-            Logger.info("Update Finished: ", app);
         }
     }
 
@@ -405,15 +416,13 @@ export class AppsService {
             }
             let metalink = await this.http.post(updateUrl, changedFiles).map((response) => response.text()).toPromise();
             let downloadDir = path.join(path.dirname(app.local!.path), "downloading");
-            let downloadId = await
-                this.downloadService.addMetalink(metalink, downloadDir);
-            await
-                this.downloadService.progress(downloadId, (status: DownloadStatus) => {
-                    app.status.progress = status.completedLength;
-                    app.status.total = status.totalLength;
-                    app.status.progressMessage = status.downloadSpeedText;
-                    this.ref.tick();
-                });
+            let downloadId = await this.downloadService.addMetalink(metalink, downloadDir);
+            await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
+                app.status.progress = status.completedLength;
+                app.status.total = status.totalLength;
+                app.status.progressMessage = status.downloadSpeedText;
+                this.ref.tick();
+            });
             let downloadFiles = await this.downloadService.getFiles(downloadId);
             for (let downloadFile of downloadFiles) {
                 await new Promise((resolve, reject) => {
@@ -433,6 +442,7 @@ export class AppsService {
                 await this.deleteFile(path.join(app.local!.path, deletedFile));
             }
         }
+
     }
 
     async install(app: App, option: InstallOption) {

@@ -145,8 +145,18 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
-    verifyFiles(app: App) {
-        this.appsService.verifyFiles(app);
+    async verifyFiles(app: App) {
+        try {
+            await this.appsService.update(app, true);
+            let installedMods = this.appsService.findChildren(app).filter((child) => {
+                return child.parent === app && child.isInstalled() && child.isReady();
+            });
+            for (let mod of installedMods) {
+                await this.appsService.update(mod, true);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     copy(text: string) {
