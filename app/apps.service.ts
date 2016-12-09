@@ -1,5 +1,6 @@
 import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
+import * as crypto from "crypto";
 import {App, AppStatus, Action} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
@@ -246,69 +247,191 @@ export class AppsService {
         return apps;
     };
 
-    async update(app: App) {
-        const updateServer = "https://thief.mycard.moe/update/metalinks/";
-        if (app.isReady() && app.local!.version !== app.version) {
+    sha256sum(file: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            let input = fs.createReadStream(file);
+            const hash = crypto.createHash("sha256");
+            hash.on("error", (error: Error) => {
+                reject(error)
+            });
+            input.on("error", (error: Error) => {
+                reject(error);
+            });
+            hash.on('readable', () => {
+                let data = hash.read();
+                if (data) {
+                    resolve((<Buffer>data).toString("hex"));
+                }
+            });
+            input.pipe(hash);
+        });
+    }
+
+    async verifyFiles(app: App) {
+        if (app.isReady()) {
             app.status.status = "updating";
-            let updateMetalink = updateServer + app.id;
-            if (app.id === "ygopro" || app.id === "desmume") {
-                updateMetalink = updateMetalink + '-' + process.platform;
+            Logger.info("Start to verify files: ", app);
+            let lastedFile = await this.getChecksumFile(app);
+
+            let changedList: string[] = [];
+
+            for (let [file,checksum] of lastedFile) {
+                let absolutePath = path.join(app.local!.path, file);
+                await new Promise((resolve, reject) => {
+                    fs.access(absolutePath, fs.constants.F_OK, (err) => {
+                        if (err) {
+                            changedList.push(file);
+                        }
+                        resolve();
+                    });
+                });
+                if (checksum !== "") {
+                    let c = await this.sha256sum(file);
+                    if (c !== checksum) {
+                        changedList.push(file);
+                    }
+                }
             }
+            await this.doUpdate(app, changedList);
+
+            app.status.status = "ready";
+        }
+
+    }
+
+    async update(app: App) {
+        let readyToUpdate: boolean = false;
+        // 已经安装的mod
+        let mods = this.findChildren(app).filter((mod) => {
+            return mod.parent === app && mod.isInstalled();
+        });
+        // 如果是不是mod，那么要所有已经安装mod都ready
+        // 如果是mod，那么要parent ready
+        if (app.parent && app.parent.isReady()) {
+            readyToUpdate = true;
+        } else {
+            readyToUpdate = mods.every((mod) => {
+                return mod.isReady();
+            })
+        }
+        if (readyToUpdate && app.local!.version !== app.version) {
+            app.status.status = "updating";
             Logger.info("Checking updating: ", app);
             let latestFiles = await this.getChecksumFile(app);
             let localFiles = app.local!.files;
-            let changedFiles: string[] = [];
-            let deletedFiles: string[] = [];
+            let changedFiles: Set<string> = new Set<string>();
+            let deletedFiles: Set<string> = new Set<string>();
             for (let [file,checksum] of latestFiles) {
                 if (!localFiles.has(file)) {
-                    changedFiles.push(file);
+                    changedFiles.add(file);
                 }
             }
             for (let [file,checksum] of localFiles) {
                 if (latestFiles.has(file)) {
                     if (latestFiles.get(file) !== checksum) {
-                        changedFiles.push(file);
+                        changedFiles.add(file);
                     }
                 } else {
-                    deletedFiles.push(file);
+                    deletedFiles.add(file);
+                }
+            }
+            let backupFiles: string[] = [];
+            let restoreFiles: string[] = [];
+            if (app.parent) {
+                let parentFiles = app.parent.local!.files;
+                // 添加的文件和parent冲突，且不是目录,就添加到conflict列表
+                for (let changedFile of changedFiles) {
+                    if (parentFiles.has(changedFile) && parentFiles.get(changedFile) !== "") {
+                        backupFiles.push(changedFile);
+                    }
+                }
+                //如果要删除的文件parent里也有就恢复这个文件
+                for (let deletedFile of deletedFiles) {
+                    restoreFiles.push(deletedFile);
+                }
+
+                let backupDir = path.join(path.dirname(app.local!.path), "backup", app.parent.id);
+                await this.backupFiles(app.local!.path, backupDir, backupFiles);
+                await this.restoreFiles(app.local!.path, backupDir, restoreFiles);
+            } else {
+                for (let mod of mods) {
+                    // 如果changed列表与已经安装的mod有冲突，就push到back列表里
+                    for (let changedFile of changedFiles) {
+                        if (mod.local!.files.has(changedFile)) {
+                            backupFiles.push(changedFile);
+                        }
+                    }
+                    // 如果要删除的文件,mod里面存在，就不要删除这个文件
+                    for (let deletedFile of deletedFiles) {
+                        if (mod.local!.files.has(deletedFile)) {
+                            deletedFiles.delete(deletedFile);
+                        }
+                    }
+                    let backupDir = path.join(path.dirname(app.local!.path), "mods_backup", app.id);
                 }
             }
 
-            if (changedFiles.length > 0) {
-                Logger.info("Found files changed: ", changedFiles);
-                let metalink = await this.http.post(updateMetalink, changedFiles).map((response) => response.text()).toPromise();
-                let library = path.dirname(app.local!.path);
-                let downloadId = await this.downloadService.addMetalink(metalink, library);
-                await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
+            // 筛选更新文件中与mod冲突的部分
+            for (let mod of installedMods) {
+                changedFiles.forEach((changedFile) => {
+                    if (mod.local!.files.has(changedFile)) {
+                        conflictFiles.add(changedFile);
+                    }
+                });
+                deletedFiles.forEach((deletedFile) => {
+                    if (mod.local!.files.has(deletedFile)) {
+                        deletedFiles.delete(deletedFile);
+                    }
+                })
+            }
+            await this.doUpdate(app, changedFiles, deletedFiles);
+            app.local!.version = app.version;
+            app.local!.files = latestFiles;
+            this.saveAppLocal(app);
+            app.status.status = "ready";
+
+            installedMods.forEach((mod) => mod.status.status = "ready");
+            Logger.info("Update Finished: ", app);
+        }
+    }
+
+    async doUpdate(app: App, changedFiles?: Set<string>, deletedFiles?: Set<string>) {
+        const updateServer = "https://thief.mycard.moe/update/metalinks/";
+        if (changedFiles && changedFiles.size > 0) {
+            Logger.info("Update changed files: ", changedFiles);
+            let updateUrl = updateServer + app.id;
+            if (app.id === "ygopro" || app.id === "desmume") {
+                updateUrl = updateUrl + '-' + process.platform;
+            }
+            let metalink = await this.http.post(updateUrl, changedFiles).map((response) => response.text()).toPromise();
+            let downloadDir = path.join(path.dirname(app.local!.path), "downloading");
+            let downloadId = await
+                this.downloadService.addMetalink(metalink, downloadDir);
+            await
+                this.downloadService.progress(downloadId, (status: DownloadStatus) => {
                     app.status.progress = status.completedLength;
                     app.status.total = status.totalLength;
                     app.status.progressMessage = status.downloadSpeedText;
                     this.ref.tick();
                 });
-                let downloadFiles = await this.downloadService.getFiles(downloadId);
-                for (let downloadFile of downloadFiles) {
-                    await new Promise((resolve, reject) => {
-                        this.extract(downloadFile, app.local!.path).subscribe(() => {
+            let downloadFiles = await this.downloadService.getFiles(downloadId);
+            for (let downloadFile of downloadFiles) {
+                await new Promise((resolve, reject) => {
+                    this.extract(downloadFile, app.local!.path).subscribe(() => {
 
-                        }, (error) => {
-                            reject(error);
-                        }, () => {
-                            resolve();
-                        });
+                    }, (error) => {
+                        reject(error);
+                    }, () => {
+                        resolve();
                     });
-                }
+                });
             }
-            if (deletedFiles.length > 0) {
-                Logger.info("Found files deleted: ", deletedFiles);
-                for (let deletedFile of deletedFiles) {
-                    await this.deleteFile(path.join(app.local!.path, deletedFile));
-                }
+        }
+        if (deletedFiles && deletedFiles.size > 0) {
+            Logger.info("Found files deleted: ", deletedFiles);
+            for (let deletedFile of deletedFiles) {
+                await this.deleteFile(path.join(app.local!.path, deletedFile));
             }
-            app.local!.version = app.version;
-            app.local!.files = latestFiles;
-            this.saveAppLocal(app);
-            app.status.status = "ready";
-            Logger.info("Update Finished: ", app);
         }
     }
 
@@ -614,6 +737,12 @@ export class AppsService {
                 let conflictFiles = appFiles.intersection(parentFiles);
                 if (conflictFiles.size > 0) {
                     let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
+                    // 文件夹不需要备份，删除
+                    for (let conflictFile of conflictFiles) {
+                        if (checksumFile.get(conflictFile) === '') {
+                            conflictFiles.delete(conflictFile);
+                        }
+                    }
                     await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
                 }
             }

@@ -145,6 +145,10 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
+    verifyFiles(app: App) {
+        this.appsService.verifyFiles(app);
+    }
+
     copy(text: string) {
         clipboard.writeText(text);
     }

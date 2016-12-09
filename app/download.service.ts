@@ -23,7 +23,7 @@ export class DownloadStatus {
     downloadSpeed: number;
 
     get downloadSpeedText(): string {
-        if (!isNaN(this.downloadSpeed)) {
+        if (!isNaN(this.downloadSpeed) && this.downloadSpeed !== 0) {
             const speedUnit = ["Byte/s", "KB/s", "MB/s", "GB/s", "TB/s"];
             let currentUnit = Math.floor(Math.log(this.downloadSpeed) / Math.log(1024));
             return (this.downloadSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
