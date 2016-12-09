@@ -112,6 +112,7 @@ export class DownloadService {
                 let activeList = await this.aria2.tellActive();
                 let waitList = await this.aria2.tellWaiting(0, MAX_LIST_NUM);
                 let stoppedList = await this.aria2.tellStopped(0, MAX_LIST_NUM);
+                this.downloadList.clear();
                 for (let item of activeList) {
                     this.downloadList.set(item.gid, new DownloadStatus(item));
                 }
@@ -142,33 +143,41 @@ export class DownloadService {
             let gids = this.taskMap.get(id);
             if (gids) {
                 let allStatus: DownloadStatus;
-                this.updateEmitter.subscribe(() => {
-                    let status: DownloadStatus = new DownloadStatus();
-                    // 合并每个状态信息
-                    status =
-                        gids!.map((value, index, array) => {
-                            let s = this.downloadList.get(value);
-                            if (!s) {
-                                throw new Error("Gid not Exists");
-                            }
-                            return s;
-                        })
-                            .reduce((previousValue, currentValue, currentIndex, array) => {
-                                return previousValue.combine(currentValue);
-                            }, status);
-                    if (!allStatus) {
-                        allStatus = status;
-                    } else {
-                        if (allStatus.compareTo(status) != 0) {
+                let subscription = this.updateEmitter.subscribe(() => {
+
+                    try {
+                        let status: DownloadStatus = new DownloadStatus();
+                        // 合并每个状态信息
+                        status =
+                            gids!.map((value, index, array) => {
+                                let s = this.downloadList.get(value);
+                                if (!s) {
+                                    throw "Gid not exists";
+                                }
+                                return s;
+                            })
+                                .reduce((previousValue, currentValue, currentIndex, array) => {
+                                    return previousValue.combine(currentValue);
+                                }, status);
+                        if (!allStatus) {
                             allStatus = status;
+                        } else {
+                            if (allStatus.compareTo(status) != 0) {
+                                allStatus = status;
+                            }
                         }
-                    }
-                    if (allStatus.status === "error") {
-                        reject(`Download Error: code ${allStatus.errorCode}, message: ${allStatus.errorMessage}`);
-                    } else if (allStatus.status === "complete") {
-                        resolve();
-                    } else {
-                        callback(allStatus);
+                        if (allStatus.status === "error") {
+                            throw `Download Error: code ${allStatus.errorCode}, message: ${allStatus.errorMessage}`;
+                        } else if (allStatus.status === "complete") {
+                            resolve();
+                            subscription.unsubscribe();
+                        } else {
+                            callback(allStatus);
+                        }
+
+                    } catch (e) {
+                        reject(e);
+                        subscription.unsubscribe();
                     }
                 });
             } else {
