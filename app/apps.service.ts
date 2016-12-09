@@ -400,7 +400,7 @@ export class AppsService {
                 app.status.status = "ready";
                 Logger.info("Update Finished: ", app);
             } catch (e) {
-                Logger.error("Update Failed: ",e);
+                Logger.error("Update Failed: ", e);
                 app.status.status = "ready";
             }
         }
@@ -472,12 +472,16 @@ export class AppsService {
             app.status.status = "downloading";
             let metalink = await this.http.get(metalinkUrl).map((response) => response.text()).toPromise();
             let downloadId = await this.downloadService.addMetalink(metalink, dir);
-            await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
-                app.status.progress = status.completedLength;
-                app.status.total = status.totalLength;
-                app.status.progressMessage = status.downloadSpeedText;
-                this.ref.tick();
-            });
+            try {
+                await this.downloadService.progress(downloadId, (status: DownloadStatus) => {
+                    app.status.progress = status.completedLength;
+                    app.status.total = status.totalLength;
+                    app.status.progressMessage = status.downloadSpeedText;
+                    this.ref.tick();
+                });
+            } catch (e) {
+
+            }
             let files = await this.downloadService.getFiles(downloadId);
             app.status.status = "waiting";
             return {app: app, files: files}
