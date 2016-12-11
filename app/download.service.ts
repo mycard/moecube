@@ -3,11 +3,8 @@
  */
 import {Injectable, NgZone, EventEmitter} from "@angular/core";
 import {Http} from "@angular/http";
-import {Observable} from "rxjs/Observable";
-import {App} from "./app";
-import {Observer} from "rxjs";
-import Timer = NodeJS.Timer;
 import {error} from "util";
+import Timer = NodeJS.Timer;
 const Logger = {
     "error": (message: string) => {
         console.error("DownloadService: ", message);
@@ -97,7 +94,8 @@ export class DownloadStatus {
 
 @Injectable()
 export class DownloadService {
-    aria2 = new Aria2();
+    // 强制指定IPv4，接到过一个反馈无法监听v6的。默认的host值是localhost，会连v6。
+    aria2 = new Aria2({host: '127.0.0.1'});
     open = this.aria2.open();
     updateEmitter = new EventEmitter<void>();
 
