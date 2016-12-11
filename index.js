@@ -170,7 +170,12 @@ let tray;
 function createTray() {
     tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
     tray.on('click', (event) => {
-        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+        console.log(event);
+        if (event.metaKey) {
+            mainWindow.webContents.openDevTools();
+        } else {
+            mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+        }
     });
     const contextMenu = Menu.buildFromTemplate([
         // {label: '游戏', type: 'normal', click: (menuItem, browserWindow, event)=>{}},

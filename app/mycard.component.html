@@ -2,7 +2,7 @@
     <a class="navbar-brand" href="#">MyCard</a>
     <ul class="nav navbar-nav">
         <li *ngIf="!loginService.logged_in" class="nav-item active">
-            <a class="nav-link" href="#">登录<span class="sr-only">(current)</span></a>
+            <a i18n class="nav-link" href="#">登录</a>
         </li>
         <!--
         <li [ngClass]="{active: routingService.component == 'store'}" class="nav-item">
@@ -27,6 +27,7 @@
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
             <a i18n href="#" (click)="loginService.logout()" class="item">切换账号</a>
+            <a i18n href="#" data-toggle="modal" data-target="#settings-modal" class="item">设置</a>
         </div>
         <div id="window-buttons">
             <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
@@ -40,3 +41,36 @@
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
 <webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com" (new-window)="openExternal($event.url)"></webview>
+
+<!-- Modal -->
+<div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 i18n class="modal-title" id="myModalLabel">MyCard 设置</h4>
+            </div>
+            <form (submit)="submit()">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group row">
+                            <label i18n for="locale" class="col-sm-2 col-form-label">语言</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="locale" [(ngModel)]="locale" name="locale">
+                                    <option i18n value="en-US">英文</option>
+                                    <option i18n value="zh-CN">简体中文</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button i18n type="submit" class="btn btn-primary">确定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

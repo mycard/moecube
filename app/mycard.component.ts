@@ -1,6 +1,7 @@
 import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} from "@angular/core";
 import {remote, shell} from "electron";
 import {LoginService} from "./login.service";
+import {SettingsService} from "./settings.sevices";
 const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
 declare const $: any;
 
@@ -29,6 +30,8 @@ export class MyCardComponent implements OnInit {
     update_downloaded: ElementRef;
     update_elements: Map<string, ElementRef>;
 
+    locale: string;
+
     ngOnInit() {
         this.update_elements = new Map(Object.entries({
             'error': this.error,
@@ -38,7 +41,7 @@ export class MyCardComponent implements OnInit {
         }));
     }
 
-    constructor(private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef) {
+    constructor(private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef, private settingsService: SettingsService) {
         // renderer.listenGlobal('window', 'message', (event) => {
         //     console.log(event);
         //     // Do something with 'event'
@@ -62,6 +65,8 @@ export class MyCardComponent implements OnInit {
         autoUpdater.on('update-downloaded', (event) => {
             this.set_update_status('update-downloaded');
         });
+
+        this.locale = this.settingsService.getLocale();
 
     }
 
@@ -92,5 +97,13 @@ export class MyCardComponent implements OnInit {
 
     openExternal(url: string) {
         shell.openExternal(url);
+    }
+
+    submit() {
+        if (this.locale != this.settingsService.getLocale()) {
+            localStorage.setItem(SettingsService.SETTING_LOCALE, this.locale);
+            remote.app.relaunch();
+            remote.app.quit()
+        }
     }
 }

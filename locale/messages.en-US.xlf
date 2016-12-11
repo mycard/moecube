@@ -1,6 +1,11 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file datatype="plaintext" original="ng2.template" source-language="zh-CN" target-language="en-US">
     <body>
+      <trans-unit datatype="html" id="ae5dccdf399fb229fb9f0153a7ec5c28a4579ca1">
+        <source>登录</source>
+        <target>Sign In</target>
+
+      </trans-unit>
       <trans-unit datatype="html" id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c">
         <source>游戏</source>
         <target>Library</target>
@@ -14,7 +19,42 @@
       <trans-unit datatype="html" id="8422ff34db177236e8f54d415b07c972284c36bf">
         <source>切换账号</source>
         <target>Change Account</target>
-        
+
+      </trans-unit>
+      <trans-unit datatype="html" id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd">
+        <source>设置</source>
+        <target>Custom</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="9d9335d175b40b85f2b98610af517a8b7509c089">
+        <source>MyCard 设置</source>
+        <target>MyCard Settings</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="b22ce2179c700e2499e1d402fb1d3f4392c7f6af">
+        <source>语言</source>
+        <target>Language</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="80a97c5d9418c828bebf91b112188f12a4f5317c">
+        <source>英文</source>
+        <target>English</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="8f9b332ffed52a814f1926470890d7e75865f2ce">
+        <source>简体中文</source>
+        <target>Simplified Chinese</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="f6f3be110e7043e3cfe71a7bd75b8b3be79bff5d">
+        <source>取消</source>
+        <target>Cancel</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="af09a0e18f4200fdb729133ddcd5bb43d52439aa">
+        <source>确定</source>
+        <target>OK</target>
+
       </trans-unit>
       <trans-unit datatype="html" id="1761e51e36b01ae1e0012914bd58aa2a741d0401">
         <source>已安装</source>
@@ -51,11 +91,6 @@
         <target>Install</target>
         
       </trans-unit>
-      <trans-unit datatype="html" id="e6194d8a9c8da57b667847cd80f1da563f2c2b1e">
-        <source>导入</source>
-        <target>Import</target>
-        
-      </trans-unit>
       <trans-unit datatype="html" id="8bb533b37ee18bf8d09df19b4d7234b38f134909">
         <source>正在下载</source>
         <target>Downloading...</target>
@@ -79,11 +114,6 @@
       <trans-unit datatype="html" id="d3852e0147360b29d0d6076e95dd1ad0098a60db">
         <source>运行</source>
         <target>Start</target>
-        
-      </trans-unit>
-      <trans-unit datatype="html" id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd">
-        <source>设置</source>
-        <target>Custom</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b">
@@ -136,11 +166,6 @@
         <target>Browse</target>
         
       </trans-unit>
-      <trans-unit datatype="html" id="6d582ed48c57c91fc7cf10f36f3869cd33808d1d">
-        <source>校验完整性</source>
-        <target>Verify integrity</target>
-        
-      </trans-unit>
       <trans-unit datatype="html" id="4809edca33b1a07d7d6e8905287d3825e676f2c8">
         <source>安装 <x id="INTERPOLATION"/></source>
         <target>Install <x id="INTERPOLATION"/></target>
@@ -184,11 +209,6 @@
       <trans-unit datatype="html" id="2ba33dd61b1ac70666322680f248e5336b3ee69a">
         <source>依赖：</source>
         <target>Dependencies</target>
-        
-      </trans-unit>
-      <trans-unit datatype="html" id="f6f3be110e7043e3cfe71a7bd75b8b3be79bff5d">
-        <source>取消</source>
-        <target>Cancel</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="def237147323023c1f5ce0579345da19d4707fdb">
@@ -298,7 +318,7 @@
       </trans-unit>
       <trans-unit datatype="html" id="d4038dd5d0e9d5139d425fc7bea40e40d965cc5b">
         <source>额外选项</source>
-        <target>Additional Options</target>
+        <target>Additional Options</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="01cfbee3f1d69f5adae299b7b8c8d75034aef53b">
