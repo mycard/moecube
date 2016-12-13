@@ -55,8 +55,23 @@ export class AppsService {
                 private downloadService: DownloadService, private ngZone: NgZone) {
     }
 
+    get lastVisted(): App|undefined {
+        let id = localStorage.getItem("last_visited");
+        if (id) {
+            return this.apps.get(id);
+        }
+        return undefined;
+    }
+
+    set lastVisted(app: App|undefined) {
+        if (app) {
+            localStorage.setItem("last_visited", app.id);
+        }
+    }
+
     async loadApps() {
-        let data = await this.http.get('./apps.json').map((response) => response.json()).toPromise();
+        let data = await
+            this.http.get('./apps.json').map((response) => response.json()).toPromise();
         this.apps = this.loadAppsList(data);
         return this.apps;
     }
@@ -253,6 +268,15 @@ export class AppsService {
             this.findChildren(app).every((child) => (child.isInstalled() && child.isReady()) || !child.isInstalled());
     }
 
+    async importApp(app: App, appPath: string) {
+        if (!app.isInstalled()) {
+            app.status.status = "ready";
+            app.local = new AppLocal();
+            app.local.path = appPath;
+            await this.update(app, true);
+        }
+    }
+
     sha256sum(file: string): Promise<string> {
         return new Promise((resolve, reject) => {
             let input = fs.createReadStream(file);
@@ -308,7 +332,7 @@ export class AppsService {
         } else {
             readyToUpdate = app.isReady() && mods.every((mod) => mod.isReady());
         }
-        if (readyToUpdate && (app.local!.version !== app.version || verify)) {
+        if (readyToUpdate && (verify || app.local!.version !== app.version )) {
             app.status.status = "updating";
             try {
                 Logger.info("Checking updating: ", app);

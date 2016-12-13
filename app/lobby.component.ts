@@ -31,10 +31,10 @@ export class LobbyComponent implements OnInit {
     async ngOnInit() {
         this.apps = await this.appsService.loadApps();
         await this.appsService.migrate();
-        for(let app of this.apps.values()) {
+        for (let app of this.apps.values()) {
             this.appsService.update(app);
         }
-        this.chooseApp(Array.from(this.apps.values()).find(app => app.isInstalled()) || this.apps.get("ygopro")!);
+        this.chooseApp(this.appsService.lastVisted || this.apps.get("ygopro")!);
 
         // 初始化聊天室
         let url = new URL('candy/index.html', location.href);
@@ -42,7 +42,7 @@ export class LobbyComponent implements OnInit {
         params.set('jid', this.loginService.user.username + '@mycard.moe');
         params.set('password', this.loginService.user.external_id.toString());
         params.set('nickname', this.loginService.user.username);
-        switch(this.settingsService.getLocale()){
+        switch (this.settingsService.getLocale()) {
             case 'zh-CN':
                 params.set('language', 'cn');
                 break;
@@ -57,6 +57,7 @@ export class LobbyComponent implements OnInit {
 
     chooseApp(app: App) {
         this.currentApp = app;
+        this.appsService.lastVisted = app;
         if (this.candy && this.currentApp.conference) {
             (<WebViewElement>this.candy.nativeElement).send('join', this.currentApp.conference + '@conference.mycard.moe');
         }
