@@ -226,7 +226,7 @@ export class YGOProComponent implements OnInit {
 
     save_system_conf(data: SystemConf) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(this.system_conf, ini.stringify(data, <EncodeOptions>{whitespace: true}), (error) => {
+            fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{whitespace: true})), (error) => {
                 if (error) return reject(error);
                 resolve(data);
             });
