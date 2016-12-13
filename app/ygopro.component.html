@@ -7,13 +7,13 @@
     </div>
     <button i18n [disabled]="!appsService.allReady(app)" type="submit" class="btn btn-secondary" (click)="edit_deck(current_deck)">编辑</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="delete_deck(current_deck)" class="btn btn-secondary">删除</button>
-    <button i18n [disabled]="!appsService.allReady(app)" types="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
 </form>
 
 <div class="actions">
-    <button i18n [disabled]="!appsService.allReady(app)" (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" [disabled]="matching" type="button" class="btn btn-primary">竞技匹配</button>
+    <button i18n [disabled]="matching||!appsService.allReady(app)" (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" type="button" class="btn btn-primary">竞技匹配</button>
     <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary">取消等待</button>
-    <button i18n [disabled]="!appsService.allReady(app)" (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" [disabled]="matching" type="button" class="btn btn-secondary">娱乐匹配</button>
+    <button i18n [disabled]="matching||!appsService.allReady(app)" (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" type="button" class="btn btn-secondary">娱乐匹配</button>
     <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary">取消等待</button>
     <button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
     <button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
