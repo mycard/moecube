@@ -1,4 +1,4 @@
-import {Injectable, ApplicationRef, EventEmitter} from "@angular/core";
+import {Injectable, ApplicationRef, EventEmitter, NgZone} from "@angular/core";
 import {Http} from "@angular/http";
 import * as crypto from "crypto";
 import {App, AppStatus, Action} from "./app";
@@ -52,11 +52,26 @@ export class AppsService {
     readonly tarPath = process.platform === "win32" ? path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : '', 'bin', 'bsdtar.exe') : 'bsdtar';
 
     constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,
-                private downloadService: DownloadService) {
+                private downloadService: DownloadService, private ngZone: NgZone) {
+    }
+
+    get lastVisted(): App|undefined {
+        let id = localStorage.getItem("last_visited");
+        if (id) {
+            return this.apps.get(id);
+        }
+        return undefined;
+    }
+
+    set lastVisted(app: App|undefined) {
+        if (app) {
+            localStorage.setItem("last_visited", app.id);
+        }
     }
 
     async loadApps() {
-        let data = await this.http.get('./apps.json').map((response) => response.json()).toPromise();
+        let data = await
+            this.http.get('./apps.json').map((response) => response.json()).toPromise();
         this.apps = this.loadAppsList(data);
         return this.apps;
     }
@@ -247,6 +262,21 @@ export class AppsService {
         return apps;
     };
 
+    allReady(app: App) {
+        return app.isReady() &&
+            app.findDependencies().every((dependency) => dependency.isReady()) &&
+            this.findChildren(app).every((child) => (child.isInstalled() && child.isReady()) || !child.isInstalled());
+    }
+
+    async importApp(app: App, appPath: string) {
+        if (!app.isInstalled()) {
+            app.status.status = "ready";
+            app.local = new AppLocal();
+            app.local.path = appPath;
+            await this.update(app, true);
+        }
+    }
+
     sha256sum(file: string): Promise<string> {
         return new Promise((resolve, reject) => {
             let input = fs.createReadStream(file);
@@ -258,9 +288,9 @@ export class AppsService {
                 reject(error);
             });
             hash.on('readable', () => {
-                let data = hash.read();
+                let data = <Buffer>hash.read();
                 if (data) {
-                    resolve((<Buffer>data).toString("hex"));
+                    resolve(data.toString("hex"));
                 }
             });
             input.pipe(hash);
@@ -302,7 +332,7 @@ export class AppsService {
         } else {
             readyToUpdate = app.isReady() && mods.every((mod) => mod.isReady());
         }
-        if (readyToUpdate && (app.local!.version !== app.version || verify)) {
+        if (readyToUpdate && (verify || app.local!.version !== app.version )) {
             app.status.status = "updating";
             try {
                 Logger.info("Checking updating: ", app);
@@ -333,6 +363,12 @@ export class AppsService {
                         deletedFiles.add(file);
                     }
                 }
+
+                // changedFiles包含addedFiles，addedFiles仅供mod更新的时候使用。
+                for (let addedFile of addedFiles) {
+                    changedFiles.add(addedFile);
+                }
+
                 let backupFiles: string[] = [];
                 let restoreFiles: string[] = [];
                 if (app.parent) {
@@ -743,12 +779,19 @@ export class AppsService {
             let option = task.option;
             let installDir = option.installDir;
             let checksumFile = await this.getChecksumFile(app);
+            let allFiles = new Set(checksumFile.keys());
+            app.status.status = "installing";
+            app.status.total = allFiles.size;
+            app.status.progress = 0;
+            let interval = setInterval(() => {
+            }, 500);
             if (app.parent) {
                 // mod需要安装到parent路径
                 installDir = app.parent.local!.path;
                 let parentFiles = new ComparableSet(Array.from(app.parent.local!.files.keys()));
                 let appFiles = new ComparableSet(Array.from(checksumFile.keys()));
                 let conflictFiles = appFiles.intersection(parentFiles);
+                app.status.total += conflictFiles.size;
                 if (conflictFiles.size > 0) {
                     let backupPath = path.join(option.installLibrary, "backup", app.parent.id);
                     // 文件夹不需要备份，删除
@@ -757,18 +800,23 @@ export class AppsService {
                             conflictFiles.delete(conflictFile);
                         }
                     }
-                    await this.backupFiles(app.parent.local!.path, backupPath, conflictFiles);
+                    await new Promise((resolve, reject) => {
+                        this.ngZone.runOutsideAngular(async() => {
+                            try {
+                                await this.backupFiles(app.parent!.local!.path, backupPath, conflictFiles, (n) => {
+                                    app.status.progress += 1;
+                                });
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    });
                 }
             }
-            let allFiles = new Set(checksumFile.keys());
-            app.status.status = "installing";
-            app.status.total = allFiles.size;
-            app.status.progress = 0;
             // let timeNow = new Date().getTime();
             for (let file of option.downloadFiles) {
                 await this.createDirectory(installDir);
-                let interval = setInterval(() => {
-                }, 500);
                 await new Promise((resolve, reject) => {
                     this.extract(file, installDir).subscribe(
                         (lastItem: string) => {
@@ -782,8 +830,8 @@ export class AppsService {
                             resolve();
                         });
                 });
-                clearInterval(interval);
             }
+            clearInterval(interval);
             await this.postInstall(app, installDir);
             console.log("post install success");
             let local = new AppLocal();
@@ -903,7 +951,8 @@ export class AppsService {
         }
     }
 
-    async backupFiles(dir: string, backupDir: string, files: Iterable<string>) {
+    async backupFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number)=>void) {
+        let n = 0;
         for (let file of files) {
             await new Promise(async(resolve, reject) => {
                 let srcPath = path.join(dir, file);
@@ -912,19 +961,28 @@ export class AppsService {
                 fs.unlink(backupPath, (err) => {
                     fs.rename(srcPath, backupPath, resolve);
                 });
+                if (callback) {
+                    callback(n)
+                }
+                n += 1;
             });
         }
     }
 
-    async restoreFiles(dir: string, backupDir: string, files: Iterable<string>) {
+    async restoreFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number)=>{}) {
+        let n = 0;
         for (let file of files) {
             await new Promise((resolve, reject) => {
                 let backupPath = path.join(backupDir, file);
                 let srcPath = path.join(dir, file);
                 fs.unlink(srcPath, (err) => {
                     fs.rename(backupPath, srcPath, resolve);
-                })
-            })
+                });
+                n += 1;
+                if (callback) {
+                    callback(n);
+                }
+            });
         }
     }
 
@@ -993,29 +1051,40 @@ export class AppsService {
             console.error('doUninstall', "无法卸载，还有依赖此程序的游戏。", app);
             throw "无法卸载，还有依赖此程序的游戏。"
         }
-
         app.status.status = "uninstalling";
         let appDir = app.local!.path;
         let files = Array.from(app.local!.files.keys()).sort().reverse();
 
         app.status.total = files.length;
+        // 500毫秒手动刷新，避免文件过多产生的性能问题
+        let interval = setInterval(() => {
+        }, 500);
+        await new Promise((resolve, reject) => {
+            this.ngZone.runOutsideAngular(async() => {
+                try {
+                    for (let file of files) {
+                        app.status.progress += 1;
+                        await this.deleteFile(path.join(appDir, file));
+                    }
+                    if (app.parent) {
+                        // TODO: 建立Library模型，把拼路径的事情交给Library
+                        let backupDir = path.join(path.dirname(appDir), "backup", app.parent.id);
+                        let fileSet = new ComparableSet(files);
+                        let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
+                        let difference = parentSet.intersection(fileSet);
+                        if (difference) {
+                            await this.restoreFiles(appDir, backupDir, Array.from(difference))
+                        }
+                    }
+                    resolve();
+                }
+                catch (e) {
+                    reject(e);
+                }
 
-        for (let file of files) {
-            app.status.progress += 1;
-            await this.deleteFile(path.join(appDir, file));
-        }
-
-        if (app.parent) {
-            // TODO: 建立Library模型，把拼路径的事情交给Library
-            let backupDir = path.join(path.dirname(appDir), "backup", app.parent.id);
-            let fileSet = new ComparableSet(files);
-            let parentSet = new ComparableSet(Array.from(app.parent.local!.files.keys()));
-            let difference = parentSet.intersection(fileSet);
-            if (difference) {
-                await this.restoreFiles(appDir, backupDir, Array.from(difference))
-            }
-        }
-
+            });
+        });
+        clearInterval(interval);
         app.reset()
     }
 }

@@ -15,6 +15,7 @@ import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
 import {SettingsService} from "./settings.sevices";
+import {AppsService} from "./apps.service";
 
 declare const $: any;
 
@@ -108,7 +109,7 @@ export class YGOProComponent implements OnInit {
 
     connections: WebSocket[] = [];
 
-    constructor(private http: Http, private settingsService: SettingsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
