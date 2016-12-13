@@ -516,7 +516,7 @@ export class AppsService {
                     this.ref.tick();
                 });
             } catch (e) {
-
+                throw e;
             }
             let files = await this.downloadService.getFiles(downloadId);
             app.status.status = "waiting";
