@@ -19,6 +19,8 @@ import {Observable, Observer} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
 // import mkdirp = require("mkdirp");
 import ReadableStream = NodeJS.ReadableStream;
+import {createReadStream} from "fs";
+import {createWriteStream} from "fs";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -212,7 +214,7 @@ export class AppsService {
 
         // 设置App关系
 
-        for (let [id,app] of apps) {
+        for (let [id, app] of apps) {
             let temp = app.actions;
             let map = new Map<string,any>();
             for (let action of Object.keys(temp)) {
@@ -268,12 +270,59 @@ export class AppsService {
             this.findChildren(app).every((child) => (child.isInstalled() && child.isReady()) || !child.isInstalled());
     }
 
-    async importApp(app: App, appPath: string) {
+    async copyFile(src: string, dst: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let readable = createReadStream(src);
+            readable.on('open', () => {
+                let writable = createWriteStream(dst);
+                writable.on("error", reject);
+                writable.on("close", resolve);
+                readable.pipe(writable);
+            });
+            readable.on("error", reject);
+        });
+    }
+
+    async importApp(app: App, appPath: string, option: InstallOption) {
         if (!app.isInstalled()) {
-            app.status.status = "ready";
+            app.status.status = "updating";
+            let checksumFiles = await this.getChecksumFile(app);
+            await this.createDirectory(option.installDir);
+            await new Promise((resolve, reject) => {
+                this.ngZone.runOutsideAngular(async() => {
+                    try {
+                        let sortedFiles = Array.from(checksumFiles.entries()).sort((a: string[], b: string[]): number => {
+                            if (a[0] > b[0]) {
+                                return 1;
+                            } else if (a[0] < b[0]) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        for (let [file, checksum] of sortedFiles) {
+                            let src = path.join(appPath, file);
+                            let dst = path.join(option.installDir, file);
+                            if (checksum === "") {
+                                await this.createDirectory(dst);
+                            } else {
+                                try {
+                                    await this.copyFile(src, dst);
+                                } catch (e) {
+                                }
+                            }
+                        }
+                        resolve();
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            });
             app.local = new AppLocal();
-            app.local.path = appPath;
+            app.local.path = option.installDir;
+            app.status.status = "ready";
             await this.update(app, true);
+            this.saveAppLocal(app);
         }
     }
 
@@ -299,7 +348,7 @@ export class AppsService {
 
     async verifyFiles(app: App, checksumFiles: Map<string,string>): Promise<Map<string,string>> {
         let result = new Map<string,string>();
-        for (let [file,checksum] of checksumFiles) {
+        for (let [file, checksum] of checksumFiles) {
             let filePath = path.join(app.local!.path, file);
             // 如果文件不存在，随便生成一个checksum
             await new Promise((resolve, reject) => {
@@ -356,7 +405,7 @@ export class AppsService {
                 let changedFiles: Set<string> = new Set<string>();
                 let deletedFiles: Set<string> = new Set<string>();
                 // 遍历寻找新增加的文件
-                for (let [file,checksum] of latestFiles) {
+                for (let [file, checksum] of latestFiles) {
                     if (checksum !== "" && !localFiles!.has(file)) {
                         addedFiles.add(file);
                         // changedFiles包含addedFiles，addedFiles仅供mod更新的时候使用。
@@ -366,7 +415,7 @@ export class AppsService {
                     }
                 }
                 // 遍历寻找旧版本与新版本不一样的文件和新版本比旧版少了的文件
-                for (let [file,checksum] of localFiles!) {
+                for (let [file, checksum] of localFiles!) {
                     if (latestFiles.has(file)) {
                         let latestChecksum = latestFiles.get(file);
                         if (latestChecksum !== checksum && latestChecksum !== "") {
@@ -507,7 +556,7 @@ export class AppsService {
             }
             await this.doInstall(task);
         };
-        const addDownloadTask = async(app: App, dir: string): Promise<{app: App,files: string[]} > => {
+        const addDownloadTask = async(app: App, dir: string): Promise<{app: App, files: string[]} > => {
             let metalinkUrl = app.download;
             if (app.id === "ygopro") {
                 metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + ".meta4";
@@ -569,7 +618,7 @@ export class AppsService {
 
     findChildren(app: App): App[] {
         let children: App[] = [];
-        for (let [id,child] of this.apps) {
+        for (let [id, child] of this.apps) {
             if (child.parent === app || child.dependencies && child.dependencies.has(app.id)) {
                 children.push(child);
             }
@@ -961,7 +1010,7 @@ export class AppsService {
         }
     }
 
-    async backupFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number)=>void) {
+    async backupFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number) => void) {
         let n = 0;
         for (let file of files) {
             await new Promise(async(resolve, reject) => {
@@ -979,7 +1028,7 @@ export class AppsService {
         }
     }
 
-    async restoreFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number)=>{}) {
+    async restoreFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number) => {}) {
         let n = 0;
         for (let file of files) {
             await new Promise((resolve, reject) => {
@@ -1006,7 +1055,7 @@ export class AppsService {
                 let map = new Map<string,string>();
                 for (let line of response.text().split('\n')) {
                     if (line !== "") {
-                        let [checksum,filename]=line.split('  ', 2);
+                        let [checksum, filename]=line.split('  ', 2);
                         // checksum文件里没有文件夹，这里添加上
                         map.set(path.dirname(filename), "");
                         map.set(filename, checksum);

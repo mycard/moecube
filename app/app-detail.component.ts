@@ -102,7 +102,7 @@ export class AppDetailComponent implements OnInit {
 
         try {
             await this.appsService.install(targetApp, options);
-            for (let [id,install] of Object.entries(referencesInstall)) {
+            for (let [id, install] of Object.entries(referencesInstall)) {
                 if (install) {
                     let reference = targetApp.references.get(id)!;
                     console.log("reference install ", id, targetApp, targetApp.references, reference);
@@ -147,10 +147,18 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
-    importGame(targetApp: App, options: InstallOption, referencesInstall: {[id: string]: boolean}) {
-        let dir = path.basename(this.import_path);
+    async importGame(targetApp: App, option: InstallOption, referencesInstall: {[id: string]: boolean}) {
+        $('#import-modal').modal('hide');
+        let dir = path.dirname(this.import_path);
         // TODO: 执行依赖和references安装
-        this.appsService.importApp(targetApp, dir);
+        await this.appsService.importApp(targetApp, dir, option);
+        for (let [id, install] of Object.entries(referencesInstall)) {
+            if (install) {
+                let reference = targetApp.references.get(id)!;
+                console.log("reference install ", id, targetApp, targetApp.references, reference);
+                await this.appsService.install(reference, option);
+            }
+        }
     }
 
     async verifyFiles(app: App) {
@@ -186,7 +194,7 @@ export class AppDetailComponent implements OnInit {
         let filePaths = await new Promise((resolve, reject) => {
             remote.dialog.showOpenDialog({
                 filters: [{name: filename, extensions: [extname]}],
-                properties: ['openFile', 'openDirectory', 'multiSelections']
+                properties: ['openFile',]
             }, resolve)
         });
 
