@@ -332,6 +332,9 @@ export class AppsService {
         } else {
             readyToUpdate = app.isReady() && mods.every((mod) => mod.isReady());
         }
+        if (app.id === "ygopro") {
+            console.log(111);
+        }
         if (readyToUpdate && (verify || app.local!.version !== app.version )) {
             app.status.status = "updating";
             try {
@@ -348,25 +351,21 @@ export class AppsService {
                 let deletedFiles: Set<string> = new Set<string>();
                 // 遍历寻找新增加的文件
                 for (let [file,checksum] of latestFiles) {
-                    if (!localFiles.has(file)) {
-                        changedFiles.add(file);
+                    if (!localFiles.has(file) && latestFiles.get(file) !== "") {
                         addedFiles.add(file);
+                        // changedFiles包含addedFiles，addedFiles仅供mod更新的时候使用。
+                        changedFiles.add(file);
                     }
                 }
                 // 遍历寻找旧版本与新版本不一样的文件和新版本比旧版少了的文件
                 for (let [file,checksum] of localFiles) {
                     if (latestFiles.has(file)) {
-                        if (latestFiles.get(file) !== checksum) {
+                        if (latestFiles.get(file) !== checksum && latestFiles.get(file) !== "") {
                             changedFiles.add(file);
                         }
                     } else {
                         deletedFiles.add(file);
                     }
-                }
-
-                // changedFiles包含addedFiles，addedFiles仅供mod更新的时候使用。
-                for (let addedFile of addedFiles) {
-                    changedFiles.add(addedFile);
                 }
 
                 let backupFiles: string[] = [];
@@ -443,7 +442,7 @@ export class AppsService {
     }
 
     async doUpdate(app: App, changedFiles?: Set<string>, deletedFiles?: Set<string>) {
-        const updateServer = "https://thief.mycard.moe/update/metalinks/";
+        const updateServer = "https://thief.mycard.moe/update/";
         if (changedFiles && changedFiles.size > 0) {
             Logger.info("Update changed files: ", changedFiles);
             let updateUrl = updateServer + app.id;
