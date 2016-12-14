@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges} from "@angular/core";
+import {Component, OnInit, Input, ChangeDetectorRef} from "@angular/core";
 import {AppsService} from "./apps.service";
 import {InstallOption} from "./install-option";
 import {SettingsService} from "./settings.sevices";
@@ -26,6 +26,8 @@ export class AppDetailComponent implements OnInit {
     availableLibraries: string[] = [];
     references: App[];
     referencesInstall: {[id: string]: boolean};
+
+    import_path: string;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
@@ -145,9 +147,10 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
-    importGame(app: App) {
-        let dir = this.selectDir();
-        this.appsService.importApp(app, dir);
+    importGame(targetApp: App, options: InstallOption, referencesInstall: {[id: string]: boolean}) {
+        let dir = path.basename(this.import_path);
+        // TODO: 执行依赖和references安装
+        this.appsService.importApp(targetApp, dir);
     }
 
     async verifyFiles(app: App) {
@@ -168,4 +171,28 @@ export class AppDetailComponent implements OnInit {
         clipboard.writeText(text);
     }
 
+    async selectImport(app: App) {
+        let main = app.actions.get('main');
+        if (!main) {
+            return
+        }
+        if (!main.execute) {
+            return
+        }
+        let filename = main.execute.split('/')[0];
+        let extname = path.extname(filename).slice(1);
+
+        // let remote = require('electron').remote
+        let filePaths = await new Promise((resolve, reject) => {
+            remote.dialog.showOpenDialog({
+                filters: [{name: filename, extensions: [extname]}],
+                properties: ['openFile', 'openDirectory', 'multiSelections']
+            }, resolve)
+        });
+
+        if (filePaths && filePaths[0]) {
+            this.import_path = filePaths[0]
+        }
+
+    }
 }

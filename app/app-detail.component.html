@@ -1,8 +1,8 @@
 <h1>{{currentApp.name}}</h1>
 <!--应用未安装-->
 <div class="actions" *ngIf="!currentApp.isInstalled()">
-    <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">安装</button>
-    <button i18n (click)="importGame(currentApp)" type="button" class="btn btn-secondary">导入</button>
+    <button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
+    <button i18n *ngIf="currentApp.runnable()" (click)="updateInstallOption(currentApp)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#import-modal">导入</button>
 </div>
 
 <!--应用变更中-->
@@ -119,7 +119,57 @@
             </div>
             <div class="modal-footer">
                 <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button i18n id="submit" type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
+                <button i18n type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
+    <div class="modal-dialog" role="document">
+        <form id="import-form" class="modal-content" (ngSubmit)="importGame(currentApp,installOption,referencesInstall)" #theForm="ngForm">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+                <h4 i18n class="modal-title">导入 {{currentApp.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <p i18n>选择主程序 {{currentApp.actions.get('main').execute}}</p>
+                <label class="custom-file" lang="en">
+                    <input (click)="$event.preventDefault();selectImport(currentApp)" type="file" id="file" class="custom-file-input">
+                    <span class="custom-file-control">{{import_path || currentApp.actions.get('main').execute}}</span>
+                </label>
+
+                <h4 i18n>导入到</h4>
+                <div class="form-group">
+                    <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
+                        <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
+                    </select>
+                </div>
+                <!--<h4 i18n>快捷方式</h4>-->
+                <!--<div class="checkbox">-->
+                <!--<input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">-->
+                <!--<label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>-->
+                <!--<label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>-->
+                <!--</div>-->
+                <!--<div class="checkbox">-->
+                <!--<input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">-->
+                <!--<label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>-->
+                <!--</div>-->
+                <h4 i18n *ngIf="references.length>0">扩展内容</h4>
+                <div *ngFor="let reference of references"><label>
+                    <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
+                </label></div>
+                <div *ngIf="currentApp.findDependencies().length">
+                    <span i18n>依赖：</span>
+                    <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n type="submit" [disabled]="import_path && !theForm.form.valid" class="btn btn-primary">导入</button>
             </div>
         </form>
     </div>

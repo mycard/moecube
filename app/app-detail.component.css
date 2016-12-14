@@ -53,3 +53,16 @@ progress {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
+
+.custom-file {
+    width: 100%;
+}
+
+.custom-file-control:lang(en)::after{
+    content: initial;
+}
+
+.custom-file-control {
+    overflow: hidden;
+    white-space: nowrap;
+}
