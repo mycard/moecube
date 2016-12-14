@@ -332,17 +332,23 @@ export class AppsService {
         } else {
             readyToUpdate = app.isReady() && mods.every((mod) => mod.isReady());
         }
-        if (app.id === "ygopro") {
-            console.log(111);
-        }
         if (readyToUpdate && (verify || app.local!.version !== app.version )) {
             app.status.status = "updating";
             try {
                 Logger.info("Checking updating: ", app);
                 let latestFiles = await this.getChecksumFile(app);
-                let localFiles: Map<string,string>;
+                let localFiles: Map<string,string>|undefined;
                 if (verify) {
-                    localFiles = await this.verifyFiles(app, latestFiles);
+                    await new Promise((resolve, reject) => {
+                        this.ngZone.runOutsideAngular(async() => {
+                            try {
+                                localFiles = await this.verifyFiles(app, latestFiles);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    });
                 } else {
                     localFiles = app.local!.files;
                 }
@@ -351,17 +357,22 @@ export class AppsService {
                 let deletedFiles: Set<string> = new Set<string>();
                 // 遍历寻找新增加的文件
                 for (let [file,checksum] of latestFiles) {
-                    if (!localFiles.has(file) && latestFiles.get(file) !== "") {
+                    if (checksum !== "" && !localFiles!.has(file)) {
                         addedFiles.add(file);
                         // changedFiles包含addedFiles，addedFiles仅供mod更新的时候使用。
                         changedFiles.add(file);
+                    } else if (checksum === "" && file != ".") {
+                        await this.createDirectory(path.join(app.local!.path, file));
                     }
                 }
                 // 遍历寻找旧版本与新版本不一样的文件和新版本比旧版少了的文件
-                for (let [file,checksum] of localFiles) {
+                for (let [file,checksum] of localFiles!) {
                     if (latestFiles.has(file)) {
-                        if (latestFiles.get(file) !== checksum && latestFiles.get(file) !== "") {
+                        let latestChecksum = latestFiles.get(file);
+                        if (latestChecksum !== checksum && latestChecksum !== "") {
                             changedFiles.add(file);
+                        } else if (latestChecksum === "") {
+                            await this.createDirectory(path.join(app.local!.path, file));
                         }
                     } else {
                         deletedFiles.add(file);

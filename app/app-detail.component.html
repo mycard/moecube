@@ -2,7 +2,7 @@
 <!--应用未安装-->
 <div class="actions" *ngIf="!currentApp.isInstalled()">
     <button i18n type="button" class="btn btn-primary" data-toggle="modal" (click)="updateInstallOption(currentApp)" data-target="#install-modal">安装</button>
-    <!--<button i18n type="button" class="btn btn-secondary">导入</button>-->
+    <button i18n (click)="importGame(currentApp)" type="button" class="btn btn-secondary">导入</button>
 </div>
 
 <!--应用变更中-->
@@ -76,7 +76,7 @@
     </div>
     <h2 i18n>本地文件</h2>
     <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
-    <!--<button i18n type="button" (click)="verifyFiles(currentApp)" class="btn btn-secondary">校验完整性</button>-->
+    <button i18n type="button" (click)="verifyFiles(currentApp)" class="btn btn-secondary">校验完整性</button>
     <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">卸载</button>
 </div>
 

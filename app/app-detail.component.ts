@@ -145,6 +145,11 @@ export class AppDetailComponent implements OnInit {
         this.appsService.runApp(app, 'custom');
     }
 
+    importGame(app: App) {
+        let dir = this.selectDir();
+        this.appsService.importApp(app, dir);
+    }
+
     async verifyFiles(app: App) {
         try {
             await this.appsService.update(app, true);
