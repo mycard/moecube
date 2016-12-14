@@ -114,6 +114,9 @@ export class App {
     isUninstalling(): boolean {
         return this.status.status === "uninstalling";
     }
+    isUpdating(): boolean {
+        return this.status.status === "updating";
+    }
 
     runnable(): boolean {
         return [Category.game].includes(this.category);

@@ -12,6 +12,7 @@
         <span i18n *ngIf="currentApp.isInstalling()">正在安装...</span>
         <span i18n *ngIf="currentApp.isUninstalling()">正在卸载...</span>
         <span i18n *ngIf="currentApp.isWaiting()">等待安装...</span>
+        <span i18n *ngIf="currentApp.isUpdating()">正在更新...</span>
         <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
         <span>{{currentApp.progressMessage()}}</span>
     </div>

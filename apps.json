@@ -2026,10 +2026,8 @@
     },
     "references": {
       "win32": [
-        "ygopro-lang-en-US"
       ],
       "darwin": [
-        "ygopro-lang-en-US"
       ]
     },
     "author": "Fluorohydride",
@@ -2056,8 +2054,8 @@
       }
     },
     "version": {
-      "win32": "1.033.C-9",
-      "darwin": "1.033.C-9"
+      "win32": "1.033.C-15",
+      "darwin": "1.033.C-15"
     },
     "news": {
       "zh-CN": [
@@ -2084,54 +2082,6 @@
       ]
     },
     "conference": "ygopro_china_north"
-  },
-  {
-    "id": "ygopro-lang-en-US",
-    "description": {
-      "zh-CN": "fxt desc"
-    },
-    "category": "module",
-    "parent": "ygopro",
-    "tags": [
-      "language"
-    ],
-    "dependencies": {
-      "win32": [
-        "ygopro"
-      ],
-      "darwin": [
-        "ygopro"
-      ]
-    },
-    "references": {
-      "win32": [],
-      "darwin": []
-    },
-    "author": "ZUN",
-    "homepage": "http://www.myacg.cc",
-    "locales": [
-      "en-US"
-    ],
-    "actions": {
-      "win32": {
-        "main": {
-          "execute": "ygopro.exe",
-          "args": [],
-          "env": {}
-        }
-      },
-      "darwin": {
-        "main": {
-          "execute": "ygopro.app/Contents/MacOS/ygopro",
-          "args": [],
-          "env": {}
-        }
-      }
-    },
-    "version": {
-      "win32": "1.033.C-9",
-      "darwin": "1.033.C-9"
-    }
   },
   {
     "id": "desmume",

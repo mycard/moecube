@@ -4,6 +4,7 @@ import * as crypto from "crypto";
 import {App, AppStatus, Action} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
+import {createReadStream, createWriteStream} from "fs";
 import * as path from "path";
 import * as child_process from "child_process";
 import {ChildProcess} from "child_process";
@@ -19,8 +20,6 @@ import {Observable, Observer} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
 // import mkdirp = require("mkdirp");
 import ReadableStream = NodeJS.ReadableStream;
-import {createReadStream} from "fs";
-import {createWriteStream} from "fs";
 
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
@@ -506,7 +505,13 @@ export class AppsService {
         if (changedFiles && changedFiles.size > 0) {
             Logger.info("Update changed files: ", changedFiles);
             let updateUrl = updateServer + app.id;
-            if (app.id === "ygopro" || app.id === "desmume") {
+            if (app.id === "ygopro") {
+                let locale = this.settingsService.getLocale();
+                if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+                    locale = 'en-US';
+                }
+                updateUrl = updateUrl + '-' + process.platform + '-' + locale;
+            } else if (app.id === "desmume") {
                 updateUrl = updateUrl + '-' + process.platform;
             }
             let metalink = await this.http.post(updateUrl, changedFiles).map((response) => response.text()).toPromise();
@@ -559,9 +564,12 @@ export class AppsService {
         const addDownloadTask = async(app: App, dir: string): Promise<{app: App, files: string[]} > => {
             let metalinkUrl = app.download;
             if (app.id === "ygopro") {
-                metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + ".meta4";
-            }
-            if (app.id === "desmume") {
+                let locale = this.settingsService.getLocale();
+                if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+                    locale = 'en-US';
+                }
+                metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + '-' + locale + ".meta4";
+            } else if (app.id === "desmume") {
                 metalinkUrl = "https://thief.mycard.moe/metalinks/desmume-" + process.platform + ".meta4";
             }
             app.status.status = "downloading";
@@ -1047,9 +1055,17 @@ export class AppsService {
 
     async getChecksumFile(app: App): Promise<Map<string,string> > {
         let checksumUrl = this.checksumURL + app.id;
-        if (["ygopro", 'desmume'].includes(app.id)) {
+
+        if (app.id === "ygopro") {
+            let locale = this.settingsService.getLocale();
+            if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+                locale = 'en-US';
+            }
+            checksumUrl = this.checksumURL + app.id + "-" + process.platform + '-' + locale;
+        } else if (app.id === "desmume") {
             checksumUrl = this.checksumURL + app.id + "-" + process.platform;
         }
+
         return this.http.get(checksumUrl)
             .map((response) => {
                 let map = new Map<string,string>();
