@@ -246,7 +246,7 @@ export class AppsService {
                     'en-US': 'English',
                     'zh-CN': 'Simplified Chinese',
                     'zh-TW': 'Traditional Chinese',
-                    'language_pack': 'Language'
+                    'language_pack': 'Language Pack'
                 },
                 'zh-CN': {
                     'en-US': '英文',
