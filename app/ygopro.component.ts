@@ -14,7 +14,6 @@ import {App} from "./app";
 import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
-import {SettingsService} from "./settings.sevices";
 import {AppsService} from "./apps.service";
 
 declare const $: any;
@@ -167,7 +166,7 @@ export class YGOProComponent implements OnInit {
     async refresh() {
         let decks = await this.get_decks();
         this.decks = decks;
-        if (!(this.current_deck in this.decks)) {
+        if (!(this.decks.includes(this.current_deck))) {
             this.current_deck = decks[0];
         }
     };

@@ -15,7 +15,7 @@
         <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
         <span>{{currentApp.progressMessage()}}</span>
     </div>
-    <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.progress}}" max="{{currentApp.status.total}}"></progress>
+    <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.total ? currentApp.status.progress : 1}}" max="{{currentApp.status.total}}"></progress>
 </div>
 
 <!--应用ready-->
@@ -67,7 +67,7 @@
                     <button i18n (click)="installMod(mod)" [disabled]="mod.isInstalled()&&!appsService.allReady(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
                 </td>
                 <td *ngIf="mod.isInstalled()&&!mod.isReady()">
-                    <progress class="progress progress-striped progress-animated" value="{{mod.status.progress}}" max="{{mod.status.total}}"></progress>
+                    <progress class="progress progress-striped progress-animated" value="{{mod.status.total ? mod.status.progress : 1}}" max="{{mod.status.total}}"></progress>
                     <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
                 </td>
             </tr>
