@@ -5,7 +5,7 @@ import {Injectable} from "@angular/core";
 import {remote} from "electron";
 import * as path from "path";
 
-interface Library {
+export interface Library {
     "default": boolean,path: string
 }
 

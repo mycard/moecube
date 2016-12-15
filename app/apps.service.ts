@@ -18,9 +18,7 @@ import {InstallOption} from "./install-option";
 import {ComparableSet} from "./shared/ComparableSet";
 import {Observable, Observer} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
-// import mkdirp = require("mkdirp");
 import ReadableStream = NodeJS.ReadableStream;
-
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
 const Logger = {
@@ -44,6 +42,8 @@ interface InstallStatus {
 interface Connection {
     connection: WebSocket, address: string | null
 }
+
+declare const System: any;
 
 @Injectable()
 export class AppsService {
@@ -141,18 +141,44 @@ export class AppsService {
         }
     }
 
+
     async migrate_v2_ygopro() {
         // 导入萌卡 v2 的 YGOPRO
-        if (this.apps.get('ygopro')!.isInstalled()) {
+        let app = this.apps.get('ygopro')!;
+        if (app.isInstalled() || localStorage.getItem('migrate_v2_ygopro')) {
             return
         }
         try {
-            const legacy_ygopro_path = require(path.join(remote.app.getPath('appData'), 'mycard', 'db.json')).local.ygopro.path;
+            const legacy_ygopro_path = System._nodeRequire(path.join(remote.app.getPath('appData'), 'mycard', 'db.json')).local.ygopro.path;
             if (legacy_ygopro_path) {
                 // TODO: 导入YGOPRO
+                // 示例: "C:\\Users\\a915329096\\AppData\\Roaming\\mycard\\apps\\ygopro"
+                // 不带任何reference，如果同盘符已有库，安装到那个库里，否则在那个盘符建个库。
+                let library: string | undefined;
+                if (process.platform == 'win32') {
+                    let volume = legacy_ygopro_path.split(':')[0].toUpperCase();
+                    for (let _library of this.settingsService.getLibraries()) {
+                        if (_library.path.split(':')[0].toUpperCase() == volume) {
+                            library = _library.path
+                        }
+                    }
+                    try {
+                        let library = path.join(volume + ':', "MyCardLibrary");
+                        await this.createDirectory(library);
+                        this.settingsService.addLibrary(library, true);
+                    } catch (error) {
+
+                    }
+                }
+                if (!library) {
+                    library = this.settingsService.getDefaultLibrary().path;
+                }
+                let option = new InstallOption(app, library, false, false);
+                console.log('migrate ygopro', legacy_ygopro_path, library);
+                await this.importApp(app, legacy_ygopro_path, option);
+                localStorage.setItem('migrate_v2_ygopro', "true")
             }
         } catch (error) {
-
         }
     }
 

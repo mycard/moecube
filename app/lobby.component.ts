@@ -30,7 +30,6 @@ export class LobbyComponent implements OnInit {
 
     async ngOnInit() {
         this.apps = await this.appsService.loadApps();
-        await this.appsService.migrate();
         for (let app of this.apps.values()) {
             this.appsService.update(app);
         }
@@ -53,6 +52,7 @@ export class LobbyComponent implements OnInit {
             params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
         }
         this.candy_url = url;
+        await this.appsService.migrate();
     }
 
     chooseApp(app: App) {
