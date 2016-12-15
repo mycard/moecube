@@ -164,9 +164,10 @@ export class AppsService {
                     }
                     if (!library) {
                         try {
-                            library = path.join(volume + ':', "MyCardLibrary");
-                            await this.createDirectory(library);
-                            this.settingsService.addLibrary(library, true);
+                            let _library = path.join(volume + ':', "MyCardLibrary");
+                            await this.createDirectory(_library);
+                            this.settingsService.addLibrary(_library, true);
+                            library = _library
                         } catch (error) {
                         }
                     }
