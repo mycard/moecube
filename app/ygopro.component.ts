@@ -331,7 +331,7 @@ export class YGOProComponent implements OnInit {
         let search = new URLSearchParams();
         search.set("arena", arena);
         this.matching_arena = arena;
-        this.matching = this.http.post('https://mycard.moe/ygopro/match', null, {
+        this.matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
             headers: headers,
             search: search
         }).map(response => response.json())
@@ -345,6 +345,7 @@ export class YGOProComponent implements OnInit {
             }, () => {
                 this.matching = null;
                 this.matching_arena = null;
+                this.ref.detectChanges()
             });
     }
 
