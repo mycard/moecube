@@ -9,7 +9,8 @@
     <!--<meta name="author" content="">-->
     <!--<link rel="icon" href="../../favicon.ico">-->
 
-    <title>更新消息</title>
+    <title lang="zh-CN">更新消息</title>
+    <title lang="en-US">Update</title>
 
     <!-- Bootstrap core CSS -->
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,7 +30,7 @@
 
 <body>
 
-<div class="container">
+<div class="container" lang="zh-CN">
 
     <h1>MyCard 更新下载完毕</h1>
     <p>点击【现在安装更新】，会立即关闭 MyCard 平台及正在运行中的游戏，并安装更新。</p>
@@ -42,8 +43,38 @@
     </p>
 
 </div><!-- /.container -->
+
+<div class="container" lang="en-US">
+
+    <h1>Update downloaded</h1>
+    <p>If you install now, MyCard will go offline and update immediately, your gaming progress may be affected.</p>
+    <p>If you install later, then the update will be automatically installed when you start-up MyCard next time.</p>
+    <p>You may also click the Update button to install the update anytime.</p>
+
+    <!--<p>If auto-update failed, please refer to-->
+    <!--<a href="https://mycard.moe" target="_blank">https://mycard.moe</a> to download latest version</p>-->
+    <p id="actions">
+        <button id="close" class="btn btn-secondary">Install Later _(:3 」∠)_</button>
+        <button id="update" class="btn btn-primary">(。・`ω´・) Install Now</button>
+    </p>
+
+</div><!-- /.container -->
+
 <script>
-    const {ipcRenderer} = require('electron');
+    const {ipcRenderer, remote} = require('electron');
+    let locale = localStorage.getItem('locale') || remote.app.getLocale();
+
+    if (locale.startsWith('zh-')) {
+        locale = 'zh-CN'
+    } else {
+        locale = 'en-US'
+    }
+    for (let element of document.querySelectorAll('[lang]')) {
+        if (element.getAttribute('lang') != locale) {
+            element.parentNode.removeChild(element);
+        }
+    }
+
     document.getElementById('update').addEventListener('click', () => {
         ipcRenderer.send('update');
     });
