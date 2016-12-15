@@ -77,7 +77,7 @@
     </div>
     <h2 i18n>本地文件</h2>
     <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
-    <button i18n type="button" (click)="verifyFiles(currentApp)" class="btn btn-secondary">校验完整性</button>
+    <button i18n type="button" (click)="verifyFiles(currentApp)" [disabled]="!appsService.allReady(currentApp)" class="btn btn-secondary">校验完整性</button>
     <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">卸载</button>
 </div>
 

@@ -496,6 +496,7 @@ export class AppsService {
             } catch (e) {
                 Logger.error("Update Failed: ", e);
                 app.status.status = "ready";
+                throw e;
             }
         }
     }

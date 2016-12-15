@@ -171,6 +171,7 @@ export class AppDetailComponent implements OnInit {
                 await this.appsService.update(mod, true);
             }
         } catch (e) {
+            new Notification(app.name, {body: "校验失败"});
             console.log(e);
         }
     }
