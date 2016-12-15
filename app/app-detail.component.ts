@@ -151,13 +151,18 @@ export class AppDetailComponent implements OnInit {
         $('#import-modal').modal('hide');
         let dir = path.dirname(this.import_path);
         // TODO: 执行依赖和references安装
-        await this.appsService.importApp(targetApp, dir, option);
-        for (let [id, install] of Object.entries(referencesInstall)) {
-            if (install) {
-                let reference = targetApp.references.get(id)!;
-                console.log("reference install ", id, targetApp, targetApp.references, reference);
-                await this.appsService.install(reference, option);
+        try {
+            await this.appsService.importApp(targetApp, dir, option);
+            for (let [id, install] of Object.entries(referencesInstall)) {
+                if (install) {
+                    let reference = targetApp.references.get(id)!;
+                    console.log("reference install ", id, targetApp, targetApp.references, reference);
+                    await this.appsService.install(reference, option);
+                }
             }
+        } catch (e) {
+            console.error(e);
+            new Notification(targetApp.name, {body: "导入失败"});
         }
     }
 
@@ -172,7 +177,7 @@ export class AppDetailComponent implements OnInit {
             }
         } catch (e) {
             new Notification(app.name, {body: "校验失败"});
-            console.log(e);
+            console.error(e);
         }
     }
 

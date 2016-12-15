@@ -539,7 +539,12 @@ export class AppsService {
                 Logger.info("Update Finished: ", app);
             } catch (e) {
                 Logger.error("Update Failed: ", e);
-                app.status.status = "ready";
+                // 如果导入失败，根据是否安装重置status
+                if (app.local!.files) {
+                    app.status.status = "ready";
+                } else {
+                    app.reset();
+                }
                 throw e;
             }
         }

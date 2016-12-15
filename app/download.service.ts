@@ -13,7 +13,7 @@ const Logger = {
 const Aria2 = require('aria2');
 
 const MAX_LIST_NUM = 1000;
-const ARIA2_INTERVAL = 1000;
+const ARIA2_INTERVAL = 500;
 
 export class DownloadStatus {
     completedLength: number;
@@ -103,24 +103,28 @@ export class DownloadService {
 
     taskMap: Map<string,string[]> = new Map();
 
+    async refreshDownloadList() {
+        let activeList = await this.aria2.tellActive();
+        let waitList = await this.aria2.tellWaiting(0, MAX_LIST_NUM);
+        let stoppedList = await this.aria2.tellStopped(0, MAX_LIST_NUM);
+        this.downloadList.clear();
+        for (let item of activeList) {
+            this.downloadList.set(item.gid, new DownloadStatus(item));
+        }
+        for (let item of waitList) {
+            this.downloadList.set(item.gid, new DownloadStatus(item));
+        }
+        for (let item of stoppedList) {
+            this.downloadList.set(item.gid, new DownloadStatus(item));
+        }
+        this.updateEmitter.emit();
+    }
+
     constructor(private ngZone: NgZone, private http: Http) {
         ngZone.runOutsideAngular(async() => {
             await this.open;
             setInterval(async() => {
-                let activeList = await this.aria2.tellActive();
-                let waitList = await this.aria2.tellWaiting(0, MAX_LIST_NUM);
-                let stoppedList = await this.aria2.tellStopped(0, MAX_LIST_NUM);
-                this.downloadList.clear();
-                for (let item of activeList) {
-                    this.downloadList.set(item.gid, new DownloadStatus(item));
-                }
-                for (let item of waitList) {
-                    this.downloadList.set(item.gid, new DownloadStatus(item));
-                }
-                for (let item of stoppedList) {
-                    this.downloadList.set(item.gid, new DownloadStatus(item));
-                }
-                this.updateEmitter.emit();
+                await this.refreshDownloadList();
             }, ARIA2_INTERVAL);
         })
     }
@@ -136,7 +140,7 @@ export class DownloadService {
             s4() + '-' + s4() + s4() + s4();
     }
 
-    async progress(id: string, callback: (downloadStatus: DownloadStatus)=>void) {
+    async progress(id: string, callback: (downloadStatus: DownloadStatus) => void) {
         return new Promise((resolve, reject) => {
             let gids = this.taskMap.get(id);
             if (gids) {
@@ -184,69 +188,6 @@ export class DownloadService {
         })
     }
 
-    // downloadProgress(id: string): Observable<any> {
-    //     let progress = this.progressList.get(id);
-    //     if (progress) {
-    //         return progress;
-    //     } else {
-    //         return Observable.create((observer: Observer<any>) => {
-    //             let status = '';
-    //             let completedLength = 0;
-    //             let totalLength = 0;
-    //             let downloadSpeed = 0;
-    //
-    //             let gidList = this.taskMap.get(id) !;
-    //             this.updateEmitter.subscribe((value: string) => {
-    //                 let statusList = new Array(gidList.length);
-    //                 let newCompletedLength = 0;
-    //                 let newTotalLength = 0;
-    //                 let newDownloadSpeed = 0;
-    //                 for (let [index,gid] of gidList.entries()) {
-    //                     let task = this.downloadList.get(gid)!;
-    //                     if (task) {
-    //                         statusList[index] = task.status;
-    //                         newCompletedLength += parseInt(task.completedLength);
-    //                         newTotalLength += parseInt(task.totalLength);
-    //                         newDownloadSpeed += parseInt(task.downloadSpeed);
-    //                     }
-    //                 }
-    //                 if (newCompletedLength !== completedLength || newTotalLength !== totalLength) {
-    //                     completedLength = newCompletedLength;
-    //                     totalLength = newTotalLength;
-    //                     downloadSpeed = newDownloadSpeed;
-    //                     observer.next({
-    //                         status: status,
-    //                         completedLength: completedLength,
-    //                         totalLength: totalLength,
-    //                         downloadSpeed: downloadSpeed
-    //                     });
-    //                 }
-    //                 status = statusList.reduce((value, current) => {
-    //                     if (value === "complete" && current === "complete") {
-    //                         return "complete";
-    //                     }
-    //                     if (current != "complete" && current != "active") {
-    //                         return "error";
-    //                     }
-    //                 });
-    //                 if (status === "complete") {
-    //                     observer.complete();
-    //                 } else if (status == "error") {
-    //                     observer.error("Download Error");
-    //                 }
-    //                 return () => {
-    //
-    //                 }
-    //             }, () => {
-    //
-    //             }, () => {
-    //
-    //             })
-    //         });
-    //
-    //     }
-    // }
-
     async getFiles(id: string): Promise<string[]> {
         let gids = this.taskMap.get(id)!;
         let files: string[] = [];
@@ -262,6 +203,8 @@ export class DownloadService {
         let gidList = await this.aria2.addMetalink(encodedMeta4, {dir: library});
         let taskId = this.createId();
         this.taskMap.set(taskId, gidList);
+        // 每次添加任务，刷新一下本地任务列表
+        await this.refreshDownloadList();
         return taskId;
     }
 
