@@ -574,10 +574,14 @@ export class AppsService {
                 this.ref.tick();
             });
             let downloadFiles = await this.downloadService.getFiles(downloadId);
+            app.status.total = 0;
+            // 刷新进度条
+            let interval = setInterval(() => {
+            }, 500);
             for (let downloadFile of downloadFiles) {
                 await new Promise((resolve, reject) => {
-                    this.extract(downloadFile, app.local!.path).subscribe(() => {
-
+                    this.extract(downloadFile, app.local!.path).subscribe((file) => {
+                        app.status.progressMessage = file;
                     }, (error) => {
                         reject(error);
                     }, () => {
@@ -585,6 +589,7 @@ export class AppsService {
                     });
                 });
             }
+            clearInterval(interval);
         }
         if (deletedFiles && deletedFiles.size > 0) {
             Logger.info("Found files deleted: ", deletedFiles);
