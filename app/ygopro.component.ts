@@ -185,9 +185,7 @@ export class YGOProComponent implements OnInit {
 
     async get_font(files: string[]): Promise<string | undefined> {
         for (let file of files) {
-            console.log(file);
             let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
-            console.log(found);
             if (found) {
                 return file;
             }

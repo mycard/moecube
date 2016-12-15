@@ -313,18 +313,22 @@ export class AppsService {
             app.status.status = "updating";
             let checksumFiles = await this.getChecksumFile(app);
             await this.createDirectory(option.installDir);
+            let sortedFiles = Array.from(checksumFiles.entries()).sort((a: string[], b: string[]): number => {
+                if (a[0] > b[0]) {
+                    return 1;
+                } else if (a[0] < b[0]) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+            app.status.total = sortedFiles.length;
+            // 刷新进度
+            let interval = setInterval(() => {
+            }, 500);
             await new Promise((resolve, reject) => {
                 this.ngZone.runOutsideAngular(async() => {
                     try {
-                        let sortedFiles = Array.from(checksumFiles.entries()).sort((a: string[], b: string[]): number => {
-                            if (a[0] > b[0]) {
-                                return 1;
-                            } else if (a[0] < b[0]) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
-                        });
                         for (let [file, checksum] of sortedFiles) {
                             let src = path.join(appPath, file);
                             let dst = path.join(option.installDir, file);
@@ -334,6 +338,9 @@ export class AppsService {
                                 try {
                                     await this.copyFile(src, dst);
                                 } catch (e) {
+                                } finally {
+                                    app.status.progress += 1;
+
                                 }
                             }
                         }
@@ -343,6 +350,7 @@ export class AppsService {
                     }
                 });
             });
+            clearInterval(interval);
             app.local = new AppLocal();
             app.local.path = option.installDir;
             app.status.status = "ready";
@@ -371,7 +379,7 @@ export class AppsService {
         });
     }
 
-    async verifyFiles(app: App, checksumFiles: Map<string,string>): Promise<Map<string,string>> {
+    async verifyFiles(app: App, checksumFiles: Map<string,string>, callback: () => void): Promise<Map<string,string>> {
         let result = new Map<string,string>();
         for (let [file, checksum] of checksumFiles) {
             let filePath = path.join(app.local!.path, file);
@@ -386,6 +394,7 @@ export class AppsService {
                         let sha256sum = await this.sha256sum(filePath);
                         result.set(file, sha256sum);
                     }
+                    callback();
                     resolve();
                 });
             });
@@ -413,16 +422,23 @@ export class AppsService {
                 let latestFiles = await this.getChecksumFile(app);
                 let localFiles: Map<string,string>|undefined;
                 if (verify) {
+                    //刷新进度条
+                    let interval = setInterval(() => {
+                    }, 500);
+                    app.status.total = latestFiles.size;
                     await new Promise((resolve, reject) => {
                         this.ngZone.runOutsideAngular(async() => {
                             try {
-                                localFiles = await this.verifyFiles(app, latestFiles);
+                                localFiles = await this.verifyFiles(app, latestFiles, () => {
+                                    app.status.progress += 1;
+                                });
                                 resolve();
                             } catch (e) {
                                 reject(e);
                             }
                         });
                     });
+                    clearInterval(interval);
                 } else {
                     localFiles = app.local!.files;
                 }
