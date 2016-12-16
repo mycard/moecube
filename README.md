@@ -20,7 +20,7 @@ npm run dist
 ## Install Dependencies (macOS)
 ```bash
 mkdir -p bin
-curl --location --retry 5 https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-osx-darwin.tar.bz2 | tar --strip-components=2 -C bin -jxf - aria2-1.29.1/bin/aria2c
+curl --location --retry 5 https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-osx-darwin.tar.bz2 | tar --strip-components=2 -C bin -jxf - aria2-1.29.0/bin/aria2c
 ```
 
 ## Install Dependencies (Windows)

@@ -41,6 +41,7 @@
     "systemjs": "mycard/systemjs#mycard",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
+    "vue": "^2.1.6",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {

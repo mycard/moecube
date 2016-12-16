@@ -9,11 +9,11 @@
     <!--<meta name="author" content="">-->
     <!--<link rel="icon" href="../../favicon.ico">-->
 
-    <title lang="zh-CN">更新消息</title>
-    <title lang="en-US">Update</title>
+    <title id="title"></title>
 
     <!-- Bootstrap core CSS -->
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="node_modules/vue/dist/vue.min.js"></script>
     <style>
         h1 {
             margin-top: 10px;
@@ -30,57 +30,50 @@
 
 <body>
 
-<div class="container" lang="zh-CN">
-
-    <h1>MyCard 更新下载完毕</h1>
-    <p>点击【现在安装更新】，会立即关闭 MyCard 平台及正在运行中的游戏，并安装更新。</p>
-    <p>点击【下次启动时安装更新】，会在 MyCard 平台退出之后进行更新。</p>
-    <p>你也可以随时点击平台上的更新按钮安装哦！</p>
-    <p>如果自动更新失败，请至 <a href="https://mycard.moe" target="_blank">https://mycard.moe</a> 手动下载最新版本</p>
-    <p id="actions">
-        <button id="close" type="button" class="btn btn-secondary">下次启动时安装更新 _(:3 」∠)_</button>
-        <button id="update" type="button" class="btn btn-primary">(。・`ω´・) 现在安装更新</button>
-    </p>
-
-</div><!-- /.container -->
-
-<div class="container" lang="en-US">
-
-    <h1>Update downloaded</h1>
-    <p>If you install now, MyCard will go offline and update immediately, your gaming progress may be affected.</p>
-    <p>If you install later, then the update will be automatically installed when you start-up MyCard next time.</p>
-    <p>You may also click the Update button to install the update anytime.</p>
-
-    <!--<p>If auto-update failed, please refer to-->
-    <!--<a href="https://mycard.moe" target="_blank">https://mycard.moe</a> to download latest version</p>-->
-    <p id="actions">
-        <button id="close" class="btn btn-secondary">Install Later _(:3 」∠)_</button>
-        <button id="update" class="btn btn-primary">(。・`ω´・) Install Now</button>
-    </p>
-
-</div><!-- /.container -->
+<div id="vueApp">
+    <div class="container">
+        <h1>{{pageText.updateTitle}}</h1>
+        <p v-for="(msg, index) in pageText.updateMsg" >{{msg}}</p>
+        <p>{{pageText.updateFailed.p1}} <a href="https://mycard.moe" target="_blank">{{pageText.updateFailed.p2}}</a> {{pageText.updateFailed.p3}}</p>
+        <p id="actions">
+            <button @click="onClose" type="button" class="btn btn-secondary">{{pageText.actions.close}}</button>
+            <button @click="onUpdate" type="button" class="btn btn-primary">{{pageText.actions.update}}</button>
+        </p>
+    </div>
+</div>
 
 <script>
     const {ipcRenderer, remote} = require('electron');
-    let locale = localStorage.getItem('locale') || remote.app.getLocale();
+    const lang = require('./lang.js')
 
-    if (locale.startsWith('zh-')) {
-        locale = 'zh-CN'
-    } else {
-        locale = 'en-US'
-    }
-    for (let element of document.querySelectorAll('[lang]')) {
-        if (element.getAttribute('lang') != locale) {
-            element.parentNode.removeChild(element);
+    var app = new Vue({
+        el: '#vueApp',
+        created: function () {
+            let locale = localStorage.getItem('locale') || remote.app.getLocale();
+            if (locale.startsWith('zh-')) {
+                locale = 'zh-CN'
+            } else {
+                locale = 'en-US'
+            }
+            this.pageText = lang['update'][locale]
+
+            document.getElementById('title').innerHTML = this.pageText.pageTitle
+        },
+        methods: {
+            onClose(){
+                window.close()
+            },
+            onUpdate(){
+                ipcRenderer.send('update')
+            }
+        },
+        data: {
+            message: 'Hello Vue!',
+            pageText:{}
         }
-    }
+    })
 
-    document.getElementById('update').addEventListener('click', () => {
-        ipcRenderer.send('update');
-    });
-    document.getElementById('close').addEventListener('click', () => {
-        window.close()
-    });
 </script>
 </body>
 </html>
+
