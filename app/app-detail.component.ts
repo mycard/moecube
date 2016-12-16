@@ -126,10 +126,16 @@ export class AppDetailComponent implements OnInit {
             } catch (e) {
                 this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
                 alert("无法创建指定目录");
+            } finally {
+                let index = this.availableLibraries.findIndex((l) => {
+                    return l === volume
+                });
+                this.availableLibraries.splice(index, 1);
             }
         } else {
             this.settingsService.setDefaultLibrary({path: this.installOption.installLibrary, "default": true})
         }
+        this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
     }
 
     selectDir() {
