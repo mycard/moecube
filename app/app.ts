@@ -26,6 +26,10 @@ export interface Action {
     env: {};
     open?: App
 }
+export class FileOptions {
+    sync: boolean;
+    ignore: boolean;
+}
 
 export class AppStatus {
     progress: number;
@@ -80,6 +84,7 @@ export class App {
     local: AppLocal | null;
     status: AppStatus;
     conference: string | undefined;
+    files: Map<string,FileOptions>;
 
     isLanguage() {
         return this.category == Category.module && this.tags.includes('language');
@@ -114,6 +119,7 @@ export class App {
     isUninstalling(): boolean {
         return this.status.status === "uninstalling";
     }
+
     isUpdating(): boolean {
         return this.status.status === "updating";
     }
@@ -143,6 +149,7 @@ export class App {
         this.tags = app.tags;
         this.version = app.version;
         this.conference = app.conference;
+        this.files = app.files;
     }
 
     findDependencies(): App[] {

@@ -1,7 +1,7 @@
 import {Injectable, ApplicationRef, EventEmitter, NgZone} from "@angular/core";
 import {Http} from "@angular/http";
 import * as crypto from "crypto";
-import {App, AppStatus, Action} from "./app";
+import {App, AppStatus, Action, FileOptions} from "./app";
 import {SettingsService} from "./settings.sevices";
 import * as fs from "fs";
 import {createReadStream, createWriteStream} from "fs";
@@ -12,6 +12,7 @@ import {remote} from "electron";
 import "rxjs/Rx";
 import * as readline from "readline";
 import {AppLocal} from "./app-local";
+import * as glob from "glob";
 import * as ini from "ini";
 import {DownloadService, DownloadStatus} from "./download.service";
 import {InstallOption} from "./install-option";
@@ -202,6 +203,13 @@ export class AppsService {
         for (let item of data) {
             let app = new App(item);
             let local = localStorage.getItem(app.id);
+
+            if (item.files) {
+                app.files = new Map(Object.entries(item.files))
+            } else {
+                app.files = new Map();
+            }
+
             if (local) {
                 app.local = new AppLocal();
                 app.local.update(JSON.parse(local));
@@ -314,6 +322,19 @@ export class AppsService {
         if (!app.isInstalled()) {
             app.status.status = "updating";
             let checksumFiles = await this.getChecksumFile(app);
+            for (let [pattern, fileOption] of app.files) {
+                await new Promise((resolve, reject) => {
+                    new glob.Glob(pattern, {cwd: appPath}, (err, files) => {
+                        for (let file of files) {
+                            // 避免被当做文件夹
+                            if (fileOption.sync) {
+                                checksumFiles.set(file, "DO_NOT_CARE_HASH");
+                            }
+                        }
+                        resolve();
+                    });
+                })
+            }
             await this.createDirectory(option.installDir);
             let sortedFiles = Array.from(checksumFiles.entries()).sort((a: string[], b: string[]): number => {
                 if (a[0] > b[0]) {
@@ -457,11 +478,26 @@ export class AppsService {
                         await this.createDirectory(path.join(app.local!.path, file));
                     }
                 }
+                let ignoreFiles: Set<string> = new Set();
+                for (let [pattern, fileOption] of app.files) {
+                    await new Promise((resolve, reject) => {
+                        new glob.Glob(pattern, {cwd: app.local!.path}, (err, files) => {
+                            for (let file of files) {
+                                if (fileOption.ignore) {
+                                    ignoreFiles.add(file);
+                                }
+                            }
+                            resolve();
+                        });
+                    });
+                }
+
                 // 遍历寻找旧版本与新版本不一样的文件和新版本比旧版少了的文件
+                // ignoreFiles里的文件不作处理
                 for (let [file, checksum] of localFiles!) {
                     if (latestFiles.has(file)) {
                         let latestChecksum = latestFiles.get(file);
-                        if (latestChecksum !== checksum && latestChecksum !== "") {
+                        if (!ignoreFiles.has(file) && latestChecksum !== checksum && latestChecksum !== "") {
                             changedFiles.add(file);
                         } else if (latestChecksum === "") {
                             await this.createDirectory(path.join(app.local!.path, file));

@@ -49,6 +49,7 @@ System.config({
         "url": "@node/url",
         "dns": "@node/dns",
         "net": "@node/net",
+        "glob": "@node/glob",
         "dgram": "@node/dgram",
         "fs": "@node/fs",
         "path": "@node/path",

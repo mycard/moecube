@@ -2057,6 +2057,21 @@
       "win32": "1.033.C-15",
       "darwin": "1.033.C-15"
     },
+    "files": {
+      "deck/*.ydk": {
+        "sync": true,
+        "ignore": true
+      },
+      "single/*.lua": {
+        "sync": true
+      },
+      "replay/*.yrp": {
+        "sync": true
+      },
+      "system.conf": {
+        "ignore": true
+      }
+    },
     "news": {
       "zh-CN": [
         {
