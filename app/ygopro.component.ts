@@ -56,6 +56,10 @@ interface Room {
     title?: string
     server?: Server
     private?: boolean
+    options: Options;
+}
+
+interface Options {
     mode: number,
     rule: number,
     start_lp: number,
@@ -64,7 +68,24 @@ interface Room {
     enable_priority: boolean,
     no_check_deck: boolean,
     no_shuffle_deck: boolean
+    lflist?: number;
+    time_limit?: number
 }
+interface Points {
+    exp: number,
+    exp_rank: number,
+    pt: number,
+    arena_rank: number,
+    win: number,
+    lose: number,
+    draw: number,
+    all: number,
+    ratio: number
+}
+
+
+let matching: ISubscription | undefined;
+let matching_arena: string | undefined;
 
 @Component({
     moduleId: module.id,
@@ -80,6 +101,7 @@ export class YGOProComponent implements OnInit {
     system_conf: string;
     numfont: string[];
     textfont: string[];
+    points: Points;
 
     windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
@@ -91,7 +113,7 @@ export class YGOProComponent implements OnInit {
     }];
 
 
-    default_options: Room = {
+    default_options: Options = {
         mode: 1,
         rule: 0,
         start_lp: 8000,
@@ -99,14 +121,19 @@ export class YGOProComponent implements OnInit {
         draw_count: 1,
         enable_priority: false,
         no_check_deck: false,
-        no_shuffle_deck: false
+        no_shuffle_deck: false,
+        lflist: 0,
+        time_limit: 180
     };
 
-    room: Room = Object.assign({title: this.loginService.user.username + '的房间'}, this.default_options);
+    room: Room = {title: this.loginService.user.username + '的房间', options: Object.assign({}, this.default_options)};
 
     rooms: Room[] = [];
 
     connections: WebSocket[] = [];
+
+    matching: ISubscription | undefined;
+    matching_arena: string | undefined;
 
     constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
@@ -119,6 +146,9 @@ export class YGOProComponent implements OnInit {
                 this.textfont = [path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttc'), path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttf'), path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')];
                 break;
         }
+
+        this.matching = matching;
+        this.matching_arena = matching_arena;
     }
 
     async ngOnInit() {
@@ -138,13 +168,13 @@ export class YGOProComponent implements OnInit {
                     //console.log(message)
                     switch (message.event) {
                         case 'init':
-                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map((data: any) => Object.assign({server: server}, this.default_options, data)));
+                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map((room: Room) => Object.assign({server: server}, room)));
                             break;
                         case 'create':
-                            this.rooms.push(Object.assign({server: server}, this.default_options, message.data));
+                            this.rooms.push(Object.assign({server: server}, message.data));
                             break;
                         case 'update':
-                            Object.assign(this.rooms.find(room => room.server == server && room.id == message.data.id), this.default_options, message.data);
+                            Object.assign(this.rooms.find(room => room.server == server && room.id == message.data.id), message.data);
                             break;
                         case 'delete':
                             this.rooms.splice(this.rooms.findIndex(room => room.server == server && room.id == message.data), 1);
@@ -168,6 +198,14 @@ export class YGOProComponent implements OnInit {
         this.decks = decks;
         if (!(this.decks.includes(this.current_deck))) {
             this.current_deck = decks[0];
+        }
+        // https://mycard.moe/ygopro/api/user?username=ozxdno
+        let params = new URLSearchParams();
+        params.set('username', this.loginService.user.username);
+        try {
+            this.points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params}).map((response) => response.json()).toPromise()
+        } catch (error) {
+            console.log(error)
         }
     };
 
@@ -276,13 +314,13 @@ export class YGOProComponent implements OnInit {
         })
     };
 
-    create_room(options: Room) {
+    create_room(room: Room) {
         let options_buffer = new Buffer(6);
         // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
-        options_buffer.writeUInt8((options.private ? 2 : 1) << 4, 1);
-        options_buffer.writeUInt8(options.rule << 5 | options.mode << 3 | (options.enable_priority ? 1 << 2 : 0) | (options.no_check_deck ? 1 << 1 : 0) | (options.no_shuffle_deck ? 1 : 0), 2);
-        options_buffer.writeUInt16LE(options.start_lp, 3);
-        options_buffer.writeUInt8(options.start_hand << 4 | options.draw_count, 5);
+        options_buffer.writeUInt8((room.private ? 2 : 1) << 4, 1);
+        options_buffer.writeUInt8(room.options.rule << 5 | room.options.mode << 3 | (room.options.enable_priority ? 1 << 2 : 0) | (room.options.no_check_deck ? 1 << 1 : 0) | (room.options.no_shuffle_deck ? 1 : 0), 2);
+        options_buffer.writeUInt16LE(room.options.start_lp, 3);
+        options_buffer.writeUInt8(room.options.start_hand << 4 | room.options.draw_count, 5);
         let checksum = 0;
         for (let i = 1; i < options_buffer.length; i++) {
             checksum -= options_buffer.readUInt8(i)
@@ -294,7 +332,7 @@ export class YGOProComponent implements OnInit {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
         }
 
-        let password = options_buffer.toString('base64') + (options.title!).replace(/\s/, String.fromCharCode(0xFEFF));
+        let password = options_buffer.toString('base64') + (room.title!).replace(/\s/, String.fromCharCode(0xFEFF));
         let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
@@ -320,16 +358,13 @@ export class YGOProComponent implements OnInit {
         this.join(password, room.server!);
     }
 
-    matching: ISubscription | null;
-    matching_arena: string | null;
-
     request_match(arena = 'entertain') {
         let headers = new Headers();
         headers.append("Authorization", "Basic " + new Buffer(this.loginService.user.username + ":" + this.loginService.user.external_id).toString('base64'));
         let search = new URLSearchParams();
         search.set("arena", arena);
-        this.matching_arena = arena;
-        this.matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
+        this.matching_arena = matching_arena = arena;
+        this.matching = matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
             headers: headers,
             search: search
         }).map(response => response.json())
@@ -341,15 +376,15 @@ export class YGOProComponent implements OnInit {
             }, (error) => {
                 alert(`匹配失败\n${error}`)
             }, () => {
-                this.matching = null;
-                this.matching_arena = null;
+                this.matching = matching = undefined;
+                this.matching_arena = matching_arena = undefined;
                 this.ref.detectChanges()
             });
     }
 
     cancel_match() {
         this.matching!.unsubscribe();
-        this.matching = null;
-        this.matching_arena = null;
+        this.matching = matching = undefined;
+        this.matching_arena = matching_arena = undefined;
     }
 }

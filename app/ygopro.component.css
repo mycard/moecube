@@ -80,3 +80,7 @@
 .actions {
     margin-bottom: 1em;
 }
+
+dl {
+    margin-bottom: 0;
+}

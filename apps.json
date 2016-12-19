@@ -2059,17 +2059,13 @@
     },
     "files": {
       "deck/*.ydk": {
-        "sync": true,
-        "ignore": true
+        "sync": true
       },
       "single/*.lua": {
         "sync": true
       },
       "replay/*.yrp": {
         "sync": true
-      },
-      "system.conf": {
-        "ignore": true
       }
     },
     "news": {

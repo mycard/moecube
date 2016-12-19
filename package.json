@@ -1,6 +1,6 @@
 {
   "name": "mycard",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "mycard",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
@@ -33,7 +33,7 @@
     "electron-is-dev": "latest",
     "electron-sudo": "mycard/electron-sudo#mycard",
     "font-awesome": "latest",
-    "glob": "^7.1.1",
+    "glob": "latest",
     "ini": "latest",
     "jquery": "latest",
     "raw-socket": "latest",
@@ -42,14 +42,14 @@
     "systemjs": "mycard/systemjs#mycard",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
-    "vue": "^2.1.6",
+    "vue": "latest",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {
     "@angular/compiler-cli": "latest",
     "@angular/platform-server": "latest",
     "@types/electron": "latest",
-    "@types/glob": "^5.0.30",
+    "@types/glob": "latest",
     "@types/ini": "latest",
     "@types/node": "latest",
     "electron": "latest",

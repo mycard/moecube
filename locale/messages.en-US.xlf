@@ -14,7 +14,12 @@
       <trans-unit datatype="html" id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b">
         <source>社区</source>
         <target>Community</target>
-        
+
+      </trans-unit>
+      <trans-unit datatype="html" id="6ef7c5489cf0504f9a170d1344abb0420312ceeb">
+        <source>关于</source>
+        <target>About</target>
+
       </trans-unit>
       <trans-unit datatype="html" id="8422ff34db177236e8f54d415b07c972284c36bf">
         <source>切换账号</source>
@@ -289,7 +294,57 @@
       <trans-unit datatype="html" id="3768b60a7e2625bb1fc2db37eb8c6b8e4bd99101">
         <source>单人模式</source>
         <target>Single Mode</target>
-        
+
+      </trans-unit>
+      <trans-unit datatype="html" id="6f0b5aa5478c05ac01323a83854985ac4ee6ecdb">
+        <source>排位成绩 (测试中)</source>
+        <target>Rank Result</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="c46097c9d5e0501f2dc3a79eaafa0ca8330b0a25">
+        <source>D.P 排名</source>
+        <target>D.P Rank</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="e7dd051e36eb95e7d6ce704dff0068e1bf5bd81a">
+        <source>D.P 胜率</source>
+        <target>Win Rate</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="0ce6333a9b6c85ccd57ecdbee84ef7f6f3f51ef4">
+        <source>胜场</source>
+        <target>Win</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="a89a5c5567bbe1de398b978749b9a1bf6f1281bf">
+        <source>负场</source>
+        <target>Lose</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="41a0424d676209939f79f70c8ef8aa8a143d3451">
+        <source>平局</source>
+        <target>Draw</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="3f4d682cd4fc7579e9ea6bd1bddec84dbc35fd50">
+        <source>总场</source>
+        <target>Total</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="4a893998eefe3a0d103863aac391b5789870c089">
+        <source>EXP 排名</source>
+        <target>EXP Rank</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="6ec23deac8d2367c3a7a4f27946d0835634514fb">
+        <source>EXP</source>
+        <target>EXP</target>
+
+      </trans-unit>
+      <trans-unit datatype="html" id="f5f5d4874301c4b42cdbfab010c953631abbcec9">
+        <source>更多资料</source>
+        <target>More Info</target>
+
       </trans-unit>
       <trans-unit datatype="html" id="1e64bb9c96dfc2b9cb03179dd0c9f992e0645e5f">
         <source>选择对手</source>
@@ -348,7 +403,7 @@
       </trans-unit>
       <trans-unit datatype="html" id="d4038dd5d0e9d5139d425fc7bea40e40d965cc5b">
         <source>额外选项</source>
-        <target>Additional Options</target>
+        <target>Additional Options</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="01cfbee3f1d69f5adae299b7b8c8d75034aef53b">
@@ -396,17 +451,17 @@
         <target>Player</target>
         
       </trans-unit>
-      <trans-unit datatype="html" id="4baa1360b4d635000fc5e14a6e7376f46ace0bd9">
+      <trans-unit datatype="html" id="8514a93609dc67a44e5b198b53e42fe468f8a81a">
         <source><x id="INTERPOLATION"/> LP</source>
         <target><x id="INTERPOLATION"/> LP</target>
         
       </trans-unit>
-      <trans-unit datatype="html" id="1939517ea2b4ff337ce2847302fbcc6f1217d269">
+      <trans-unit datatype="html" id="4a6f5fb56c2367667232cc46608dc46a282e2e56">
         <source><x id="INTERPOLATION"/> 初始</source>
         <target><x id="INTERPOLATION"/> Starting</target>
         
       </trans-unit>
-      <trans-unit datatype="html" id="a19d6d5a2c74d9df73936a17b5c71b2069051b49">
+      <trans-unit datatype="html" id="cae091ce48a80dbc22d5fde2eea1cbd34e7038c7">
         <source><x id="INTERPOLATION"/> 抽卡</source>
         <target><x id="INTERPOLATION"/> Draw</target>
         

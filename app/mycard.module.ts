@@ -13,12 +13,13 @@ import {AppsService} from "./apps.service";
 import {SettingsService} from "./settings.sevices";
 import {LoginService} from "./login.service";
 import {DownloadService} from "./download.service";
+import {AboutComponent} from "./about.component";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
     declarations: [
         MyCardComponent, LoginComponent, StoreComponent, LobbyComponent,
-        AppDetailComponent, RosterComponent, YGOProComponent,
+        AppDetailComponent, RosterComponent, YGOProComponent, AboutComponent
     ],
     bootstrap: [MyCardComponent],
     providers: [

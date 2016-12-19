@@ -15,6 +15,9 @@
         <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
             <a i18n (click)="currentPage='community'" class="nav-link" href="#">社区</a>
         </li>
+        <!--<li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'about'}" class="nav-item">-->
+        <!--<a i18n (click)="currentPage='about'" class="nav-link" href="#">关于</a>-->
+        <!--</li>-->
     </ul>
     <div class="navbar-right">
         <div id="update-status">
@@ -41,6 +44,7 @@
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
 <webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com" (new-window)="openExternal($event.url)"></webview>
+<about class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'about'"></about>
 
 <!-- Modal -->
 <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

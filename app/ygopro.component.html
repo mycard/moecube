@@ -20,6 +20,31 @@
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 
+<!--<div class="actions">-->
+<!--<h2 i18n>排位成绩 (测试中)</h2>-->
+<!--&lt;!&ndash;{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}&ndash;&gt;-->
+<!--<dl *ngIf="points" class="row">-->
+<!--<dt i18n class="col-xs-2">D.P 排名</dt>-->
+<!--<dd class="col-xs-1">{{points.arena_rank}}</dd>-->
+<!--<dt i18n class="col-xs-2">D.P 胜率</dt>-->
+<!--<dd class="col-xs-1">{{points.ratio}}%</dd>-->
+<!--<dt i18n class="col-xs-2">胜场</dt>-->
+<!--<dd class="col-xs-1">{{points.win}}</dd>-->
+<!--<dt i18n class="col-xs-2">负场</dt>-->
+<!--<dd class="col-xs-1">{{points.lose}}</dd>-->
+<!--<dt i18n class="col-xs-2">平局</dt>-->
+<!--<dd class="col-xs-1">{{points.draw}}</dd>-->
+<!--<dt i18n class="col-xs-2">总场</dt>-->
+<!--<dd class="col-xs-1">{{points.all}}</dd>-->
+<!--<dt i18n class="col-xs-2">EXP 排名</dt>-->
+<!--<dd class="col-xs-1">{{points.exp_rank}}</dd>-->
+<!--<dt i18n class="col-xs-2">EXP</dt>-->
+<!--<dd class="col-xs-1">{{points.exp}}</dd>-->
+<!--</dl>-->
+<!--<a i18n href="https://mycard.moe/ygopro/arena/" target="_blank">更多资料</a>-->
+<!--</div>-->
+
+
 <div class="modal fade" id="game-create-windbot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -62,7 +87,7 @@
                     <div class="form-group row">
                         <label i18n for="game-create-rule" class="col-sm-2 form-control-label">卡片允许</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="game-create-rule" name="rule" [(ngModel)]="room.rule">
+                            <select class="form-control" id="game-create-rule" name="rule" [(ngModel)]="room.options.rule">
                                 <option i18n value="0">OCG</option>
                                 <option i18n value="1">TCG</option>
                                 <option i18n value="2">OCG & TCG</option>
@@ -73,7 +98,7 @@
                     <div class="form-group row">
                         <label for="game-create-mode" i18n class="col-sm-2 form-control-label">决斗模式</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="game-create-mode" name="mode" [(ngModel)]="room.mode">
+                            <select class="form-control" id="game-create-mode" name="mode" [(ngModel)]="room.options.mode">
                                 <option i18n value="0">单局模式</option>
                                 <option i18n value="1">比赛模式</option>
                                 <option i18n value="2">TAG</option>
@@ -86,33 +111,33 @@
                             <div class="row">
                                 <label i18n for="game-create-start-lp" class="col-sm-6 form-control-label">初始 LP</label>
                                 <div class="col-sm-6">
-                                    <input name="start_lp" type="number" value="8000" min="1" max="65536" class="form-control form-control-sm game-create-extra" id="game-create-start-lp" [(ngModel)]="room.start_lp">
+                                    <input name="start_lp" type="number" value="8000" min="1" max="65536" class="form-control form-control-sm game-create-extra" id="game-create-start-lp" [(ngModel)]="room.options.start_lp">
                                 </div>
                             </div>
                             <div class="row">
                                 <label i18n for="game-create-start-hand" class="col-sm-6 form-control-label">初始手牌数</label>
                                 <div class="col-sm-6">
-                                    <input name="start_hand" type="number" value="5" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-start-hand" [(ngModel)]="room.start_hand">
+                                    <input name="start_hand" type="number" value="5" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-start-hand" [(ngModel)]="room.options.start_hand">
                                 </div>
                             </div>
                             <div class="row">
                                 <label i18n for="game-create-draw-count" class="col-sm-6 form-control-label">每回合抽卡</label>
                                 <div class="col-sm-6">
-                                    <input name="draw_count" type="number" value="1" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-draw-count" [(ngModel)]="room.draw_count">
+                                    <input name="draw_count" type="number" value="1" min="0" max="16" class="form-control form-control-sm game-create-extra" id="game-create-draw-count" [(ngModel)]="room.options.draw_count">
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-5">
                             <div class="checkbox">
-                                <input id="enable_priority" name="enable_priority" type="checkbox" [(ngModel)]="room.enable_priority">
+                                <input id="enable_priority" name="enable_priority" type="checkbox" [(ngModel)]="room.options.enable_priority">
                                 <label i18n for="enable_priority">允许启动效果优先权</label>
                             </div>
                             <div class="checkbox">
-                                <input id="no_check_deck" name="no_check_deck" type="checkbox" [(ngModel)]="room.no_check_deck">
+                                <input id="no_check_deck" name="no_check_deck" type="checkbox" [(ngModel)]="room.options.no_check_deck">
                                 <label i18n for="no_check_deck">不检查卡组</label>
                             </div>
                             <div class="checkbox">
-                                <input id="no_shuffle_deck" name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.no_shuffle_deck">
+                                <input id="no_shuffle_deck" name="no_shuffle_deck" type="checkbox" [(ngModel)]="room.options.no_shuffle_deck">
                                 <label for="no_shuffle_deck" i18n>开局不洗卡组</label>
                             </div>
                         </div>
@@ -156,15 +181,15 @@
                     <td class="users">
                         <img *ngFor="let user of room.users" class="avatar" [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
                     </td>
-                    <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.mode]}}</td>
+                    <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.options.mode]}}</td>
                     <td class="extra">
-                        <span *ngIf="room.rule != default_options.rule">{{{'0': 'OCG', '1': 'TCG', '2': 'O/T', '3': '专有卡禁止'}[room.rule]}}</span>
-                        <span i18n *ngIf="room.start_lp != default_options.start_lp">{{room.start_lp}} LP</span>
-                        <span i18n *ngIf="room.start_hand != default_options.start_hand">{{room.start_hand}} 初始</span>
-                        <span i18n *ngIf="room.draw_count != default_options.draw_count">{{room.draw_count}} 抽卡</span>
-                        <span i18n *ngIf="room.enable_priority != default_options.enable_priority">优先权</span>
-                        <span i18n *ngIf="room.no_check_deck != default_options.no_check_deck">不检查</span>
-                        <span i18n *ngIf="room.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
+                        <span *ngIf="room.options.rule != default_options.rule">{{{'0': 'OCG', '1': 'TCG', '2': 'O/T', '3': '专有卡禁止'}[room.options.rule]}}</span>
+                        <span i18n *ngIf="room.options.start_lp != default_options.start_lp">{{room.options.start_lp}} LP</span>
+                        <span i18n *ngIf="room.options.start_hand != default_options.start_hand">{{room.options.start_hand}} 初始</span>
+                        <span i18n *ngIf="room.options.draw_count != default_options.draw_count">{{room.options.draw_count}} 抽卡</span>
+                        <span i18n *ngIf="room.options.enable_priority != default_options.enable_priority">优先权</span>
+                        <span i18n *ngIf="room.options.no_check_deck != default_options.no_check_deck">不检查</span>
+                        <span i18n *ngIf="room.options.no_shuffle_deck != default_options.no_shuffle_deck">不洗卡</span>
                     </td>
                 </tbody>
             </table>
