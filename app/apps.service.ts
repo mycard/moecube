@@ -72,10 +72,10 @@ export class AppsService {
     }
 
     async loadApps() {
-        let appsURL = 'https://wudizhanche.mycard.moe/downloads/apps.json';
+        let appsURL = 'https://api.mycard.moe/apps.json';
         try {
             let data = await this.http.get(appsURL).map((response) => response.json()).toPromise();
-            localStorage.setItem("apps_json", appsURL);
+            localStorage.setItem("apps_json", JSON.stringify(data));
             this.apps = this.loadAppsList(data);
         } catch (e) {
             let data = localStorage.getItem("apps_json");
