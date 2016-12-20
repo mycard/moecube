@@ -30,34 +30,42 @@ export class LobbyComponent implements OnInit {
 
     async ngOnInit() {
         this.apps = await this.appsService.loadApps();
-        for (let app of this.apps.values()) {
-            this.appsService.update(app);
-        }
-        this.chooseApp(this.appsService.lastVisted || this.apps.get("ygopro")!);
+        if (this.apps.size > 0) {
+            this.chooseApp(this.appsService.lastVisited || this.apps.get("ygopro")!);
 
-        // 初始化聊天室
-        let url = new URL('candy/index.html', location.href);
-        let params: URLSearchParams = url['searchParams']; // TypeScrpt 缺了 url.searchParams 的定义
-        params.set('jid', this.loginService.user.username + '@mycard.moe');
-        params.set('password', this.loginService.user.external_id.toString());
-        params.set('nickname', this.loginService.user.username);
-        switch (this.settingsService.getLocale()) {
-            case 'zh-CN':
-                params.set('language', 'cn');
-                break;
-            default:
-                params.set('language', 'en');
+            // 初始化聊天室
+            let url = new URL('candy/index.html', location.href);
+            let params: URLSearchParams = url['searchParams']; // TypeScrpt 缺了 url.searchParams 的定义
+            params.set('jid', this.loginService.user.username + '@mycard.moe');
+            params.set('password', this.loginService.user.external_id.toString());
+            params.set('nickname', this.loginService.user.username);
+            switch (this.settingsService.getLocale()) {
+                case 'zh-CN':
+                    params.set('language', 'cn');
+                    break;
+                default:
+                    params.set('language', 'en');
+            }
+            if (this.currentApp.conference) {
+                params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
+            }
+            this.candy_url = url;
+            await this.appsService.migrate();
+            for (let app of this.apps.values()) {
+                await  this.appsService.update(app);
+            }
+        } else {
+            if (confirm("获取程序列表失败,是否重试?")) {
+                location.reload();
+            } else {
+                window.close();
+            }
         }
-        if (this.currentApp.conference) {
-            params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
-        }
-        this.candy_url = url;
-        await this.appsService.migrate();
     }
 
     chooseApp(app: App) {
         this.currentApp = app;
-        this.appsService.lastVisted = app;
+        this.appsService.lastVisited = app;
         if (this.candy && this.currentApp.conference) {
             (<WebViewElement>this.candy.nativeElement).send('join', this.currentApp.conference + '@conference.mycard.moe');
         }

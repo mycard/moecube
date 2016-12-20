@@ -57,7 +57,7 @@ export class AppsService {
                 private downloadService: DownloadService, private ngZone: NgZone) {
     }
 
-    get lastVisted(): App|undefined {
+    get lastVisited(): App|undefined {
         let id = localStorage.getItem("last_visited");
         if (id) {
             return this.apps.get(id);
@@ -65,16 +65,26 @@ export class AppsService {
         return undefined;
     }
 
-    set lastVisted(app: App|undefined) {
+    set lastVisited(app: App|undefined) {
         if (app) {
             localStorage.setItem("last_visited", app.id);
         }
     }
 
     async loadApps() {
-        let data = await
-            this.http.get('./apps.json').map((response) => response.json()).toPromise();
-        this.apps = this.loadAppsList(data);
+        let appsURL = 'https://wudizhanche.mycard.moe/downloads/apps.json';
+        try {
+            let data = await this.http.get(appsURL).map((response) => response.json()).toPromise();
+            localStorage.setItem("apps_json", appsURL);
+            this.apps = this.loadAppsList(data);
+        } catch (e) {
+            let data = localStorage.getItem("apps_json");
+            if (data) {
+                this.apps = this.loadAppsList(data);
+            } else {
+                this.apps = new Map();
+            }
+        }
         return this.apps;
     }
 
