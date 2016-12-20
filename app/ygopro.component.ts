@@ -15,6 +15,7 @@ import {Http, Headers, URLSearchParams} from "@angular/http";
 import "rxjs/Rx";
 import {ISubscription} from "rxjs/Subscription";
 import {AppsService} from "./apps.service";
+import {SettingsService} from "./settings.sevices";
 
 declare const $: any;
 
@@ -83,6 +84,10 @@ interface Points {
     ratio: number
 }
 
+interface YGOProData {
+    windbot: {[locale: string]: string[]}
+}
+
 
 let matching: ISubscription | undefined;
 let matching_arena: string | undefined;
@@ -103,7 +108,7 @@ export class YGOProComponent implements OnInit {
     textfont: string[];
     points: Points;
 
-    windbot = ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
+    windbot: string[]; //["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
     servers: Server[] = [{
         id: 'tiramisu',
@@ -135,7 +140,7 @@ export class YGOProComponent implements OnInit {
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
 
-    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -152,6 +157,15 @@ export class YGOProComponent implements OnInit {
     }
 
     async ngOnInit() {
+
+        let locale: string;
+        if (this.settingsService.getLocale().startsWith('zh')) {
+            locale = 'zh-CN'
+        } else {
+            locale = 'en-US'
+        }
+        this.windbot = (<YGOProData>this.app.data).windbot[locale];
+
         this.system_conf = path.join(this.app.local!.path, 'system.conf');
         await this.refresh();
 

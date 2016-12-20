@@ -33,6 +33,8 @@
                 <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
                     <h6 i18n class="dropdown-header">选择服务器</h6>
                     <a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
+                    <div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>
+                    <a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>
                 </div>
             </div>
         </div>

@@ -2092,7 +2092,25 @@
         }
       ]
     },
-    "conference": "ygopro_china_north"
+    "conference": "ygopro_china_north",
+    "data": {
+      "windbot": {
+        "zh-CN": [
+          "琪露诺",
+          "谜之剑士LV4",
+          "复制植物",
+          "尼亚",
+          "永远之魂"
+        ],
+        "en-US": [
+          "琪露诺",
+          "谜之剑士LV4",
+          "复制植物",
+          "尼亚",
+          "永远之魂"
+        ]
+      }
+    }
   },
   {
     "id": "desmume",

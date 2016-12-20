@@ -85,6 +85,7 @@ export class App {
     status: AppStatus;
     conference: string | undefined;
     files: Map<string,FileOptions>;
+    data: any;
 
     isLanguage() {
         return this.category == Category.module && this.tags.includes('language');
@@ -150,6 +151,7 @@ export class App {
         this.version = app.version;
         this.conference = app.conference;
         this.files = app.files;
+        this.data = app.data;
     }
 
     findDependencies(): App[] {
