@@ -179,7 +179,7 @@
                 <tr *ngFor="let room of rooms" class="room" (click)="join_room(room)">
                     <td class="title">{{room.title}}</td>
                     <td class="users">
-                        <img *ngFor="let user of room.users" class="avatar" [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'">
+                        <img *ngFor="let user of room.users" class="avatar" [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'" data-toggle="tooltip" data-placement="bottom" [title]="user.username">
                     </td>
                     <td class="mode">{{{'0': '单局模式', '1': '比赛模式', '2': 'TAG'}[room.options.mode]}}</td>
                     <td class="extra">

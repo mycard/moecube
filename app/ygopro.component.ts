@@ -185,6 +185,12 @@ export class YGOProComponent implements OnInit {
             });
         });
 
+        modal.on('shown.bs.modal', () => {
+            $('td.users').tooltip({
+                selector: '[data-toggle=tooltip]'
+            });
+        });
+
         modal.on('hide.bs.modal', () => {
             for (let connection of this.connections) {
                 connection.close();
