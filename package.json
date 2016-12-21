@@ -43,7 +43,9 @@
     "systemjs-plugin-text": "latest",
     "tether": "latest",
     "vue": "latest",
-    "zone.js": "^0.6.26"
+    "zone.js": "^0.6.26",
+    "candy": "https://github.com/mycard/candy/releases/download/v2.2.0/candy.tar.gz",
+    "candy-shop": "zh99998/candy-plugins#patch-2"
   },
   "devDependencies": {
     "@angular/compiler-cli": "latest",

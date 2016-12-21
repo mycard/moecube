@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Candy - Chats are not dead yet</title>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy/libs.min.css"/>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy/res/default.css"/>
+    <style>
+        body {
+            font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+        }
+    </style>
+
+    <script>delete module.exports</script>
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="node_modules/candy/libs.min.js"></script>
+    <script type="text/javascript" src="node_modules/candy/candy.min.js"></script>
+
+
+    <!-- plugins -->
+    <script type="text/javascript" src="node_modules/candy-shop/replies/candy.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/replies/candy.css"/>
+
+    <script type="text/javascript" src="node_modules/candy-shop/notifyme/candy.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/notifyme/candy.css"/>
+
+    <script type="text/javascript" src="node_modules/candy-shop/namecomplete/candy.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/namecomplete/candy.css"/>
+
+    <script type="text/javascript" src="node_modules/candy-shop/modify-role/candy.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/modify-role/candy.css"/>
+
+    <script type="text/javascript" src="node_modules/candy-shop/inline-images/candy.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/inline-images/candy.css"/>
+
+    <script type="text/javascript" src="node_modules/candy-shop/me-does/candy.js"></script>
+
+    <script type="text/javascript" src="node_modules/candy-shop/notifications/candy.js"></script>
+
+    <script type="text/javascript" src="node_modules/candy-shop/refocus/candy.js"></script>
+
+    <script type="text/javascript" src="node_modules/candy-shop/slash-commands/slash-commands.js"></script>
+
+
+    <!--正在输入那个插件不好用-->
+    <!--<script type="text/javascript" src="node_modules/candy-shop/typingnotifications/typingnotifications.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="node_modules/candy-shop/typingnotifications/typingnotifications.css" />-->
+</head>
+<body>
+<div id="candy"></div>
+<script type="text/javascript">
+    const {remote, ipcRenderer} = require('electron');
+    //    remote.getCurrentWebContents().openDevTools();
+    require('electron-cookies'); // https://github.com/hstove/electron-cookies
+
+    ipcRenderer.on('join', (event, message) => {
+        if (Candy.View.Pane.Chat.rooms[message]) {
+            Candy.View.Pane.Room.show(message);
+        } else {
+            Candy.Core.Action.Jabber.Room.Join(message);
+        }
+    });
+
+    // fix
+    Base64.encode = (data) => new Buffer(data).toString('base64');
+    Base64.decode = (data) => new Buffer(data, 'base64').toString();
+
+    // candy init
+    const params = new URLSearchParams(location.search);
+
+    Candy.View.Template.Login.form = '<form method="post" id="login-form" class="login-form">' + '<input type="hidden" id="nickname" name="nickname" value="' + params.get('nickname') + '"/>' + '{{#displayUsername}}<input type="hidden" id="username" name="username" value="' + params.get('jid') + '"/>' + '{{#displayDomain}} <span class="at-symbol">@</span> ' + '<select id="domain" name="domain">{{#domains}}<option value="{{domain}}">{{domain}}</option>{{/domains}}</select>' + "{{/displayDomain}}" + "{{/displayUsername}}" + '{{#presetJid}}<input type="hidden" id="username" name="username" value="{{presetJid}}"/>{{/presetJid}}' + '{{#displayPassword}}<input type="hidden" id="password" name="password" value="' + params.get('password') + '"/>{{/displayPassword}}' + '<input type="submit" class="button" value="{{_loginSubmit}}" /></form>';
+
+    Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
+    Candy.init('wss://chat.mycard.moe:5280/websocket', {
+        core: {
+            debug: false,
+            autojoin: params.get('autojoin') && [params.get('autojoin')],
+            resource: 'mycard-' + Math.random().toString().split('.')[1],
+            enableXHTML: true
+        },
+        view: {assets: 'node_modules/candy/res/', language: params.get('language')}
+    });
+
+    CandyShop.Replies.init();
+    CandyShop.NotifyMe.init();
+    CandyShop.NameComplete.init();
+    CandyShop.ModifyRole.init();
+    CandyShop.InlineImages.init();
+    CandyShop.MeDoes.init();
+    CandyShop.Notifications.init();
+    CandyShop.Refocus.init();
+    CandyShop.SlashCommands.init();
+
+    Candy.Core.connect(params.get('jid'), params.get('password'), params.get('nickname'));
+
+</script>
+
+</body>
+</html>

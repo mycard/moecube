@@ -5,11 +5,10 @@ import {Component, OnInit, ElementRef, ViewChild} from "@angular/core";
 import {AppsService} from "./apps.service";
 import {LoginService} from "./login.service";
 import {App, Category} from "./app";
-import {DownloadService} from "./download.service";
-import {Http, URLSearchParams} from "@angular/http";
+import {URLSearchParams} from "@angular/http";
 import {shell} from "electron";
-import WebViewElement = Electron.WebViewElement;
 import {SettingsService} from "./settings.sevices";
+import WebViewElement = Electron.WebViewElement;
 
 @Component({
     moduleId: module.id,
@@ -34,7 +33,7 @@ export class LobbyComponent implements OnInit {
             this.chooseApp(this.appsService.lastVisited || this.apps.get("ygopro")!);
 
             // 初始化聊天室
-            let url = new URL('candy/index.html', location.href);
+            let url = new URL('candy.html', location.href);
             let params: URLSearchParams = url['searchParams']; // TypeScrpt 缺了 url.searchParams 的定义
             params.set('jid', this.loginService.user.username + '@mycard.moe');
             params.set('password', this.loginService.user.external_id.toString());
