@@ -20,6 +20,7 @@ import {ComparableSet} from "./shared/ComparableSet";
 import {Observable, Observer} from "rxjs/Rx";
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream;
+import {platform} from "os";
 const Aria2 = require('aria2');
 const sudo = require('electron-sudo');
 const Logger = {
@@ -597,19 +598,13 @@ export class AppsService {
     }
 
     async doUpdate(app: App, changedFiles?: Set<string>, deletedFiles?: Set<string>) {
-        const updateServer = "https://thief.mycard.moe/update/";
         if (changedFiles && changedFiles.size > 0) {
             Logger.info("Update changed files: ", changedFiles);
-            let updateUrl = updateServer + app.id;
-            if (app.id === "ygopro") {
-                let locale = this.settingsService.getLocale();
-                if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
-                    locale = 'en-US';
-                }
-                updateUrl = updateUrl + '-' + process.platform + '-' + locale;
-            } else if (app.id === "desmume") {
-                updateUrl = updateUrl + '-' + process.platform;
+            let locale = this.settingsService.getLocale();
+            if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+                locale = 'en-US';
             }
+            let updateUrl = App.updateUrl(app, process.platform, locale);
             let metalink = await this.http.post(updateUrl, changedFiles).map((response) => response.text()).toPromise();
             let downloadDir = path.join(path.dirname(app.local!.path), "downloading");
             let downloadId = await this.downloadService.addMetalink(metalink, downloadDir);
@@ -663,16 +658,11 @@ export class AppsService {
             await this.doInstall(task);
         };
         const addDownloadTask = async(app: App, dir: string): Promise<{app: App, files: string[]} > => {
-            let metalinkUrl = app.download;
-            if (app.id === "ygopro") {
-                let locale = this.settingsService.getLocale();
-                if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
-                    locale = 'en-US';
-                }
-                metalinkUrl = "https://thief.mycard.moe/metalinks/ygopro-" + process.platform + '-' + locale + ".meta4";
-            } else if (app.id === "desmume") {
-                metalinkUrl = "https://thief.mycard.moe/metalinks/desmume-" + process.platform + ".meta4";
+            let locale = this.settingsService.getLocale();
+            if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+                locale = 'en-US';
             }
+            let metalinkUrl = App.downloadUrl(app, process.platform, locale);
             app.status.status = "downloading";
             let metalink = await this.http.get(metalinkUrl).map((response) => response.text()).toPromise();
             let downloadId = await this.downloadService.addMetalink(metalink, dir);
@@ -920,9 +910,6 @@ export class AppsService {
     // installingId: string = '';
     eventEmitter = new EventEmitter<void>();
 
-    readonly checksumURL = "https://thief.mycard.moe/checksums/";
-    readonly updateServerURL = 'https://thief.mycard.moe/update/metalinks';
-
     // installQueue: Map<string,InstallTask> = new Map();
 
     map: Map<string,string> = new Map();
@@ -1155,18 +1142,13 @@ export class AppsService {
     }
 
     async getChecksumFile(app: App): Promise<Map<string,string> > {
-        let checksumUrl = this.checksumURL + app.id;
 
-        if (app.id === "ygopro") {
-            let locale = this.settingsService.getLocale();
-            if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
-                locale = 'en-US';
-            }
-            checksumUrl = this.checksumURL + app.id + "-" + process.platform + '-' + locale;
-        } else if (app.id === "desmume") {
-            checksumUrl = this.checksumURL + app.id + "-" + process.platform;
+        let locale = this.settingsService.getLocale();
+        if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
+            locale = 'en-US';
         }
 
+        let checksumUrl = App.checksumUrl(app, process.platform, locale);
         return this.http.get(checksumUrl)
             .map((response) => {
                 let map = new Map<string,string>();
