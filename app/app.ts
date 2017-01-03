@@ -60,9 +60,9 @@ export class App {
 
     static downloadUrl(app: App, platform: string, locale: string): string {
         if (app.id === "ygopro") {
-            return `https://thief.mycard.moe/metalink/${app.id}-${process.platform}/${app.version}`
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`
         } else if (app.id === "desmume") {
-            return `https://thief.mycard.moe/metalink/${app.id}-${process.platform}-${locale}/${app.version}`
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}/${app.version}`
         }
         return `https://thief.mycard.moe/metalinks/${app.id}/${app.version}`;
     }
@@ -70,11 +70,11 @@ export class App {
 
     static checksumUrl(app: App, platform: string, locale: string): string {
         if (app.id === "ygopro") {
-            return `https://thief.mycard.moe/checksum/${app.id}-${platform}-${locale}/${app.version}`
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}-${locale}/${app.version}`
         } else if (app.id === "desmume") {
-            return `https://thief.mycard.moe/checksum/${app.id}-${platform}/${app.version}`
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}/${app.version}`
         }
-        return `https://thief.mycard.moe/checksum/${app.id}/${app.version}`
+        return `https://thief.mycard.moe/checksums/${app.id}/${app.version}`
     }
 
     static updateUrl(app: App, platform: string, locale: string): string {
