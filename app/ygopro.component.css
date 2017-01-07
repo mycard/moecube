@@ -84,3 +84,7 @@
 dl {
     margin-bottom: 0;
 }
+
+.modal-dialog {
+    max-width: 600px;
+}

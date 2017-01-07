@@ -36,11 +36,7 @@ mycard {
     -webkit-app-region: no-drag;
 }
 
-#navbar .navbar-right {
-    float: right
-}
-
-#navbar .navbar-right > div, #user > .item {
+#navbar-right > div, #user > .item {
     float: left;
     margin: 0 0.5rem;
 }

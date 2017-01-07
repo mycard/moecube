@@ -1,6 +1,6 @@
-<nav id="navbar" class="navbar navbar-dark bg-inverse">
+<nav id="navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
     <a class="navbar-brand" href="#">MyCard</a>
-    <ul class="nav navbar-nav">
+    <ul class="navbar-nav mr-auto">
         <li *ngIf="!loginService.logged_in" class="nav-item active">
             <a i18n class="nav-link" href="#">登录</a>
         </li>
@@ -19,7 +19,7 @@
         <!--<a i18n (click)="currentPage='about'" class="nav-link" href="#">关于</a>-->
         <!--</li>-->
     </ul>
-    <div class="navbar-right">
+    <div id="navbar-right">
         <div id="update-status">
             <i #error [hidden]="update_status != 'error'" (click)="update_retry()" class="fa fa-exclamation-circle" data-toggle="tooltip" title="更新出错，点击重试"></i>
             <i #checking_for_update [hidden]="update_status != 'checking-for-update'" class="fa fa-spinner fa-pulse fa-spin" data-toggle="tooltip" title="正在检查更新"></i>
@@ -51,10 +51,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 i18n class="modal-title" id="myModalLabel">MyCard 设置</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 i18n class="modal-title" id="myModalLabel">MyCard 设置</h4>
             </div>
             <form (submit)="submit()">
                 <div class="modal-body">

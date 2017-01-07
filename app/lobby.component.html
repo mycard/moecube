@@ -1,63 +1,56 @@
 <!-- Begin page content -->
 <div id="main">
-
-    <div id="apps" *ngIf="apps">
+    <nav id="apps" *ngIf="apps" class="bg-faded sidebar">
         <span i18n *ngIf="grouped_apps.installed">已安装</span>
-        <ul *ngIf="grouped_apps.installed" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.installed" [class.active]="app===currentApp">
-                <i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
-                <div *ngIf="!app.isReady() && app.status.total" class="progress">
-                    <div class="pie" [class.second-half]="app.status.progress/app.status.total>0.5">
-                        <div class="left-side half-circle" [style.transform]="'rotate('+(app.status.progress/app.status.total).toString()+'turn)'"></div>
-                        <div class="right-side half-circle"></div>
+        <ul *ngIf="grouped_apps.installed" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.installed" class="nav-item">
+                <a (click)="chooseApp(app)" class="nav-link" [class.active]="app===currentApp" href="#">{{app.name}}<i
+                        *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
+                    <div *ngIf="!app.isReady() && app.status.total" class="progress">
+                        <div class="pie" [class.second-half]="app.status.progress/app.status.total>0.5">
+                            <div class="left-side half-circle"
+                                 [style.transform]="'rotate('+(app.status.progress/app.status.total).toString()+'turn)'"></div>
+                            <div class="right-side half-circle"></div>
+                        </div>
+                        <div class="shadow"></div>
                     </div>
-                    <div class="shadow"></div>
-                </div>
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
-
+                </a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.recommend">推荐</span>
-        <ul *ngIf="grouped_apps.recommend" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.recommend" [class.active]="app===currentApp">
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+        <ul *ngIf="grouped_apps.recommend" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.recommend" class="nav-item">
+                <a (click)="chooseApp(app)" href="#" class="nav-link" [class.active]="app===currentApp">{{app.name}}</a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.mysterious">迷之物体</span>
-        <ul *ngIf="grouped_apps.mysterious" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.mysterious" [class.active]="app===currentApp">
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
-                <progress *ngIf="app.status.status === 'downloading'"
-                          class="progress progress-striped progress-animated"
-                          value="{{app.status.progress}}"
-                          max="{{app.status.total}}"></progress>
+        <ul *ngIf="grouped_apps.mysterious" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.mysterious" class="nav-item">
+                <a (click)="chooseApp(app)" href="#" class="nav-link" [class.active]="app===currentApp">{{app.name}}</a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.touhou">东方 Project</span>
-        <ul *ngIf="grouped_apps.touhou" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.touhou" [class.active]="app===currentApp">
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
-                <progress *ngIf="app.status.status === 'downloading'"
-                          class="progress progress-striped progress-animated"
-                          value="{{app.status.progress}}"
-                          max="{{app.status.total}}"></progress>
+        <ul *ngIf="grouped_apps.touhou" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.touhou" class="nav-item">
+                <a (click)="chooseApp(app)" href="#" class="nav-link" [class.active]="app===currentApp">{{app.name}}</a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
-        <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.touhou_pc98" [class.active]="app===currentApp">
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+        <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.touhou_pc98" class="nav-item">
+                <a (click)="chooseApp(app)" href="#" class="nav-link" [class.active]="app===currentApp">{{app.name}}</a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.runtime_installed">已安装的运行库</span>
-        <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-sidebar">
-            <li *ngFor="let app of grouped_apps.runtime_installed" [class.active]="app===currentApp">
-                <a (click)="chooseApp(app)" href="#">{{app.name}}</a>
+        <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.runtime_installed" class="nav-item">
+                <a (click)="chooseApp(app)" href="#" class="nav-link" [class.active]="app===currentApp">{{app.name}}</a>
             </li>
         </ul>
-    </div>
+    </nav>
     <app-detail *ngIf="currentApp" [currentApp]="currentApp"></app-detail>
     <roster></roster>
 </div>
 
-<webview *ngIf="currentApp" #candy id="candy" [src]="candy_url" (new-window)="openExternal($event.url)" nodeintegration></webview>
+<webview *ngIf="currentApp" #candy id="candy" [src]="candy_url" (new-window)="openExternal($event.url)"
+         nodeintegration></webview>

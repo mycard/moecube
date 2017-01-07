@@ -14,31 +14,22 @@
     flex-shrink: 0;
 }
 
-#apps {
-    /*background-color: darkslategray;*/
-    width: 280px;
-    flex-shrink: 0;
-    overflow-y: auto;
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
-}
+/*a {*/
+/*display: block;*/
+/*padding: 10px 20px 10px 20px;*/
+/*}*/
 
-a {
-    display: block;
-    padding: 10px 20px 10px 20px;
-}
+/*a:focus, a:hover {*/
+/*text-decoration: none;*/
+/*}*/
 
-a:focus, a:hover {
-    text-decoration: none;
-}
+/*.active {*/
+/*background-color: #428bca;*/
+/*}*/
 
-.active {
-    background-color: #428bca;
-}
-
-.active > a {
-    color: #fff;
-}
+/*.active > a {*/
+/*color: #fff;*/
+/*}*/
 
 span {
     margin-left: 8px;
@@ -111,4 +102,35 @@ span {
     color: #0275d8;
     font-weight: bold;
     float: right;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+    padding-top: 10px;
+}
+
+/* Sidebar navigation */
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
 }

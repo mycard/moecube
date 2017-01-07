@@ -116,7 +116,7 @@ export class YGOProComponent implements OnInit {
 
     default_options: Options = {
         mode: 1,
-        rule: 0,
+        rule: this.settingsService.getLocale().startsWith('zh') ? 0 : 1,
         start_lp: 8000,
         start_hand: 5,
         draw_count: 1,
@@ -229,7 +229,11 @@ export class YGOProComponent implements OnInit {
     async refresh() {
         let decks = await this.get_decks();
         this.decks = decks;
-        if (!(this.decks.includes(this.current_deck))) {
+        let system_conf = await this.load_system_conf();
+
+        if (this.decks.includes(system_conf.lastdeck)) {
+            this.current_deck = system_conf.lastdeck;
+        } else {
             this.current_deck = decks[0];
         }
         // https://mycard.moe/ygopro/api/user?username=ozxdno

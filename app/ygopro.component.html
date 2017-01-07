@@ -1,13 +1,19 @@
 <form class="form-inline actions">
     <div class="form-group">
-        <label i18n for="exampleSelect1">卡组</label>
-        <select class="form-control" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
+        <label i18n for="exampleSelect1" class="mr-sm-2">卡组</label>
+        <select class="form-control mr-sm-2" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
             <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
         </select>
     </div>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" class="btn btn-secondary" (click)="edit_deck(current_deck)">编辑</button>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="delete_deck(current_deck)" class="btn btn-secondary">删除</button>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="refresh()" class="btn btn-secondary">刷新</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" class="btn btn-secondary mr-sm-2"
+            (click)="edit_deck(current_deck)">编辑
+    </button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="delete_deck(current_deck)"
+            class="btn btn-secondary mr-sm-2">删除
+    </button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="refresh()"
+            class="btn btn-secondary mr-sm-2">刷新
+    </button>
 </form>
 
 <div class="actions">
@@ -23,31 +29,31 @@
 <div class="actions">
     <h2 i18n>排位成绩</h2>
     <!--{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}-->
-    <dl *ngIf="points" class="row">
-        <dt i18n class="col-xs-2">D.P 排名</dt>
-        <dd class="col-xs-1">{{points.arena_rank}}</dd>
-        <dt i18n class="col-xs-2">D.P 胜率</dt>
-        <dd class="col-xs-1">{{points.athletic_wl_ratio}}%</dd>
-        <dt i18n class="col-xs-2">胜场</dt>
-        <dd class="col-xs-1">{{points.athletic_win}}</dd>
-        <dt i18n class="col-xs-2">负场</dt>
-        <dd class="col-xs-1">{{points.athletic_lose}}</dd>
-        <dt i18n class="col-xs-2">平局</dt>
-        <dd class="col-xs-1">{{points.athletic_draw}}</dd>
-        <dt i18n class="col-xs-2">总场</dt>
-        <dd class="col-xs-1">{{points.athletic_all}}</dd>
-        <dt i18n class="col-xs-2">EXP 排名</dt>
-        <dd class="col-xs-1">{{points.exp_rank}}</dd>
-        <dt i18n class="col-xs-2">EXP</dt>
-        <dd class="col-xs-1">{{points.exp}}</dd>
-        <dt i18n class="col-xs-2">胜场</dt>
-        <dd class="col-xs-1">{{points.entertain_win}}</dd>
-        <dt i18n class="col-xs-2">负场</dt>
-        <dd class="col-xs-1">{{points.entertain_lose}}</dd>
-        <dt i18n class="col-xs-2">平局</dt>
-        <dd class="col-xs-1">{{points.entertain_draw}}</dd>
-        <dt i18n class="col-xs-2">总场</dt>
-        <dd class="col-xs-1">{{points.entertain_all}}</dd>
+    <dl *ngIf="points" class="row col-3">
+        <dt i18n class="col-8">D.P 排名</dt>
+        <dd class="col-4">{{points.arena_rank}}</dd>
+        <dt i18n class="col-8">D.P 胜率</dt>
+        <dd class="col-4">{{points.athletic_wl_ratio}}%</dd>
+        <dt i18n class="col-8">胜场</dt>
+        <dd class="col-4">{{points.athletic_win}}</dd>
+        <dt i18n class="col-8">负场</dt>
+        <dd class="col-4">{{points.athletic_lose}}</dd>
+        <dt i18n class="col-8">平局</dt>
+        <dd class="col-4">{{points.athletic_draw}}</dd>
+        <dt i18n class="col-8">总场</dt>
+        <dd class="col-4">{{points.athletic_all}}</dd>
+        <dt i18n class="col-8">EXP 排名</dt>
+        <dd class="col-4">{{points.exp_rank}}</dd>
+        <dt i18n class="col-8">EXP</dt>
+        <dd class="col-4">{{points.exp}}</dd>
+        <dt i18n class="col-8">胜场</dt>
+        <dd class="col-4">{{points.entertain_win}}</dd>
+        <dt i18n class="col-8">负场</dt>
+        <dd class="col-4">{{points.entertain_lose}}</dd>
+        <dt i18n class="col-8">平局</dt>
+        <dd class="col-4">{{points.entertain_draw}}</dd>
+        <dt i18n class="col-8">总场</dt>
+        <dd class="col-4">{{points.entertain_all}}</dd>
     </dl>
     <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank">更多资料</a>
 </div>
@@ -56,10 +62,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 i18n class="modal-title">单人模式</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 i18n class="modal-title" id="myModalLabel1">单人模式</h4>
             </div>
             <div class="modal-body">
                 <label i18n>选择对手</label>
@@ -78,10 +84,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title" i18n id="myModalLabel">创建房间</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" i18n id="myModalLabel">创建房间</h4>
             </div>
             <form id="game-create" (submit)="create_room(room)">
                 <div class="modal-body">
@@ -160,10 +166,14 @@
                         </div>
                     </div>-->
                 </div>
-                <div class="modal-footer">
-                    <button i18n type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-list-modal">查看房间</button>
-                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button i18n type="submit" class="btn btn-primary">创建</button>
+                <div class="modal-footer justify-content-between">
+                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal"
+                            data-target="#game-list-modal">查看房间
+                    </button>
+                    <div>
+                        <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button i18n type="submit" class="btn btn-primary">创建</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -203,8 +213,10 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <div class="modal-footer">
-                <button i18n type="button" class="btn btn-secondary float-left" data-dismiss="modal" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
+            <div class="modal-footer justify-content-between">
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal"
+                        data-target="#game-create-modal">创建房间
+                </button>
                 <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
             </div>
         </div>
