@@ -19,8 +19,8 @@
 
 
     <!-- plugins -->
-    <script type="text/javascript" src="node_modules/candy-shop/replies/candy.js"></script>
-    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/replies/candy.css"/>
+    <!--<script type="text/javascript" src="node_modules/candy-shop/replies/candy.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="node_modules/candy-shop/replies/candy.css"/>-->
 
     <script type="text/javascript" src="node_modules/candy-shop/notifyme/candy.js"></script>
     <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/notifyme/candy.css"/>
@@ -31,8 +31,9 @@
     <script type="text/javascript" src="node_modules/candy-shop/modify-role/candy.js"></script>
     <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/modify-role/candy.css"/>
 
-    <script type="text/javascript" src="node_modules/candy-shop/inline-images/candy.js"></script>
-    <link rel="stylesheet" type="text/css" href="node_modules/candy-shop/inline-images/candy.css"/>
+    <!-- 内联图片插件不好用 -->
+    <!--<script type="text/javascript" src="node_modules/candy-shop/inline-images/candy.js"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="node_modules/candy-shop/inline-images/candy.css"/>-->
 
     <script type="text/javascript" src="node_modules/candy-shop/me-does/candy.js"></script>
 
@@ -40,7 +41,7 @@
 
     <script type="text/javascript" src="node_modules/candy-shop/refocus/candy.js"></script>
 
-    <script type="text/javascript" src="node_modules/candy-shop/slash-commands/slash-commands.js"></script>
+    <!--<script type="text/javascript" src="node_modules/candy-shop/slash-commands/slash-commands.js"></script>-->
 
 
     <!--正在输入那个插件不好用-->
@@ -82,15 +83,12 @@
         view: {assets: 'node_modules/candy/res/', language: params.get('language')}
     });
 
-    CandyShop.Replies.init();
     CandyShop.NotifyMe.init();
     CandyShop.NameComplete.init();
     CandyShop.ModifyRole.init();
-    CandyShop.InlineImages.init();
     CandyShop.MeDoes.init();
     CandyShop.Notifications.init();
     CandyShop.Refocus.init();
-    CandyShop.SlashCommands.init();
 
     Candy.Core.connect(params.get('jid'), params.get('password'), params.get('nickname'));
 

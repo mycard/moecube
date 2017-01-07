@@ -30,6 +30,7 @@ interface SystemConf {
     numfont: string
     serverport: string
     lastip: string
+    lasthost: string
     lastport: string
     autopos: string
     randompos: string
@@ -294,6 +295,7 @@ export class YGOProComponent implements OnInit {
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = this.current_deck;
         system_conf.lastip = server.address;
+        system_conf.lasthost = server.address;
         system_conf.lastport = server.port.toString();
         system_conf.roompass = name;
         system_conf.nickname = this.loginService.user.username;
