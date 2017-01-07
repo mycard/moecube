@@ -264,8 +264,10 @@ export class YGOProComponent implements OnInit {
     }
 
     async delete_deck(deck: string) {
-        await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
-        return this.refresh()
+        if (confirm('确认删除?')) {
+            await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
+            return this.refresh()
+        }
     }
 
     async fix_fonts(data: SystemConf) {
