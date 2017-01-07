@@ -403,6 +403,7 @@ export class YGOProComponent implements OnInit {
         headers.append("Authorization", "Basic " + new Buffer(this.loginService.user.username + ":" + this.loginService.user.external_id).toString('base64'));
         let search = new URLSearchParams();
         search.set("arena", arena);
+        search.set("locale", this.settingsService.getLocale());
         this.matching_arena = matching_arena = arena;
         this.matching = matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
             headers: headers,
