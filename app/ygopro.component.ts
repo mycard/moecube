@@ -1,21 +1,21 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef, Input} from "@angular/core";
-import * as fs from "fs";
-import * as path from "path";
-import * as crypto from "crypto";
-import * as child_process from "child_process";
-import {remote} from "electron";
-import * as ini from "ini";
-import {EncodeOptions} from "ini";
-import {LoginService} from "./login.service";
-import {App} from "./app";
-import {Http, Headers, URLSearchParams} from "@angular/http";
-import "rxjs/Rx";
-import {ISubscription} from "rxjs/Subscription";
-import {AppsService} from "./apps.service";
-import {SettingsService} from "./settings.sevices";
+import {Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as crypto from 'crypto';
+import * as child_process from 'child_process';
+import {remote} from 'electron';
+import * as ini from 'ini';
+import {EncodeOptions} from 'ini';
+import {LoginService} from './login.service';
+import {App} from './app';
+import {Http, Headers, URLSearchParams} from '@angular/http';
+import 'rxjs/Rx';
+import {ISubscription} from 'rxjs/Subscription';
+import {AppsService} from './apps.service';
+import {SettingsService} from './settings.sevices';
 
 declare const $: any;
 
@@ -111,12 +111,7 @@ export class YGOProComponent implements OnInit {
 
     windbot: string[]; //["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
-    servers: Server[] = [{
-        id: 'tiramisu',
-        url: 'wss://tiramisu.mycard.moe:7923',
-        address: "112.124.105.11",
-        port: 7911
-    }];
+    servers: Server[] = [];
 
 
     default_options: Options = {
@@ -155,6 +150,23 @@ export class YGOProComponent implements OnInit {
 
         this.matching = matching;
         this.matching_arena = matching_arena;
+
+        if (this.settingsService.getLocale().startsWith('zh')) {
+            this.servers.push({
+                id: 'tiramisu',
+                url: 'wss://tiramisu.mycard.moe:7923',
+                address: "112.124.105.11",
+                port: 7911
+            })
+        } else {
+            this.servers.push({
+                id: 'mercury-us-1',
+                url: 'wss://mercury-us-1.mycard.moe:7923',
+                address: "104.237.154.173",
+                port: 7911
+            })
+        }
+
     }
 
     async ngOnInit() {

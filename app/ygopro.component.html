@@ -20,30 +20,37 @@
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 
-<!--<div class="actions">-->
-<!--<h2 i18n>排位成绩 (测试中)</h2>-->
-<!--&lt;!&ndash;{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}&ndash;&gt;-->
-<!--<dl *ngIf="points" class="row">-->
-<!--<dt i18n class="col-xs-2">D.P 排名</dt>-->
-<!--<dd class="col-xs-1">{{points.arena_rank}}</dd>-->
-<!--<dt i18n class="col-xs-2">D.P 胜率</dt>-->
-<!--<dd class="col-xs-1">{{points.ratio}}%</dd>-->
-<!--<dt i18n class="col-xs-2">胜场</dt>-->
-<!--<dd class="col-xs-1">{{points.win}}</dd>-->
-<!--<dt i18n class="col-xs-2">负场</dt>-->
-<!--<dd class="col-xs-1">{{points.lose}}</dd>-->
-<!--<dt i18n class="col-xs-2">平局</dt>-->
-<!--<dd class="col-xs-1">{{points.draw}}</dd>-->
-<!--<dt i18n class="col-xs-2">总场</dt>-->
-<!--<dd class="col-xs-1">{{points.all}}</dd>-->
-<!--<dt i18n class="col-xs-2">EXP 排名</dt>-->
-<!--<dd class="col-xs-1">{{points.exp_rank}}</dd>-->
-<!--<dt i18n class="col-xs-2">EXP</dt>-->
-<!--<dd class="col-xs-1">{{points.exp}}</dd>-->
-<!--</dl>-->
-<!--<a i18n href="https://mycard.moe/ygopro/arena/" target="_blank">更多资料</a>-->
-<!--</div>-->
-
+<div class="actions">
+    <h2 i18n>排位成绩</h2>
+    <!--{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}-->
+    <dl *ngIf="points" class="row">
+        <dt i18n class="col-xs-2">D.P 排名</dt>
+        <dd class="col-xs-1">{{points.arena_rank}}</dd>
+        <dt i18n class="col-xs-2">D.P 胜率</dt>
+        <dd class="col-xs-1">{{points.athletic_wl_ratio}}%</dd>
+        <dt i18n class="col-xs-2">胜场</dt>
+        <dd class="col-xs-1">{{points.athletic_win}}</dd>
+        <dt i18n class="col-xs-2">负场</dt>
+        <dd class="col-xs-1">{{points.athletic_lose}}</dd>
+        <dt i18n class="col-xs-2">平局</dt>
+        <dd class="col-xs-1">{{points.athletic_draw}}</dd>
+        <dt i18n class="col-xs-2">总场</dt>
+        <dd class="col-xs-1">{{points.athletic_all}}</dd>
+        <dt i18n class="col-xs-2">EXP 排名</dt>
+        <dd class="col-xs-1">{{points.exp_rank}}</dd>
+        <dt i18n class="col-xs-2">EXP</dt>
+        <dd class="col-xs-1">{{points.exp}}</dd>
+        <dt i18n class="col-xs-2">胜场</dt>
+        <dd class="col-xs-1">{{points.entertain_win}}</dd>
+        <dt i18n class="col-xs-2">负场</dt>
+        <dd class="col-xs-1">{{points.entertain_lose}}</dd>
+        <dt i18n class="col-xs-2">平局</dt>
+        <dd class="col-xs-1">{{points.entertain_draw}}</dd>
+        <dt i18n class="col-xs-2">总场</dt>
+        <dd class="col-xs-1">{{points.entertain_all}}</dd>
+    </dl>
+    <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank">更多资料</a>
+</div>
 
 <div class="modal fade" id="game-create-windbot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
