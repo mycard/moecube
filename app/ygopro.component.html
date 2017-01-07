@@ -5,15 +5,9 @@
             <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
         </select>
     </div>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" class="btn btn-secondary mr-sm-2"
-            (click)="edit_deck(current_deck)">编辑
-    </button>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="delete_deck(current_deck)"
-            class="btn btn-secondary mr-sm-2">删除
-    </button>
-    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="refresh()"
-            class="btn btn-secondary mr-sm-2">刷新
-    </button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" class="btn btn-secondary mr-sm-2" (click)="edit_deck(current_deck)">编辑</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="delete_deck(current_deck)" class="btn btn-secondary mr-sm-2">删除</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="submit" (click)="refresh()" class="btn btn-secondary mr-sm-2">刷新</button>
 </form>
 
 <div class="actions">
@@ -167,9 +161,7 @@
                     </div>-->
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal"
-                            data-target="#game-list-modal">查看房间
-                    </button>
+                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#game-list-modal">查看房间</button>
                     <div>
                         <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         <button i18n type="submit" class="btn btn-primary">创建</button>
@@ -214,9 +206,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <div class="modal-footer justify-content-between">
-                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal"
-                        data-target="#game-create-modal">创建房间
-                </button>
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#game-create-modal">创建房间</button>
                 <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
             </div>
         </div>
