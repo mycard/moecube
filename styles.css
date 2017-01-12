@@ -17,12 +17,13 @@ mycard {
 }
 
 #window-buttons > i {
-    color: rgba(255, 255, 255, .75);
-    margin: .5rem;
+    color: #a7a7a7;
+    font-size: 18px;
+    margin: .6rem .3rem;
 }
 
 #window-buttons > i:hover {
-    color: #fff;
+    color: #5e5e5e;
 }
 
 #navbar {
@@ -36,11 +37,44 @@ mycard {
     -webkit-app-region: no-drag;
 }
 
-#navbar-right > div, #user > .item {
+#navbar-right > div {
     float: left;
-    margin: 0 0.5rem;
+    margin: 0 0.3rem;
 }
 
 .darwin #navbar {
     padding-left: 80px;
+}
+
+/* Turn on custom 8px wide scrollbar */
+::-webkit-scrollbar {
+    width: 8px; /* 1px wider than Lion. */
+    /* This is more usable for users trying to click it. */
+    background-color: rgba(0,0,0,0);
+    -webkit-border-radius: 100px;
+}
+/* hover effect for both scrollbar area, and scrollbar 'thumb' */
+::-webkit-scrollbar:active {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+::-webkit-scrollbar-thumb:vertical {
+    /* This is the EXACT color of Mac OS scrollbars.
+       Yes, I pulled out digital color meter */
+    background: rgba(0,0,0,0.1);
+    -webkit-border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:vertical:active {
+    background: rgba(0,0,0,0.2); /* Some darker color when you click it */
+    -webkit-border-radius: 100px;
+}
+
+.scroll {
+    overflow-y: hidden;
+}
+
+.scroll:hover {
+    overflow-y: auto;
+
 }

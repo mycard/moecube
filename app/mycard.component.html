@@ -1,14 +1,14 @@
-<nav id="navbar" class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-    <a class="navbar-brand" href="#">MyCard</a>
+<nav id="navbar" class="navbar navbar-toggleable-md navbar-light">
+    <a id="navbar-brand" class="navbar-brand" href="#">MyCard</a>
     <ul class="navbar-nav mr-auto">
         <li *ngIf="!loginService.logged_in" class="nav-item active">
             <a i18n class="nav-link" href="#">登录</a>
         </li>
-        <!--
-        <li [ngClass]="{active: routingService.component == 'store'}" class="nav-item">
-            <a (click)="changeFouce('store')" class="nav-link" href="#">商店</a>
-        </li>
-        -->
+
+        <!--<li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'store'}" class="nav-item">-->
+            <!--<a (click)="currentPage = 'store'" class="nav-link" href="#">商店</a>-->
+        <!--</li>-->
+
         <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'lobby'}" class="nav-item">
             <a i18n (click)="currentPage='lobby'" class="nav-link" href="#">游戏</a>
         </li>
@@ -29,9 +29,10 @@
         <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
-            <a i18n href="#" (click)="loginService.logout()" class="item">切换账号</a>
-            <a i18n href="#" data-toggle="modal" data-target="#settings-modal" class="item">设置</a>
+            <i (click)="loginService.logout()" class="fa fa-sign-out item-icon" aria-hidden="true"></i>
+            <i data-toggle="modal" data-target="#settings-modal" class="fa fa-cog item-icon" aria-hidden="true"></i>
         </div>
+        <div id="border">|</div>
         <div id="window-buttons">
             <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
             <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand"></i>

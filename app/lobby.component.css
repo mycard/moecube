@@ -1,6 +1,10 @@
 :host {
     display: flex;
+}
+#right {
+    display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 #main {
@@ -10,7 +14,13 @@
 
 #candy {
     background-color: #444;
-    height: 236px;
+    height: 230px;
+    flex-shrink: 0;
+}
+
+roster {
+    width: 190px;
+    background-color: #f7f7f9;
     flex-shrink: 0;
 }
 
@@ -32,7 +42,10 @@
 /*}*/
 
 span {
-    margin-left: 8px;
+    margin: 12px 0 8px 8px;
+    color: #a7a7a7;
+    font-size: 14px;
+    display: block;
 }
 
 .actions {
@@ -105,18 +118,14 @@ span {
 }
 
 .sidebar {
-    width: 240px;
+    width: 190px;
     flex-shrink: 0;
-    overflow-y: auto;
-    background-color: #f5f5f5;
+    background-color: #f7f7f9;
     border-right: 1px solid #eee;
-    padding-top: 10px;
-}
-
-/* Sidebar navigation */
-.sidebar {
     padding-left: 0;
     padding-right: 0;
+    padding-top: 20px;
+
 }
 
 .sidebar .nav {
@@ -133,4 +142,43 @@ span {
 
 .sidebar .nav-link {
     border-radius: 0;
+}
+
+.nav-link {
+    padding: .3em 1em;
+    color: black;
+    font-size: 15px;
+}
+
+.nav-link.active {
+    background-color: #ebf3f8;
+    color: #00a4d9;
+}
+
+a {
+    cursor: default;
+}
+.search {
+    background-color: #ebf3f8;
+    border: none;
+}
+i.search {
+    color: #a7a7a7;
+}
+input.search {
+    padding-left: 0;
+    font-size: 14px;
+    font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+}
+input.search::-webkit-input-placeholder{
+    color: #a7a7a7;
+}
+
+#search {
+    padding: 0 10px;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
 }
