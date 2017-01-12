@@ -43,12 +43,12 @@ Editor
                 × Keep line breaks
                 × Keep line breaks in text
 
-                Wrap attributes: Wrap if lone
+                Wrap attributes: Do not wrap
                 × Wrap text
         TypeScript
             Other
                 Generated code
-                    Quote marks: Double quotes
+                    Quote marks: Single quotes
 
 Languages & Frameworks
     Javascript
