@@ -58,8 +58,8 @@ Languages & Frameworks
 
     TypeScript
         √ Enable TypeScript Compiler
-    TSLint
-        √ Enable
+        TSLint
+            √ Enable
     Node.js and NPM
         Coding Assistance
             Enable
