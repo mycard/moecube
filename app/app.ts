@@ -1,4 +1,4 @@
-import {AppLocal} from "./app-local";
+import {AppLocal} from './app-local';
 
 export enum Category {
     game,
@@ -24,7 +24,7 @@ export interface Action {
     execute: string;
     args: string[];
     env: {};
-    open?: App
+    open?: App;
 }
 export class FileOptions {
     sync: boolean;
@@ -36,7 +36,7 @@ export class AppStatus {
     total: number;
     private _status: string;
     get status(): string {
-        return this._status
+        return this._status;
     }
 
     set status(status: string) {
@@ -52,43 +52,15 @@ export class App {
     id: string;
     name: string;          // i18n
 
-    description: string;   //i18n
+    description: string;   // i18n
     author: string;             // English Only
     homepage: string;
     category: Category;
     parent?: App;
 
-    static downloadUrl(app: App, platform: string, locale: string): string {
-        if (app.id === "ygopro") {
-            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`
-        } else if (app.id === "desmume") {
-            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}/${app.version}`
-        }
-        return `https://thief.mycard.moe/metalinks/${app.id}/${app.version}`;
-    }
-
-
-    static checksumUrl(app: App, platform: string, locale: string): string {
-        if (app.id === "ygopro") {
-            return `https://thief.mycard.moe/checksums/${app.id}-${platform}-${locale}/${app.version}`
-        } else if (app.id === "desmume") {
-            return `https://thief.mycard.moe/checksums/${app.id}-${platform}/${app.version}`
-        }
-        return `https://thief.mycard.moe/checksums/${app.id}/${app.version}`
-    }
-
-    static updateUrl(app: App, platform: string, locale: string): string {
-        if (app.id === "ygopro") {
-            return `https://thief.mycard.moe/update/${app.id}-${platform}-${locale}/${app.version}`;
-        } else if (app.id === "desmume") {
-            return `https://thief.mycard.moe/update/${app.id}-${platform}/${app.version}`;
-        }
-        return `https://thief.mycard.moe/update/${app.id}/${app.version}`;
-    }
-
-    actions: Map<string,Action>;
-    references: Map<string,App>;
-    dependencies: Map<string,App>;
+    actions: Map<string, Action>;
+    references: Map<string, App>;
+    dependencies: Map<string, App>;
     locales: string[];
     news: {title: string, url: string, image: string}[];
     network: any;
@@ -97,11 +69,39 @@ export class App {
     local: AppLocal | null;
     status: AppStatus;
     conference: string | undefined;
-    files: Map<string,FileOptions>;
+    files: Map<string, FileOptions>;
     data: any;
 
+    static downloadUrl (app: App, platform: string, locale: string): string {
+        if (app.id === 'ygopro') {
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`;
+        } else if (app.id === 'desmume') {
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}/${app.version}`;
+        }
+        return `https://thief.mycard.moe/metalinks/${app.id}/${app.version}`;
+    }
+
+
+    static checksumUrl (app: App, platform: string, locale: string): string {
+        if (app.id === 'ygopro') {
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}-${locale}/${app.version}`;
+        } else if (app.id === 'desmume') {
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}/${app.version}`;
+        }
+        return `https://thief.mycard.moe/checksums/${app.id}/${app.version}`;
+    }
+
+    static updateUrl (app: App, platform: string, locale: string): string {
+        if (app.id === 'ygopro') {
+            return `https://thief.mycard.moe/update/${app.id}-${platform}-${locale}/${app.version}`;
+        } else if (app.id === 'desmume') {
+            return `https://thief.mycard.moe/update/${app.id}-${platform}/${app.version}`;
+        }
+        return `https://thief.mycard.moe/update/${app.id}/${app.version}`;
+    }
+
     isLanguage() {
-        return this.category == Category.module && this.tags.includes('language');
+        return this.category === Category.module && this.tags.includes('language');
     }
 
     reset() {
@@ -111,31 +111,31 @@ export class App {
     }
 
     isInstalled(): boolean {
-        return this.status.status != 'init';
+        return this.status.status !== 'init';
     }
 
     isReady(): boolean {
-        return this.status.status == 'ready';
+        return this.status.status === 'ready';
     }
 
     isInstalling(): boolean {
-        return this.status.status == 'installing';
+        return this.status.status === 'installing';
     }
 
     isWaiting(): boolean {
-        return this.status.status == 'waiting';
+        return this.status.status === 'waiting';
     }
 
     isDownloading(): boolean {
-        return this.status.status === "downloading";
+        return this.status.status === 'downloading';
     }
 
     isUninstalling(): boolean {
-        return this.status.status === "uninstalling";
+        return this.status.status === 'uninstalling';
     }
 
     isUpdating(): boolean {
-        return this.status.status === "updating";
+        return this.status.status === 'updating';
     }
 
     runnable(): boolean {

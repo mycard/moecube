@@ -1,9 +1,9 @@
-import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} from "@angular/core";
-import {remote, shell} from "electron";
-import {LoginService} from "./login.service";
-import {SettingsService} from "./settings.sevices";
+import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} from '@angular/core';
+import {remote, shell} from 'electron';
+import {LoginService} from './login.service';
+import {SettingsService} from './settings.sevices';
+import * as $ from 'jquery';
 const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
-declare const $: any;
 
 @Component({
     moduleId: module.id,
@@ -13,7 +13,7 @@ declare const $: any;
 
 })
 export class MyCardComponent implements OnInit {
-    currentPage: string = "lobby";
+    currentPage: string = 'lobby';
 
     update_status: string | undefined = remote.getGlobal('update_status');
     update_error: string | undefined;
@@ -32,7 +32,9 @@ export class MyCardComponent implements OnInit {
 
     locale: string;
 
-    ngOnInit() {
+    resizing: HTMLElement | null;
+
+    ngOnInit () {
         this.update_elements = new Map(Object.entries({
             'error': this.error,
             'checking-for-update': this.checking_for_update,
@@ -41,7 +43,8 @@ export class MyCardComponent implements OnInit {
         }));
     }
 
-    constructor(private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef, private settingsService: SettingsService) {
+    constructor (private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef,
+                 private settingsService: SettingsService) {
         // renderer.listenGlobal('window', 'message', (event) => {
         //     console.log(event);
         //     // Do something with 'event'
@@ -70,20 +73,20 @@ export class MyCardComponent implements OnInit {
 
     }
 
-    update_retry() {
-        autoUpdater.checkForUpdates()
+    update_retry () {
+        autoUpdater.checkForUpdates();
     }
 
-    update_install() {
-        autoUpdater.quitAndInstall()
+    update_install () {
+        autoUpdater.quitAndInstall();
     }
 
-    set_update_status(status: string) {
+    set_update_status (status: string) {
         console.log('autoUpdater', status);
         if (this.update_status) {
             let element = this.update_elements.get(this.update_status);
             if (element) {
-                $(element.nativeElement).tooltip('dispose')
+                $(element.nativeElement).tooltip('dispose');
             }
         }
         this.update_status = status;
@@ -91,19 +94,19 @@ export class MyCardComponent implements OnInit {
 
         let element = this.update_elements.get(this.update_status);
         if (element) {
-            $(element.nativeElement).tooltip({placement: 'bottom', container: 'body'})
+            $(element.nativeElement).tooltip({placement: 'bottom', container: 'body'});
         }
     }
 
-    openExternal(url: string) {
+    openExternal (url: string) {
         shell.openExternal(url);
     }
 
-    submit() {
-        if (this.locale != this.settingsService.getLocale()) {
+    submit () {
+        if (this.locale !== this.settingsService.getLocale()) {
             localStorage.setItem(SettingsService.SETTING_LOCALE, this.locale);
             remote.app.relaunch();
-            remote.app.quit()
+            remote.app.quit();
         }
     }
 }

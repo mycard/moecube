@@ -17,16 +17,12 @@
 
     <script src="systemjs.config.js"></script>
 
-    <script>delete module.exports</script>
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/tether/dist/js/tether.min.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-
     <script>
         System.import('app').catch((error) => {
-            $('#loading').hide();
-            $('#failed').removeAttr('hidden');
-            $('#error').removeAttr('hidden').text(error);
+            document.getElementById('loading').setAttribute('hidden', 'hidden');
+            document.getElementById('failed').removeAttribute('hidden');
+            document.getElementById('error').removeAttribute('hidden');
+            document.getElementById('error').textContent = error;
         });
     </script>
 </head>

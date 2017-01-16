@@ -72,7 +72,12 @@ System.config({
         "ini": "@node/ini",
         "mkdirp": "@node/mkdirp",
         "aria2": "@node/aria2",
-        "electron-sudo": "@node/electron-sudo"
+        "electron-sudo": "@node/electron-sudo",
+        "electron-cookies": "@node/electron-cookies",
+
+        'jquery': '@node/jquery',
+        'tether': '@node/tether',
+        'bootstrap': '@node/bootstrap'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

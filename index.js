@@ -141,6 +141,7 @@ function createWindow() {
         width: 1024,
         height: 640,
         frame: process.platform == 'darwin',
+        transparent: true,
         titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
     });
 

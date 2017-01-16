@@ -25,7 +25,6 @@
       "variables-before-functions"
     ],
     "no-arg": true,
-    "no-bitwise": true,
     "no-console": [
       true,
       "debug",
@@ -62,8 +61,9 @@
       true,
       "single"
     ],
-    "radix": true,
-    "semicolon": true,
+    "semicolon": [
+      "always"
+    ],
     "triple-equals": [
       true,
       "allow-null-check"

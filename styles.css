@@ -12,8 +12,12 @@ mycard {
     flex-direction: column;
 }
 
-.darwin #window-buttons {
+.darwin #window-buttons, .darwin #border {
     display: none;
+}
+
+.darwin #navbar {
+    padding-top: 1rem !important;
 }
 
 #window-buttons > i {
@@ -42,17 +46,14 @@ mycard {
     margin: 0 0.3rem;
 }
 
-.darwin #navbar {
-    padding-left: 80px;
-}
-
 /* Turn on custom 8px wide scrollbar */
 ::-webkit-scrollbar {
     width: 8px; /* 1px wider than Lion. */
     /* This is more usable for users trying to click it. */
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     -webkit-border-radius: 100px;
 }
+
 /* hover effect for both scrollbar area, and scrollbar 'thumb' */
 ::-webkit-scrollbar:active {
     background-color: rgba(0, 0, 0, 0.05);
@@ -62,11 +63,12 @@ mycard {
 ::-webkit-scrollbar-thumb:vertical {
     /* This is the EXACT color of Mac OS scrollbars.
        Yes, I pulled out digital color meter */
-    background: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
     -webkit-border-radius: 100px;
 }
+
 ::-webkit-scrollbar-thumb:vertical:active {
-    background: rgba(0,0,0,0.2); /* Some darker color when you click it */
+    background: rgba(0, 0, 0, 0.2); /* Some darker color when you click it */
     -webkit-border-radius: 100px;
 }
 

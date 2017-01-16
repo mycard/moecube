@@ -9,6 +9,7 @@
   "repository": "github:mycard/mycard",
   "scripts": {
     "start": "tsc && electron .",
+    "lint": "tslint ./app/*.ts -t verbose",
     "pack": "tsc && build --dir",
     "dist": "tsc && build",
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js",
@@ -24,9 +25,14 @@
     "@angular/platform-browser": "latest",
     "@angular/platform-browser-dynamic": "latest",
     "@angular/router": "latest",
+    "@types/bootstrap": "latest",
+    "@types/jquery": "latest",
+    "@types/tether": "latest",
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
     "bootstrap": "next",
+    "candy": "https://github.com/mycard/candy/releases/download/v2.2.0/candy.tar.gz",
+    "candy-shop": "zh99998/candy-plugins#patch-3",
     "core-js": "latest",
     "electron-auto-updater": "latest",
     "electron-cookies": "latest",
@@ -38,14 +44,12 @@
     "jquery": "latest",
     "raw-socket": "latest",
     "reflect-metadata": "latest",
-    "rxjs": "5.0.0-beta.12",
+    "rxjs": "latest",
     "systemjs": "mycard/systemjs#mycard",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
     "vue": "latest",
-    "zone.js": "^0.6.26",
-    "candy": "https://github.com/mycard/candy/releases/download/v2.2.0/candy.tar.gz",
-    "candy-shop": "zh99998/candy-plugins#patch-2"
+    "zone.js": "latest"
   },
   "devDependencies": {
     "@angular/compiler-cli": "latest",
@@ -61,7 +65,8 @@
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-node-resolve": "latest",
     "rollup-plugin-uglify": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "tslint": "^3.15.1"
   },
   "build": {
     "productName": "MyCard",

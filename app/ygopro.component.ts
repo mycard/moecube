@@ -4,7 +4,6 @@
 import {Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
 import * as child_process from 'child_process';
 import {remote} from 'electron';
 import * as ini from 'ini';
@@ -16,77 +15,76 @@ import 'rxjs/Rx';
 import {ISubscription} from 'rxjs/Subscription';
 import {AppsService} from './apps.service';
 import {SettingsService} from './settings.sevices';
-
-declare const $: any;
+import * as $ from 'jquery';
 
 interface SystemConf {
-    use_d3d: string
-    antialias: string
-    errorlog: string
-    nickname: string
-    gamename: string
-    lastdeck: string
-    textfont: string
-    numfont: string
-    serverport: string
-    lastip: string
-    lasthost: string
-    lastport: string
-    autopos: string
-    randompos: string
-    autochain: string
-    waitchain: string
-    mute_opponent: string
-    mute_spectators: string
-    hide_setname: string
-    hide_hint_button: string
-    control_mode: string
-    draw_field_spell: string
-    separate_clear_button: string
-    roompass: string
+    use_d3d: string;
+    antialias: string;
+    errorlog: string;
+    nickname: string;
+    gamename: string;
+    lastdeck: string;
+    textfont: string;
+    numfont: string;
+    serverport: string;
+    lastip: string;
+    lasthost: string;
+    lastport: string;
+    autopos: string;
+    randompos: string;
+    autochain: string;
+    waitchain: string;
+    mute_opponent: string;
+    mute_spectators: string;
+    hide_setname: string;
+    hide_hint_button: string;
+    control_mode: string;
+    draw_field_spell: string;
+    separate_clear_button: string;
+    roompass: string;
 }
 
 interface Server {
-    id?: string
-    url?: string
-    address: string
-    port: number
+    id?: string;
+    url?: string;
+    address: string;
+    port: number;
 }
 
 interface Room {
-    id?: string
-    title?: string
-    server?: Server
-    private?: boolean
+    id?: string;
+    title?: string;
+    server?: Server;
+    private?: boolean;
     options: Options;
 }
 
 interface Options {
-    mode: number,
-    rule: number,
-    start_lp: number,
-    start_hand: number,
-    draw_count: number,
-    enable_priority: boolean,
-    no_check_deck: boolean,
-    no_shuffle_deck: boolean
+    mode: number;
+    rule: number;
+    start_lp: number;
+    start_hand: number;
+    draw_count: number;
+    enable_priority: boolean;
+    no_check_deck: boolean;
+    no_shuffle_deck: boolean;
     lflist?: number;
-    time_limit?: number
+    time_limit?: number;
 }
 interface Points {
-    exp: number,
-    exp_rank: number,
-    pt: number,
-    arena_rank: number,
-    win: number,
-    lose: number,
-    draw: number,
-    all: number,
-    ratio: number
+    exp: number;
+    exp_rank: number;
+    pt: number;
+    arena_rank: number;
+    win: number;
+    lose: number;
+    draw: number;
+    all: number;
+    ratio: number;
 }
 
 interface YGOProData {
-    windbot: {[locale: string]: string[]}
+    windbot: {[locale: string]: string[]};
 }
 
 
@@ -109,7 +107,7 @@ export class YGOProComponent implements OnInit {
     textfont: string[];
     points: Points;
 
-    windbot: string[]; //["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
+    windbot: string[]; // ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
     servers: Server[] = [];
 
@@ -136,7 +134,8 @@ export class YGOProComponent implements OnInit {
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
 
-    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService, private ref: ChangeDetectorRef) {
+    constructor (private http: Http, private appsService: AppsService, private loginService: LoginService,
+                 private settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -144,7 +143,11 @@ export class YGOProComponent implements OnInit {
                 break;
             case 'win32':
                 this.numfont = [path.join(process.env['SystemRoot'], 'Fonts', 'arialbd.ttf')];
-                this.textfont = [path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttc'), path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttf'), path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')];
+                this.textfont = [
+                    path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttc'),
+                    path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttf'),
+                    path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')
+                ];
                 break;
         }
 
@@ -155,27 +158,27 @@ export class YGOProComponent implements OnInit {
             this.servers.push({
                 id: 'tiramisu',
                 url: 'wss://tiramisu.mycard.moe:7923',
-                address: "112.124.105.11",
+                address: '112.124.105.11',
                 port: 7911
-            })
+            });
         } else {
             this.servers.push({
                 id: 'mercury-us-1',
                 url: 'wss://mercury-us-1.mycard.moe:7923',
-                address: "104.237.154.173",
+                address: '104.237.154.173',
                 port: 7911
-            })
+            });
         }
 
     }
 
-    async ngOnInit() {
+    async ngOnInit () {
 
         let locale: string;
         if (this.settingsService.getLocale().startsWith('zh')) {
-            locale = 'zh-CN'
+            locale = 'zh-CN';
         } else {
-            locale = 'en-US'
+            locale = 'en-US';
         }
         this.windbot = (<YGOProData>this.app.data).windbot[locale];
 
@@ -188,25 +191,26 @@ export class YGOProComponent implements OnInit {
             this.connections = this.servers.map((server) => {
                 let connection = new WebSocket(server.url!);
                 connection.onclose = () => {
-                    this.rooms = this.rooms.filter(room => room.server != server)
+                    this.rooms = this.rooms.filter(room => room.server !== server);
                 };
                 connection.onmessage = (event) => {
                     let message = JSON.parse(event.data);
-                    //console.log(message)
                     switch (message.event) {
                         case 'init':
-                            this.rooms = this.rooms.filter(room => room.server != server).concat(message.data.map((room: Room) => Object.assign({server: server}, room)));
+                            this.rooms = this.rooms.filter(room => room.server !== server).concat(
+                                message.data.map((room: Room) => Object.assign({server: server}, room))
+                            );
                             break;
                         case 'create':
                             this.rooms.push(Object.assign({server: server}, message.data));
                             break;
                         case 'update':
-                            Object.assign(this.rooms.find(room => room.server == server && room.id == message.data.id), message.data);
+                            Object.assign(this.rooms.find(room => room.server === server && room.id === message.data.id), message.data);
                             break;
                         case 'delete':
-                            this.rooms.splice(this.rooms.findIndex(room => room.server == server && room.id == message.data), 1);
+                            this.rooms.splice(this.rooms.findIndex(room => room.server === server && room.id === message.data), 1);
                     }
-                    this.ref.detectChanges()
+                    this.ref.detectChanges();
                 };
                 return connection;
             });
@@ -222,11 +226,11 @@ export class YGOProComponent implements OnInit {
             for (let connection of this.connections) {
                 connection.close();
             }
-            this.connections = []
+            this.connections = [];
         });
     }
 
-    async refresh() {
+    async refresh () {
         let decks = await this.get_decks();
         this.decks = decks;
         let system_conf = await this.load_system_conf();
@@ -240,25 +244,27 @@ export class YGOProComponent implements OnInit {
         let params = new URLSearchParams();
         params.set('username', this.loginService.user.username);
         try {
-            this.points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params}).map((response) => response.json()).toPromise()
+            this.points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params})
+                .map((response) => response.json())
+                .toPromise();
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
-    get_decks(): Promise<string[]> {
+    get_decks (): Promise<string[]> {
         return new Promise((resolve, reject) => {
             fs.readdir(path.join(this.app.local!.path, 'deck'), (error, files) => {
                 if (error) {
-                    resolve([])
+                    resolve([]);
                 } else {
-                    resolve(files.filter(file => path.extname(file) == ".ydk").map(file => path.basename(file, '.ydk')));
+                    resolve(files.filter(file => path.extname(file) === '.ydk').map(file => path.basename(file, '.ydk')));
                 }
-            })
-        })
+            });
+        });
     }
 
-    async get_font(files: string[]): Promise<string | undefined> {
+    async get_font (files: string[]): Promise<string | undefined> {
         for (let file of files) {
             let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
             if (found) {
@@ -267,48 +273,52 @@ export class YGOProComponent implements OnInit {
         }
     }
 
-    async delete_deck(deck: string) {
+    async delete_deck (deck: string) {
         if (confirm('确认删除?')) {
             await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
-            return this.refresh()
+            return this.refresh();
         }
     }
 
-    async fix_fonts(data: SystemConf) {
+    async fix_fonts (data: SystemConf) {
         if (!await this.get_font([data.numfont])) {
             let font = await this.get_font(this.numfont);
             if (font) {
-                data['numfont'] = font
+                data['numfont'] = font;
             }
         }
 
-        if (data.textfont == 'c:/windows/fonts/simsun.ttc 14' || !await this.get_font([data.textfont.split(' ', 2)[0]])) {
+        if (data.textfont === 'c:/windows/fonts/simsun.ttc 14' || !await this.get_font([data.textfont.split(' ', 2)[0]])) {
             let font = await this.get_font(this.textfont);
             if (font) {
-                data['textfont'] = `${font} 14`
+                data['textfont'] = `${font} 14`;
             }
         }
     };
 
-    load_system_conf(): Promise<SystemConf> {
+    load_system_conf (): Promise<SystemConf> {
         return new Promise((resolve, reject) => {
             fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
-                if (error) return reject(error);
+                if (error) {
+                    return reject(error);
+                }
                 resolve(ini.parse(data));
             });
-        })
+        });
     };
 
-    save_system_conf(data: SystemConf) {
+    save_system_conf (data: SystemConf) {
         return new Promise((resolve, reject) => {
             fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{whitespace: true})), (error) => {
-                if (error) return reject(error);
+                if (error) {
+                    return reject(error);
+                }
                 resolve(data);
             });
-        })
+        });
     };
 
-    async join(name: string, server: Server) {
+    async join (name: string, server: Server) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = this.current_deck;
@@ -321,7 +331,7 @@ export class YGOProComponent implements OnInit {
         return this.start_game(['-j']);
     };
 
-    async edit_deck(deck: string) {
+    async edit_deck (deck: string) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = deck;
@@ -329,11 +339,11 @@ export class YGOProComponent implements OnInit {
         return this.start_game(['-d']);
     }
 
-    join_windbot(name: string) {
-        return this.join('AI#' + name, this.servers[0])
+    join_windbot (name: string) {
+        return this.join('AI#' + name, this.servers[0]);
     }
 
-    async start_game(args: string[]) {
+    async start_game (args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
         return new Promise((resolve, reject) => {
@@ -343,53 +353,60 @@ export class YGOProComponent implements OnInit {
             });
             child.on('error', (error) => {
                 reject(error);
-                win.restore()
+                win.restore();
             });
-            child.on('exit', async(code, signal) => {
+            child.on('exit', async (code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
                 await this.refresh();
                 resolve();
-                win.restore()
-            })
-        })
+                win.restore();
+            });
+        });
     };
 
-    create_room(room: Room) {
+    create_room (room: Room) {
         let options_buffer = new Buffer(6);
         // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
         options_buffer.writeUInt8((room.private ? 2 : 1) << 4, 1);
-        options_buffer.writeUInt8(room.options.rule << 5 | room.options.mode << 3 | (room.options.enable_priority ? 1 << 2 : 0) | (room.options.no_check_deck ? 1 << 1 : 0) | (room.options.no_shuffle_deck ? 1 : 0), 2);
+        options_buffer.writeUInt8(
+            room.options.rule << 5 |
+            room.options.mode << 3 |
+            (room.options.enable_priority ? 1 << 2 : 0) |
+            (room.options.no_check_deck ? 1 << 1 : 0) |
+            (room.options.no_shuffle_deck ? 1 : 0)
+            , 2);
         options_buffer.writeUInt16LE(room.options.start_lp, 3);
         options_buffer.writeUInt8(room.options.start_hand << 4 | room.options.draw_count, 5);
         let checksum = 0;
         for (let i = 1; i < options_buffer.length; i++) {
-            checksum -= options_buffer.readUInt8(i)
+            checksum -= options_buffer.readUInt8(i);
         }
         options_buffer.writeUInt8(checksum & 0xFF, 0);
 
         let secret = this.loginService.user.external_id % 65535 + 1;
         for (let i = 0; i < options_buffer.length; i += 2) {
-            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i);
         }
 
         let password = options_buffer.toString('base64') + (room.title!).replace(/\s/, String.fromCharCode(0xFEFF));
-        let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64').slice(0, 10).replace('+', '-').replace('/', '_');
+        // let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64')
+        //     .slice(0, 10).replace('+', '-').replace('/', '_');
 
         this.join(password, this.servers[0]);
     }
 
-    join_room(room: Room) {
+    join_room (room: Room) {
         let options_buffer = new Buffer(6);
         options_buffer.writeUInt8(3 << 4, 1);
         let checksum = 0;
         for (let i = 1; i < options_buffer.length; i++) {
-            checksum -= options_buffer.readUInt8(i)
+            checksum -= options_buffer.readUInt8(i);
         }
         options_buffer.writeUInt8(checksum & 0xFF, 0);
 
         let secret = this.loginService.user.external_id % 65535 + 1;
         for (let i = 0; i < options_buffer.length; i += 2) {
-            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i)
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i);
         }
 
 
@@ -398,12 +415,13 @@ export class YGOProComponent implements OnInit {
         this.join(password, room.server!);
     }
 
-    request_match(arena = 'entertain') {
+    request_match (arena = 'entertain') {
         let headers = new Headers();
-        headers.append("Authorization", "Basic " + new Buffer(this.loginService.user.username + ":" + this.loginService.user.external_id).toString('base64'));
+        headers.append('Authorization',
+            'Basic ' + Buffer.from(this.loginService.user.username + ':' + this.loginService.user.external_id).toString('base64'));
         let search = new URLSearchParams();
-        search.set("arena", arena);
-        search.set("locale", this.settingsService.getLocale());
+        search.set('arena', arena);
+        search.set('locale', this.settingsService.getLocale());
         this.matching_arena = matching_arena = arena;
         this.matching = matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
             headers: headers,
@@ -415,15 +433,15 @@ export class YGOProComponent implements OnInit {
                     port: data['port']
                 });
             }, (error) => {
-                alert(`匹配失败\n${error}`)
+                alert(`匹配失败\n${error}`);
             }, () => {
                 this.matching = matching = undefined;
                 this.matching_arena = matching_arena = undefined;
-                this.ref.detectChanges()
+                this.ref.detectChanges();
             });
     }
 
-    cancel_match() {
+    cancel_match () {
         this.matching!.unsubscribe();
         this.matching = matching = undefined;
         this.matching_arena = matching_arena = undefined;

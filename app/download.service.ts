@@ -1,15 +1,15 @@
 /**
  * Created by weijian on 2016/10/26.
  */
-import {Injectable, NgZone, EventEmitter} from "@angular/core";
-import {Http} from "@angular/http";
-import {error} from "util";
-import Timer = NodeJS.Timer;
-const Logger = {
-    "error": (message: string) => {
-        console.error("DownloadService: ", message);
-    }
-};
+import {Injectable, NgZone, EventEmitter} from '@angular/core';
+import {Http} from '@angular/http';
+// import {error} from 'util';
+// import Timer = NodeJS.Timer;
+// const Logger = {
+//     'error': (message: string) => {
+//         console.error('DownloadService: ', message);
+//     }
+// };
 const Aria2 = require('aria2');
 
 const MAX_LIST_NUM = 1000;
@@ -19,13 +19,13 @@ export class DownloadStatus {
     completedLength: number;
     downloadSpeed: number;
 
-    get downloadSpeedText(): string {
+    get downloadSpeedText (): string {
         if (!isNaN(this.downloadSpeed) && this.downloadSpeed !== 0) {
-            const speedUnit = ["Byte/s", "KB/s", "MB/s", "GB/s", "TB/s"];
+            const speedUnit = ['Byte/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
             let currentUnit = Math.floor(Math.log(this.downloadSpeed) / Math.log(1024));
-            return (this.downloadSpeed / 1024 ** currentUnit).toFixed(1) + " " + speedUnit[currentUnit];
+            return (this.downloadSpeed / 1024 ** currentUnit).toFixed(1) + ' ' + speedUnit[currentUnit];
         }
-        return "";
+        return '';
     };
 
     gid: string;
@@ -35,22 +35,22 @@ export class DownloadStatus {
     errorCode: string;
     errorMessage: string;
 
-    combine(...others: DownloadStatus[]): DownloadStatus {
+    combine (...others: DownloadStatus[]): DownloadStatus {
         const priority = {
             undefined: -1,
-            "": -1,
-            "active": 0,
-            "complete": 0,
-            "paused": 1,
-            "waiting": 1,
-            "removed": 2,
-            "error": 3
+            '': -1,
+            'active': 0,
+            'complete': 0,
+            'paused': 1,
+            'waiting': 1,
+            'removed': 2,
+            'error': 3
         };
         let status = Object.assign(new DownloadStatus(), this);
         for (let o of others) {
             if (priority[o.status] > priority[status.status]) {
                 status.status = o.status;
-                if (status.status === "error") {
+                if (status.status === 'error') {
                     status.errorCode = o.errorCode;
                     status.errorMessage = o.errorMessage;
                 }
@@ -64,7 +64,7 @@ export class DownloadStatus {
     }
 
     // 0相等. 1不想等
-    compareTo(other: DownloadStatus): number {
+    compareTo (other: DownloadStatus): number {
         if (this.status !== other.status ||
             this.downloadSpeed !== other.downloadSpeed ||
             this.completedLength !== other.completedLength ||
@@ -75,7 +75,7 @@ export class DownloadStatus {
         }
     }
 
-    constructor(item ?: any) {
+    constructor (item ?: any) {
         if (item) {
             this.completedLength = parseInt(item.completedLength) || 0;
             this.downloadSpeed = parseInt(item.downloadSpeed) || 0;
@@ -99,11 +99,11 @@ export class DownloadService {
     open = this.aria2.open();
     updateEmitter = new EventEmitter<void>();
 
-    downloadList: Map<string,DownloadStatus> = new Map();
+    downloadList: Map<string, DownloadStatus> = new Map();
 
-    taskMap: Map<string,string[]> = new Map();
+    taskMap: Map<string, string[]> = new Map();
 
-    async refreshDownloadList() {
+    async refreshDownloadList () {
         let activeList = await this.aria2.tellActive();
         let waitList = await this.aria2.tellWaiting(0, MAX_LIST_NUM);
         let stoppedList = await this.aria2.tellStopped(0, MAX_LIST_NUM);
@@ -120,17 +120,17 @@ export class DownloadService {
         this.updateEmitter.emit();
     }
 
-    constructor(private ngZone: NgZone, private http: Http) {
-        ngZone.runOutsideAngular(async() => {
+    constructor (private ngZone: NgZone, private http: Http) {
+        ngZone.runOutsideAngular(async () => {
             await this.open;
-            setInterval(async() => {
+            setInterval(async () => {
                 await this.refreshDownloadList();
             }, ARIA2_INTERVAL);
-        })
+        });
     }
 
-    private createId(): string {
-        function s4() {
+    private createId (): string {
+        function s4 () {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)
                 .substring(1);
@@ -140,7 +140,7 @@ export class DownloadService {
             s4() + '-' + s4() + s4() + s4();
     }
 
-    async progress(id: string, callback: (downloadStatus: DownloadStatus) => void) {
+    async progress (id: string, callback: (downloadStatus: DownloadStatus) => void) {
         return new Promise((resolve, reject) => {
             let gids = this.taskMap.get(id);
             if (gids) {
@@ -154,7 +154,7 @@ export class DownloadService {
                             gids!.map((value, index, array) => {
                                 let s = this.downloadList.get(value);
                                 if (!s) {
-                                    throw "Gid not exists";
+                                    throw 'Gid not exists';
                                 }
                                 return s;
                             })
@@ -164,13 +164,13 @@ export class DownloadService {
                         if (!allStatus) {
                             allStatus = status;
                         } else {
-                            if (allStatus.compareTo(status) != 0) {
+                            if (allStatus.compareTo(status) !== 0) {
                                 allStatus = status;
                             }
                         }
-                        if (allStatus.status === "error") {
+                        if (allStatus.status === 'error') {
                             throw `Download Error: code ${allStatus.errorCode}, message: ${allStatus.errorMessage}`;
-                        } else if (allStatus.status === "complete") {
+                        } else if (allStatus.status === 'complete') {
                             resolve();
                             subscription.unsubscribe();
                         } else {
@@ -183,12 +183,12 @@ export class DownloadService {
                     }
                 });
             } else {
-                throw "Try to access invalid download id";
+                throw 'Try to access invalid download id';
             }
-        })
+        });
     }
 
-    async getFiles(id: string): Promise<string[]> {
+    async getFiles (id: string): Promise<string[]> {
         let gids = this.taskMap.get(id)!;
         let files: string[] = [];
         for (let gid of gids) {
@@ -198,7 +198,7 @@ export class DownloadService {
         return files;
     }
 
-    async addMetalink(metalink: string, library: string): Promise<string> {
+    async addMetalink (metalink: string, library: string): Promise<string> {
         let encodedMeta4 = new Buffer((metalink)).toString('base64');
         let gidList = await this.aria2.addMetalink(encodedMeta4, {dir: library});
         let taskId = this.createId();
@@ -208,7 +208,7 @@ export class DownloadService {
         return taskId;
     }
 
-    async addUri(url: string, destination: string): Promise<string> {
+    async addUri (url: string, destination: string): Promise<string> {
         await this.open;
         let taskId = this.createId();
         let gid = await this.aria2.addUri([url], {dir: destination});
@@ -216,10 +216,10 @@ export class DownloadService {
         return taskId;
     }
 
-    async pause(id: string): Promise<void> {
+    async pause (id: string): Promise<void> {
         await this.open;
         try {
-            await this.aria2.pause(id)
+            await this.aria2.pause(id);
         } catch (e) {
 
         }

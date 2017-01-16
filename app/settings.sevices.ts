@@ -1,28 +1,33 @@
 /**
  * Created by weijian on 2016/10/24.
  */
-import {Injectable} from "@angular/core";
-import {remote} from "electron";
-import * as path from "path";
+import {Injectable} from '@angular/core';
+import {remote} from 'electron';
+import * as path from 'path';
 
 export interface Library {
-    "default": boolean,path: string
+    'default': boolean;
+    path: string;
 }
 
 @Injectable()
 export class SettingsService {
 
-    static SETTING_LIBRARY = "library";
+    static SETTING_LIBRARY = 'library';
     static defaultLibraries = [
         {
-            "default": true,
-            path: path.join(remote.app.getPath("appData"), "MyCardLibrary")
+            'default': true,
+            path: path.join(remote.app.getPath('appData'), 'MyCardLibrary')
         },
     ];
+    static SETTING_LOCALE = 'locale';
+    static defaultLocale = remote.app.getLocale();
+
+    locale: string;
     libraries: Library[];
 
 
-    getLibraries() {
+    getLibraries () {
         if (!this.libraries) {
             let data = localStorage.getItem(SettingsService.SETTING_LIBRARY);
             if (!data) {
@@ -36,7 +41,7 @@ export class SettingsService {
         return this.libraries;
     }
 
-    addLibrary(libraryPath: string, isDefault: boolean) {
+    addLibrary (libraryPath: string, isDefault: boolean) {
 
         let libraries = this.getLibraries();
         if (isDefault) {
@@ -44,37 +49,33 @@ export class SettingsService {
                 l.default = false;
             });
         }
-        libraries.push({"default": isDefault, path: libraryPath});
+        libraries.push({'default': isDefault, path: libraryPath});
         this.libraries = libraries;
         localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
     }
 
-    setDefaultLibrary(library: Library) {
+    setDefaultLibrary (library: Library) {
         let libraries = this.getLibraries();
         libraries.forEach((l) => {
-            l.default = library.path == l.path;
+            l.default = library.path === l.path;
         });
         this.libraries = libraries;
         localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));
     }
 
-    getDefaultLibrary(): Library {
+    getDefaultLibrary (): Library {
         if (!this.libraries) {
-            this.getLibraries()
+            this.getLibraries();
         }
         let result = this.libraries.find((item) => item.default === true);
         if (result) {
-            return result
+            return result;
         } else {
-            throw('no default library found')
+            throw('no default library found');
         }
     }
 
-    static SETTING_LOCALE = "locale";
-    static defaultLocale = remote.app.getLocale();
-    locale: string;
-
-    getLocale(): string {
+    getLocale (): string {
         if (!this.locale) {
             let locale = localStorage.getItem(SettingsService.SETTING_LOCALE);
             if (!locale) {
@@ -87,7 +88,7 @@ export class SettingsService {
         return this.locale;
     }
 
-    setLocale(locale: string) {
+    setLocale (locale: string) {
         this.locale = locale;
         localStorage.setItem(SettingsService.SETTING_LOCALE, locale);
     }

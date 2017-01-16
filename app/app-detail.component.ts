@@ -1,15 +1,15 @@
-import {Component, OnInit, Input, ChangeDetectorRef} from "@angular/core";
-import {AppsService} from "./apps.service";
-import {InstallOption} from "./install-option";
-import {SettingsService} from "./settings.sevices";
-import {App} from "./app";
-import {DownloadService} from "./download.service";
-import {clipboard, remote} from "electron";
-import * as path from "path";
-import * as fs from "fs";
+import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
+import {AppsService} from './apps.service';
+import {InstallOption} from './install-option';
+import {SettingsService} from './settings.sevices';
+import {App} from './app';
+import {DownloadService} from './download.service';
+import {clipboard, remote} from 'electron';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as $ from 'jquery';
 
 declare const Notification: any;
-declare const $: any;
 
 @Component({
     moduleId: module.id,
@@ -37,17 +37,17 @@ export class AppDetailComponent implements OnInit {
         let volume = 'A';
         for (let i = 0; i < 26; i++) {
             await new Promise((resolve, reject) => {
-                let currentVolume = String.fromCharCode(volume.charCodeAt(0) + i) + ":";
+                let currentVolume = String.fromCharCode(volume.charCodeAt(0) + i) + ':';
                 fs.access(currentVolume, (err) => {
                     if (!err) {
-                        //判断是否已经存在Library
+                        // 判断是否已经存在Library
                         if (this.libraries.every((library) => !library.startsWith(currentVolume))) {
                             this.availableLibraries.push(currentVolume);
                         }
                     }
-                    resolve()
-                })
-            })
+                    resolve();
+                });
+            });
         }
     }
 
@@ -61,7 +61,8 @@ export class AppDetailComponent implements OnInit {
             if (reference.isLanguage()) {
                 // 对于语言包，只有在语言包的locales比游戏本身的更加合适的时候才默认勾选
                 // 这里先偷个懒，中文环境勾选中文语言包，非中文环境勾选非中文语言包
-                this.referencesInstall[reference.id] = reference.locales[0].startsWith('zh') == this.settingsService.getLocale().startsWith('zh')
+                this.referencesInstall[reference.id] =
+                    reference.locales[0].startsWith('zh') === this.settingsService.getLocale().startsWith('zh');
             } else {
                 this.referencesInstall[reference.id] = true;
             }
@@ -88,7 +89,7 @@ export class AppDetailComponent implements OnInit {
     }
 
     async uninstall(app: App) {
-        if (confirm("确认删除？")) {
+        if (confirm('确认删除？')) {
             try {
                 await this.appsService.uninstall(app);
             } catch (e) {
@@ -105,35 +106,35 @@ export class AppDetailComponent implements OnInit {
             for (let [id, install] of Object.entries(referencesInstall)) {
                 if (install) {
                     let reference = targetApp.references.get(id)!;
-                    console.log("reference install ", id, targetApp, targetApp.references, reference);
+                    console.log('reference install ', id, targetApp, targetApp.references, reference);
                     await this.appsService.install(reference, options);
                 }
             }
         } catch (e) {
             console.error(e);
-            new Notification(targetApp.name, {body: "下载失败"});
+            new Notification(targetApp.name, {body: '下载失败'});
         }
     }
 
     async selectLibrary() {
         if (this.installOption.installLibrary.startsWith('create_')) {
             let volume = this.installOption.installLibrary.slice(7);
-            let library = path.join(volume, "MyCardLibrary");
+            let library = path.join(volume, 'MyCardLibrary');
             try {
                 await this.appsService.createDirectory(library);
                 this.installOption.installLibrary = library;
                 this.settingsService.addLibrary(library, true);
             } catch (e) {
                 this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
-                alert("无法创建指定目录");
+                alert('无法创建指定目录');
             } finally {
                 let index = this.availableLibraries.findIndex((l) => {
-                    return l === volume
+                    return l === volume;
                 });
                 this.availableLibraries.splice(index, 1);
             }
         } else {
-            this.settingsService.setDefaultLibrary({path: this.installOption.installLibrary, "default": true})
+            this.settingsService.setDefaultLibrary({path: this.installOption.installLibrary, 'default': true});
         }
         this.installOption.installLibrary = this.settingsService.getDefaultLibrary().path;
     }
@@ -162,13 +163,13 @@ export class AppDetailComponent implements OnInit {
             for (let [id, install] of Object.entries(referencesInstall)) {
                 if (install) {
                     let reference = targetApp.references.get(id)!;
-                    console.log("reference install ", id, targetApp, targetApp.references, reference);
+                    console.log('reference install ', id, targetApp, targetApp.references, reference);
                     await this.appsService.install(reference, option);
                 }
             }
         } catch (e) {
             console.error(e);
-            new Notification(targetApp.name, {body: "导入失败"});
+            new Notification(targetApp.name, {body: '导入失败'});
         }
     }
 
@@ -182,7 +183,7 @@ export class AppDetailComponent implements OnInit {
                 await this.appsService.update(mod, true);
             }
         } catch (e) {
-            new Notification(app.name, {body: "校验失败"});
+            new Notification(app.name, {body: '校验失败'});
             console.error(e);
         }
     }
@@ -194,10 +195,10 @@ export class AppDetailComponent implements OnInit {
     async selectImport(app: App) {
         let main = app.actions.get('main');
         if (!main) {
-            return
+            return;
         }
         if (!main.execute) {
-            return
+            return;
         }
         let filename = main.execute.split('/')[0];
         let extname = path.extname(filename).slice(1);
@@ -206,12 +207,12 @@ export class AppDetailComponent implements OnInit {
         let filePaths = await new Promise((resolve, reject) => {
             remote.dialog.showOpenDialog({
                 filters: [{name: filename, extensions: [extname]}],
-                properties: ['openFile',]
-            }, resolve)
+                properties: ['openFile']
+            }, resolve);
         });
 
         if (filePaths && filePaths[0]) {
-            this.import_path = filePaths[0]
+            this.import_path = filePaths[0];
         }
 
     }

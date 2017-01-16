@@ -1,14 +1,12 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ElementRef, ViewChild} from "@angular/core";
-import {AppsService} from "./apps.service";
-import {LoginService} from "./login.service";
-import {App, Category} from "./app";
-import {URLSearchParams} from "@angular/http";
-import {shell} from "electron";
-import {SettingsService} from "./settings.sevices";
-import WebViewElement = Electron.WebViewElement;
+import {Component, OnInit} from '@angular/core';
+import {AppsService} from './apps.service';
+import {LoginService} from './login.service';
+import {App, Category} from './app';
+import {shell} from 'electron';
+import {SettingsService} from './settings.sevices';
 
 @Component({
     moduleId: module.id,
@@ -18,60 +16,73 @@ import WebViewElement = Electron.WebViewElement;
 
 })
 export class LobbyComponent implements OnInit {
-    @ViewChild('candy')
-    candy?: ElementRef;
-    candy_url: URL;
-    currentApp: App;
-    private apps: Map<string,App>;
 
-    constructor(private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService) {
+    currentApp: App;
+    private apps: Map<string, App>;
+
+    resizing: HTMLElement | undefined;
+    offset: number;
+
+    constructor (private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService) {
     }
 
-    async ngOnInit() {
+    async ngOnInit () {
         this.apps = await this.appsService.loadApps();
         if (this.apps.size > 0) {
-            this.chooseApp(this.appsService.lastVisited || this.apps.get("ygopro")!);
+            this.chooseApp(this.appsService.lastVisited || this.apps.get('ygopro')!);
 
-            // 初始化聊天室
-            let url = new URL('candy.html', location.href);
-            let params: URLSearchParams = url['searchParams']; // TypeScrpt 缺了 url.searchParams 的定义
-            params.set('jid', this.loginService.user.username + '@mycard.moe');
-            params.set('password', this.loginService.user.external_id.toString());
-            params.set('nickname', this.loginService.user.username);
-            switch (this.settingsService.getLocale()) {
-                case 'zh-CN':
-                    params.set('language', 'cn');
-                    break;
-                default:
-                    params.set('language', 'en');
-            }
-            if (this.currentApp.conference) {
-                params.set('autojoin', this.currentApp.conference + '@conference.mycard.moe');
-            }
-            this.candy_url = url;
             await this.appsService.migrate();
             for (let app of this.apps.values()) {
                 await  this.appsService.update(app);
             }
         } else {
-            if (confirm("获取程序列表失败,是否重试?")) {
+            if (confirm('获取程序列表失败,是否重试?')) {
                 location.reload();
             } else {
                 window.close();
             }
         }
+
+        document.addEventListener('mousemove', (event: MouseEvent) => {
+            if (!this.resizing) {
+                return;
+            }
+            if (this.resizing.classList.contains('resize-right')) {
+                let width = this.offset + event.clientX;
+                if (width < 190) {
+                    width = 190;
+                }
+                this.resizing.style.width = `${width}px`;
+            } else {
+                let height = this.offset - event.clientY;
+                if (height < 236) {
+                    height = 236;
+                }
+                this.resizing.style.height = `${height}px`;
+            }
+        });
+        document.addEventListener('mouseup', (event: MouseEvent) => {
+            this.resizing = undefined;
+        });
     }
 
-    chooseApp(app: App) {
-        this.currentApp = app;
-        this.appsService.lastVisited = app;
-        if (this.candy && this.currentApp.conference) {
-            (<WebViewElement>this.candy.nativeElement).send('join', this.currentApp.conference + '@conference.mycard.moe');
+    mousedown (event: MouseEvent) {
+        // console.log(()
+        this.resizing = <HTMLElement>(<HTMLElement>event.target).parentNode;
+        if (this.resizing.classList.contains('resize-right')) {
+            this.offset = this.resizing.offsetWidth - event.clientX;
+        } else {
+            this.offset = this.resizing.offsetHeight + event.clientY;
         }
     }
 
-    get grouped_apps() {
-        let contains = ["game", "music", "book"].map((value) => Category[value]);
+    chooseApp (app: App) {
+        this.currentApp = app;
+        this.appsService.lastVisited = app;
+    }
+
+    get grouped_apps () {
+        let contains = ['game', 'music', 'book'].map((value) => Category[value]);
         let result = {runtime: []};
         for (let app of this.apps.values()) {
             let tag: string;
@@ -90,14 +101,14 @@ export class LobbyComponent implements OnInit {
 
             }
             if (!result[tag]) {
-                result[tag] = []
+                result[tag] = [];
             }
-            result[tag].push(app)
+            result[tag].push(app);
         }
-        return result
+        return result;
     }
 
-    openExternal(url: string) {
+    openExternal (url: string) {
         shell.openExternal(url);
     }
 }
