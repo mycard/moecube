@@ -1,12 +1,14 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild} from '@angular/core';
 import {AppsService} from './apps.service';
 import {LoginService} from './login.service';
 import {App, Category} from './app';
 import {shell} from 'electron';
 import {SettingsService} from './settings.sevices';
+import 'typeahead.js';
+// import Options = Twitter.Typeahead.Options;
 
 @Component({
     moduleId: module.id,
@@ -23,7 +25,11 @@ export class LobbyComponent implements OnInit {
     resizing: HTMLElement | undefined;
     offset: number;
 
-    constructor (private appsService: AppsService, private loginService: LoginService, private settingsService: SettingsService) {
+    @ViewChild('search')
+    search: ElementRef;
+
+    constructor (private appsService: AppsService, private loginService: LoginService,
+                 private settingsService: SettingsService, private ref: ChangeDetectorRef) {
     }
 
     async ngOnInit () {
@@ -42,6 +48,23 @@ export class LobbyComponent implements OnInit {
                 window.close();
             }
         }
+        this.ref.detectChanges();
+
+        // $(this.search.nativeElement).typeahead(<any>{
+        //     minLength: 1,
+        //     highlight: true
+        // }, {
+        //     name: 'apps',
+        //     source: (query, syncResults) => {
+        //         query = query.toLowerCase();
+        //         let result = Array.from(this.apps.values())
+        //             .filter((app: App) => [Category.game, Category.music, Category.book].includes(app.category))
+        //             .filter((app: App) => app.id.includes(query) || app.name.toLowerCase().includes(query))
+        //             .map((app: App) => app.name);
+        //         console.log(result);
+        //         syncResults(result);
+        //     }
+        // });
 
         document.addEventListener('mousemove', (event: MouseEvent) => {
             if (!this.resizing) {

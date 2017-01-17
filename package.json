@@ -28,6 +28,7 @@
     "@types/bootstrap": "latest",
     "@types/jquery": "latest",
     "@types/tether": "latest",
+    "@types/typeahead": "latest",
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
     "bootstrap": "next",
@@ -48,6 +49,7 @@
     "systemjs": "mycard/systemjs#mycard",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
+    "typeahead.js": "latest",
     "vue": "latest",
     "zone.js": "latest"
   },

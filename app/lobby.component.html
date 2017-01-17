@@ -3,7 +3,7 @@
     <nav id="apps" *ngIf="apps" class="bg-faded sidebar scroll">
         <div id="search" class="input-group">
             <i class="fa fa-search input-group-addon search" id="basic-addon1"></i>
-            <input type="text" class="form-control search" placeholder="搜索游戏" aria-describedby="basic-addon1">
+            <input #search id="search-input" type="text" class="form-control search" placeholder="搜索游戏" aria-describedby="basic-addon1">
         </div>
 
 
