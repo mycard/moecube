@@ -85,12 +85,14 @@ export class LobbyComponent implements OnInit {
             }
         });
         document.addEventListener('mouseup', (event: MouseEvent) => {
+            document.body.classList.remove('resizing');
             this.resizing = undefined;
         });
     }
 
     mousedown (event: MouseEvent) {
         // console.log(()
+        document.body.classList.add('resizing');
         this.resizing = <HTMLElement>(<HTMLElement>event.target).parentNode;
         if (this.resizing.classList.contains('resize-right')) {
             this.offset = this.resizing.offsetWidth - event.clientX;

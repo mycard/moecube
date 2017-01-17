@@ -157,3 +157,6 @@
 /*#context-menu {*/
 /**/
 /*}*/
+.message-pane {
+    -webkit-user-select: auto;
+}

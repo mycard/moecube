@@ -41,6 +41,11 @@ export class MyCardComponent implements OnInit {
             'update-available': this.update_available,
             'update-downloaded': this.update_downloaded
         }));
+        // document.addEventListener('drop', (event)=>{
+        //     console.log('drop', event);
+        //     event.preventDefault();
+        //
+        // });
     }
 
     constructor (private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef,

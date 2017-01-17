@@ -28,7 +28,7 @@ import {LoginService} from './login.service';
 import {SettingsService} from './settings.sevices';
 import {App} from './app';
 import 'node_modules/candy/libs.min.js';
-import 'node_modules/candy/candy.bundle.js';
+import 'node_modules/candy/candy.min.js';
 import 'node_modules/candy-shop/notifyme/candy.js';
 import 'node_modules/candy-shop/namecomplete/candy.js';
 import 'node_modules/candy-shop/modify-role/candy.js';
@@ -146,10 +146,14 @@ export class CandyComponent implements OnInit, OnChanges {
         }
         conference += '@conference.mycard.moe';
 
-        if (Candy.View.Pane.Chat.rooms[conference]) {
-            Candy.View.Pane.Room.show(conference);
-        } else {
-            Candy.Core.Action.Jabber.Room.Join(conference);
+        try {
+            if (Candy.View.Pane.Chat.rooms[conference]) {
+                Candy.View.Pane.Room.show(conference);
+            } else {
+                Candy.Core.Action.Jabber.Room.Join(conference);
+            }
+        } catch (error) {
+
         }
     }
 }

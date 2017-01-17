@@ -80,3 +80,11 @@ mycard {
     overflow-y: auto;
 
 }
+
+body.resizing /deep/ * {
+    -webkit-user-select: none;
+}
+
+body {
+    -webkit-user-select: none;
+}
