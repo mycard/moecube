@@ -97,16 +97,16 @@ export class CandyComponent implements OnInit, OnChanges {
 
         Candy.View.Template.Login.form = `
             <form method="post" id="login-form" class="login-form">
-                <input type="hidden" id="nickname" name="nickname" value="' + this.nickname + '"/>
+                <input type="hidden" id="nickname" name="nickname" value="${this.nickname}"/>
                 {{#displayUsername}}
-                    <input type="hidden" id="username" name="username" value="' + this.jid + '"/>
+                    <input type="hidden" id="username" name="username" value="${this.jid}"/>
                     {{#displayDomain}}
                         <span class="at-symbol">@</span>
                         <select id="domain" name="domain">{{#domains}}<option value="{{domain}}">{{domain}}</option>{{/domains}}</select>
                     {{/displayDomain}}
                 {{/displayUsername}}
                 {{#presetJid}}<input type="hidden" id="username" name="username" value="{{presetJid}}"/>{{/presetJid}}
-                {{#displayPassword}}<input type="hidden" id="password" name="password" value="' + this.password + '"/>{{/displayPassword}}
+                {{#displayPassword}}<input type="hidden" id="password" name="password" value="${this.password}"/>{{/displayPassword}}
                 <input type="submit" class="button" value="{{_loginSubmit}}" />
             </form>
             `;
