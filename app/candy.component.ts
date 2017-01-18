@@ -3,7 +3,7 @@
  */
 
 let shadow: ShadowRoot;
-const jQueryOriginal = window['jQuery'];
+
 const jQueryShadow = require('../jquery-shadow.js');
 jQueryShadow.fn.init = new Proxy(jQueryShadow.fn.init, {
     construct(target, argumentsList, newTarget) {
@@ -28,7 +28,7 @@ import {LoginService} from './login.service';
 import {SettingsService} from './settings.sevices';
 import {App} from './app';
 import 'node_modules/candy/libs.min.js';
-import 'node_modules/candy/candy.min.js';
+import 'node_modules/candy/candy.bundle.js';
 import 'node_modules/candy-shop/notifyme/candy.js';
 import 'node_modules/candy-shop/namecomplete/candy.js';
 import 'node_modules/candy-shop/modify-role/candy.js';
@@ -37,9 +37,14 @@ import 'node_modules/candy-shop/notifications/candy.js';
 import 'node_modules/candy-shop/refocus/candy.js';
 import 'electron-cookies';
 
-window['jQuery'] = jQueryOriginal;
+delete window['jQuery'];
+
+// Candy fix
 
 declare const Candy: any, CandyShop: any, Base64: any;
+
+Base64.encode = (data: string) => Buffer.from(data).toString('base64');
+Base64.decode = (data: string) => Buffer.from(data, 'base64').toString();
 
 Candy.Util.getPosLeftAccordingToWindowBounds = new Proxy(Candy.Util.getPosLeftAccordingToWindowBounds, {
     apply(target, thisArg, argumentsList) {
@@ -54,6 +59,7 @@ Candy.Util.getPosTopAccordingToWindowBounds = new Proxy(Candy.Util.getPosTopAcco
     }
 });
 
+Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
 
 @Component({
     moduleId: module.id,
@@ -91,10 +97,6 @@ export class CandyComponent implements OnInit, OnChanges {
         `;
         shadow.insertBefore(element, shadow.firstChild);
 
-        // Candy fix
-        Base64.encode = (data: string) => Buffer.from(data).toString('base64');
-        Base64.decode = (data: string) => Buffer.from(data, 'base64').toString();
-
         Candy.View.Template.Login.form = `
             <form method="post" id="login-form" class="login-form">
                 <input type="hidden" id="nickname" name="nickname" value="${this.nickname}"/>
@@ -110,8 +112,6 @@ export class CandyComponent implements OnInit, OnChanges {
                 <input type="submit" class="button" value="{{_loginSubmit}}" />
             </form>
             `;
-
-        Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
 
         Candy.init('wss://chat.mycard.moe:5280/websocket', {
             core: {
@@ -156,4 +156,10 @@ export class CandyComponent implements OnInit, OnChanges {
 
         }
     }
+
+    // ngOnDestroy () {
+    //     if (Candy.Core.getConnection()) {
+    //         Candy.Core.disconnect();
+    //     }
+    // }
 }

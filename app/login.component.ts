@@ -4,9 +4,10 @@
 import {Component} from '@angular/core';
 import {LoginService} from './login.service';
 import * as crypto from 'crypto';
-import * as querystring from 'querystring';
-import * as url from 'url';
 import {shell} from 'electron';
+
+declare const URLSearchParams: any;
+
 
 @Component({
     moduleId: module.id,
@@ -16,34 +17,50 @@ import {shell} from 'electron';
 })
 export class LoginComponent {
     url: string;
-    return_sso_url = 'https://mycard.moe/login_callback'; // 这个url不会真的被使用，可以填写不存在的
+    readonly return_sso_url = 'https://mycard.moe/login_callback'; // 这个url不会真的被使用，可以填写不存在的
 
     constructor (private loginService: LoginService) {
 
-        let payload = new Buffer(querystring.stringify({
-            // nonce: nonce,
-            return_sso_url: this.return_sso_url
-        })).toString('base64');
+        let params = new URLSearchParams();
+        params.set('return_sso_url', this.return_sso_url);
+        let payload = Buffer.from(params.toString()).toString('base64');
 
-        let request = querystring.stringify({
-            'sso': payload,
-            'sig': crypto.createHmac('sha256', 'zsZv6LXHDwwtUAGa').update(payload).digest('hex')
-        });
-        this.url = 'https://ygobbs.com/session/sso_provider?' + request;
+        let url = new URL('https://ygobbs.com/session/sso_provider');
+        params = url['searchParams'];
+        params.set('sso', payload);
+        params.set('sig', crypto.createHmac('sha256', 'zsZv6LXHDwwtUAGa').update(payload).digest('hex'));
+
+        this.url = url.toString();
 
         if (this.loginService.logging_out) {
-            this.url = 'https://ygobbs.com/logout?' + querystring.stringify({'redirect': this.url});
+            url = new URL('https://ygobbs.com/logout');
+            params = url['searchParams'];
+            // params.set('redirect', this.url);
+
+            // 暂时 hack 一下登出，因为聊天室现在没办法重新初始化，于是登出后刷新页面。
+            params.set('redirect', 'https://mycard.moe/logout_callback');
+            this.url = url.toString()
         }
     }
 
     return_sso (return_url: string) {
+        if (return_url === 'https://mycard.moe/logout_callback') {
+            return location.reload()
+        }
         if (!return_url.startsWith(this.return_sso_url)) {
             return;
         }
-        let token = querystring.parse(url.parse(return_url).query).sso;
-        let user = querystring.parse(new Buffer(token, 'base64').toString());
-
+        let token = new URL(return_url)['searchParams'].get('sso');
+        let user = this.toObject(new URLSearchParams(Buffer.from(token, 'base64').toString()));
         this.loginService.login(user);
+    }
+
+    toObject (entries: Iterable<[string, any]>): any {
+        let result = {};
+        for (let [key, value] of entries) {
+            result[key] = value;
+        }
+        return result;
     }
 
     openExternal (url: string) {

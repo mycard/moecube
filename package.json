@@ -33,7 +33,7 @@
     "aria2": "latest",
     "bootstrap": "next",
     "candy": "https://github.com/mycard/candy/releases/download/v2.2.0/candy.tar.gz",
-    "candy-shop": "zh99998/candy-plugins#patch-3",
+    "candy-shop": "zh99998/candy-plugins#patch-5",
     "core-js": "latest",
     "electron-auto-updater": "latest",
     "electron-cookies": "latest",
@@ -51,7 +51,7 @@
     "tether": "latest",
     "typeahead.js": "latest",
     "vue": "latest",
-    "zone.js": "latest"
+    "zone.js": "^0.7.4"
   },
   "devDependencies": {
     "@angular/compiler-cli": "latest",

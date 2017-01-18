@@ -75,9 +75,9 @@ System.config({
         "electron-sudo": "@node/electron-sudo",
         "electron-cookies": "@node/electron-cookies",
 
-        'jquery': '@node/jquery',
-        'tether': '@node/tether',
-        'bootstrap': '@node/bootstrap',
+        'jquery': 'npm:jquery/dist/jquery.min.js',
+        'tether': 'npm:tether/dist/js/tether.min.js',
+        'bootstrap': 'npm:bootstrap/dist/js/bootstrap.min.js',
         'typeahead.js': '@node/typeahead.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
@@ -88,6 +88,14 @@ System.config({
         },
         rxjs: {
             defaultExtension: 'js'
+        }
+    },
+    meta: {
+        bootstrap: {
+            globals: {
+                jQuery: 'jquery',
+                Tether: 'tether'
+            }
         }
     }
 });
