@@ -3,20 +3,22 @@
     flex-grow: 1;
     position: relative;
 }
-/*:host:before {*/
-    /*content: '';*/
-    /*background-image: url('http://vignette2.wikia.nocookie.net/touhou/images/2/2c/Th10_cover.jpg/revision/latest?cb=20071101234746');*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*bottom: 0;*/
-    /*z-index: -1;*/
-    /*filter: grayscale(50%) opacity(10%);*/
-    /*background-repeat: no-repeat;*/
-    /*background-size: 100% auto;*/
 
-/*}*/
+:host:before {
+    content: '';
+    background-image: url('http://vignette2.wikia.nocookie.net/touhou/images/2/2c/Th10_cover.jpg/revision/latest?cb=20071101234746');
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    filter: grayscale(50%) opacity(10%);
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+
+}
+
 .scroll {
     padding: 1rem;
     height: 100%;
@@ -52,7 +54,6 @@ progress {
 
 #news a {
     display: block;
-    margin-bottom: 1rem;
 }
 
 #network {
@@ -75,11 +76,78 @@ progress {
     width: 100%;
 }
 
-.custom-file-control:lang(en)::after{
+.custom-file-control:lang(en)::after {
     content: initial;
 }
 
 .custom-file-control {
     overflow: hidden;
     white-space: nowrap;
+}
+
+h1 {
+    font-size: 28px;
+    margin-left: 1rem;
+}
+
+#status {
+    font-size: 15px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+#icon {
+    width: 128px;
+    height: 128px;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+}
+
+.panel {
+    border: 1px solid #eceeef;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .7);
+    padding: .8rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+#news h3 {
+    padding-top: .8rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+#news p {
+    font-size: 14px;
+    color: #888;
+}
+
+#news a {
+    font-size: 14px;
+    color: #00a4d9;
+}
+
+#news span {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.moreinfo {
+    color: #00a4d9;
+    display: block;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 14px;
+}
+
+#local h2 {
+    margin-bottom: .8rem;
 }

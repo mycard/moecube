@@ -1,56 +1,20 @@
 <div class="scroll">
-<h1>{{currentApp.name}}</h1>
-<!--应用未安装-->
-<div class="actions" *ngIf="!currentApp.isInstalled()">
-    <button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary" data-toggle="modal" data-target="#install-modal">安装</button>
-    <button i18n *ngIf="currentApp.runnable()" (click)="updateInstallOption(currentApp)" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#import-modal">导入</button>
-</div>
 
-<!--应用变更中-->
-<div class="actions" *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
-    <div>
-        <span i18n *ngIf="currentApp.isDownloading()">正在下载</span>
-        <span i18n *ngIf="currentApp.isInstalling()">正在安装...</span>
-        <span i18n *ngIf="currentApp.isUninstalling()">正在卸载...</span>
-        <span i18n *ngIf="currentApp.isWaiting()">等待安装...</span>
-        <span i18n *ngIf="currentApp.isUpdating()">正在更新...</span>
-        <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
-        <span>{{currentApp.progressMessage()}}</span>
-    </div>
-    <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.total ? currentApp.status.progress : 1}}" max="{{currentApp.status.total}}"></progress>
-</div>
+<ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp" [currentApp]="currentApp"></ygopro>
 
-<!--应用ready-->
-<div class="actions" *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
-    <button i18n *ngIf="currentApp.runnable()" (click)="runApp(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-primary">运行</button>
-    <button i18n *ngIf="currentApp.runnable() && currentApp.actions.get('custom')" [disabled]="!appsService.allReady(currentApp)" (click)="custom(currentApp)" type="button" class="btn btn-secondary">设置</button>
-    <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
-        <div class="input-group">
-            <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
-            <div class="input-group-btn" style="flex-direction: row">
-                <button i18n *ngIf="!appsService.connections.get(currentApp)" [disabled]="!appsService.allReady(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary">联机</button>
-                <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary">复制</button>
-                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" style="height: 38px;"></button>
-                <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
-                    <h6 i18n class="dropdown-header">选择服务器</h6>
-                    <a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
-                    <div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>
-                    <a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>
-                </div>
-            </div>
+    <div class="panel panel-default">
+        <h2 i18n *ngIf="news && news.length">新闻</h2>
+        <div id="news" *ngFor="let item of news">
+            <h3>{{item.title}}</h3>
+            <span>2017-01-18</span>
+            <p>{{item.text}}</p>
+            <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
         </div>
+        <a href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>
     </div>
-</div>
-<ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp"></ygopro>
 
-<h2 i18n *ngIf="news && news.length">新闻</h2>
-<div id="news" *ngFor="let item of news">
-    <h3>{{item.title}}</h3>
-    <p>{{item.text}}</p>
-    <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
-</div>
 
-<div *ngIf="currentApp.isReady()">
+    <div *ngIf="currentApp.isReady()">
     <div *ngIf="mods && mods.length">
         <table class="table table-striped">
             <thead class="thead-inverse">
@@ -78,10 +42,19 @@
             </tbody>
         </table>
     </div>
-    <h2 i18n>本地文件</h2>
-    <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">浏览本地文件</button>
-    <button i18n type="button" (click)="verifyFiles(currentApp)" [disabled]="!appsService.allReady(currentApp)" class="btn btn-secondary">校验完整性</button>
-    <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary">卸载</button>
+
+
+        <div class="panel panel-default" id="local">
+            <h2 i18n>本地文件</h2>
+            <div>
+                <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">浏览本地文件</button>
+                <button i18n type="button" (click)="verifyFiles(currentApp)" [disabled]="!appsService.allReady(currentApp)" class="btn btn-secondary btn-sm">校验完整性</button>
+                <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">卸载</button>
+            </div>
+        </div>
+
+
+
 </div>
 
 <!--安装modal-->

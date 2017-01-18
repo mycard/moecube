@@ -100,6 +100,8 @@ let matching_arena: string | undefined;
 export class YGOProComponent implements OnInit {
     @Input()
     app: App;
+    @Input()
+    currentApp: App;
     decks: string[] = [];
     current_deck: string;
     system_conf: string;

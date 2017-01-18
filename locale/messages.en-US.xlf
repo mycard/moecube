@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit datatype="html" id="86738bd5d32223ffbb690a7c71360ddf8e7b1b2e">
         <source>竞技匹配</source>
-        <target>Ranked Match</target>
+        <target>Ranked</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="37869c115276c5df476f1f5aae75c099ffb35b59">
@@ -273,7 +273,7 @@
       </trans-unit>
       <trans-unit datatype="html" id="0bf938a69dc640aba46428d1cbbd2fef34c88daa">
         <source>娱乐匹配</source>
-        <target>Unranked Match</target>
+        <target>Unranked</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="19923836b1ae79614782426a7a001d8ccfa27b5c">
@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit datatype="html" id="c54a3c40a2766446dd03b0af75f64055aa404855">
         <source>房间列表</source>
-        <target>Game List</target>
+        <target>Custom Game</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="3768b60a7e2625bb1fc2db37eb8c6b8e4bd99101">

@@ -11,7 +11,8 @@
         <ul *ngIf="grouped_apps.installed" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.installed" class="nav-item">
                 <a (click)="$event.preventDefault(); chooseApp(app)" class="nav-link" [class.active]="app===currentApp" [href]="'https://mycard.moe/' + app.id">
-                    <!--<img class="icon" src="https://lh3.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAAA/AKB_U8u0CDmxkVqQgOKesrJIb-6eiXacgA/s32-c-mo/photo.jpg">-->{{app.name}}<i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
+                    <img class="icon" src="https://lh3.googleusercontent.com/-crYEtoQ-4Ho/AAAAAAAAAAI/AAAAAAAAAAA/AKB_U8u0CDmxkVqQgOKesrJIb-6eiXacgA/s32-c-mo/photo.jpg">
+                    {{app.name}}<i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
                     <div *ngIf="!app.isReady() && app.status.total" class="progress">
                         <div class="pie" [class.second-half]="app.status.progress/app.status.total>0.5">
                             <div class="left-side half-circle" [style.transform]="'rotate('+(app.status.progress/app.status.total).toString()+'turn)'"></div>
