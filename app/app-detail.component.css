@@ -174,6 +174,7 @@ h1 {
 #time {
     font-size: 14px;
     margin-bottom: .6rem;
+    visibility: hidden;
 }
 
 th {
@@ -210,6 +211,7 @@ dt, dd {
 }
 
 table {
+    margin-top: .5rem;
     margin-bottom: 0;
 }
 
@@ -219,4 +221,4 @@ table th, table td {
     font-weight: normal;
 }
 
-/* */
+
