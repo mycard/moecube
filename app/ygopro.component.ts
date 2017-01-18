@@ -1,7 +1,7 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, Input, EventEmitter, Output} from '@angular/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as child_process from 'child_process';
@@ -71,7 +71,7 @@ interface Options {
     lflist?: number;
     time_limit?: number;
 }
-interface Points {
+export interface Points {
     exp: number;
     exp_rank: number;
     pt: number;
@@ -102,12 +102,15 @@ export class YGOProComponent implements OnInit {
     app: App;
     @Input()
     currentApp: App;
+
+    @Output()
+    points: EventEmitter<Points> = new EventEmitter();
     decks: string[] = [];
     current_deck: string;
     system_conf: string;
     numfont: string[];
     textfont: string[];
-    points: Points;
+    // points: Points;
 
     windbot: string[]; // ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
 
@@ -136,8 +139,8 @@ export class YGOProComponent implements OnInit {
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
 
-    constructor (private http: Http, private appsService: AppsService, private loginService: LoginService,
-                 private settingsService: SettingsService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService,
+                private settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -174,7 +177,7 @@ export class YGOProComponent implements OnInit {
 
     }
 
-    async ngOnInit () {
+    async ngOnInit() {
 
         let locale: string;
         if (this.settingsService.getLocale().startsWith('zh')) {
@@ -232,7 +235,7 @@ export class YGOProComponent implements OnInit {
         });
     }
 
-    async refresh () {
+    async refresh() {
         let decks = await this.get_decks();
         this.decks = decks;
         let system_conf = await this.load_system_conf();
@@ -246,15 +249,16 @@ export class YGOProComponent implements OnInit {
         let params = new URLSearchParams();
         params.set('username', this.loginService.user.username);
         try {
-            this.points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params})
+            let points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params})
                 .map((response) => response.json())
                 .toPromise();
+            this.points.emit(points);
         } catch (error) {
             console.log(error);
         }
     };
 
-    get_decks (): Promise<string[]> {
+    get_decks(): Promise<string[]> {
         return new Promise((resolve, reject) => {
             fs.readdir(path.join(this.app.local!.path, 'deck'), (error, files) => {
                 if (error) {
@@ -266,7 +270,7 @@ export class YGOProComponent implements OnInit {
         });
     }
 
-    async get_font (files: string[]): Promise<string | undefined> {
+    async get_font(files: string[]): Promise<string | undefined> {
         for (let file of files) {
             let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
             if (found) {
@@ -275,14 +279,14 @@ export class YGOProComponent implements OnInit {
         }
     }
 
-    async delete_deck (deck: string) {
+    async delete_deck(deck: string) {
         if (confirm('确认删除?')) {
             await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
             return this.refresh();
         }
     }
 
-    async fix_fonts (data: SystemConf) {
+    async fix_fonts(data: SystemConf) {
         if (!await this.get_font([data.numfont])) {
             let font = await this.get_font(this.numfont);
             if (font) {
@@ -298,7 +302,7 @@ export class YGOProComponent implements OnInit {
         }
     };
 
-    load_system_conf (): Promise<SystemConf> {
+    load_system_conf(): Promise<SystemConf> {
         return new Promise((resolve, reject) => {
             fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
                 if (error) {
@@ -309,7 +313,7 @@ export class YGOProComponent implements OnInit {
         });
     };
 
-    save_system_conf (data: SystemConf) {
+    save_system_conf(data: SystemConf) {
         return new Promise((resolve, reject) => {
             fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{whitespace: true})), (error) => {
                 if (error) {
@@ -320,7 +324,7 @@ export class YGOProComponent implements OnInit {
         });
     };
 
-    async join (name: string, server: Server) {
+    async join(name: string, server: Server) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = this.current_deck;
@@ -333,7 +337,7 @@ export class YGOProComponent implements OnInit {
         return this.start_game(['-j']);
     };
 
-    async edit_deck (deck: string) {
+    async edit_deck(deck: string) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = deck;
@@ -341,11 +345,11 @@ export class YGOProComponent implements OnInit {
         return this.start_game(['-d']);
     }
 
-    join_windbot (name: string) {
+    join_windbot(name: string) {
         return this.join('AI#' + name, this.servers[0]);
     }
 
-    async start_game (args: string[]) {
+    async start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
         return new Promise((resolve, reject) => {
@@ -357,7 +361,7 @@ export class YGOProComponent implements OnInit {
                 reject(error);
                 win.restore();
             });
-            child.on('exit', async (code, signal) => {
+            child.on('exit', async(code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
                 await this.refresh();
                 resolve();
@@ -366,7 +370,7 @@ export class YGOProComponent implements OnInit {
         });
     };
 
-    create_room (room: Room) {
+    create_room(room: Room) {
         let options_buffer = new Buffer(6);
         // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
         options_buffer.writeUInt8((room.private ? 2 : 1) << 4, 1);
@@ -397,7 +401,7 @@ export class YGOProComponent implements OnInit {
         this.join(password, this.servers[0]);
     }
 
-    join_room (room: Room) {
+    join_room(room: Room) {
         let options_buffer = new Buffer(6);
         options_buffer.writeUInt8(3 << 4, 1);
         let checksum = 0;
@@ -417,7 +421,7 @@ export class YGOProComponent implements OnInit {
         this.join(password, room.server!);
     }
 
-    request_match (arena = 'entertain') {
+    request_match(arena = 'entertain') {
         let headers = new Headers();
         headers.append('Authorization',
             'Basic ' + Buffer.from(this.loginService.user.username + ':' + this.loginService.user.external_id).toString('base64'));
@@ -443,7 +447,7 @@ export class YGOProComponent implements OnInit {
             });
     }
 
-    cancel_match () {
+    cancel_match() {
         this.matching!.unsubscribe();
         this.matching = matching = undefined;
         this.matching_arena = matching_arena = undefined;

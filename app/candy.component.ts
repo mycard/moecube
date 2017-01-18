@@ -35,7 +35,6 @@ import 'node_modules/candy-shop/modify-role/candy.js';
 import 'node_modules/candy-shop/me-does/candy.js';
 import 'node_modules/candy-shop/notifications/candy.js';
 import 'node_modules/candy-shop/refocus/candy.js';
-import 'electron-cookies';
 
 delete window['jQuery'];
 
@@ -59,7 +58,8 @@ Candy.Util.getPosTopAccordingToWindowBounds = new Proxy(Candy.Util.getPosTopAcco
     }
 });
 
-Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
+document['__defineGetter__']('cookie', () => 'candy-nostatusmessages');
+document['__defineSetter__']('cookie', () => true);
 
 @Component({
     moduleId: module.id,
@@ -75,10 +75,10 @@ export class CandyComponent implements OnInit, OnChanges {
     password: string;
     nickname: string;
 
-    constructor (private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
+    constructor(private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
     }
 
-    ngOnInit () {
+    ngOnInit() {
 
         this.jid = this.loginService.user.username + '@mycard.moe';
         this.password = this.loginService.user.external_id.toString();
@@ -136,7 +136,7 @@ export class CandyComponent implements OnInit, OnChanges {
         Candy.Core.connect(this.jid, this.password, this.nickname);
     }
 
-    ngOnChanges (changes: SimpleChanges): void {
+    ngOnChanges(changes: SimpleChanges): void {
         if (!Candy.Core.getConnection()) {
             return;
         }

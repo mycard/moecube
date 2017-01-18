@@ -72,6 +72,10 @@ export class App {
     files: Map<string, FileOptions>;
     data: any;
 
+    icon: string;
+    cover: string;
+    background: string;
+
     static downloadUrl (app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
             return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`;
@@ -165,6 +169,10 @@ export class App {
         this.conference = app.conference;
         this.files = app.files;
         this.data = app.data;
+
+        this.icon = app.icon;
+        this.cover = app.cover;
+        this.background = app.background;
     }
 
     findDependencies(): App[] {

@@ -73,7 +73,6 @@ System.config({
         "mkdirp": "@node/mkdirp",
         "aria2": "@node/aria2",
         "electron-sudo": "@node/electron-sudo",
-        "electron-cookies": "@node/electron-cookies",
 
         'jquery': 'npm:jquery/dist/jquery.min.js',
         'tether': 'npm:tether/dist/js/tether.min.js',

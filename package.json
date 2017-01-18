@@ -1,6 +1,6 @@
 {
   "name": "mycard",
-  "version": "3.0.16",
+  "version": "3.0.17",
   "description": "mycard",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
@@ -36,7 +36,6 @@
     "candy-shop": "zh99998/candy-plugins#patch-5",
     "core-js": "latest",
     "electron-auto-updater": "latest",
-    "electron-cookies": "latest",
     "electron-is-dev": "latest",
     "electron-sudo": "mycard/electron-sudo#mycard",
     "font-awesome": "latest",

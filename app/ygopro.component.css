@@ -93,98 +93,6 @@ label {
     font-size: 15px;
 }
 
-h2 {
-    font-size: 20px;
-}
-
-dt, dd {
-    font-size: 14px;
-}
-
-.panel {
-    border: 1px solid #eceeef;
-    border-radius: 6px;
-    background: rgba(255,255,255,.7);
-    padding: .8rem;
-    margin-bottom: 1rem;
-}
-
-table {
-    margin-bottom: 0;
-}
-
-table th, table td {
-    border-top: none;
-    font-size: 14px;
-    font-weight: normal;
-}
-
-
-/*.table-curved {*/
-    /*border-collapse: separate;*/
-    /*border: solid #ccc 1px;*/
-    /*border-radius: 6px;*/
-    /*border-left: 0px;*/
-    /*border-top: 0px;*/
-/*}*/
-/*.table-curved > thead:first-child > tr:first-child > th {*/
-    /*border-bottom: 0px;*/
-    /*border-top: solid #ccc 1px;*/
-/*}*/
-/*.table-curved td, .table-curved th {*/
-    /*border-left: 1px solid #ccc;*/
-    /*border-top: 1px solid #ccc;*/
-/*}*/
-/*.table-curved > :first-child > :first-child > :first-child {*/
-    /*border-radius: 6px 0 0 0;*/
-/*}*/
-/*.table-curved > :first-child > :first-child > :last-child {*/
-    /*border-radius: 0 6px 0 0;*/
-/*}*/
-/*.table-curved > :last-child > :last-child > :first-child {*/
-    /*border-radius: 0 0 0 6px;*/
-/*}*/
-/*.table-curved > :last-child > :last-child > :last-child {*/
-    /*border-radius: 0 0 6px 0;*/
-/*}*/
-
-
-
-#icon {
-    width: 128px;
-    height: 128px;
-    box-shadow: 0 0 4px #ccc;
-}
-
-#main {
-    display: flex;
-    flex-direction: row;
-}
-
-.panel {
-    border: 1px solid #eceeef;
-    border-radius: 6px;
-    background: rgba(255,255,255,.7);
-    padding: .8rem;
-    margin-bottom: 1rem;
-    position: relative;
-}
-#right {
-    margin-left: 1rem;
-}
-h1 {
-    font-size: 28px;
-    margin-bottom: 0;
-}
-
-#time {
-    font-size: 14px;
-    margin-bottom: .6rem;
-}
-
-#action {
-    margin-bottom: .5rem;
-}
 
 form {
     margin-bottom: 0;
@@ -195,22 +103,6 @@ form {
     border-color: #008dbb;
 }
 
-th {
-    width: 25%;
-}
-.moreinfo {
-    color: #00a4d9;
-    display: block;
-    position: absolute;
-    top: 12px;
-    right: 18px;
-    font-size: 14px;
-}
-
-#arena {
-    position: relative;
-}
-
-select {
-    margin-right: 0 !important;
+#action {
+    margin-bottom: .5rem;
 }

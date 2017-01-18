@@ -4,15 +4,12 @@
     position: relative;
 }
 
-:host:before {
-    content: '';
-    background-image: url('http://vignette2.wikia.nocookie.net/touhou/images/2/2c/Th10_cover.jpg/revision/latest?cb=20071101234746');
+#background {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
     filter: grayscale(50%) opacity(10%);
     background-repeat: no-repeat;
     background-size: 100% auto;
@@ -20,7 +17,7 @@
 }
 
 .scroll {
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem;
     height: 100%;
 }
 
@@ -59,7 +56,7 @@ progress {
 #network {
     display: inline-block;
     vertical-align: middle;
-    width: 300px;
+    width: 230px;
 }
 
 #network .input-group-btn > .btn:not(:last-child):not(.dropdown-toggle) {
@@ -87,7 +84,6 @@ progress {
 
 h1 {
     font-size: 28px;
-    margin-left: 1rem;
 }
 
 #status {
@@ -112,9 +108,10 @@ h2 {
 .panel {
     border: 1px solid #eceeef;
     border-radius: 6px;
-    background: rgba(255, 255, 255, .7);
+    background: rgba(255,255,255,.7);
     padding: .8rem;
     margin-bottom: 1rem;
+    box-shadow: 0 0 15px rgba(0,0,0,.05);
     position: relative;
 }
 
@@ -151,3 +148,75 @@ h2 {
 #local h2 {
     margin-bottom: .8rem;
 }
+
+
+
+
+#icon {
+    width: 128px;
+    height: 128px;
+    box-shadow: 0 0 4px #ccc;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+}
+
+#right {
+    margin-left: 1rem;
+}
+h1 {
+    font-size: 28px;
+    margin-bottom: 0;
+}
+
+#time {
+    font-size: 14px;
+    margin-bottom: .6rem;
+}
+
+th {
+    width: 25%;
+}
+.moreinfo {
+    color: #00a4d9;
+    display: block;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 14px;
+}
+
+#arena {
+    position: relative;
+}
+
+.btn-primary {
+    background-color: #00a4d9;
+    border-color: #008dbb;
+}
+
+
+
+/* 竞技场 */
+
+h2 {
+    font-size: 20px;
+}
+
+dt, dd {
+    font-size: 14px;
+}
+
+table {
+    margin-bottom: 0;
+}
+
+table th, table td {
+    border-top: none;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+/* */

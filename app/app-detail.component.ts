@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges} from '@angular/core';
 import {AppsService} from './apps.service';
 import {InstallOption} from './install-option';
 import {SettingsService} from './settings.sevices';
@@ -8,6 +8,7 @@ import {clipboard, remote} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
+import {Points} from './ygopro.component';
 
 declare const Notification: any;
 
@@ -17,7 +18,7 @@ declare const Notification: any;
     templateUrl: 'app-detail.component.html',
     styleUrls: ['app-detail.component.css'],
 })
-export class AppDetailComponent implements OnInit {
+export class AppDetailComponent implements OnInit, OnChanges {
     @Input()
     currentApp: App;
     platform = process.platform;
@@ -28,10 +29,25 @@ export class AppDetailComponent implements OnInit {
     referencesInstall: {[id: string]: boolean};
 
     import_path: string;
+    background: string;
+
+    points: Points;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
     }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['currentApp']) {
+            if (this.currentApp.background && this.currentApp.background.length > 0) {
+                let url = this.currentApp.background[Math.floor(Math.random() * this.currentApp.background.length)];
+                this.background = `url(${url})`;
+            } else {
+                this.background = '';
+            }
+        }
+    }
+
 
     async ngOnInit(): Promise<void> {
         let volume = 'A';
@@ -215,5 +231,9 @@ export class AppDetailComponent implements OnInit {
             this.import_path = filePaths[0];
         }
 
+    }
+
+    onPoints(points: Points) {
+        this.points = points;
     }
 }

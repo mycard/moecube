@@ -1,9 +1,16 @@
 html, body {
     height: 100%;
+    overflow: hidden;
 }
 
 body {
     font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+    -webkit-user-select: none;
+    background: transparent;
+    border-radius: 5px;
+    border: 1px solid #eee;
+
+    padding-right: 0 !important;
 }
 
 mycard {
@@ -85,6 +92,6 @@ body.resizing /deep/ * {
     -webkit-user-select: none;
 }
 
-body {
-    -webkit-user-select: none;
+mycard {
+    background-color: white;
 }

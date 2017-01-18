@@ -2,6 +2,7 @@
     display: flex;
     height: 100%;
 }
+
 #right {
     display: flex;
     flex-direction: column;
@@ -166,19 +167,23 @@ nav {
 a {
     cursor: default;
 }
+
 .search {
     background-color: #ebf3f8;
     border: none;
 }
+
 i.search {
     color: #a7a7a7;
 }
+
 input.search {
     padding-left: 0;
     font-size: 14px;
     font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
 }
-input.search::-webkit-input-placeholder{
+
+input.search::-webkit-input-placeholder {
     color: #a7a7a7;
 }
 
@@ -230,3 +235,27 @@ nav::-webkit-resizer {
     right: 0;
     cursor: row-resize;
 }
+
+#nav-wrapper {
+    z-index: 90;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+}
+
+#candy-wrapper {
+    z-index: 80;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+}
+
+roster {
+    z-index: 90;
+}
+
+/*#right-shadow {*/
+    /*width: 190px;*/
+    /*z-index: 95;*/
+    /*box-shadow: 0 0 5px rgba(0, 0, 0, .2);*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+/*}*/
