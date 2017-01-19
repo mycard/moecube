@@ -1,18 +1,27 @@
-<div id="action">
-    <button [disabled]="matching||!appsService.allReady(app)" (click)="request_match('athletic')" *ngIf="matching_arena != 'athletic'" type="button" class="btn btn-primary btn-sm">
+<div *ngIf="!matching" id="action">
+    <button [disabled]="!appsService.allReady(app)" (click)="request_match('athletic')" type="button" class="btn btn-primary btn-sm">
         <i class="fa fa-play" aria-hidden="true"></i> <span i18n>竞技匹配</span></button>
-    <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary btn-sm">取消等待</button>
-    <button i18n [disabled]="matching||!appsService.allReady(app)" (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" type="button" class="btn btn-secondary btn-sm">娱乐匹配</button>
-    <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary btn-sm">取消等待</button>
-    <button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-list-modal">自定义游戏</button>
+    <button i18n [disabled]="!appsService.allReady(app)" (click)="request_match('entertain')" type="button" class="btn btn-secondary btn-sm">娱乐匹配</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-list-modal">自定义游戏</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
+
+<!-- 匹配中 -->
+<div *ngIf="matching" id="match-time" class="input-group input-group-sm">
+    <span class="input-group-addon">
+        <i class="fa fa-futbol-o fa-spin" aria-hidden="true"></i>
+        <span i18n *ngIf="matching_arena == 'athletic'">竞技匹配</span>
+        <span i18n *ngIf="matching_arena == 'entertain'">娱乐匹配</span>
+    </span>
+    <span class="input-group-addon"><span i18n>预计时间</span> 03:00</span><span class="input-group-addon"><span i18n>实际时间</span> {{match_time | date:'mm:ss'}}</span>
+    <span class="input-group-btn"><button class="btn btn-secondary" type="button" [disabled]="!match_cancelable" (click)="cancel_match()">取消</button></span>
+</div>
+
 <div class="input-group input-group-sm">
     <label i18n class="input-group-addon" id="basic-addon1">卡组</label>
     <select class="form-control form-control-sm" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
         <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
-    </select>
-    <span class="input-group-btn">
+    </select> <span class="input-group-btn">
         <button id="edit_deck_button" i18n [disabled]="!appsService.allReady(app)" class="btn btn-secondary btn-sm" (click)="edit_deck(current_deck)">编辑</button>
     </span>
 </div>

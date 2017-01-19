@@ -103,6 +103,10 @@ form {
     border-color: #008dbb;
 }
 
-#action {
+#action, #match-time {
     margin-bottom: .5rem;
+}
+
+#match-time .input-group-addon {
+    display: block;
 }
