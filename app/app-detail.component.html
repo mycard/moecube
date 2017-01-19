@@ -1,283 +1,251 @@
-<div *ngIf="currentApp.background" id="background" [style.background-image]="'url(' + currentApp.background + ')'"></div>
-<div class="scroll">
-    <div id="main" class="panel">
-        <img *ngIf="currentApp.cover" id="icon" class="rounded" [src]="currentApp.cover">
-        <div id="right">
-            <h1>{{currentApp.name}}</h1>
-            <div id="time">您已玩了 2564 小时</div>
-            <!--应用未安装-->
-            <div *ngIf="!currentApp.isInstalled()">
-                <button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#install-modal">安装</button>
-                <button i18n *ngIf="currentApp.runnable()" (click)="updateInstallOption(currentApp)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#import-modal">导入</button>
-            </div>
+<div id="main" class="panel">
+    <img *ngIf="currentApp.cover" id="icon" class="rounded" [src]="currentApp.cover">
+    <div id="right">
+        <h1>{{currentApp.name}}</h1>
+        <div id="time">您已玩了 2564 小时</div>
+        <!--应用未安装-->
+        <div *ngIf="!currentApp.isInstalled()">
+            <button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#install-modal">安装</button>
+            <button i18n *ngIf="currentApp.runnable()" (click)="updateInstallOption(currentApp)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#import-modal">导入</button>
+        </div>
 
-            <!--应用变更中-->
-            <div *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
-                <div id="status">
-                    <span i18n *ngIf="currentApp.isDownloading()">正在下载</span>
-                    <span i18n *ngIf="currentApp.isInstalling()">正在安装...</span>
-                    <span i18n *ngIf="currentApp.isUninstalling()">正在卸载...</span>
-                    <span i18n *ngIf="currentApp.isWaiting()">等待安装...</span>
-                    <span i18n *ngIf="currentApp.isUpdating()">正在更新...</span>
-                    <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
-                    <span>{{currentApp.progressMessage()}}</span>
-                </div>
-                <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.total ? currentApp.status.progress : 1}}" max="{{currentApp.status.total}}"></progress>
+        <!--应用变更中-->
+        <div *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
+            <div id="status">
+                <span i18n *ngIf="currentApp.isDownloading()">正在下载</span>
+                <span i18n *ngIf="currentApp.isInstalling()">正在安装...</span>
+                <span i18n *ngIf="currentApp.isUninstalling()">正在卸载...</span>
+                <span i18n *ngIf="currentApp.isWaiting()">等待安装...</span>
+                <span i18n *ngIf="currentApp.isUpdating()">正在更新...</span>
+                <span *ngIf="currentApp.status.total">{{(currentApp.status.progress/currentApp.status.total * 100).toFixed()}}%</span>
+                <span>{{currentApp.progressMessage()}}</span>
             </div>
+            <progress class="progress" [class.progress-striped]="!currentApp.status.total" [class.progress-animated]="!currentApp.status.total" value="{{currentApp.status.total ? currentApp.status.progress : 1}}" max="{{currentApp.status.total}}"></progress>
+        </div>
 
-            <!--应用ready-->
-            <div *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
-                <button *ngIf="currentApp.runnable()" (click)="runApp(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-primary btn-sm"><i class="fa fa-play" aria-hidden="true"></i> <span i18n>运行</span></button>
-                <button i18n *ngIf="currentApp.runnable() && currentApp.actions.get('custom')" [disabled]="!appsService.allReady(currentApp)" (click)="custom(currentApp)" type="button" class="btn btn-secondary btn-sm">设置</button>
-                <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
-                    <div class="input-group input-group-sm">
-                        <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
-                        <div class="input-group-btn" style="flex-direction: row">
-                            <button i18n *ngIf="!appsService.connections.get(currentApp)" [disabled]="!appsService.allReady(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary btn-sm">联机</button>
-                            <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary btn-sm">复制</button>
-                            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
-                            <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
-                                <h6 i18n class="dropdown-header">选择服务器</h6>
-                                <a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
-                                <div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>
-                                <a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>
-                            </div>
+        <!--应用ready-->
+        <div *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
+            <button *ngIf="currentApp.runnable()" (click)="runApp(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-primary btn-sm">
+                <i class="fa fa-play" aria-hidden="true"></i> <span i18n>运行</span></button>
+            <button i18n *ngIf="currentApp.runnable() && currentApp.actions.get('custom')" [disabled]="!appsService.allReady(currentApp)" (click)="custom(currentApp)" type="button" class="btn btn-secondary btn-sm">设置</button>
+            <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
+                <div class="input-group input-group-sm">
+                    <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
+                    <div class="input-group-btn" style="flex-direction: row">
+                        <button i18n *ngIf="!appsService.connections.get(currentApp)" [disabled]="!appsService.allReady(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary btn-sm">联机</button>
+                        <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary btn-sm">复制</button>
+                        <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
+                        <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
+                            <h6 i18n class="dropdown-header">选择服务器</h6>
+                            <a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
+                            <div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>
+                            <a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp" [currentApp]="currentApp" (points)="onPoints($event)"></ygopro>
         </div>
-
+        <ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp" [currentApp]="currentApp" (points)="onPoints($event)"></ygopro>
     </div>
 
+</div>
 
 
-    <!--{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}-->
+<!--{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}-->
 
-    <div id="arena" class="panel panel-default" *ngIf="points">
-        <h2 i18n>排位成绩</h2>
-        <table class="table table-sm">
+<div id="arena" class="panel panel-default" *ngIf="points">
+    <h2 i18n>排位成绩</h2>
+    <table class="table table-sm">
+        <tbody>
+        <tr>
+            <th i18n>竞技排名</th>
+            <td>{{points.arena_rank}}</td>
+            <th i18n>娱乐排名</th>
+            <td>{{points.exp_rank}}</td>
+        </tr>
+        <tr>
+            <th i18n>竞技胜率</th>
+            <td>{{points.athletic_wl_ratio}}%</td>
+            <th i18n>经验</th>
+            <td>{{points.exp}}</td>
+        </tr>
+        <tr>
+            <th i18n>胜场</th>
+            <td>{{points.athletic_win}}</td>
+            <th i18n>胜场</th>
+            <td>{{points.entertain_win}}</td>
+        </tr>
+        <tr>
+            <th i18n>负场</th>
+            <td>{{points.athletic_win}}</td>
+            <th i18n>负场</th>
+            <td>{{points.entertain_lose}}</td>
+        </tr>
+        <tr>
+            <th i18n>平局</th>
+            <td>{{points.athletic_draw}}</td>
+            <th i18n>平局</th>
+            <td>{{points.entertain_draw}}</td>
+        </tr>
+        <tr>
+            <th i18n>总场</th>
+            <td>{{points.athletic_all}}</td>
+            <th i18n>总场</th>
+            <td>{{points.entertain_all}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>
+</div>
+
+
+<!--<div *ngIf="points" class="row">--><!--<dl class="col-4 row">--><!--<dt i18n class="col-8">竞技排名</dt>--><!--<dd class="col-4">{{points.arena_rank}}</dd>--><!--<dt i18n class="col-8">竞技胜率</dt>--><!--<dd class="col-4">{{points.athletic_wl_ratio}}%</dd>--><!--<dt i18n class="col-8">胜场</dt>--><!--<dd class="col-4">{{points.athletic_win}}</dd>--><!--<dt i18n class="col-8">负场</dt>--><!--<dd class="col-4">{{points.athletic_lose}}</dd>--><!--<dt i18n class="col-8">平局</dt>--><!--<dd class="col-4">{{points.athletic_draw}}</dd>--><!--<dt i18n class="col-8">总场</dt>--><!--<dd class="col-4">{{points.athletic_all}}</dd>--><!--</dl>--><!--<dl class="col-4 row">--><!--<dt i18n class="col-8">娱乐排名</dt>--><!--<dd class="col-4">{{points.exp_rank}}</dd>--><!--<dt i18n class="col-8">经验</dt>--><!--<dd class="col-4">{{points.exp}}</dd>--><!--<dt i18n class="col-8">胜场</dt>--><!--<dd class="col-4">{{points.entertain_win}}</dd>--><!--<dt i18n class="col-8">负场</dt>--><!--<dd class="col-4">{{points.entertain_lose}}</dd>--><!--<dt i18n class="col-8">平局</dt>--><!--<dd class="col-4">{{points.entertain_draw}}</dd>--><!--<dt i18n class="col-8">总场</dt>--><!--<dd class="col-4">{{points.entertain_all}}</dd>--><!--</dl>--><!--</div>-->
+
+<div class="panel panel-default" *ngIf="news && news.length">
+    <h2 i18n>新闻</h2>
+    <div id="news" *ngFor="let item of news">
+        <h3>{{item.title}}</h3>
+        <span>2017-01-18</span>
+        <p>{{item.text}}</p>
+        <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
+    </div>
+    <!--<a href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>-->
+</div>
+
+
+<div *ngIf="currentApp.isReady()">
+    <div *ngIf="mods && mods.length">
+        <table class="table table-striped">
+            <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th i18n>名称</th>
+                <th i18n>操作</th>
+            </tr>
+            </thead>
             <tbody>
-            <tr>
-                <th>竞技排名</th>
-                <td>{{points.arena_rank}}</td>
-                <th>娱乐排名</th>
-                <td>{{points.exp_rank}}</td>
-            </tr>
-            <tr>
-                <th>竞技胜率</th>
-                <td>{{points.athletic_wl_ratio}}%</td>
-                <th>经验</th>
-                <td>{{points.exp}}</td>
-            </tr>
-            <tr>
-                <th>胜场</th>
-                <td>{{points.athletic_win}}</td>
-                <th>胜场</th>
-                <td>{{points.entertain_win}}</td>
-            </tr>
-            <tr>
-                <th>负场</th>
-                <td>{{points.entertain_lose}}</td>
-                <th>负场</th>
-                <td>{{points.entertain_lose}}</td>
-            </tr>
-            <tr>
-                <th>平局</th>
-                <td>{{points.athletic_draw}}</td>
-                <th>平局</th>
-                <td>{{points.entertain_draw}}</td>
-            </tr>
-            <tr>
-                <th>总场</th>
-                <td>{{points.athletic_all}}</td>
-                <th>总场</th>
-                <td>{{points.entertain_all}}</td>
+            <tr *ngFor="let mod of mods; let i = index">
+                <th scope="row">{{i + 1}}</th>
+                <td>{{mod.name}}</td>
+                <td *ngIf="mod.isReady()">
+                    <button i18n type="button" [disabled]="mod.isInstalled()&&!appsService.allReady(mod)" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
+                </td>
+                <td *ngIf="!mod.isInstalled()">
+                    <button i18n (click)="installMod(mod)" [disabled]="mod.isInstalled()&&!appsService.allReady(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
+                </td>
+                <td *ngIf="mod.isInstalled()&&!mod.isReady()">
+                    <progress class="progress progress-striped progress-animated" value="{{mod.status.total ? mod.status.progress : 1}}" max="{{mod.status.total}}"></progress>
+                    <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
+                </td>
             </tr>
             </tbody>
         </table>
-        <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>
     </div>
 
 
-    <!--<div *ngIf="points" class="row">-->
-    <!--<dl class="col-4 row">-->
-    <!--<dt i18n class="col-8">竞技排名</dt>-->
-    <!--<dd class="col-4">{{points.arena_rank}}</dd>-->
-    <!--<dt i18n class="col-8">竞技胜率</dt>-->
-    <!--<dd class="col-4">{{points.athletic_wl_ratio}}%</dd>-->
-    <!--<dt i18n class="col-8">胜场</dt>-->
-    <!--<dd class="col-4">{{points.athletic_win}}</dd>-->
-    <!--<dt i18n class="col-8">负场</dt>-->
-    <!--<dd class="col-4">{{points.athletic_lose}}</dd>-->
-    <!--<dt i18n class="col-8">平局</dt>-->
-    <!--<dd class="col-4">{{points.athletic_draw}}</dd>-->
-    <!--<dt i18n class="col-8">总场</dt>-->
-    <!--<dd class="col-4">{{points.athletic_all}}</dd>-->
-    <!--</dl>-->
-    <!--<dl class="col-4 row">-->
-    <!--<dt i18n class="col-8">娱乐排名</dt>-->
-    <!--<dd class="col-4">{{points.exp_rank}}</dd>-->
-    <!--<dt i18n class="col-8">经验</dt>-->
-    <!--<dd class="col-4">{{points.exp}}</dd>-->
-    <!--<dt i18n class="col-8">胜场</dt>-->
-    <!--<dd class="col-4">{{points.entertain_win}}</dd>-->
-    <!--<dt i18n class="col-8">负场</dt>-->
-    <!--<dd class="col-4">{{points.entertain_lose}}</dd>-->
-    <!--<dt i18n class="col-8">平局</dt>-->
-    <!--<dd class="col-4">{{points.entertain_draw}}</dd>-->
-    <!--<dt i18n class="col-8">总场</dt>-->
-    <!--<dd class="col-4">{{points.entertain_all}}</dd>-->
-    <!--</dl>-->
-    <!--</div>-->
-
-    <div class="panel panel-default" *ngIf="news && news.length">
-        <h2 i18n>新闻</h2>
-        <div id="news" *ngFor="let item of news">
-            <h3>{{item.title}}</h3>
-            <span>2017-01-18</span>
-            <p>{{item.text}}</p>
-            <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
+    <div class="panel panel-default" id="local">
+        <h2 i18n>本地文件</h2>
+        <div>
+            <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">浏览本地文件</button>
+            <button i18n type="button" (click)="verifyFiles(currentApp)" [disabled]="!appsService.allReady(currentApp)" class="btn btn-secondary btn-sm">校验完整性</button>
+            <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">卸载</button>
         </div>
-        <!--<a href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>-->
     </div>
 
 
-    <div *ngIf="currentApp.isReady()">
-        <div *ngIf="mods && mods.length">
-            <table class="table table-striped">
-                <thead class="thead-inverse">
-                <tr>
-                    <th>#</th>
-                    <th i18n>名称</th>
-                    <th i18n>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let mod of mods; let i = index">
-                    <th scope="row">{{i + 1}}</th>
-                    <td>{{mod.name}}</td>
-                    <td *ngIf="mod.isReady()">
-                        <button i18n type="button" [disabled]="mod.isInstalled()&&!appsService.allReady(mod)" (click)="uninstall(mod)" class="btn btn-danger btn-sm">卸载</button>
-                    </td>
-                    <td *ngIf="!mod.isInstalled()">
-                        <button i18n (click)="installMod(mod)" [disabled]="mod.isInstalled()&&!appsService.allReady(mod)" type="button" *ngIf="!mod.isInstalled()" class="btn btn-primary btn-sm">安装</button>
-                    </td>
-                    <td *ngIf="mod.isInstalled()&&!mod.isReady()">
-                        <progress class="progress progress-striped progress-animated" value="{{mod.status.total ? mod.status.progress : 1}}" max="{{mod.status.total}}"></progress>
-                        <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+</div>
 
-
-        <div class="panel panel-default" id="local">
-            <h2 i18n>本地文件</h2>
-            <div>
-                <button i18n (click)="appsService.browse(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">浏览本地文件</button>
-                <button i18n type="button" (click)="verifyFiles(currentApp)" [disabled]="!appsService.allReady(currentApp)" class="btn btn-secondary btn-sm">校验完整性</button>
-                <button i18n (click)="uninstall(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-secondary btn-sm">卸载</button>
+<!--安装modal-->
+<div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
+    <div class="modal-dialog" role="document">
+        <form id="install-form" class="modal-content" (ngSubmit)="install(currentApp,installOption,referencesInstall)" #theForm="ngForm">
+            <div class="modal-header">
+                <h5 i18n class="modal-title" id="myModalLabel">安装 {{currentApp.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
             </div>
-        </div>
-
-
+            <div class="modal-body">
+                <p i18n>即将开始安装 {{currentApp.name}}</p>
+                <h4 i18n>安装位置</h4>
+                <div class="form-group">
+                    <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
+                        <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
+                    </select></div>
+                <h4 i18n>快捷方式</h4>
+                <div class="checkbox">
+                    <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">
+                    <label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>
+                    <label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>
+                </div>
+                <div class="checkbox">
+                    <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">
+                    <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
+                </div>
+                <h4 i18n *ngIf="references.length>0">扩展内容</h4>
+                <div *ngFor="let reference of references"><label>
+                    <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
+                </label></div>
+                <div *ngIf="currentApp.findDependencies().length">
+                    <span i18n>依赖：</span>
+                    <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!--安装modal-->
-    <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
-        <div class="modal-dialog" role="document">
-            <form id="install-form" class="modal-content" (ngSubmit)="install(currentApp,installOption,referencesInstall)" #theForm="ngForm">
-                <div class="modal-header">
-                    <h5 i18n class="modal-title" id="myModalLabel">安装 {{currentApp.name}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p i18n>即将开始安装 {{currentApp.name}}</p>
-                    <h4 i18n>安装位置</h4>
-                    <div class="form-group">
-                        <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
-                            <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
-                            <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
-                        </select></div>
-                    <h4 i18n>快捷方式</h4>
-                    <div class="checkbox">
-                        <input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">
-                        <label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>
-                        <label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>
-                    </div>
-                    <div class="checkbox">
-                        <input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">
-                        <label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>
-                    </div>
-                    <h4 i18n *ngIf="references.length>0">扩展内容</h4>
-                    <div *ngFor="let reference of references"><label>
-                        <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
-                    </label></div>
-                    <div *ngIf="currentApp.findDependencies().length">
-                        <span i18n>依赖：</span>
-                        <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button i18n type="submit" [disabled]="!theForm.form.valid" class="btn btn-primary">安装</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
+    <div class="modal-dialog" role="document">
+        <form id="import-form" class="modal-content" (ngSubmit)="importGame(currentApp,installOption,referencesInstall)" #theForm="ngForm">
+            <div class="modal-header">
+                <h5 i18n class="modal-title">导入 {{currentApp.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p i18n>选择主程序 {{currentApp.actions.get('main').execute}}</p>
+                <label class="custom-file" lang="en">
+                    <input (click)="$event.preventDefault();selectImport(currentApp)" type="file" id="file" class="custom-file-input">
+                    <span class="custom-file-control">{{import_path || currentApp.actions.get('main').execute}}</span>
+                </label>
 
-    <div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
-        <div class="modal-dialog" role="document">
-            <form id="import-form" class="modal-content" (ngSubmit)="importGame(currentApp,installOption,referencesInstall)" #theForm="ngForm">
-                <div class="modal-header">
-                    <h5 i18n class="modal-title">导入 {{currentApp.name}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
-                    </button>
+                <h4 i18n>导入到</h4>
+                <div class="form-group">
+                    <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
+                        <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
+                    </select>
                 </div>
-                <div class="modal-body">
-                    <p i18n>选择主程序 {{currentApp.actions.get('main').execute}}</p>
-                    <label class="custom-file" lang="en">
-                        <input (click)="$event.preventDefault();selectImport(currentApp)" type="file" id="file" class="custom-file-input">
-                        <span class="custom-file-control">{{import_path || currentApp.actions.get('main').execute}}</span>
-                    </label>
-
-                    <h4 i18n>导入到</h4>
-                    <div class="form-group">
-                        <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
-                            <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
-                            <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
-                        </select>
-                    </div>
-                    <!--<h4 i18n>快捷方式</h4>-->
-                    <!--<div class="checkbox">-->
-                    <!--<input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">-->
-                    <!--<label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>-->
-                    <!--<label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>-->
-                    <!--</div>-->
-                    <!--<div class="checkbox">-->
-                    <!--<input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">-->
-                    <!--<label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>-->
-                    <!--</div>-->
-                    <h4 i18n *ngIf="references.length>0">扩展内容</h4>
-                    <div *ngFor="let reference of references"><label>
-                        <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
-                    </label></div>
-                    <div *ngIf="currentApp.findDependencies().length">
-                        <span i18n>依赖：</span>
-                        <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>
-                    </div>
+                <!--<h4 i18n>快捷方式</h4>-->
+                <!--<div class="checkbox">-->
+                <!--<input id="create_application_shortcut" type="checkbox" name="application" [(ngModel)]="installOption.createShortcut">-->
+                <!--<label i18n *ngIf="platform == 'darwin'" for="create_application_shortcut">创建 LaunchPad 快捷方式</label>-->
+                <!--<label i18n *ngIf="platform == 'win32'" for="create_application_shortcut">创建开始菜单快捷方式</label>-->
+                <!--</div>-->
+                <!--<div class="checkbox">-->
+                <!--<input id="create_desktop_shortcut" type="checkbox" name="desktop" [(ngModel)]="installOption.createDesktopShortcut">-->
+                <!--<label i18n for="create_desktop_shortcut">创建桌面快捷方式</label>-->
+                <!--</div>-->
+                <h4 i18n *ngIf="references.length>0">扩展内容</h4>
+                <div *ngFor="let reference of references"><label>
+                    <input type="checkbox" [(ngModel)]="referencesInstall[reference.id]" name="references"> {{reference.name}}
+                </label></div>
+                <div *ngIf="currentApp.findDependencies().length">
+                    <span i18n>依赖：</span>
+                    <span class="dependency" *ngFor="let dependency of currentApp.findDependencies()">{{dependency.name}}</span>
                 </div>
-                <div class="modal-footer">
-                    <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button i18n type="submit" [disabled]="import_path && !theForm.form.valid" class="btn btn-primary">导入</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n type="submit" [disabled]="import_path && !theForm.form.valid" class="btn btn-primary">导入</button>
+            </div>
+        </form>
     </div>
 </div>

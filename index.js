@@ -140,8 +140,10 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 640,
+        minWidth: 1024,
+        minHeight: 640,
         frame: process.platform == 'darwin',
-        transparent: true,
+        transparent: process.platform != 'darwin',
         titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
     });
 

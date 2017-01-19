@@ -4,8 +4,7 @@
     <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'athletic'" type="button" class="btn btn-primary btn-sm">取消等待</button>
     <button i18n [disabled]="matching||!appsService.allReady(app)" (click)="request_match('entertain')" *ngIf="matching_arena != 'entertain'" type="button" class="btn btn-secondary btn-sm">娱乐匹配</button>
     <button i18n [disabled]="!appsService.allReady(app)" (click)="cancel_match()" *ngIf="matching_arena == 'entertain'" type="button" class="btn btn-secondary btn-sm">取消等待</button>
-    <!--<button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-create-modal">创建房间</button>-->
-    <button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-list-modal">房间列表</button>
+    <button i18n [disabled]="matching||!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-list-modal">自定义游戏</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
 </div>
 <div class="input-group input-group-sm">
@@ -13,7 +12,6 @@
     <select class="form-control form-control-sm" id="exampleSelect1" name="deck" [(ngModel)]="current_deck">
         <option *ngFor="let deck of decks" [ngValue]="deck">{{deck}}</option>
     </select>
-    <!--<input type="text" class="form-control" aria-label="Text input with checkbox">-->
     <span class="input-group-btn">
         <button id="edit_deck_button" i18n [disabled]="!appsService.allReady(app)" class="btn btn-secondary btn-sm" (click)="edit_deck(current_deck)">编辑</button>
     </span>

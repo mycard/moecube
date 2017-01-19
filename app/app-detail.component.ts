@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges, ElementRef} from '@angular/core';
 import {AppsService} from './apps.service';
 import {InstallOption} from './install-option';
 import {SettingsService} from './settings.sevices';
@@ -34,20 +34,18 @@ export class AppDetailComponent implements OnInit, OnChanges {
     points: Points;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
-                private  downloadService: DownloadService, private ref: ChangeDetectorRef) {
+                private  downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef) {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['currentApp']) {
-            if (this.currentApp.background && this.currentApp.background.length > 0) {
-                let url = this.currentApp.background[Math.floor(Math.random() * this.currentApp.background.length)];
-                this.background = `url(${url})`;
+            if (this.currentApp.background) {
+                this.el.nativeElement.style.background = `url("${this.currentApp.background}") rgba(255,255,255,.8)`;
             } else {
-                this.background = '';
+                this.el.nativeElement.style.background = 'white';
             }
         }
     }
-
 
     async ngOnInit(): Promise<void> {
         let volume = 'A';

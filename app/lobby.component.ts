@@ -48,6 +48,10 @@ export class LobbyComponent implements OnInit {
                 window.close();
             }
         }
+        // 特化个 YGOPRO 国际服聊天室。其他的暂时没需求。
+        if (!this.settingsService.getLocale().startsWith('zh')) {
+            this.apps.get('ygopro')!.conference = 'ygopro-international'
+        }
         this.ref.detectChanges();
 
         // $(this.search.nativeElement).typeahead(<any>{
@@ -75,11 +79,17 @@ export class LobbyComponent implements OnInit {
                 if (width < 190) {
                     width = 190;
                 }
+                if (width > 400) {
+                    width = 400;
+                }
                 this.resizing.style.width = `${width}px`;
             } else {
                 let height = this.offset - event.clientY;
                 if (height < 236) {
                     height = 236;
+                }
+                if (height > 540) {
+                    height = 540;
                 }
                 this.resizing.style.height = `${height}px`;
             }
