@@ -77,7 +77,7 @@ System.config({
         'jquery': 'npm:jquery/dist/jquery.min.js',
         'tether': 'npm:tether/dist/js/tether.min.js',
         'bootstrap': 'npm:bootstrap/dist/js/bootstrap.min.js',
-        'typeahead.js': '@node/typeahead.js'
+        // 'typeahead.js': '@node/typeahead.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

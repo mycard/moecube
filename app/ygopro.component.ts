@@ -1,11 +1,21 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef, Input, EventEmitter, Output, OnDestroy} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    Input,
+    EventEmitter,
+    Output,
+    OnDestroy,
+    ViewChild,
+    ElementRef
+} from '@angular/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as child_process from 'child_process';
-import {remote} from 'electron';
+import {remote, shell} from 'electron';
 import * as ini from 'ini';
 import {EncodeOptions} from 'ini';
 import {LoginService} from './login.service';
@@ -17,6 +27,7 @@ import {AppsService} from './apps.service';
 import {SettingsService} from './settings.sevices';
 import * as $ from 'jquery';
 import Timer = NodeJS.Timer;
+import WillNavigateEvent = Electron.WebViewElement.WillNavigateEvent;
 
 interface SystemConf {
     use_d3d: string;
@@ -50,6 +61,8 @@ interface Server {
     url?: string;
     address: string;
     port: number;
+    custom?: boolean;
+    replay?: boolean;
 }
 
 interface Room {
@@ -58,6 +71,8 @@ interface Room {
     server?: Server;
     private?: boolean;
     options: Options;
+    arena?: string;
+    users?: {username: string, position: number}[];
 }
 
 interface Options {
@@ -108,10 +123,17 @@ export class YGOProComponent implements OnInit, OnDestroy {
     @Output()
     points: EventEmitter<Points> = new EventEmitter();
     decks: string[] = [];
+    replays: string[] = [];
     current_deck: string;
     system_conf: string;
     numfont: string[];
     textfont: string[];
+
+    @ViewChild('bilibili')
+    bilibili: ElementRef;
+
+    @ViewChild('youtube')
+    youtube: ElementRef;
     // points: Points;
 
     windbot: string[]; // ["琪露诺", "谜之剑士LV4", "复制植物", "尼亚"];
@@ -137,6 +159,8 @@ export class YGOProComponent implements OnInit, OnDestroy {
     rooms: Room[] = [];
 
     connections: WebSocket[] = [];
+    replay_connections: WebSocket[] = [];
+    replay_rooms: Room[] = [];
 
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
@@ -145,7 +169,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
     match_interval: Timer | undefined;
 
     constructor (private http: Http, private appsService: AppsService, private loginService: LoginService,
-                 private settingsService: SettingsService, private ref: ChangeDetectorRef) {
+                 public settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -175,17 +199,34 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 id: 'tiramisu',
                 url: 'wss://tiramisu.mycard.moe:7923',
                 address: '112.124.105.11',
-                port: 7911
+                port: 7911,
+                custom: true,
+                replay: true
+            }, {
+                id: 'tiramisu-athletic',
+                url: 'wss://tiramisu.mycard.moe:8923',
+                address: '112.124.105.11',
+                port: 8911,
+                custom: false,
+                replay: true
             });
         } else {
             this.servers.push({
+                id: 'mercury-us-1-athletic',
+                url: 'wss://mercury-us-1.mycard.moe:7923',
+                address: '104.237.154.173',
+                port: 7911,
+                custom: true,
+                replay: true
+            }, {
                 id: 'mercury-us-1',
                 url: 'wss://mercury-us-1.mycard.moe:7923',
                 address: '104.237.154.173',
-                port: 7911
+                port: 8911,
+                custom: false,
+                replay: true
             });
         }
-
     }
 
     async ngOnInit () {
@@ -204,8 +245,10 @@ export class YGOProComponent implements OnInit, OnDestroy {
         let modal = $('#game-list-modal');
 
         modal.on('show.bs.modal', () => {
-            this.connections = this.servers.map((server) => {
-                let connection = new WebSocket(server.url!);
+            this.connections = this.servers.filter(server => server.custom).map((server) => {
+                let url = new URL(server.url!);
+                url['searchParams'].set('filter', 'waiting');
+                let connection = new WebSocket(url.toString());
                 connection.onclose = () => {
                     this.rooms = this.rooms.filter(room => room.server !== server);
                 };
@@ -232,30 +275,67 @@ export class YGOProComponent implements OnInit, OnDestroy {
             });
         });
 
-        modal.on('shown.bs.modal', () => {
-            $('td.users').tooltip({
-                selector: '[data-toggle=tooltip]'
-            });
-        });
-
         modal.on('hide.bs.modal', () => {
             for (let connection of this.connections) {
                 connection.close();
             }
             this.connections = [];
         });
+
+        // TODO: 跟上面的逻辑合并
+        let replay_modal = $('#game-replay-modal');
+
+        replay_modal.on('show.bs.modal', () => {
+            this.replay_connections = this.servers.filter(server => server.replay).map((server) => {
+                let url = new URL(server.url!);
+                url['searchParams'].set('filter', 'started');
+                let connection = new WebSocket(url.toString());
+                connection.onclose = () => {
+                    this.replay_rooms = this.replay_rooms.filter(room => room.server !== server);
+                };
+                connection.onmessage = (event) => {
+                    let message = JSON.parse(event.data);
+                    switch (message.event) {
+                        case 'init':
+                            this.replay_rooms = this.replay_rooms.filter(room => room.server !== server).concat(
+                                message.data.map((room: Room) => Object.assign({server: server}, room))
+                            );
+                            break;
+                        case 'create':
+                            this.replay_rooms.push(Object.assign({server: server}, message.data));
+                            break;
+                        // case 'update':
+                        //     Object.assign(this.replay_rooms.find(room => room.server === server && room.id === message.data.id), message.data);
+                        //     break;
+                        case 'delete':
+                            this.replay_rooms.splice(this.replay_rooms.findIndex(room => room.server === server && room.id === message.data), 1);
+                    }
+                    this.ref.detectChanges();
+                };
+                return connection;
+            });
+        });
+
+        modal.on('hide.bs.modal', () => {
+            for (let connection of this.replay_connections) {
+                connection.close();
+            }
+            this.replay_connections = [];
+        });
     }
 
     async refresh () {
-        let decks = await this.get_decks();
-        this.decks = decks;
+        this.decks = await this.get_decks();
         let system_conf = await this.load_system_conf();
 
         if (this.decks.includes(system_conf.lastdeck)) {
             this.current_deck = system_conf.lastdeck;
         } else {
-            this.current_deck = decks[0];
+            this.current_deck = this.decks[0];
         }
+
+        this.replays = await this.get_replays();
+
         // https://mycard.moe/ygopro/api/user?username=ozxdno
         let params = new URLSearchParams();
         params.set('username', this.loginService.user.username);
@@ -276,6 +356,18 @@ export class YGOProComponent implements OnInit, OnDestroy {
                     resolve([]);
                 } else {
                     resolve(files.filter(file => path.extname(file) === '.ydk').map(file => path.basename(file, '.ydk')));
+                }
+            });
+        });
+    }
+
+    get_replays (): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            fs.readdir(path.join(this.app.local!.path, 'replay'), (error, files) => {
+                if (error) {
+                    resolve([]);
+                } else {
+                    resolve(files.filter(file => path.extname(file) === '.yrp').map(file => path.basename(file, '.yrp')));
                 }
             });
         });
@@ -354,6 +446,13 @@ export class YGOProComponent implements OnInit, OnDestroy {
         system_conf.lastdeck = deck;
         await this.save_system_conf(system_conf);
         return this.start_game(['-d']);
+    }
+
+    async watch_replay (replay: string) {
+        let system_conf = await this.load_system_conf();
+        await this.fix_fonts(system_conf);
+        await this.save_system_conf(system_conf);
+        return this.start_game(['-r', path.join('replay', replay + '.yrp')]);
     }
 
     join_windbot (name: string) {
@@ -485,4 +584,38 @@ export class YGOProComponent implements OnInit, OnDestroy {
         this.match_time = new Date().getTime() - match_started_at.getTime();
         this.match_cancelable = this.match_time <= 5000 || this.match_time >= 180000;
     }
+
+    bilibili_loaded () {
+        this.bilibili.nativeElement.insertCSS(`
+            #b_app_link {
+                visibility: hidden;
+            }
+            .wrapper {
+                padding-top: 0 !important;
+                overflow-y: hidden;
+            }
+            .nav-bar, .top-title, .roll-bar, footer {
+                display: none !important;
+            }
+            html, body {
+                background-color: initial !important;
+            }
+        `);
+    }
+
+    bilibili_navigate (event: WillNavigateEvent) {
+        // event.preventDefault();
+        // https://github.com/electron/electron/issues/1378
+        this.bilibili.nativeElement.src = 'http://m.bilibili.com/search.html?keyword=YGOPro';
+        shell.openExternal(event.url);
+    }
+
+    // youtube_loaded () {
+    //
+    // }
+    //
+    // youtube_navigate (event: WillNavigateEvent) {
+    //     this.youtube.nativeElement.src = 'https://m.youtube.com/results?search_query=YGOPro';
+    //     shell.openExternal(event.url);
+    // }
 }

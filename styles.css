@@ -1,6 +1,6 @@
 html, body {
     height: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 body {
@@ -8,12 +8,12 @@ body {
     -webkit-user-select: none;
 }
 
-body.win32 {
-    background: transparent;
-    border-radius: 5px;
-    border: 1px solid #eee;
-    padding-right: 0 !important;
-}
+/*body.win32 {*/
+/*background: transparent;*/
+/*border-radius: 5px;*/
+/*border: 1px solid #eee;*/
+/*padding-right: 0 !important;*/
+/*}*/
 
 mycard {
     height: 100%;
@@ -94,6 +94,10 @@ body.resizing /deep/ * {
     -webkit-user-select: none;
 }
 
-mycard {
-    background-color: white;
-}
+/*mycard {*/
+/*background-color: white;*/
+/*}*/
+
+/*button, input, optgroup, select, textarea {*/
+/*font-family: inherit;*/
+/*}*/

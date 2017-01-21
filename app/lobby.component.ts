@@ -7,7 +7,7 @@ import {LoginService} from './login.service';
 import {App, Category} from './app';
 import {shell} from 'electron';
 import {SettingsService} from './settings.sevices';
-import 'typeahead.js';
+// import 'typeahead.js';
 // import Options = Twitter.Typeahead.Options;
 
 @Component({

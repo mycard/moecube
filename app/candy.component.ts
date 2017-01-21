@@ -4,15 +4,15 @@
 
 let shadow: ShadowRoot;
 
-const jQueryShadow = require('../jquery-shadow.js');
-jQueryShadow.fn.init = new Proxy(jQueryShadow.fn.init, {
+const $ = require('../jquery-shadow.js');
+$.fn.init = new Proxy($.fn.init, {
     construct(target, argumentsList, newTarget) {
         let [selector, context, root] = argumentsList;
         if (shadow) {
             if (selector === 'body') {
                 selector = shadow;
             } else if (selector === document) {
-                selector = shadow.querySelector('#candy');
+                selector = $('#candy');
             } else if (!context) {
                 context = shadow;
             }
@@ -21,7 +21,7 @@ jQueryShadow.fn.init = new Proxy(jQueryShadow.fn.init, {
     }
 });
 
-window['jQuery'] = jQueryShadow;
+window['jQuery'] = $;
 
 import {Component, ViewEncapsulation, OnInit, Input, OnChanges, SimpleChanges, ElementRef} from '@angular/core';
 import {LoginService} from './login.service';
@@ -57,6 +57,31 @@ Candy.Util.getPosTopAccordingToWindowBounds = new Proxy(Candy.Util.getPosTopAcco
         return target.apply(thisArg, argumentsList);
     }
 });
+Candy.View.Pane.Roster.joinAnimation = function (elementId: string) {
+    $("#" + elementId).show().css({opacity: 'initial'});
+};
+
+declare const Mustache: any;
+Candy.View.Pane.Roster._insertUser = function (roomJid: string, roomId: string, user: any, userId: string, currentUser: any) {
+    let contact = user.getContact();
+    let html = Mustache.to_html(Candy.View.Template.Roster.user, {
+        roomId: roomId,
+        userId: userId,
+        userJid: user.getJid(),
+        realJid: user.getRealJid(),
+        status: user.getStatus(),
+        contact_status: contact ? contact.getStatus() : "unavailable",
+        nick: user.getNick(),
+        displayNick: Candy.Util.crop(user.getNick(), Candy.View.getOptions().crop.roster.nickname),
+        role: user.getRole(),
+        affiliation: user.getAffiliation(),
+        me: currentUser !== undefined && user.getNick() === currentUser.getNick(),
+        tooltipRole: $.i18n._("tooltipRole"),
+        tooltipIgnored: $.i18n._("tooltipIgnored")
+    });
+    let rosterPane = Candy.View.Pane.Room.getPane(roomJid, ".roster-pane");
+    rosterPane.append(html);
+};
 
 document['__defineGetter__']('cookie', () => 'candy-nostatusmessages');
 document['__defineSetter__']('cookie', () => true);
@@ -75,10 +100,10 @@ export class CandyComponent implements OnInit, OnChanges {
     password: string;
     nickname: string;
 
-    constructor(private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
+    constructor (private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
     }
 
-    ngOnInit() {
+    ngOnInit () {
 
         this.jid = this.loginService.user.username + '@mycard.moe';
         this.password = this.loginService.user.external_id.toString();
@@ -136,7 +161,7 @@ export class CandyComponent implements OnInit, OnChanges {
         Candy.Core.connect(this.jid, this.password, this.nickname);
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges (changes: SimpleChanges): void {
         if (!Candy.Core.getConnection()) {
             return;
         }

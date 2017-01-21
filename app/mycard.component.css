@@ -1,6 +1,6 @@
-:host {
-    background-color: white;
-}
+/*:host {*/
+/*background-color: white;*/
+/*}*/
 .page {
     flex-grow: 1;
     /*margin-bottom: 60px;*/
@@ -54,9 +54,9 @@ lobby[hidden], webview[hidden] {
 
 /* 不加这个切到有 Webview 的页面，上面的圆角会消失 */
 /* 即使加了这个，下面的圆角也会消失 */
-webview {
-    overflow: hidden;
-}
+/*webview {*/
+/*overflow: hidden;*/
+/*}*/
 
 #navbar {
     background-color: #f7f7f9!important;

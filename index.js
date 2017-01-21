@@ -143,7 +143,7 @@ function createWindow() {
         minWidth: 1024,
         minHeight: 640,
         frame: process.platform == 'darwin',
-        transparent: process.platform != 'darwin',
+        // transparent: process.platform != 'darwin',
         titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
     });
 
