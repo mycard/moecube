@@ -184,6 +184,10 @@ form {
     height: 440px;
 }
 
+#game-replay-watch {
+    max-height: 500px;
+}
+
 #game-replay-watch table {
     font-size: 14px;
 }

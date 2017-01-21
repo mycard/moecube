@@ -164,7 +164,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
-    match_time: number;
+    match_time: string;
     match_cancelable: boolean;
     match_interval: Timer | undefined;
 
@@ -581,8 +581,17 @@ export class YGOProComponent implements OnInit, OnDestroy {
     }
 
     refresh_match () {
-        this.match_time = new Date().getTime() - match_started_at.getTime();
-        this.match_cancelable = this.match_time <= 5000 || this.match_time >= 180000;
+        let match_time = Math.floor((new Date().getTime() - match_started_at.getTime()) / 1000);
+        let minute = Math.floor(match_time / 60).toString();
+        if (minute.length == 1) {
+            minute = '0' + minute;
+        }
+        let second = (match_time % 60).toString();
+        if (second.length == 1) {
+            second = '0' + second;
+        }
+        this.match_time = `${minute}:${second}`;
+        this.match_cancelable = match_time <= 5 || match_time >= 180;
     }
 
     bilibili_loaded () {
