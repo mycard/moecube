@@ -316,7 +316,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
             });
         });
 
-        modal.on('hide.bs.modal', () => {
+        replay_modal.on('hide.bs.modal', () => {
             for (let connection of this.replay_connections) {
                 connection.close();
             }
