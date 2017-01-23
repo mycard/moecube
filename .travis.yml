@@ -40,9 +40,3 @@ install:
 
 script:
   - npm run dist
-
-deploy:
-  provider: script
-  script: curl --fail --verbose --request POST "https://wudizhanche.mycard.moe/publish?platform=${TRAVIS_OS_NAME}&version=${TRAVIS_TAG}"
-  on:
-    tags: true

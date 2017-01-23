@@ -15,7 +15,7 @@
         <span i18n *ngIf="matching_arena == 'entertain'">娱乐匹配</span>
     </span>
     <span class="input-group-addon"><span i18n>预计时间</span> 03:00</span><span class="input-group-addon"><span i18n>实际时间</span> {{match_time}}</span>
-    <span class="input-group-btn"><button class="btn btn-secondary" type="button" [disabled]="!match_cancelable" (click)="cancel_match()">取消</button></span>
+    <span class="input-group-btn"><button i18n class="btn btn-secondary" type="button" [disabled]="!match_cancelable" (click)="cancel_match()">取消</button></span>
 </div>
 
 <div class="input-group input-group-sm">

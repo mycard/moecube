@@ -53,7 +53,7 @@
 
 <!--{"exp":1839,"exp_rank":"9","pt":2207.2901,"arena_rank":"30","win":"703","lose":"568","draw":5,"all":"1276","ratio":"55.09"}-->
 
-<div id="arena" class="panel panel-default" *ngIf="points">
+<div id="arena" class="panel panel-default" *ngIf="currentApp.id === 'ygopro' && points ">
     <h2 i18n>排位成绩</h2>
     <table class="table table-sm">
         <tbody>

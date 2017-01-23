@@ -62,9 +62,9 @@ if (!process.env['NODE_ENV']) {
 // 自动更新
 let updateWindow;
 global.autoUpdater = autoUpdater;
-if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
-    autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
-}
+// if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
+//     autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
+// }
 // else{
 //     setTimeout(()=>{
 //         autoUpdater.emit('checking-for-update')
