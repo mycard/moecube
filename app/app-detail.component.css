@@ -3,6 +3,8 @@
     position: relative;
     padding: 1rem 1rem 0 1rem;
     background-blend-mode: color;
+    background-size: 100% auto !important;
+    background-repeat: no-repeat !important;
 }
 
 .list-group {
@@ -78,6 +80,7 @@ h2 {
 #icon {
     width: 128px;
     height: 128px;
+    object-fit: contain;
 }
 
 #main {
@@ -88,10 +91,10 @@ h2 {
 .panel {
     border: 1px solid #eceeef;
     border-radius: 6px;
-    background: rgba(255,255,255,.7);
+    background: rgba(255, 255, 255, .7);
     padding: .8rem;
     margin-bottom: 1rem;
-    box-shadow: 0 0 15px rgba(0,0,0,.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, .05);
     position: relative;
 }
 
@@ -129,9 +132,6 @@ h2 {
     margin-bottom: .8rem;
 }
 
-
-
-
 #icon {
     width: 128px;
     height: 128px;
@@ -146,6 +146,7 @@ h2 {
 #right {
     margin-left: 1rem;
 }
+
 h1 {
     font-size: 28px;
     margin-bottom: 0;
@@ -160,6 +161,7 @@ h1 {
 th {
     width: 25%;
 }
+
 .moreinfo {
     color: #00a4d9;
     display: block;
@@ -177,8 +179,6 @@ th {
     background-color: #00a4d9;
     border-color: #008dbb;
 }
-
-
 
 /* 竞技场 */
 
