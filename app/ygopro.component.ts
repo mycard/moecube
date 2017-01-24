@@ -445,7 +445,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = deck;
         await this.save_system_conf(system_conf);
-        return this.start_game(['-d']);
+        return this.start_game(['-d', deck]);
     }
 
     async watch_replay (replay: string) {

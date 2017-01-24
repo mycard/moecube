@@ -1,6 +1,6 @@
 {
   "name": "mycard",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "description": "mycard",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
@@ -25,10 +25,6 @@
     "@angular/platform-browser": "latest",
     "@angular/platform-browser-dynamic": "latest",
     "@angular/router": "latest",
-    "@types/bootstrap": "latest",
-    "@types/jquery": "latest",
-    "@types/tether": "latest",
-    "@types/typeahead": "latest",
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
     "bootstrap": "next",
@@ -42,6 +38,7 @@
     "glob": "latest",
     "ini": "latest",
     "jquery": "latest",
+    "marked": "latest",
     "raw-socket": "latest",
     "reflect-metadata": "latest",
     "rxjs": "latest",
@@ -50,7 +47,7 @@
     "tether": "latest",
     "typeahead.js": "latest",
     "vue": "latest",
-    "zone.js": "^0.7.4"
+    "zone.js": "latest"
   },
   "devDependencies": {
     "@angular/compiler-cli": "latest",
@@ -59,6 +56,11 @@
     "@types/glob": "latest",
     "@types/ini": "latest",
     "@types/node": "latest",
+    "@types/bootstrap": "latest",
+    "@types/jquery": "latest",
+    "@types/marked": "latest",
+    "@types/tether": "latest",
+    "@types/typeahead": "latest",
     "electron": "latest",
     "electron-builder": "latest",
     "electron-rebuild": "latest",
