@@ -130,7 +130,7 @@ function createAria2c() {
         default:
             throw 'unsupported platform';
     }
-    return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', '--continue', '--split=10', '--min-split-size=1M', '--max-connection-per-server=10', '--remove-control-file'], {stdio: 'ignore'});
+    return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', '--continue', '--split=10', '--min-split-size=1M', '--max-connection-per-server=10', '--remove-control-file', '--allow-overwrite'], {stdio: 'ignore'});
 }
 const aria2c = createAria2c();
 
