@@ -1,54 +1,39 @@
 <?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file datatype="plaintext" original="ng2.template" source-language="zh-CN" target-language="en-US">
     <body>
-        <trans-unit datatype="html" id="86738bd5d32223ffbb690a7c71360ddf8e7b1b2e">
-            <source>竞技匹配</source>
-            <target>Ranked Match</target>
+      <trans-unit datatype="html" id="86738bd5d32223ffbb690a7c71360ddf8e7b1b2e">
+        <source>竞技匹配</source>
+        <target>Ranked Match</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="0bf938a69dc640aba46428d1cbbd2fef34c88daa">
-            <source>娱乐匹配</source>
-            <target>Unranked Match</target>
+      <trans-unit datatype="html" id="0bf938a69dc640aba46428d1cbbd2fef34c88daa">
+        <source>娱乐匹配</source>
+        <target>Unranked Match</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="5026868223e028297430142f8cafdf6dd6fcf004">
-            <source>自定义游戏</source>
-            <target>Custom Game</target>
+      <trans-unit datatype="html" id="5026868223e028297430142f8cafdf6dd6fcf004">
+        <source>自定义游戏</source>
+        <target>Custom Game</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="3768b60a7e2625bb1fc2db37eb8c6b8e4bd99101">
-            <source>单人模式</source>
-            <target>Single Mode</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="4115bf4e35def25bcfa6d4e649f5e006225c691a">
-            <source>观战和录像</source>
-            <target>Watch Replay</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="157bc28ebe7ecf3f455852f64687ea580dfe23dc">
-            <source>预计时间</source>
-            <target>Estimated Wait</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="6968a638448b1f36c52a3b306541214acbf9d567">
-            <source>实际时间</source>
-            <target>Actual Wait</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="def237147323023c1f5ce0579345da19d4707fdb">
-            <source>卡组</source>
-            <target>Deck</target>
+      <trans-unit datatype="html" id="3768b60a7e2625bb1fc2db37eb8c6b8e4bd99101">
+        <source>单人模式</source>
+        <target>Single Mode</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="a842d4536fdee499a55c753c50810254347ced32">
-            <source>编辑</source>
-            <target>Edit</target>
+      <trans-unit datatype="html" id="4115bf4e35def25bcfa6d4e649f5e006225c691a">
+        <source>观战和录像</source>
+        <target>Watch Replay</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="1e64bb9c96dfc2b9cb03179dd0c9f992e0645e5f">
-            <source>选择对手</source>
-            <target>Select Opponent</target>
+      <trans-unit datatype="html" id="157bc28ebe7ecf3f455852f64687ea580dfe23dc">
+        <source>预计时间</source>
+        <target>Estimated Wait</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="6968a638448b1f36c52a3b306541214acbf9d567">
+        <source>实际时间</source>
+        <target>Actual Wait</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="f6f3be110e7043e3cfe71a7bd75b8b3be79bff5d">
@@ -56,176 +41,169 @@
         <target>Cancel</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="e35d1bf7c735e8df55a62046cd2d9f820bf5bffd">
-            <source>游戏标题</source>
-            <target>Title</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="3872a823a98042e4730861ab6f9344239d9deeb6">
-            <source>玩家</source>
-            <target>Player</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="d62a2717a0381d996785271c61177711777ba63c">
-            <source>决斗模式</source>
-            <target>Duel mode</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="d4038dd5d0e9d5139d425fc7bea40e40d965cc5b">
-            <source>额外选项</source>
-            <target>Additional Options</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="e436a4a0da03320dc61ba35bfab390ab85a23d0c">
-            <source>单局模式</source>
-            <target>Single Duel</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="2cf71acc936cf244cc5862b28efe461e91cb137d">
-            <source>比赛模式</source>
-            <target>Match</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="c2ed31e132c305b995382adce0f95ccdabadaa21">
-            <source>TAG</source>
-            <target>TAG</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="8514a93609dc67a44e5b198b53e42fe468f8a81a">
-            <source>
-                <x id="INTERPOLATION"/>
-                LP
-            </source>
-            <target>
-                <x id="INTERPOLATION"/>
-                LP
-            </target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="4a6f5fb56c2367667232cc46608dc46a282e2e56">
-            <source>
-                <x id="INTERPOLATION"/>
-                初始
-            </source>
-            <target>
-                <x id="INTERPOLATION"/>
-                Starting
-            </target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="cae091ce48a80dbc22d5fde2eea1cbd34e7038c7">
-            <source>
-                <x id="INTERPOLATION"/>
-                抽卡
-            </source>
-            <target>
-                <x id="INTERPOLATION"/>
-                Draw
-            </target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="785cc65c8db99887484b3b1067c45b32810c7c2a">
-            <source>旧规则</source>
-            <target>Old rules</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="b5be173f96718dfa737f1da31d9ffab5b803561e">
-            <source>不检查</source>
-            <target>Don't check</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="517c8b6e5361bc32d7458a1e8b2bdbf09abb6f01">
-            <source>不洗卡</source>
-            <target>Don't shuffle</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="19923836b1ae79614782426a7a001d8ccfa27b5c">
-            <source>创建房间</source>
-            <target>Create</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="4b911deaa4defd0803635012281f3dd1112aabd1">
-            <source>卡片允许</source>
-            <target>Rule</target>
+      <trans-unit datatype="html" id="def237147323023c1f5ce0579345da19d4707fdb">
+        <source>卡组</source>
+        <target>Deck</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="93d3b6bb4f3a66efd8c49f9063f6c8d6a9e959bf">
-            <source>OCG</source>
-            <target>OCG</target>
+      <trans-unit datatype="html" id="a842d4536fdee499a55c753c50810254347ced32">
+        <source>编辑</source>
+        <target>Edit</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="150cb34526cf737163beb63ab76e4809ac1367dd">
-            <source>TCG</source>
-            <target>TCG</target>
+      <trans-unit datatype="html" id="1e64bb9c96dfc2b9cb03179dd0c9f992e0645e5f">
+        <source>选择对手</source>
+        <target>Select Opponent</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="be6d109c359b1d11b261280915e6b1706ca3ed9b">
-            <source>OCG &amp; TCG</source>
-            <target>TCG/OCG</target>
+      <trans-unit datatype="html" id="a73f70f2c3126bd103eba9b300efb446ff353187">
+        <source>随机</source>
+        <target>Random</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="2a3f48f9ea5e6aae92e249ac2b279dbc07a6127d">
-            <source>专有卡禁止</source>
-            <target>Unspecified</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="01cfbee3f1d69f5adae299b7b8c8d75034aef53b">
-            <source>初始 LP</source>
-            <target>Starting LP</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="0d72e50857f1d2504e08f7886d4c9d35a46e3ed9">
-            <source>初始手牌数</source>
-            <target>Starting Hand</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="88cc5676c5322fd55c1df94ab487359100e6f9dd">
-            <source>每回合抽卡</source>
-            <target>Draw / Turn</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="6e7470ddf4c35f6fab39b6ebeadb1780701a5469">
-            <source>不检查卡组</source>
-            <target>Don't check</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="4f104c680937cb724b069f62ab1ff60651c5bb06">
-            <source>不洗切卡组</source>
-            <target>Don't shuffle</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="84276d07f694b80bd5ea94d28283b6530248d02e">
-            <source>观战</source>
-            <target>Live</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="d516b78557483a84288359494abde950d3887518">
-            <source>本地录像</source>
-            <target>Local</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="7047116f06b2fcb5e7f8e8589d1ef31628aff0fa">
-            <source>游戏模式</source>
-            <target>Game Mode</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="08afd8197e09842de9d76741588c6c1bcd3e2605">
-            <source>详情</source>
-            <target>Detail</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="5136f852d874c46bf808987470980a0f2560487e">
-            <source>
-                <x id="INTERPOLATION"/>
-                跟
-                <x id="INTERPOLATION_1"/>
-                的决斗
-            </source>
-            <target>
-                <x id="INTERPOLATION"/>
-                Vs.
-                <x id="INTERPOLATION_1"/>
-            </target>
+      <trans-unit datatype="html" id="e35d1bf7c735e8df55a62046cd2d9f820bf5bffd">
+        <source>游戏标题</source>
+        <target>Title</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="3872a823a98042e4730861ab6f9344239d9deeb6">
+        <source>玩家</source>
+        <target>Player</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="d62a2717a0381d996785271c61177711777ba63c">
+        <source>决斗模式</source>
+        <target>Duel mode</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="d4038dd5d0e9d5139d425fc7bea40e40d965cc5b">
+        <source>额外选项</source>
+        <target>Additional Options</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="e436a4a0da03320dc61ba35bfab390ab85a23d0c">
+        <source>单局模式</source>
+        <target>Single Duel</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="2cf71acc936cf244cc5862b28efe461e91cb137d">
+        <source>比赛模式</source>
+        <target>Match</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="c2ed31e132c305b995382adce0f95ccdabadaa21">
+        <source>TAG</source>
+        <target>TAG</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="8514a93609dc67a44e5b198b53e42fe468f8a81a">
+        <source><x id="INTERPOLATION"/> LP</source>
+        <target><x id="INTERPOLATION"/> LP</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="4a6f5fb56c2367667232cc46608dc46a282e2e56">
+        <source><x id="INTERPOLATION"/> 初始</source>
+        <target><x id="INTERPOLATION"/> Starting</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="cae091ce48a80dbc22d5fde2eea1cbd34e7038c7">
+        <source><x id="INTERPOLATION"/> 抽卡</source>
+        <target><x id="INTERPOLATION"/> Draw</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="785cc65c8db99887484b3b1067c45b32810c7c2a">
+        <source>旧规则</source>
+        <target>Old rules</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="b5be173f96718dfa737f1da31d9ffab5b803561e">
+        <source>不检查</source>
+        <target>Don't check</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="517c8b6e5361bc32d7458a1e8b2bdbf09abb6f01">
+        <source>不洗卡</source>
+        <target>Don't shuffle</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="19923836b1ae79614782426a7a001d8ccfa27b5c">
+        <source>创建房间</source>
+        <target>Create</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="4b911deaa4defd0803635012281f3dd1112aabd1">
+        <source>卡片允许</source>
+        <target>Rule</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="93d3b6bb4f3a66efd8c49f9063f6c8d6a9e959bf">
+        <source>OCG</source>
+        <target>OCG</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="150cb34526cf737163beb63ab76e4809ac1367dd">
+        <source>TCG</source>
+        <target>TCG</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="be6d109c359b1d11b261280915e6b1706ca3ed9b">
+        <source>OCG &amp; TCG</source>
+        <target>TCG/OCG</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="2a3f48f9ea5e6aae92e249ac2b279dbc07a6127d">
+        <source>专有卡禁止</source>
+        <target>Unspecified</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="01cfbee3f1d69f5adae299b7b8c8d75034aef53b">
+        <source>初始 LP</source>
+        <target>Starting LP</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="0d72e50857f1d2504e08f7886d4c9d35a46e3ed9">
+        <source>初始手牌数</source>
+        <target>Starting Hand</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="88cc5676c5322fd55c1df94ab487359100e6f9dd">
+        <source>每回合抽卡</source>
+        <target>Draw / Turn</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="6e7470ddf4c35f6fab39b6ebeadb1780701a5469">
+        <source>不检查卡组</source>
+        <target>Don't check</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="4f104c680937cb724b069f62ab1ff60651c5bb06">
+        <source>不洗切卡组</source>
+        <target>Don't shuffle</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="84276d07f694b80bd5ea94d28283b6530248d02e">
+        <source>观战</source>
+        <target>Live</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="d516b78557483a84288359494abde950d3887518">
+        <source>本地录像</source>
+        <target>Local</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="7047116f06b2fcb5e7f8e8589d1ef31628aff0fa">
+        <source>游戏模式</source>
+        <target>Game Mode</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="08afd8197e09842de9d76741588c6c1bcd3e2605">
+        <source>详情</source>
+        <target>Detail</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="5136f852d874c46bf808987470980a0f2560487e">
+        <source><x id="INTERPOLATION"/> 跟 <x id="INTERPOLATION_1"/> 的决斗</source>
+        <target><x id="INTERPOLATION"/> Vs. <x id="INTERPOLATION_1"/></target>
         
       </trans-unit>
       <trans-unit datatype="html" id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a">
@@ -266,13 +244,13 @@
       <trans-unit datatype="html" id="d3852e0147360b29d0d6076e95dd1ad0098a60db">
         <source>运行</source>
         <target>Start</target>
-
+        
       </trans-unit>
-        <trans-unit datatype="html" id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd">
-            <source>设置</source>
-            <target>Settings</target>
-
-        </trans-unit>
+      <trans-unit datatype="html" id="67adbad4f646bb8e1c440522bafea8fe5f7e6bfd">
+        <source>设置</source>
+        <target>Settings</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="3d6cad40e26f99e39bc6f5925a890ba83b67ce5b">
         <source>联机</source>
         <target>Network</target>
@@ -286,58 +264,58 @@
       <trans-unit datatype="html" id="95d5e106e679433bec012420b1ab9334c294bc7e">
         <source>选择服务器</source>
         <target>Select Server</target>
-
+        
       </trans-unit>
-        <trans-unit datatype="html" id="409ab83692bb4c157cddafe70de9e95531be796e">
-            <source>排位成绩</source>
-            <target>Rank Result</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="eb22ba5ed7019f8799bc645c508108136ad54096">
-            <source>竞技排名</source>
-            <target>D.P Rank</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="78da696d0961bc2c3f10d9e6f5998161ba17b75f">
-            <source>娱乐排名</source>
-            <target>EXP Rank</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="c3e6d747b93851670dd03bc38346f8f7f6fee421">
-            <source>竞技胜率</source>
-            <target>Win Rate</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="ed1a1a97ab1b37a358ca132a5c87040a9af13693">
-            <source>经验</source>
-            <target>EXP</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="0ce6333a9b6c85ccd57ecdbee84ef7f6f3f51ef4">
-            <source>胜场</source>
-            <target>Win</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="a89a5c5567bbe1de398b978749b9a1bf6f1281bf">
-            <source>负场</source>
-            <target>Lose</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="41a0424d676209939f79f70c8ef8aa8a143d3451">
-            <source>平局</source>
-            <target>Draw</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="3f4d682cd4fc7579e9ea6bd1bddec84dbc35fd50">
-            <source>总场</source>
-            <target>Total</target>
-
-        </trans-unit>
-        <trans-unit datatype="html" id="f5f5d4874301c4b42cdbfab010c953631abbcec9">
-            <source>更多资料</source>
-            <target>More Info</target>
-
-        </trans-unit>
+      <trans-unit datatype="html" id="409ab83692bb4c157cddafe70de9e95531be796e">
+        <source>排位成绩</source>
+        <target>Rank Result</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="eb22ba5ed7019f8799bc645c508108136ad54096">
+        <source>竞技排名</source>
+        <target>D.P Rank</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="78da696d0961bc2c3f10d9e6f5998161ba17b75f">
+        <source>娱乐排名</source>
+        <target>EXP Rank</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="c3e6d747b93851670dd03bc38346f8f7f6fee421">
+        <source>竞技胜率</source>
+        <target>Win Rate</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="ed1a1a97ab1b37a358ca132a5c87040a9af13693">
+        <source>经验</source>
+        <target>EXP</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="0ce6333a9b6c85ccd57ecdbee84ef7f6f3f51ef4">
+        <source>胜场</source>
+        <target>Win</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="a89a5c5567bbe1de398b978749b9a1bf6f1281bf">
+        <source>负场</source>
+        <target>Lose</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="41a0424d676209939f79f70c8ef8aa8a143d3451">
+        <source>平局</source>
+        <target>Draw</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="3f4d682cd4fc7579e9ea6bd1bddec84dbc35fd50">
+        <source>总场</source>
+        <target>Total</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="f5f5d4874301c4b42cdbfab010c953631abbcec9">
+        <source>更多资料</source>
+        <target>More Info</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="63346eb53d54138db02c1713ae58f73bb1b8786f">
         <source>新闻</source>
         <target>News</target>
@@ -438,64 +416,64 @@
         <target>Import to</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="1761e51e36b01ae1e0012914bd58aa2a741d0401">
-            <source>已安装</source>
-            <target>Installed</target>
+      <trans-unit datatype="html" id="1761e51e36b01ae1e0012914bd58aa2a741d0401">
+        <source>已安装</source>
+        <target>Installed</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="69f3fab778e92fcec3a8c38d53d771a36e6d5230">
-            <source>推荐</source>
-            <target>Recommended</target>
+      <trans-unit datatype="html" id="69f3fab778e92fcec3a8c38d53d771a36e6d5230">
+        <source>推荐</source>
+        <target>Recommended</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="fc570ecca13755cb4a92e7513fbd55c2d412f23c">
-            <source>迷之物体</source>
-            <target>Something</target>
+      <trans-unit datatype="html" id="fc570ecca13755cb4a92e7513fbd55c2d412f23c">
+        <source>迷之物体</source>
+        <target>Something</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="0873cd6df2d1f1016e02526aa9ba32415c1a11d8">
-            <source>东方 Project</source>
-            <target>Touhou Project</target>
+      <trans-unit datatype="html" id="0873cd6df2d1f1016e02526aa9ba32415c1a11d8">
+        <source>东方 Project</source>
+        <target>Touhou Project</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="785db32107cc0b47564b05381a1d782021d77c67">
-            <source>东方旧作</source>
-            <target>Touhou old series</target>
+      <trans-unit datatype="html" id="785db32107cc0b47564b05381a1d782021d77c67">
+        <source>东方旧作</source>
+        <target>Touhou old series</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="817376261844eb7eb0c035ed0e3fce744a96b6d9">
-            <source>已安装的运行库</source>
-            <target>Installed Runtime Library</target>
+      <trans-unit datatype="html" id="817376261844eb7eb0c035ed0e3fce744a96b6d9">
+        <source>已安装的运行库</source>
+        <target>Installed Runtime Library</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="ae5dccdf399fb229fb9f0153a7ec5c28a4579ca1">
-            <source>登录</source>
-            <target>Sign In</target>
+      <trans-unit datatype="html" id="ae5dccdf399fb229fb9f0153a7ec5c28a4579ca1">
+        <source>登录</source>
+        <target>Sign In</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c">
-            <source>游戏</source>
-            <target>Library</target>
+      <trans-unit datatype="html" id="fbfb7c4354663a67786aa5aee748d1f38b8fe71c">
+        <source>游戏</source>
+        <target>Library</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b">
-            <source>社区</source>
-            <target>Community</target>
+      <trans-unit datatype="html" id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b">
+        <source>社区</source>
+        <target>Community</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="9d9335d175b40b85f2b98610af517a8b7509c089">
-            <source>MyCard 设置</source>
-            <target>MyCard Settings</target>
+      <trans-unit datatype="html" id="9d9335d175b40b85f2b98610af517a8b7509c089">
+        <source>MyCard 设置</source>
+        <target>MyCard Settings</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="b22ce2179c700e2499e1d402fb1d3f4392c7f6af">
-            <source>语言</source>
-            <target>Language</target>
+      <trans-unit datatype="html" id="b22ce2179c700e2499e1d402fb1d3f4392c7f6af">
+        <source>语言</source>
+        <target>Language</target>
         
       </trans-unit>
-        <trans-unit datatype="html" id="af09a0e18f4200fdb729133ddcd5bb43d52439aa">
-            <source>确定</source>
-            <target>OK</target>
+      <trans-unit datatype="html" id="af09a0e18f4200fdb729133ddcd5bb43d52439aa">
+        <source>确定</source>
+        <target>OK</target>
         
       </trans-unit>
     </body>

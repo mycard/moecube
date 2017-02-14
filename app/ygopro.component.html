@@ -39,6 +39,7 @@
             <div class="modal-body">
                 <label i18n>选择对手</label>
                 <div id="windbot" class="list-group">
+                    <a i18n href="#" class="list-group-item" (click)="join_windbot()">随机</a>
                     <a *ngFor="let name of windbot" href="#" class="list-group-item" (click)="join_windbot(name)">{{name}}</a>
                 </div>
             </div>

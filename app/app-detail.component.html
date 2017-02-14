@@ -99,7 +99,21 @@
 </div>
 
 
-<!--<div *ngIf="points" class="row">--><!--<dl class="col-4 row">--><!--<dt i18n class="col-8">竞技排名</dt>--><!--<dd class="col-4">{{points.arena_rank}}</dd>--><!--<dt i18n class="col-8">竞技胜率</dt>--><!--<dd class="col-4">{{points.athletic_wl_ratio}}%</dd>--><!--<dt i18n class="col-8">胜场</dt>--><!--<dd class="col-4">{{points.athletic_win}}</dd>--><!--<dt i18n class="col-8">负场</dt>--><!--<dd class="col-4">{{points.athletic_lose}}</dd>--><!--<dt i18n class="col-8">平局</dt>--><!--<dd class="col-4">{{points.athletic_draw}}</dd>--><!--<dt i18n class="col-8">总场</dt>--><!--<dd class="col-4">{{points.athletic_all}}</dd>--><!--</dl>--><!--<dl class="col-4 row">--><!--<dt i18n class="col-8">娱乐排名</dt>--><!--<dd class="col-4">{{points.exp_rank}}</dd>--><!--<dt i18n class="col-8">经验</dt>--><!--<dd class="col-4">{{points.exp}}</dd>--><!--<dt i18n class="col-8">胜场</dt>--><!--<dd class="col-4">{{points.entertain_win}}</dd>--><!--<dt i18n class="col-8">负场</dt>--><!--<dd class="col-4">{{points.entertain_lose}}</dd>--><!--<dt i18n class="col-8">平局</dt>--><!--<dd class="col-4">{{points.entertain_draw}}</dd>--><!--<dt i18n class="col-8">总场</dt>--><!--<dd class="col-4">{{points.entertain_all}}</dd>--><!--</dl>--><!--</div>-->
+<!--<div class="panel panel-default" *ngIf="currentApp.id === 'ygopro'">-->
+    <!--<h2 i18n>社区</h2>-->
+    <!--<div class="d-flex">-->
+        <!--<div class="card">-->
+            <!--<img src="https://ygobbs.com/uploads/default/original/3X/7/b/7bf0d51bf506678f2660bf427526f4a71d213658.png">-->
+            <!--<p class="card-text">12月13日 MyCard更新RATE,1033.C程序。手动更新以及载入中/版本不匹配等错误解决方法。</p>-->
+        <!--</div>-->
+        <!--<ul>-->
+            <!--<li>决斗都市——ygocore战队联盟站报名贴</li>-->
+            <!--<li>七夕情侣YGOPRO联盟 夏日双打大赛</li>-->
+            <!--<li>蠢鱼的一些关于安装和更新指南</li>-->
+            <!--<li>MyCard V3 使用说明</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</div>-->
 
 <div class="panel panel-default" *ngIf="news && news.length">
     <h2 i18n>新闻</h2>
@@ -154,6 +168,20 @@
 
 
 </div>
+
+<!--<div class="panel panel-default">-->
+    <!--<h2 i18n>广告</h2>-->
+    <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+    <!--&lt;!&ndash; mycard &ndash;&gt;-->
+    <!--<ins class="adsbygoogle"-->
+         <!--style="display:block"-->
+         <!--data-ad-client="ca-pub-1173264056684633"-->
+         <!--data-ad-slot="3903147661"-->
+         <!--data-ad-format="auto"></ins>-->
+    <!--<script>-->
+        <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+    <!--</script>-->
+<!--</div>-->
 
 <!--安装modal-->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">

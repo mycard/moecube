@@ -26,31 +26,46 @@
         <span i18n *ngIf="grouped_apps.recommend">推荐</span>
         <ul *ngIf="grouped_apps.recommend" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.recommend" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp"><img *ngIf="app.icon" class="icon" [src]="app.icon">{{app.name}}</a>
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.mysterious">迷之物体</span>
         <ul *ngIf="grouped_apps.mysterious" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.mysterious" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp"><img *ngIf="app.icon" class="icon" [src]="app.icon">{{app.name}}</a>
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.touhou">东方 Project</span>
         <ul *ngIf="grouped_apps.touhou" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.touhou" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp"><img *ngIf="app.icon" class="icon" [src]="app.icon">{{app.name}}</a>
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
         <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.touhou_pc98" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp"><img *ngIf="app.icon" class="icon" [src]="app.icon">{{app.name}}</a>
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
             </li>
         </ul>
         <span i18n *ngIf="grouped_apps.runtime_installed">已安装的运行库</span>
         <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.runtime_installed" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp"><img *ngIf="app.icon" class="icon" [src]="app.icon">{{app.name}}</a>
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
             </li>
         </ul>
     </nav>

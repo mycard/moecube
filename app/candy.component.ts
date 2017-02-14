@@ -28,7 +28,7 @@ import {LoginService} from './login.service';
 import {SettingsService} from './settings.sevices';
 import {App} from './app';
 import 'node_modules/candy/libs.min.js';
-import 'node_modules/candy/candy.bundle.js';
+import 'node_modules/candy/candy.min.js';
 import 'node_modules/candy-shop/notifyme/candy.js';
 import 'node_modules/candy-shop/namecomplete/candy.js';
 import 'node_modules/candy-shop/modify-role/candy.js';
@@ -57,10 +57,12 @@ Candy.Util.getPosTopAccordingToWindowBounds = new Proxy(Candy.Util.getPosTopAcco
         return target.apply(thisArg, argumentsList);
     }
 });
-Candy.View.Pane.Roster.joinAnimation = function (elementId: string) {
-    $("#" + elementId).show().css({opacity: 'initial'});
+
+// 性能优化：禁用加入动画
+Candy.View.Pane.Roster.joinAnimation = function () {
 };
 
+// 性能优化：禁用用户排序
 declare const Mustache: any;
 Candy.View.Pane.Roster._insertUser = function (roomJid: string, roomId: string, user: any, userId: string, currentUser: any) {
     let contact = user.getContact();
@@ -70,17 +72,132 @@ Candy.View.Pane.Roster._insertUser = function (roomJid: string, roomId: string, 
         userJid: user.getJid(),
         realJid: user.getRealJid(),
         status: user.getStatus(),
-        contact_status: contact ? contact.getStatus() : "unavailable",
+        contact_status: contact ? contact.getStatus() : 'unavailable',
         nick: user.getNick(),
         displayNick: Candy.Util.crop(user.getNick(), Candy.View.getOptions().crop.roster.nickname),
         role: user.getRole(),
         affiliation: user.getAffiliation(),
         me: currentUser !== undefined && user.getNick() === currentUser.getNick(),
-        tooltipRole: $.i18n._("tooltipRole"),
-        tooltipIgnored: $.i18n._("tooltipIgnored")
+        tooltipRole: $.i18n._('tooltipRole'),
+        tooltipIgnored: $.i18n._('tooltipIgnored')
     });
-    let rosterPane = Candy.View.Pane.Room.getPane(roomJid, ".roster-pane");
+    let rosterPane = Candy.View.Pane.Room.getPane(roomJid, '.roster-pane');
     rosterPane.append(html);
+};
+
+// 性能优化：将未读消息计数的的 jQuery show() 改为直接置 style
+Candy.View.Pane.Chat.increaseUnreadMessages = function (roomJid: string) {
+    let unreadElem = this.getTab(roomJid).find('.unread');
+    unreadElem.text(unreadElem.text() !== '' ? parseInt(unreadElem.text(), 10) + 1 : 1);
+    unreadElem[0].style.display = 'inherit';
+    // only increase window unread messages in private chats
+    if (Candy.View.Pane.Chat.rooms[roomJid].type === 'chat' || Candy.View.getOptions().updateWindowOnAllMessages === true) {
+        Candy.View.Pane.Window.increaseUnreadMessages();
+    }
+};
+
+// 性能优化：将收到消息时的滚动放进requestIdleCallback
+declare const requestIdleCallback: Function;
+Candy.View.Pane.Message.
+    show = function (roomJid: any, name: any, message: any, xhtmlMessage: any, timestamp: any, from: any, carbon: any, stanza: any) {
+    message = Candy.Util.Parser.all(message.substring(0, Candy.View.getOptions().crop.message.body));
+    if (Candy.View.getOptions().enableXHTML === true && xhtmlMessage) {
+        xhtmlMessage = Candy.Util.parseAndCropXhtml(xhtmlMessage, Candy.View.getOptions().crop.message.body);
+    }
+    timestamp = timestamp || new Date();
+    // Assume we have an ISO-8601 date string and convert it to a Date object
+    if (!timestamp.toDateString) {
+        timestamp = Candy.Util.iso8601toDate(timestamp);
+    }
+    // Before we add the new message, check to see if we should be automatically scrolling or not.
+    let messagePane = Candy.View.Pane.Room.getPane(roomJid, '.message-pane');
+    let enableScroll;
+    if (stanza.children('delay').length > 0) {
+        enableScroll = true;
+    } else {
+        enableScroll =
+            messagePane.scrollTop() + messagePane.outerHeight() === messagePane.prop('scrollHeight') || !$(messagePane).is(':visible');
+    }
+    Candy.View.Pane.Chat.rooms[roomJid].enableScroll = enableScroll;
+    let evtData: any = {
+        roomJid: roomJid,
+        name: name,
+        message: message,
+        xhtmlMessage: xhtmlMessage,
+        from: from,
+        stanza: stanza
+    };
+    if ($(Candy).triggerHandler('candy:view.message.before-show', evtData) === false) {
+        return;
+    }
+    message = evtData.message;
+    xhtmlMessage = evtData.xhtmlMessage;
+    if (xhtmlMessage !== undefined && xhtmlMessage.length > 0) {
+        message = xhtmlMessage;
+    }
+    if (!message) {
+        return;
+    }
+    let renderEvtData = {
+        template: Candy.View.Template.Message.item,
+        templateData: {
+            name: name,
+            displayName: Candy.Util.crop(name, Candy.View.getOptions().crop.message.nickname),
+            message: message,
+            time: Candy.Util.localizedTime(timestamp),
+            timestamp: timestamp.toISOString(),
+            roomjid: roomJid,
+            from: from
+        },
+        stanza: stanza
+    };
+    $(Candy).triggerHandler('candy:view.message.before-render', renderEvtData);
+    let html = Mustache.to_html(renderEvtData.template, renderEvtData.templateData);
+    Candy.View.Pane.Room.appendToMessagePane(roomJid, html);
+    let elem = Candy.View.Pane.Room.getPane(roomJid, '.message-pane').children().last();
+    // click on username opens private chat
+    elem.find('a.label').click(function (event: any) {
+        event.preventDefault();
+        // Check if user is online and not myCandy.View.Pane
+        let room = Candy.Core.getRoom(roomJid);
+        if (room &&
+            name !== Candy.View.Pane.Room.getUser(Candy.View.getCurrent().roomJid).getNick() &&
+            room.getRoster().get(roomJid + '/' + name)) {
+            if (Candy.View.Pane.PrivateRoom.open(roomJid + '/' + name, name, true) === false) {
+                return false;
+            }
+        }
+    });
+    if (!carbon) {
+        let notifyEvtData = {
+            name: name,
+            displayName: Candy.Util.crop(name, Candy.View.getOptions().crop.message.nickname),
+            roomJid: roomJid,
+            message: message,
+            time: Candy.Util.localizedTime(timestamp),
+            timestamp: timestamp.toISOString()
+        };
+        $(Candy).triggerHandler('candy:view.message.notify', notifyEvtData);
+        // Check to see if in-core notifications are disabled
+        if (!Candy.Core.getOptions().disableCoreNotifications) {
+            if (Candy.View.getCurrent().roomJid !== roomJid || !Candy.View.Pane.Window.hasFocus()) {
+                Candy.View.Pane.Chat.increaseUnreadMessages(roomJid);
+                if (!Candy.View.Pane.Window.hasFocus()) {
+                    // Notify the user about a new private message OR on all messages if configured
+                    if (Candy.View.Pane.Chat.rooms[roomJid].type === 'chat' || Candy.View.getOptions().updateWindowOnAllMessages === true) {
+                        Candy.View.Pane.Chat.Toolbar.playSound();
+                    }
+                }
+            }
+        }
+        if (Candy.View.getCurrent().roomJid === roomJid) {
+            requestIdleCallback(function () {
+                Candy.View.Pane.Room.scrollToBottom(roomJid);
+            });
+        }
+    }
+    evtData.element = elem;
+    $(Candy).triggerHandler('candy:view.message.after-show', evtData);
 };
 
 document['__defineGetter__']('cookie', () => 'candy-nostatusmessages');
@@ -100,10 +217,10 @@ export class CandyComponent implements OnInit, OnChanges {
     password: string;
     nickname: string;
 
-    constructor (private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
+    constructor(private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
     }
 
-    ngOnInit () {
+    ngOnInit() {
 
         this.jid = this.loginService.user.username + '@mycard.moe';
         this.password = this.loginService.user.external_id.toString();
@@ -161,7 +278,7 @@ export class CandyComponent implements OnInit, OnChanges {
         Candy.Core.connect(this.jid, this.password, this.nickname);
     }
 
-    ngOnChanges (changes: SimpleChanges): void {
+    ngOnChanges(changes: SimpleChanges): void {
         if (!Candy.Core.getConnection()) {
             return;
         }

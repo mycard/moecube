@@ -69,7 +69,7 @@ interface Room {
     id?: string;
     title?: string;
     server?: Server;
-    private?: boolean;
+    'private'?: boolean;
     options: Options;
     arena?: string;
     users?: {username: string, position: number}[];
@@ -168,8 +168,8 @@ export class YGOProComponent implements OnInit, OnDestroy {
     match_cancelable: boolean;
     match_interval: Timer | undefined;
 
-    constructor (private http: Http, private appsService: AppsService, private loginService: LoginService,
-                 public settingsService: SettingsService, private ref: ChangeDetectorRef) {
+    constructor(private http: Http, private appsService: AppsService, private loginService: LoginService,
+                public settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
                 this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
@@ -190,8 +190,8 @@ export class YGOProComponent implements OnInit, OnDestroy {
             this.matching_arena = matching_arena;
             this.refresh_match();
             this.match_interval = setInterval(() => {
-                this.refresh_match()
-            }, 1000)
+                this.refresh_match();
+            }, 1000);
         }
 
         if (this.settingsService.getLocale().startsWith('zh')) {
@@ -229,7 +229,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     }
 
-    async ngOnInit () {
+    async ngOnInit() {
 
         let locale: string;
         if (this.settingsService.getLocale().startsWith('zh')) {
@@ -304,11 +304,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
                         case 'create':
                             this.replay_rooms.push(Object.assign({server: server}, message.data));
                             break;
-                        // case 'update':
-                        //     Object.assign(this.replay_rooms.find(room => room.server === server && room.id === message.data.id), message.data);
-                        //     break;
                         case 'delete':
-                            this.replay_rooms.splice(this.replay_rooms.findIndex(room => room.server === server && room.id === message.data), 1);
+                            this.replay_rooms.splice(
+                                this.replay_rooms.findIndex(room => room.server === server && room.id === message.data),
+                                1
+                            );
                     }
                     this.ref.detectChanges();
                 };
@@ -324,7 +324,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     }
 
-    async refresh () {
+    async refresh() {
         this.decks = await this.get_decks();
         let system_conf = await this.load_system_conf();
 
@@ -349,7 +349,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     };
 
-    get_decks (): Promise<string[]> {
+    get_decks(): Promise<string[]> {
         return new Promise((resolve, reject) => {
             fs.readdir(path.join(this.app.local!.path, 'deck'), (error, files) => {
                 if (error) {
@@ -361,7 +361,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     }
 
-    get_replays (): Promise<string[]> {
+    get_replays(): Promise<string[]> {
         return new Promise((resolve, reject) => {
             fs.readdir(path.join(this.app.local!.path, 'replay'), (error, files) => {
                 if (error) {
@@ -373,7 +373,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     }
 
-    async get_font (files: string[]): Promise<string | undefined> {
+    async get_font(files: string[]): Promise<string | undefined> {
         for (let file of files) {
             let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
             if (found) {
@@ -382,14 +382,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     }
 
-    async delete_deck (deck: string) {
+    async delete_deck(deck: string) {
         if (confirm('确认删除?')) {
             await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
             return this.refresh();
         }
     }
 
-    async fix_fonts (data: SystemConf) {
+    async fix_fonts(data: SystemConf) {
         if (!await this.get_font([data.numfont])) {
             let font = await this.get_font(this.numfont);
             if (font) {
@@ -405,7 +405,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     };
 
-    load_system_conf (): Promise<SystemConf> {
+    load_system_conf(): Promise<SystemConf> {
         return new Promise((resolve, reject) => {
             fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
                 if (error) {
@@ -416,7 +416,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     };
 
-    save_system_conf (data: SystemConf) {
+    save_system_conf(data: SystemConf) {
         return new Promise((resolve, reject) => {
             fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{whitespace: true})), (error) => {
                 if (error) {
@@ -427,7 +427,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     };
 
-    async join (name: string, server: Server) {
+    async join(name: string, server: Server) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = this.current_deck;
@@ -440,7 +440,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         return this.start_game(['-j']);
     };
 
-    async edit_deck (deck: string) {
+    async edit_deck(deck: string) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         system_conf.lastdeck = deck;
@@ -448,18 +448,21 @@ export class YGOProComponent implements OnInit, OnDestroy {
         return this.start_game(['-d', deck]);
     }
 
-    async watch_replay (replay: string) {
+    async watch_replay(replay: string) {
         let system_conf = await this.load_system_conf();
         await this.fix_fonts(system_conf);
         await this.save_system_conf(system_conf);
         return this.start_game(['-r', path.join('replay', replay + '.yrp')]);
     }
 
-    join_windbot (name: string) {
+    join_windbot(name?: string) {
+        if (!name) {
+            name = this.windbot[Math.floor(Math.random() * this.windbot.length)];
+        }
         return this.join('AI#' + name, this.servers[0]);
     }
 
-    async start_game (args: string[]) {
+    async start_game(args: string[]) {
         let win = remote.getCurrentWindow();
         win.minimize();
         return new Promise((resolve, reject) => {
@@ -471,7 +474,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 reject(error);
                 win.restore();
             });
-            child.on('exit', async (code, signal) => {
+            child.on('exit', async(code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
                 await this.refresh();
                 resolve();
@@ -480,7 +483,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
     };
 
-    create_room (room: Room) {
+    create_room(room: Room) {
         let options_buffer = new Buffer(6);
         // 建主密码 https://docs.google.com/document/d/1rvrCGIONua2KeRaYNjKBLqyG9uybs9ZI-AmzZKNftOI/edit
         options_buffer.writeUInt8((room.private ? 2 : 1) << 4, 1);
@@ -511,7 +514,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         this.join(password, this.servers[0]);
     }
 
-    join_room (room: Room) {
+    join_room(room: Room) {
         let options_buffer = new Buffer(6);
         options_buffer.writeUInt8(3 << 4, 1);
         let checksum = 0;
@@ -531,7 +534,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         this.join(password, room.server!);
     }
 
-    request_match (arena = 'entertain') {
+    request_match(arena = 'entertain') {
         let headers = new Headers();
         headers.append('Authorization',
             'Basic ' + Buffer.from(this.loginService.user.username + ':' + this.loginService.user.external_id).toString('base64'));
@@ -553,48 +556,48 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 this.matching_arena = matching_arena = undefined;
                 if (this.match_interval) {
                     clearInterval(this.match_interval);
-                    this.match_interval = undefined
+                    this.match_interval = undefined;
                 }
             });
 
         this.refresh_match();
         this.match_interval = setInterval(() => {
-            this.refresh_match()
-        }, 1000)
+            this.refresh_match();
+        }, 1000);
     }
 
-    cancel_match () {
+    cancel_match() {
         this.matching!.unsubscribe();
         this.matching = matching = undefined;
         this.matching_arena = matching_arena = undefined;
         if (this.match_interval) {
             clearInterval(this.match_interval);
-            this.match_interval = undefined
+            this.match_interval = undefined;
         }
     }
 
-    ngOnDestroy () {
+    ngOnDestroy() {
         if (this.match_interval) {
             clearInterval(this.match_interval);
-            this.match_interval = undefined
+            this.match_interval = undefined;
         }
     }
 
-    refresh_match () {
+    refresh_match() {
         let match_time = Math.floor((new Date().getTime() - match_started_at.getTime()) / 1000);
         let minute = Math.floor(match_time / 60).toString();
-        if (minute.length == 1) {
+        if (minute.length === 1) {
             minute = '0' + minute;
         }
         let second = (match_time % 60).toString();
-        if (second.length == 1) {
+        if (second.length === 1) {
             second = '0' + second;
         }
         this.match_time = `${minute}:${second}`;
         this.match_cancelable = match_time <= 5 || match_time >= 180;
     }
 
-    bilibili_loaded () {
+    bilibili_loaded() {
         this.bilibili.nativeElement.insertCSS(`
             #b_app_link {
                 visibility: hidden;
@@ -612,7 +615,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         `);
     }
 
-    bilibili_navigate (event: WillNavigateEvent) {
+    bilibili_navigate(event: WillNavigateEvent) {
         // event.preventDefault();
         // https://github.com/electron/electron/issues/1378
         this.bilibili.nativeElement.src = 'http://m.bilibili.com/search.html?keyword=YGOPro';

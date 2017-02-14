@@ -15,6 +15,9 @@
         <li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'community'}" class="nav-item">
             <a i18n (click)="currentPage='community'" class="nav-link" href="#">社区</a>
         </li>
+        <!--<li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'moesound'}" class="nav-item">-->
+            <!--<a i18n (click)="currentPage='moesound'" class="nav-link" href="#">萌音</a>-->
+        <!--</li>-->
         <!--<li *ngIf="loginService.logged_in" [ngClass]="{active: currentPage === 'about'}" class="nav-item">-->
         <!--<a i18n (click)="currentPage='about'" class="nav-link" href="#">关于</a>-->
         <!--</li>-->
@@ -45,6 +48,7 @@
 <store class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'store'"></store>
 <lobby class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'lobby'"></lobby>
 <webview class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'community'" src="https://ygobbs.com" (new-window)="openExternal($event.url)"></webview>
+<!--<webview #moesound preload="./moesound.js" class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'moesound'" src="http://moesound.com/" (new-window)="moesound_newwindow($event.url)" (did-finish-load)="moesound_loaded()"></webview>-->
 <about class="page" *ngIf="loginService.logged_in" [hidden]="currentPage != 'about'"></about>
 
 <!-- Modal -->

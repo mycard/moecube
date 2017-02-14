@@ -9,8 +9,15 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
 import {Points} from './ygopro.component';
+import {Http} from '@angular/http';
 
 declare const Notification: any;
+
+// declare interface Window {
+//     adsbygoogle: any[];
+// }
+//
+// declare var adsbygoogle: any[];
 
 @Component({
     moduleId: module.id,
@@ -34,16 +41,21 @@ export class AppDetailComponent implements OnInit, OnChanges {
     points: Points;
 
     constructor(private appsService: AppsService, private settingsService: SettingsService,
-                private  downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef) {
+                private  downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef,
+                private http: Http) {
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    async ngOnChanges(changes: SimpleChanges) {
         if (changes['currentApp']) {
             if (this.currentApp.background) {
                 this.el.nativeElement.style.background = `url("${this.currentApp.background}") rgba(255,255,255,.8)`;
             } else {
                 this.el.nativeElement.style.background = 'white';
             }
+
+            // let top = await this.http.get('https://ygobbs.com/top.json').map(response => response.json()).toPromise();
+            // console.log(top.topic_list.topics);
+            // (adsbygoogle = window['adsbygoogle'] || []).push({});
         }
     }
 

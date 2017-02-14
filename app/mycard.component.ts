@@ -36,7 +36,10 @@ export class MyCardComponent implements OnInit {
 
     resizing: HTMLElement | null;
 
-    ngOnInit () {
+    @ViewChild('moesound')
+    moesound: ElementRef;
+
+    ngOnInit() {
         this.update_elements = new Map(Object.entries({
             'error': this.error,
             'checking-for-update': this.checking_for_update,
@@ -50,8 +53,8 @@ export class MyCardComponent implements OnInit {
         // });
     }
 
-    constructor (private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef,
-                 private settingsService: SettingsService) {
+    constructor(private renderer: Renderer, private loginService: LoginService, private ref: ChangeDetectorRef,
+                private settingsService: SettingsService) {
         // renderer.listenGlobal('window', 'message', (event) => {
         //     console.log(event);
         //     // Do something with 'event'
@@ -80,15 +83,15 @@ export class MyCardComponent implements OnInit {
 
     }
 
-    update_retry () {
+    update_retry() {
         autoUpdater.checkForUpdates();
     }
 
-    update_install () {
+    update_install() {
         autoUpdater.quitAndInstall();
     }
 
-    set_update_status (status: string) {
+    set_update_status(status: string) {
         console.log('autoUpdater', status);
         if (this.update_status) {
             let element = this.update_elements.get(this.update_status);
@@ -105,15 +108,30 @@ export class MyCardComponent implements OnInit {
         }
     }
 
-    openExternal (url: string) {
+    openExternal(url: string) {
         shell.openExternal(url);
     }
 
-    submit () {
+    submit() {
         if (this.locale !== this.settingsService.getLocale()) {
             localStorage.setItem(SettingsService.SETTING_LOCALE, this.locale);
             remote.app.relaunch();
             remote.app.quit();
         }
     }
+    //
+    // moesound_loaded() {
+    //     this.moesound.nativeElement.insertCSS(`
+    //         body > section > header, #bjax-target > div.row.m-t-lg.m-b-lg, #bjax-target > section {
+    //             display: none;
+    //         }
+    //         body > section > section {
+    //             top: 0!important;
+    //         }
+    //     `);
+    // }
+    //
+    // moesound_newwindow(url: string) {
+    //     console.log(url);
+    // }
 }
