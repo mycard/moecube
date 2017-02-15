@@ -185,7 +185,7 @@ form {
 }
 
 #game-replay-watch {
-    max-height: 500px;
+    height: 500px;
 }
 
 #game-replay-watch table {
@@ -195,4 +195,14 @@ form {
 #game-replay-watch .avatar {
     width: 18px;
     height: 18px;
+}
+
+#watch-filter {
+    display: inline-block;
+}
+#watch-filter .dropdown-item {
+    font-size: .875rem;
+}
+#watch-filter .form-check-input {
+    margin-left: inherit;
 }

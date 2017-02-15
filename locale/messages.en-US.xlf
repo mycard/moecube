@@ -147,7 +147,7 @@
         
       </trans-unit>
       <trans-unit datatype="html" id="be6d109c359b1d11b261280915e6b1706ca3ed9b">
-        <source>OCG &amp; TCG</source>
+        <source>OCG & TCG</source>
         <target>TCG/OCG</target>
         
       </trans-unit>
@@ -194,6 +194,11 @@
       <trans-unit datatype="html" id="7047116f06b2fcb5e7f8e8589d1ef31628aff0fa">
         <source>游戏模式</source>
         <target>Game Mode</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="968e4d8a0f7b5eaaa1d588a738abdaa0ec389d16">
+        <source>匹配</source>
+        <target>Matchmaking</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="08afd8197e09842de9d76741588c6c1bcd3e2605">

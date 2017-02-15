@@ -161,6 +161,15 @@ export class YGOProComponent implements OnInit, OnDestroy {
     connections: WebSocket[] = [];
     replay_connections: WebSocket[] = [];
     replay_rooms: Room[] = [];
+    replay_rooms_show: Room[];
+    replay_rooms_filter = {
+        athletic: true,
+        entertain: true,
+        single: true,
+        match: true,
+        tag: true,
+        windbot: false
+    };
 
     matching: ISubscription | undefined;
     matching_arena: string | undefined;
@@ -229,6 +238,35 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     }
 
+    refresh_replay_rooms() {
+        this.replay_rooms_show = this.replay_rooms.filter((room) => {
+            return ((this.replay_rooms_filter.athletic && room.arena === 'athletic') ||
+            (this.replay_rooms_filter.entertain && room.arena === 'entertain') ||
+            (this.replay_rooms_filter.single && room.options.mode === 0 && !room.arena && !room.id!.startsWith('AI#')) ||
+            (this.replay_rooms_filter.match && room.options.mode === 1 && !room.arena && !room.id!.startsWith('AI#')) ||
+            (this.replay_rooms_filter.tag && room.options.mode === 2 && !room.arena && !room.id!.startsWith('AI#')) ||
+            (this.replay_rooms_filter.windbot && room.id!.startsWith('AI#')));
+        }).sort((a, b) => {
+            // if (a.arena === 'athletic' && b.arena === 'athletic') {
+            //     return a.dp - b.dp;
+            // } else if (a.arena === 'entertain' && b.arena === 'entertain') {
+            //     return a.exp - b.exp;
+            // }
+            let [a_priority, b_priority] = [a, b].map((room) => {
+                if (room.arena === 'athletic') {
+                    return 0;
+                } else if (room.arena === 'entertain') {
+                    return 1;
+                } else if (room.id!.startsWith('AI#')) {
+                    return 5;
+                } else {
+                    return room.options.mode + 2;
+                }
+            });
+            return a_priority - b_priority;
+        });
+    }
+
     async ngOnInit() {
 
         let locale: string;
@@ -292,6 +330,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 let connection = new WebSocket(url.toString());
                 connection.onclose = () => {
                     this.replay_rooms = this.replay_rooms.filter(room => room.server !== server);
+                    this.refresh_replay_rooms();
                 };
                 connection.onmessage = (event) => {
                     let message = JSON.parse(event.data);
@@ -310,6 +349,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                                 1
                             );
                     }
+                    this.refresh_replay_rooms();
                     this.ref.detectChanges();
                 };
                 return connection;
@@ -323,6 +363,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
             this.replay_connections = [];
         });
     }
+
 
     async refresh() {
         this.decks = await this.get_decks();
