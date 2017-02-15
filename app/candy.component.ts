@@ -203,6 +203,9 @@ Candy.View.Pane.Message.
 document['__defineGetter__']('cookie', () => 'candy-nostatusmessages');
 document['__defineSetter__']('cookie', () => true);
 
+declare const Strophe: any;
+declare const $iq: any;
+
 @Component({
     moduleId: module.id,
     selector: 'candy',
@@ -276,6 +279,14 @@ export class CandyComponent implements OnInit, OnChanges {
         CandyShop.Refocus.init();
 
         Candy.Core.connect(this.jid, this.password, this.nickname);
+
+
+        // $(Candy).on('candy:core.chat.connection', (event: any, args: any) => {
+        //     if (args.status === Strophe.Status.CONNECTED) {
+        //         Candy.Core.Action.Jabber.Roster();
+        //         Candy.Core.getConnection().send($iq({type: 'get'}).c('vCard', {xmlns: 'vcard-temp'}).tree());
+        //     }
+        // });
     }
 
     ngOnChanges(changes: SimpleChanges): void {

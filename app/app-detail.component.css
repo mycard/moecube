@@ -201,4 +201,21 @@ table th, table td {
     font-weight: normal;
 }
 
+#game_info {
+    font-size: 14px;
+    margin-right: 8px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+#game_info p {
+    flex-grow: 1;
+}
+#game_info_2 {
+    width: 160px;
+    flex-shrink: 0;
+}
 
+#tags {
+    font-size: 14px;
+}
