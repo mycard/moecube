@@ -4,7 +4,7 @@
     <button i18n [disabled]="!appsService.allReady(app)" (click)="request_match('entertain')" type="button" class="btn btn-secondary btn-sm">娱乐匹配</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-list-modal">自定义游戏</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
-    <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-replay-modal">观战和录像</button>
+    <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-replay-modal">观战录像</button>
 </div>
 
 <!-- 匹配中 -->
@@ -203,9 +203,7 @@
                                 <th class="title">
                                     <span i18n>游戏模式</span>
                                     <div id="watch-filter" class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            筛选
-                                        </button>
+                                        <button i18n class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">筛选</button>
                                         <div class="dropdown-menu">
                                             <h6 i18n class="dropdown-header">匹配</h6>
                                             <div class="form-check dropdown-item">

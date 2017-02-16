@@ -16,6 +16,7 @@
     "tsc": "tsc",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
     "i18n:upload": "npm run i18n && curl --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} --request PUT --header 'Content-type: multipart/form-data' --form content=@messages.xlf https://www.transifex.com/api/2/project/mycard/resource/messages/content/",
+    "i18n:translate": "open https://www.transifex.com/mycard/mycard/translate/#en_US/messages/108367258?translated=no",
     "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:zh112998 https://www.transifex.com/api/2/project/mycard/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
   },
   "dependencies": {
