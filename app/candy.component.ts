@@ -112,7 +112,7 @@ Candy.View.Pane.Message.
     // Before we add the new message, check to see if we should be automatically scrolling or not.
     let messagePane = Candy.View.Pane.Room.getPane(roomJid, '.message-pane');
     let enableScroll;
-    if (stanza.children('delay').length > 0) {
+    if (stanza && stanza.children('delay').length > 0) {
         enableScroll = true;
     } else {
         enableScroll =
