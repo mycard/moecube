@@ -85,13 +85,48 @@ export class LobbyComponent implements OnInit {
                 this.resizing.style.width = `${width}px`;
             } else {
                 let height = this.offset - event.clientY;
-                if (height < 236) {
-                    height = 236;
+                let main_height=event.clientY-document.getElementById('navbar')!.clientHeight;
+
+                let minimized: HTMLElement = $('#minimized')[0];
+                let maximized: HTMLElement = $('#maximized')[0];
+                console.log(event.clientY);
+                if (height > 150 && main_height>180) {
+                    if (height < 230) {
+                        height = 230;
+                    }
+                    this.resizing.style.height = `${height}px`;
+                    if($('#candy').attr('data-minormax')!='default') {
+                        $('#candy').attr('data-minormax', 'default');
+                        $('#mobile-roster-icon').css('display', 'block');
+                        $('#chat-toolbar').css('display', 'block');
+                        $('#chat-rooms').css('display', 'block');
+                        $('#context-menu').css('display', 'block');
+                        $('#mobile-roster-icon').css('display', 'block');
+                        $(minimized).removeClass('fa-clone');
+                        $(minimized).addClass('fa-minus');
+                        $(maximized).removeClass('fa-clone');
+                        $(maximized).addClass('fa-expand');
+                    }
+                }else if(height<=150){
+                    $('#candy').attr('data-minormax','min');
+                    this.resizing.style.height='31px';
+                    $('#mobile-roster-icon').css('display','none');
+                    $('#chat-toolbar').css('display','none');
+                    $('#chat-rooms').css('display','none');
+                    $('#context-menu').css('display','none');
+                    $('#mobile-roster-icon').css('display','none');
+                    $(minimized).addClass('fa-clone');
+                    $(minimized).removeClass('fa-minus');
+                    $(maximized).removeClass('fa-clone');
+                    $(maximized).addClass('fa-expand');
+                }else if(main_height<=180){
+                    $('#candy').attr('data-minormax','max');
+                    this.resizing.style.height='calc( 100% - 180px )';
+                    $(minimized).removeClass('fa-clone');
+                    $(minimized).addClass('fa-minus');
+                    $(maximized).removeClass('fa-expand');
+                    $(maximized).addClass('fa-clone');
                 }
-                if (height > 540) {
-                    height = 540;
-                }
-                this.resizing.style.height = `${height}px`;
             }
         });
         document.addEventListener('mouseup', (event: MouseEvent) => {

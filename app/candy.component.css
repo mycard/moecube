@@ -165,3 +165,12 @@
     display: inherit;
     opacity: inherit;
 }
+
+.hover-color{
+    color:#a7a7a7;
+    padding:0 5px;
+}
+
+.hover-color:hover{
+    color:#000;
+}

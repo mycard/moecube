@@ -79,7 +79,7 @@
         <roster class="scroll"></roster>
     </div>
 
-    <div id="candy-wrapper" class="resize-wrapper resize-top">
+    <div id="candy-wrapper" class="resize-wrapper resize-top" style="max-height: calc( 100% - 180px )">
         <div class="resize" (mousedown)="mousedown($event)"></div>
         <candy *ngIf="currentApp" [currentApp]="currentApp"></candy>
     </div>
