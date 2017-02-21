@@ -75,10 +75,8 @@
 <div class="d-flex">
     <div class="panel" id="game_info">
         <p [innerHTML]="currentApp.description"></p>
-        <div id="tags">
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">弹幕</div>
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">射击</div>
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">单机</div>
+        <div id="tags" *ngIf="currentApp.tags">
+            <div *ngFor="let tag of currentApp.tags" class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">{{tags[tag] || tag}}</div>
         </div>
     </div>
     <div class="panel" id="game_info_2">
@@ -143,7 +141,7 @@
     <h2 i18n>新闻</h2>
     <div id="news" *ngFor="let item of news">
         <h3>{{item.title}}</h3>
-        <span>2017-01-18</span>
+        <span>{{item.updated_at | date:'shortDate'}}</span>
         <p>{{item.text}}</p>
         <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
     </div>

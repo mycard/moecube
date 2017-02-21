@@ -284,12 +284,20 @@ export class CandyComponent implements OnInit, OnChanges {
 
         Candy.Core.connect(this.jid, this.password, this.nickname);
 
-
-        // $(Candy).on('candy:core.chat.connection', (event: any, args: any) => {
-        //     if (args.status === Strophe.Status.CONNECTED) {
-        //         Candy.Core.Action.Jabber.Roster();
-        //         Candy.Core.getConnection().send($iq({type: 'get'}).c('vCard', {xmlns: 'vcard-temp'}).tree());
-        //     }
+        // $(Candy).on('candy:core:roster:loaded', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(data.roster.getAll());
+        // });
+        // $(Candy).on('candy:core:roster:fetched', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(data.roster.getAll());
+        // });
+        // $(Candy).on('candy:core:roster:removed', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
+        // });
+        // $(Candy).on('candy:core:roster:added', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
+        // });
+        // $(Candy).on('candy:core:roster:updated', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
         // });
     }
 

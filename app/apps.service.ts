@@ -239,13 +239,9 @@ export class AppsService {
             }
 
             // 去除无关语言
-            for (let key of ['name', 'description', 'news']) {
+            for (let key of ['name', 'description', 'news', 'developers', 'publishers']) {
                 if (app[key]) {
-                    let value = app[key][locale];
-                    if (!value) {
-                        value = app[key]['zh-CN'];
-                    }
-                    app[key] = value;
+                    app[key] = app[key][locale] || app[key]['zh-CN'] || Object.values(app[key])[0];
                 }
             }
 
@@ -259,6 +255,17 @@ export class AppsService {
                     }
                 }
             }
+
+            // 时间
+            if (app.released_at) {
+                app.released_at = new Date(app.released_at);
+            }
+            if (app.news) {
+                for (let item of app.news) {
+                    item.updated_at = new Date(item.updated_at);
+                }
+            }
+
             apps.set(item.id, app);
 
         }
@@ -418,7 +425,7 @@ export class AppsService {
         });
     }
 
-    async verifyFiles (app: App, checksumFiles: Map<string, string>, callback: () => void): Promise<Map<string, string>> {
+    async verifyFiles(app: App, checksumFiles: Map<string, string>, callback: () => void): Promise<Map<string, string>> {
         let result = new Map<string, string>();
         for (let [file, checksum] of checksumFiles) {
             let filePath = path.join(app.local!.path, file);
@@ -662,7 +669,7 @@ export class AppsService {
             }
             await this.doInstall(task);
         };
-        const addDownloadTask = async (_app: App, dir: string): Promise<{app: App, files: string[]} > => {
+        const addDownloadTask = async(_app: App, dir: string): Promise<{app: App, files: string[]} > => {
             let locale = this.settingsService.getLocale();
             if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
                 locale = 'en-US';
@@ -1147,7 +1154,7 @@ export class AppsService {
         }
     }
 
-    async getChecksumFile (app: App): Promise<Map<string, string> > {
+    async getChecksumFile(app: App): Promise<Map<string, string> > {
 
         let locale = this.settingsService.getLocale();
         if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
