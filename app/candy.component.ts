@@ -219,7 +219,9 @@ export class CandyComponent implements OnInit, OnChanges {
     jid: string;
     password: string;
     nickname: string;
-    roster: any[] = [];
+    // ismin_window:Boolean=false;
+    // ismax_window:Boolean=false;
+    height_default_window:string="230px";
 
     constructor(private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
     }
@@ -235,11 +237,12 @@ export class CandyComponent implements OnInit, OnChanges {
         // 很 Tricky 的加载 Candy 的 css，这里涉及图片等资源的相对路径引用问题，如果丢给 Angular 去加载，会让相对路径找不到
         const element = document.createElement('style');
         element.innerHTML = `
+            @import "node_modules/font-awesome/css/font-awesome.min.css";
             @import "node_modules/candy/libs.min.css";
             @import "node_modules/candy/res/default.css";
             @import "node_modules/candy-shop/notifyme/candy.css";
             @import "node_modules/candy-shop/namecomplete/candy.css";
-            @import "node_modules/candy-shop/modify-role/candy.css"
+            @import "node_modules/candy-shop/modify-role/candy.css";
         `;
         shadow.insertBefore(element, shadow.firstChild);
 
@@ -281,21 +284,21 @@ export class CandyComponent implements OnInit, OnChanges {
 
         Candy.Core.connect(this.jid, this.password, this.nickname);
 
-        $(Candy).on('candy:core:roster:loaded', (event: JQueryEventObject, data: any) => {
-            this.roster = Object.values(data.roster.getAll());
-        });
-        $(Candy).on('candy:core:roster:fetched', (event: JQueryEventObject, data: any) => {
-            this.roster = Object.values(data.roster.getAll());
-        });
-        $(Candy).on('candy:core:roster:removed', (event: JQueryEventObject, data: any) => {
-            this.roster = Object.values(Candy.Core.getRoster().getAll());
-        });
-        $(Candy).on('candy:core:roster:added', (event: JQueryEventObject, data: any) => {
-            this.roster = Object.values(Candy.Core.getRoster().getAll());
-        });
-        $(Candy).on('candy:core:roster:updated', (event: JQueryEventObject, data: any) => {
-            this.roster = Object.values(Candy.Core.getRoster().getAll());
-        });
+        // $(Candy).on('candy:core:roster:loaded', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(data.roster.getAll());
+        // });
+        // $(Candy).on('candy:core:roster:fetched', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(data.roster.getAll());
+        // });
+        // $(Candy).on('candy:core:roster:removed', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
+        // });
+        // $(Candy).on('candy:core:roster:added', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
+        // });
+        // $(Candy).on('candy:core:roster:updated', (event: JQueryEventObject, data: any) => {
+        //     this.roster = Object.values(Candy.Core.getRoster().getAll());
+        // });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -319,13 +322,60 @@ export class CandyComponent implements OnInit, OnChanges {
         }
     }
 
-    chat(jid: string) {
-        console.log(jid);
+    minimized():void{
+        let minimized:HTMLElement = $('#minimized')[0];
+        let maximized:HTMLElement = $('#maximized')[0];
+        if($('#candy').attr('data-minormax')!='min'){
+            $('#candy').attr('data-minormax','min');
+            document.getElementById('candy-wrapper')!.style.height='31px';
+            $('#mobile-roster-icon').css('display','none');
+            $('#chat-toolbar').css('display','none');
+            $('#chat-rooms').css('display','none');
+            $('#context-menu').css('display','none');
+            $('#mobile-roster-icon').css('display','none');
+            $(minimized).addClass('fa-clone');
+            $(minimized).removeClass('fa-minus');
+            $(maximized).removeClass('fa-clone');
+            $(maximized).addClass('fa-expand');
+        }else{
+            $('#candy').attr('data-minormax','default');
+            document.getElementById('candy-wrapper')!.style!.height=this.height_default_window;
+            $('#mobile-roster-icon').css('display','block');
+            $('#chat-toolbar').css('display','block');
+            $('#chat-rooms').css('display','block');
+            $('#context-menu').css('display','block');
+            $('#mobile-roster-icon').css('display','block');
+            $(minimized).removeClass('fa-clone');
+            $(minimized).addClass('fa-minus');
+        }
     }
 
-    // ngOnDestroy () {
-    //     if (Candy.Core.getConnection()) {
-    //         Candy.Core.disconnect();
-    //     }
-    // }
+    maximized():void{
+        let minimized:HTMLElement = $('#minimized')[0];
+        let maximized:HTMLElement = $('#maximized')[0];
+        if($('#candy').attr('data-minormax')!='max'){
+            $('#candy').attr('data-minormax','max');
+            document.getElementById('candy-wrapper')!.style!.height="calc( 100% - 180px )";
+            $('#mobile-roster-icon').css('display','block');
+            $('#chat-toolbar').css('display','block');
+            $('#chat-rooms').css('display','block');
+            $('#context-menu').css('display','block');
+            $('#mobile-roster-icon').css('display','block');
+            $(minimized).removeClass('fa-clone');
+            $(minimized).addClass('fa-minus');
+            $(maximized).removeClass('fa-expand');
+            $(maximized).addClass('fa-clone');
+        }else{
+            $('#candy').attr('data-minormax','default');
+            $(maximized).removeClass('fa-clone');
+            $(maximized).addClass('fa-expand');
+            document.getElementById('candy-wrapper')!.style!.height=this.height_default_window;
+        }
+    }
 }
+
+
+
+
+
+
