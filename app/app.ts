@@ -55,6 +55,8 @@ export class App {
     description: string;   // i18n
     author: string;             // English Only
     homepage: string;
+    developers: {name: string, url: string}[];
+    released_at: Date;
     category: Category;
     parent?: App;
 
@@ -62,7 +64,7 @@ export class App {
     references: Map<string, App>;
     dependencies: Map<string, App>;
     locales: string[];
-    news: {title: string, url: string, image: string}[];
+    news: {title: string, url: string, image: string, updated_at: Date}[];
     network: any;
     tags: string[];
     version: string;
@@ -154,6 +156,8 @@ export class App {
         this.id = app.id;
         this.name = app.name;
         this.description = app.description;
+        this.developers = app.developers;
+        this.released_at = app.released_at;
         this.author = app.author;
         this.homepage = app.homepage;
         this.category = Category[app.category as string];

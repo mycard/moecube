@@ -50,36 +50,14 @@
 
 </div>
 
-<!--<div class="d-flex">-->
-    <!--<div class="panel" id="game_info">-->
-        <!--<p>-->
-            <!--《东方红魔乡 ～ the Embodiment of Scarlet Devil.》（东方红魔郷 ～ the Embodiment of Scarlet Devil.）是由同人组织上海爱丽丝幻乐团所制作的纵弹幕射击游戏，于2002年6月10日发布体验版，2002年8月11日（Comic Market62）正式发售，9月27日在各同人商店开始了委托贩卖。该作是东方Project的第6作，也是东方Project在Windows平台上的第一作。 </p>-->
-        <!--<div id="tags">-->
-            <!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">弹幕</div>-->
-            <!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">射击</div>-->
-            <!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">单机</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="panel" id="game_info_2">-->
-        <!--<dl>-->
-            <!--<dt>开发</dt>-->
-            <!--<dd>上海爱丽丝幻乐团</dd>-->
-            <!--<dt>出版</dt>-->
-            <!--<dd>上海爱丽丝幻乐团</dd>-->
-            <!--<dt>发行日期</dt>-->
-            <!--<dd>2002年8月11日</dd>-->
-        <!--</dl>-->
-    <!--</div>-->
-<!--</div>-->
+<!--<div class="d-flex">--><!--<div class="panel" id="game_info">--><!--<p>--><!--《东方红魔乡 ～ the Embodiment of Scarlet Devil.》（东方红魔郷 ～ the Embodiment of Scarlet Devil.）是由同人组织上海爱丽丝幻乐团所制作的纵弹幕射击游戏，于2002年6月10日发布体验版，2002年8月11日（Comic Market62）正式发售，9月27日在各同人商店开始了委托贩卖。该作是东方Project的第6作，也是东方Project在Windows平台上的第一作。 </p>--><!--<div id="tags">--><!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">弹幕</div>--><!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">射击</div>--><!--<div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">单机</div>--><!--</div>--><!--</div>--><!--<div class="panel" id="game_info_2">--><!--<dl>--><!--<dt>开发</dt>--><!--<dd>上海爱丽丝幻乐团</dd>--><!--<dt>出版</dt>--><!--<dd>上海爱丽丝幻乐团</dd>--><!--<dt>发行日期</dt>--><!--<dd>2002年8月11日</dd>--><!--</dl>--><!--</div>--><!--</div>-->
 
 <div class="d-flex">
     <div class="panel" id="game_info">
         <p>
             《东方红魔乡 ～ the Embodiment of Scarlet Devil.》（东方红魔郷 ～ the Embodiment of Scarlet Devil.）是由同人组织上海爱丽丝幻乐团所制作的纵弹幕射击游戏，于2002年6月10日发布体验版，2002年8月11日（Comic Market62）正式发售，9月27日在各同人商店开始了委托贩卖。该作是东方Project的第6作，也是东方Project在Windows平台上的第一作。 </p>
-        <div id="tags">
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">弹幕</div>
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">射击</div>
-            <div class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">单机</div>
+        <div id="tags" *ngIf="currentApp.tags">
+            <div *ngFor="let tag of currentApp.tags" class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">{{tags[tag] || tag}}</div>
         </div>
     </div>
     <div class="panel" id="game_info_2">
@@ -144,7 +122,7 @@
     <h2 i18n>新闻</h2>
     <div id="news" *ngFor="let item of news">
         <h3>{{item.title}}</h3>
-        <span>2017-01-18</span>
+        <span>{{item.updated_at | date:'shortDate'}}</span>
         <p>{{item.text}}</p>
         <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
     </div>

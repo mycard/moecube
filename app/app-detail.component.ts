@@ -40,9 +40,25 @@ export class AppDetailComponent implements OnInit, OnChanges {
 
     points: Points;
 
+    tags: {};
+
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef,
                 private http: Http) {
+
+        this.tags = this.settingsService.getLocale().startsWith('zh') ? {
+                'recommend': '推荐',
+                'mysterious': '迷之物体',
+                'touhou': '东方 Project',
+                'touhou-pc98': '东方旧作',
+                'language': '语言包'
+            } : {
+                'recommend': 'Recommended',
+                'mysterious': 'Something',
+                'touhou': 'Touhou Project',
+                'touhou-pc98': 'Touhou old series',
+                'language': 'Language Pack'
+            };
     }
 
     async ngOnChanges(changes: SimpleChanges) {
