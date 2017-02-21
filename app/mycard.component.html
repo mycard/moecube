@@ -32,15 +32,15 @@
         <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
-            <i (click)="loginService.logout()" class="fa fa-sign-out item-icon" aria-hidden="true"></i>
-            <i data-toggle="modal" data-target="#settings-modal" class="fa fa-cog item-icon" aria-hidden="true"></i>
+            <i i18n (click)="loginService.logout()" class="fa fa-sign-out item-icon" aria-hidden="true" title="登出"></i>
+            <i i18n data-toggle="modal" data-target="#settings-modal" class="fa fa-cog item-icon" aria-hidden="true" title="设置"></i>
         </div>
         <div id="border">|</div>
         <div id="window-buttons">
-            <i (click)="currentWindow.minimize()" class="fa fa-minus"></i>
-            <i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand"></i>
-            <i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone"></i>
-            <i (click)="currentWindow.hide()" class="fa fa-times"></i>
+            <i i18n (click)="currentWindow.minimize()" class="fa fa-minus" title="最小化"></i>
+            <i i18n *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" title="最大化"></i>
+            <i i18n *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" title="还原"></i>
+            <i i18n (click)="currentWindow.hide()" class="fa fa-times" title="关闭"></i>
         </div>
     </div>
 </nav>

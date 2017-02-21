@@ -221,7 +221,7 @@ export class CandyComponent implements OnInit, OnChanges {
     nickname: string;
     // ismin_window:Boolean=false;
     // ismax_window:Boolean=false;
-    height_default_window:string="230px";
+    height_default_window: string = '230px';
 
     constructor(private loginService: LoginService, private settingsService: SettingsService, private element: ElementRef) {
     }
@@ -314,56 +314,51 @@ export class CandyComponent implements OnInit, OnChanges {
         }
     }
 
-    minimized():void{
-        let minimized:HTMLElement = $('#minimized')[0];
-        let maximized:HTMLElement = $('#maximized')[0];
-        if($('#candy').attr('data-minormax')!='min'){
-            $('#candy').attr('data-minormax','min');
-            document.getElementById('candy-wrapper')!.style.height='31px';
-            $('#mobile-roster-icon').css('display','none');
-            $('#chat-toolbar').css('display','none');
-            $('#chat-rooms').css('display','none');
-            $('#context-menu').css('display','none');
-            $('#mobile-roster-icon').css('display','none');
-            $(minimized).addClass('fa-clone');
-            $(minimized).removeClass('fa-minus');
-            $(maximized).removeClass('fa-clone');
-            $(maximized).addClass('fa-expand');
-        }else{
-            $('#candy').attr('data-minormax','default');
-            document.getElementById('candy-wrapper')!.style!.height=this.height_default_window;
-            $('#mobile-roster-icon').css('display','block');
-            $('#chat-toolbar').css('display','block');
-            $('#chat-rooms').css('display','block');
-            $('#context-menu').css('display','block');
-            $('#mobile-roster-icon').css('display','block');
-            $(minimized).removeClass('fa-clone');
-            $(minimized).addClass('fa-minus');
-        }
+    minimized(): void {
+        // let minimized:HTMLElement = $('#minimized')[0];
+        // let maximized:HTMLElement = $('#maximized')[0];
+        // let un_minimized:HTMLElement = $('#un_minimized')[0];
+        // let un_maximized:HTMLElement = $('#un_maximized')[0];
+        $('#candy').attr('data-minormax', 'min');
+        document.getElementById('candy-wrapper')!.style.height = '31px';
+        $('#mobile-roster-icon').css('display', 'none');
+        $('#chat-toolbar').css('display', 'none');
+        $('#chat-rooms').css('display', 'none');
+        $('#context-menu').css('display', 'none');
+        $('#mobile-roster-icon').css('display', 'none');
+
+        $('#minimized').hide();
+        $('#restore').show();
+        $('#maximized').show();
+    }
+    restore(): void {
+        $('#candy').attr('data-minormax', 'default');
+        document.getElementById('candy-wrapper')!.style!.height = this.height_default_window;
+        $('#mobile-roster-icon').css('display', 'block');
+        $('#chat-toolbar').css('display', 'block');
+        $('#chat-rooms').css('display', 'block');
+        $('#context-menu').css('display', 'block');
+        $('#mobile-roster-icon').css('display', 'block');
+
+        $('#minimized').show();
+        $('#restore').hide();
+        $('#maximized').show();
     }
 
-    maximized():void{
-        let minimized:HTMLElement = $('#minimized')[0];
-        let maximized:HTMLElement = $('#maximized')[0];
-        if($('#candy').attr('data-minormax')!='max'){
-            $('#candy').attr('data-minormax','max');
-            document.getElementById('candy-wrapper')!.style!.height="calc( 100% - 180px )";
-            $('#mobile-roster-icon').css('display','block');
-            $('#chat-toolbar').css('display','block');
-            $('#chat-rooms').css('display','block');
-            $('#context-menu').css('display','block');
-            $('#mobile-roster-icon').css('display','block');
-            $(minimized).removeClass('fa-clone');
-            $(minimized).addClass('fa-minus');
-            $(maximized).removeClass('fa-expand');
-            $(maximized).addClass('fa-clone');
-        }else{
-            $('#candy').attr('data-minormax','default');
-            $(maximized).removeClass('fa-clone');
-            $(maximized).addClass('fa-expand');
-            document.getElementById('candy-wrapper')!.style!.height=this.height_default_window;
-        }
+    maximized(): void {
+        $('#candy').attr('data-minormax', 'max');
+        document.getElementById('candy-wrapper')!.style!.height = 'calc( 100% - 180px )' ;
+        $('#mobile-roster-icon').css('display', 'block');
+        $('#chat-toolbar').css('display', 'block');
+        $('#chat-rooms').css('display', 'block');
+        $('#context-menu').css('display', 'block');
+        $('#mobile-roster-icon').css('display', 'block');
+
+        $('#minimized').show();
+        $('#restore').show();
+        $('#maximized').hide();
     }
+
 }
 
 
