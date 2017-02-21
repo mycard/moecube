@@ -1,4 +1,4 @@
-import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {NgModule, NO_ERRORS_SCHEMA, LOCALE_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
@@ -24,7 +24,11 @@ import {CandyComponent} from './candy.component';
     ],
     bootstrap: [MyCardComponent],
     providers: [
-        AppsService, SettingsService, LoginService, DownloadService,
+        AppsService, SettingsService, LoginService, DownloadService, {
+            provide: LOCALE_ID,
+            deps: [SettingsService],
+            useFactory: (settingsService: SettingsService) => settingsService.getLocale()
+        }
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })
