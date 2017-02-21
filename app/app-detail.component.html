@@ -82,7 +82,11 @@
     <div class="panel" id="game_info_2">
         <dl>
             <dt>开发</dt>
-            <dd><a href="https://github.com/Fluorohydride/ygopro">Fluorohydride</a></dd>
+            <dd *ngFor="let developer of currentApp.developers">
+                <a *ngIf="developer.url" target="_blank" href="{{developer.url}}">{{developer.name}}</a>
+                <span *ngIf="!developer.url" >{{developer.name}}</span>
+            </dd>
+
             <dt>发行日期</dt>
             <dd>{{currentApp.released_at | date:'mediumDate'}}</dd>
         </dl>

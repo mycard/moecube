@@ -50,13 +50,13 @@ export class AppDetailComponent implements OnInit, OnChanges {
                 'recommend': '推荐',
                 'mysterious': '迷之物体',
                 'touhou': '东方 Project',
-                'touhou-pc98': '东方旧作',
+                'touhou_pc98': '东方旧作',
                 'language': '语言包'
             } : {
                 'recommend': 'Recommended',
                 'mysterious': 'Something',
                 'touhou': 'Touhou Project',
-                'touhou-pc98': 'Touhou old series',
+                'touhou_pc98': 'Touhou old series',
                 'language': 'Language Pack'
             };
     }
