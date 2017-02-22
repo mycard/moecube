@@ -24,7 +24,8 @@ import {CandyComponent} from './candy.component';
     ],
     bootstrap: [MyCardComponent],
     providers: [
-        AppsService, SettingsService, LoginService, DownloadService, {
+        AppsService, SettingsService, LoginService, DownloadService
+        , {
             provide: LOCALE_ID,
             deps: [SettingsService],
             useFactory: (settingsService: SettingsService) => settingsService.getLocale()

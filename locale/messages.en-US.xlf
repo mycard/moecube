@@ -216,6 +216,11 @@
         <target><x id="INTERPOLATION"/> Vs. <x id="INTERPOLATION_1"/></target>
         
       </trans-unit>
+      <trans-unit datatype="html" id="4fbedd55acdf8789c0d5bb10792a2775540c990b">
+        <source><x id="INTERPOLATION"/> 购买</source>
+        <target><x id="INTERPOLATION"/> Buy</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a">
         <source>安装</source>
         <target>Install</target>
@@ -326,6 +331,16 @@
         <target>More Info</target>
         
       </trans-unit>
+      <trans-unit datatype="html" id="d894d6d2877894a61841bb27d0ed7a85419b58aa">
+        <source>开发</source>
+        <target>Developer</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="502c98fe1d2359937a3be80448a1343c43eb0e82">
+        <source>发行日期</source>
+        <target>Release Date</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="63346eb53d54138db02c1713ae58f73bb1b8786f">
         <source>新闻</source>
         <target>News</target>
@@ -426,6 +441,36 @@
         <target>Import to</target>
         
       </trans-unit>
+      <trans-unit datatype="html" id="446a2e3833dd7f4122a0a3f2046e7b062b54d575">
+        <source>购买 <x id="INTERPOLATION"/></source>
+        <target>Buy <x id="INTERPOLATION"/></target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="6b296cbd1145fbf948c58a7afa5c4d200cdfd98b">
+        <source>购买</source>
+        <target>Buy</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="ef65da47763167a418e811d9007c53b896b50479">
+        <source>最小化</source>
+        <target>Minimize</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="a4148531ad465c2e931b7e754db36872c37d81e9">
+        <source>取消最小化</source>
+        <target>Unminimize</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="3b5d294cb083dfe7adeef5030777e93a14b3ba25">
+        <source>还原</source>
+        <target>Restore</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="5d721f211851b0df47f1b25a5cc0b66ba0c1d2ec">
+        <source>最大化</source>
+        <target>Maximize</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="1761e51e36b01ae1e0012914bd58aa2a741d0401">
         <source>已安装</source>
         <target>Installed</target>
@@ -469,6 +514,36 @@
       <trans-unit datatype="html" id="c4fc2b3584e7581cddb08bb1ebfa41e601195d5b">
         <source>社区</source>
         <target>Community</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="a8bb0580a537d7a47ff0a2df6907b5f6acee50c6">
+        <source>更新出错，点击重试</source>
+        <target>Download update failed, click to retry</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="a75ff3d3253e8d65f703cf2a9384fc09532a73d5">
+        <source>正在检查更新</source>
+        <target>Checking for updates</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="21d13c0058fb50264b8e8a867dff4133861e5260">
+        <source>正在下载更新</source>
+        <target>Downloading updates</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="abd0524ada522c2ca41fa6ac06bbc6a887828d70">
+        <source>下载更新完成，点击安装</source>
+        <target>Update Downloaded, click to install</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="d2f3938b0b672d936a9b157211b6212d7f015c21">
+        <source>切换用户</source>
+        <target>Logout</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="065034046fe7863f3fe1a1f68e5767cf58bed3c1">
+        <source>关闭</source>
+        <target>Close</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="9d9335d175b40b85f2b98610af517a8b7509c089">

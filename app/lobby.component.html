@@ -23,7 +23,7 @@
             </li>
         </ul>
 
-        <span i18n *ngIf="grouped_apps.test">测试</span>
+        <span *ngIf="grouped_apps.test">测试</span>
         <ul *ngIf="grouped_apps.test" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.test" class="nav-item">
                 <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">

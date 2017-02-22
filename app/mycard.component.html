@@ -24,23 +24,23 @@
     </ul>
     <div id="navbar-right">
         <div id="update-status">
-            <i #error [hidden]="update_status != 'error'" (click)="update_retry()" class="fa fa-exclamation-circle" data-toggle="tooltip" title="更新出错，点击重试"></i>
-            <i #checking_for_update [hidden]="update_status != 'checking-for-update'" class="fa fa-spinner fa-pulse fa-spin" data-toggle="tooltip" title="正在检查更新"></i>
-            <i #update_available [hidden]="update_status != 'update-available'" class="fa fa-refresh fa-spin" data-toggle="tooltip" title="正在下载更新"></i>
-            <i #update_downloaded [hidden]="update_status != 'update-downloaded'" (click)="update_install()" class="fa fa-angle-double-up" data-toggle="tooltip" title="下载更新完成，点击安装"></i>
+            <i #error [hidden]="update_status != 'error'" (click)="update_retry()" class="fa fa-exclamation-circle" data-toggle="tooltip" i18n-title title="更新出错，点击重试"></i>
+            <i #checking_for_update [hidden]="update_status != 'checking-for-update'" class="fa fa-spinner fa-pulse fa-spin" data-toggle="tooltip" i18n-title title="正在检查更新"></i>
+            <i #update_available [hidden]="update_status != 'update-available'" class="fa fa-refresh fa-spin" data-toggle="tooltip" i18n-title title="正在下载更新"></i>
+            <i #update_downloaded [hidden]="update_status != 'update-downloaded'" (click)="update_install()" class="fa fa-angle-double-up" data-toggle="tooltip" i18n-title title="下载更新完成，点击安装"></i>
         </div>
         <div id="user" *ngIf="loginService.logged_in">
             <a href="#" class="profile"><img id="avatar" [src]="loginService.user.avatar_url" alt="image"></a>
             <a href="#" class="profile item" id="username">{{loginService.user.username}}</a>
-            <i i18n (click)="loginService.logout()" class="fa fa-sign-out item-icon" aria-hidden="true" title="登出"></i>
-            <i i18n data-toggle="modal" data-target="#settings-modal" class="fa fa-cog item-icon" aria-hidden="true" title="设置"></i>
+            <i i18n (click)="loginService.logout()" class="fa fa-sign-out item-icon" aria-hidden="true" i18n-title title="切换用户"></i>
+            <i i18n data-toggle="modal" data-target="#settings-modal" class="fa fa-cog item-icon" aria-hidden="true" i18n-title title="设置"></i>
         </div>
         <div id="border">|</div>
         <div id="window-buttons">
-            <i i18n (click)="currentWindow.minimize()" class="fa fa-minus" title="最小化"></i>
-            <i i18n *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" title="最大化"></i>
-            <i i18n *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" title="还原"></i>
-            <i i18n (click)="currentWindow.hide()" class="fa fa-times" title="关闭"></i>
+            <i i18n (click)="currentWindow.minimize()" class="fa fa-minus" i18n-title title="最小化"></i>
+            <i i18n *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" i18n-title title="最大化"></i>
+            <i i18n *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" i18n-title title="还原"></i>
+            <i i18n (click)="currentWindow.hide()" class="fa fa-times" i18n-title title="关闭"></i>
         </div>
     </div>
 </nav>

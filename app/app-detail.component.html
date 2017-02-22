@@ -113,7 +113,7 @@
     </div>
     <div class="panel" id="game_info_2">
         <dl>
-            <dt>开发</dt>
+            <dt i18n>开发</dt>
             <dd>
                 <div *ngFor="let developer of currentApp.developers">
                     <a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>
@@ -121,7 +121,7 @@
                 </div>
             </dd>
 
-            <dt>发行日期</dt>
+            <dt i18n>发行日期</dt>
             <dd>{{currentApp.released_at | date:'mediumDate'}}</dd>
         </dl>
     </div>
