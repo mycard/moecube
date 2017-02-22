@@ -114,9 +114,11 @@
     <div class="panel" id="game_info_2">
         <dl>
             <dt>开发</dt>
-            <dd *ngFor="let developer of currentApp.developers">
-                <a *ngIf="developer.url" target="_blank" href="{{developer.url}}">{{developer.name}}</a>
-                <span *ngIf="!developer.url" >{{developer.name}}</span>
+            <dd>
+                <div *ngFor="let developer of currentApp.developers">
+                    <a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>
+                    <span *ngIf="!developer.url">{{developer.name}}</span>
+                </div>
             </dd>
 
             <dt>发行日期</dt>
@@ -304,8 +306,8 @@
                         <label for="wechat" class="form-check-label">微信</label>
                     </div>
                     <!--<div class="form-check">-->
-                        <!--<input id="paypal" type="radio" class="form-check-input" name="optionsRadios" value="alipay" checked>-->
-                        <!--<label for="paypal" class="form-check-label">PayPal</label>-->
+                    <!--<input id="paypal" type="radio" class="form-check-input" name="optionsRadios" value="alipay" checked>-->
+                    <!--<label for="paypal" class="form-check-label">PayPal</label>-->
                     <!--</div>-->
                     <!--</fieldset>-->
                 </form>

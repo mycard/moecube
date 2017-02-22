@@ -322,10 +322,10 @@ export class CandyComponent implements OnInit, OnChanges {
         }
     }
 
-    minimized(): void {
-        // let minimized:HTMLElement = $('#minimized')[0];
+    minimize(): void {
+        // let minimize:HTMLElement = $('#minimize')[0];
         // let maximized:HTMLElement = $('#maximized')[0];
-        // let un_minimized:HTMLElement = $('#un_minimized')[0];
+        // let un_minimize:HTMLElement = $('#un_minimize')[0];
         // let un_maximized:HTMLElement = $('#un_maximized')[0];
         $('#candy').attr('data-minormax', 'min');
         document.getElementById('candy-wrapper')!.style.height = '31px';
@@ -335,9 +335,10 @@ export class CandyComponent implements OnInit, OnChanges {
         $('#context-menu').css('display', 'none');
         $('#mobile-roster-icon').css('display', 'none');
 
-        $('#minimized').hide();
-        $('#restore').show();
-        $('#maximized').show();
+        $('#minimize').hide();
+        $('#unminimize').show();
+        $('#restore').hide();
+        $('#maximize').show();
     }
     restore(): void {
         $('#candy').attr('data-minormax', 'default');
@@ -348,12 +349,13 @@ export class CandyComponent implements OnInit, OnChanges {
         $('#context-menu').css('display', 'block');
         $('#mobile-roster-icon').css('display', 'block');
 
-        $('#minimized').show();
+        $('#minimize').show();
+        $('#unminimize').hide();
         $('#restore').hide();
-        $('#maximized').show();
+        $('#maximize').show();
     }
 
-    maximized(): void {
+    maximize(): void {
         $('#candy').attr('data-minormax', 'max');
         document.getElementById('candy-wrapper')!.style!.height = 'calc( 100% - 180px )' ;
         $('#mobile-roster-icon').css('display', 'block');
@@ -362,9 +364,10 @@ export class CandyComponent implements OnInit, OnChanges {
         $('#context-menu').css('display', 'block');
         $('#mobile-roster-icon').css('display', 'block');
 
-        $('#minimized').show();
+        $('#minimize').show();
+        $('#unminimize').hide();
         $('#restore').show();
-        $('#maximized').hide();
+        $('#maximize').hide();
     }
 
 }

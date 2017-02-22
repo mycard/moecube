@@ -2,7 +2,8 @@
 
 </div>
 <div style="position:absolute; top:5px; right:10px;">
-    <i  id="minimized" class="fa fa-minus hover-color" (click)="minimized()" data-size="" title="最小化"></i>
-    <i  id="restore" class="fa fa-clone hover-color" (click)="restore()" data-size="" title="还原" hidden></i>
-    <i  id="maximized" class="fa fa-expand hover-color"  (click)="maximized()"  onclick="" title="最大化"></i>
+    <i id="minimize" class="fa fa-minus hover-color" (click)="minimize()" data-size="" title="最小化"></i>
+    <i id="unminimize" class="fa fa-minus hover-color" (click)="restore()" data-size="" title="取消最小化" hidden></i>
+    <i id="restore" class="fa fa fa-chevron-down hover-color" (click)="restore()" data-size="" title="还原" hidden></i>
+    <i id="maximize" class="fa fa fa-chevron-up hover-color" (click)="maximize()" title="最大化"></i>
 </div>

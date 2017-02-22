@@ -86,7 +86,7 @@ export class LobbyComponent implements OnInit {
             } else {
                 let height = this.offset - event.clientY;
                 let main_height = event.clientY - document.getElementById('navbar')!.clientHeight;
-                console.log(event.clientY);
+                // console.log(event.clientY);
                 if (height > 150 && main_height > 180) {
                     if (height < 230) {
                         height = 230;
@@ -99,9 +99,10 @@ export class LobbyComponent implements OnInit {
                         $('#chat-rooms').css('display', 'block');
                         $('#context-menu').css('display', 'block');
                         $('#mobile-roster-icon').css('display', 'block');
-                        $('#minimized').show();
+                        $('#minimize').show();
+                        $('#unminimize').hide();
                         $('#restore').hide();
-                        $('#maximized').show();
+                        $('#maximize').show();
                     }
                 }else if ( height <= 150) {
                     $('#candy').attr('data-minormax', 'min');
@@ -111,15 +112,17 @@ export class LobbyComponent implements OnInit {
                     $('#chat-rooms').css('display', 'none');
                     $('#context-menu').css('display', 'none');
                     $('#mobile-roster-icon').css('display', 'none');
-                    $('#minimized').hide();
-                    $('#restore').show();
-                    $('#maximized').show();
+                    $('#minimize').hide();
+                    $('#unminimize').show();
+                    $('#restore').hide();
+                    $('#maximize').show();
                 }else if ( main_height <= 180) {
                     $('#candy').attr('data-minormax', 'max');
                     this.resizing.style.height = 'calc( 100% - 180px )';
-                    $('#minimized').show();
+                    $('#minimize').show();
+                    $('#unminimize').hide();
                     $('#restore').show();
-                    $('#maximized').hide();
+                    $('#maximize').hide();
                 }
             }
         });
