@@ -104,7 +104,7 @@
     <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>
 </div>
 
-<div class="d-flex">
+<div *ngIf="currentApp.description" class="d-flex">
     <div class="panel" id="game_info">
         <p [innerHTML]="currentApp.description"></p>
         <div id="tags" *ngIf="currentApp.tags">
@@ -114,7 +114,11 @@
     <div class="panel" id="game_info_2">
         <dl>
             <dt>开发</dt>
-            <dd><a href="https://github.com/Fluorohydride/ygopro">Fluorohydride</a></dd>
+            <dd *ngFor="let developer of currentApp.developers">
+                <a *ngIf="developer.url" target="_blank" href="{{developer.url}}">{{developer.name}}</a>
+                <span *ngIf="!developer.url" >{{developer.name}}</span>
+            </dd>
+
             <dt>发行日期</dt>
             <dd>{{currentApp.released_at | date:'mediumDate'}}</dd>
         </dl>
