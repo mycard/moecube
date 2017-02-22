@@ -599,6 +599,12 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 this.join(data['password'], {address: data['address'], port: data['port']});
             }, (error) => {
                 alert(`匹配失败\n${error}`);
+                this.matching = matching = undefined;
+                this.matching_arena = matching_arena = undefined;
+                if (this.match_interval) {
+                    clearInterval(this.match_interval);
+                    this.match_interval = undefined;
+                }
             }, () => {
                 this.matching = matching = undefined;
                 this.matching_arena = matching_arena = undefined;
