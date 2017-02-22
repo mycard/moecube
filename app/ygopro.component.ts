@@ -140,6 +140,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     servers: Server[] = [];
 
+    rooms_loading = true;
 
     default_options: Options = {
         mode: 1,
@@ -283,17 +284,23 @@ export class YGOProComponent implements OnInit, OnDestroy {
         let modal = $('#game-list-modal');
 
         modal.on('show.bs.modal', () => {
+            this.rooms_loading = true;
             this.connections = this.servers.filter(server => server.custom).map((server) => {
                 let url = new URL(server.url!);
                 url['searchParams'].set('filter', 'waiting');
                 let connection = new WebSocket(url.toString());
-                connection.onclose = () => {
+                connection.onclose = (event: CloseEvent) => {
+                    this.rooms = this.rooms.filter(room => room.server !== server);
+                };
+                connection.onerror = (event: ErrorEvent) => {
+                    console.log('error', server.id, event);
                     this.rooms = this.rooms.filter(room => room.server !== server);
                 };
                 connection.onmessage = (event) => {
                     let message = JSON.parse(event.data);
                     switch (message.event) {
                         case 'init':
+                            this.rooms_loading = false;
                             this.rooms = this.rooms.filter(room => room.server !== server).concat(
                                 message.data.map((room: Room) => Object.assign({server: server}, room))
                             );
