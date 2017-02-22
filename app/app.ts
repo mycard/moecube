@@ -78,7 +78,9 @@ export class App {
     cover: string;
     background: string;
 
-    static downloadUrl (app: App, platform: string, locale: string): string {
+    price: {[currency: string]: string}
+
+    static downloadUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
             return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
@@ -88,7 +90,7 @@ export class App {
     }
 
 
-    static checksumUrl (app: App, platform: string, locale: string): string {
+    static checksumUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
             return `https://thief.mycard.moe/checksums/${app.id}-${platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
@@ -97,13 +99,17 @@ export class App {
         return `https://thief.mycard.moe/checksums/${app.id}/${app.version}`;
     }
 
-    static updateUrl (app: App, platform: string, locale: string): string {
+    static updateUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
             return `https://thief.mycard.moe/update/${app.id}-${platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
             return `https://thief.mycard.moe/update/${app.id}-${platform}/${app.version}`;
         }
         return `https://thief.mycard.moe/update/${app.id}/${app.version}`;
+    }
+
+    isBought() {
+        return !this.price;
     }
 
     isLanguage() {
@@ -177,6 +183,8 @@ export class App {
         this.icon = app.icon;
         this.cover = app.cover;
         this.background = app.background;
+
+        this.price = app.price;
     }
 
     findDependencies(): App[] {

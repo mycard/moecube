@@ -6,7 +6,6 @@
             <input #search id="search-input" type="text" class="form-control search" placeholder="搜索游戏" aria-describedby="basic-addon1">
         </div>
 
-
         <span i18n *ngIf="grouped_apps.installed">已安装</span>
         <ul *ngIf="grouped_apps.installed" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.installed" class="nav-item">
@@ -23,6 +22,17 @@
                 </a>
             </li>
         </ul>
+
+        <span i18n *ngIf="grouped_apps.test">测试</span>
+        <ul *ngIf="grouped_apps.test" class="nav nav-pills flex-column">
+            <li *ngFor="let app of grouped_apps.test" class="nav-item">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                    <img *ngIf="app.icon" class="icon" [src]="app.icon">
+                    {{app.name}}
+                </a>
+            </li>
+        </ul>
+
         <span i18n *ngIf="grouped_apps.recommend">推荐</span>
         <ul *ngIf="grouped_apps.recommend" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.recommend" class="nav-item">
@@ -76,7 +86,7 @@
 <div id="right">
     <div id="main">
         <app-detail class="scroll" *ngIf="currentApp" [currentApp]="currentApp"></app-detail>
-        <!--<roster class="scroll"></roster>-->
+        <roster class="scroll"></roster>
     </div>
 
     <div id="candy-wrapper" class="resize-wrapper resize-top" style="max-height: calc( 100% - 180px )">

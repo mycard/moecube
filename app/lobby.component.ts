@@ -154,7 +154,7 @@ export class LobbyComponent implements OnInit {
                 if (app.isInstalled()) {
                     tag = 'installed';
                 } else {
-                    tag = app.tags[0];
+                    tag = app.tags ? app.tags[0] : 'test';
                 }
             } else {
                 if (app.isInstalled()) {

@@ -15,10 +15,10 @@ export class RosterComponent implements OnInit, OnChanges {
     chat = new EventEmitter<string>();
 
     ngOnInit() {
-        console.log(this.roster);
+        // console.log(this.roster);
     }
 
     ngOnChanges() {
-        console.log(this.roster);
+        // console.log(this.roster);
     }
 }

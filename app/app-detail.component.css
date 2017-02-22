@@ -23,10 +23,6 @@ progress {
     margin-right: 0.8em;
 }
 
-#news h3 {
-    font-size: 1.5rem;
-}
-
 #news p {
     margin-bottom: 0;
 }
@@ -77,10 +73,16 @@ h2 {
     margin-bottom: 0;
 }
 
-#icon {
+.cover {
     width: 128px;
     height: 128px;
     object-fit: contain;
+    box-shadow: 0 0 4px #ccc;
+}
+.banner {
+    width: 120px;
+    height:45px;
+    object-fit: cover;
 }
 
 #main {
@@ -98,10 +100,14 @@ h2 {
     position: relative;
 }
 
+#news h3 > .title {
+    font-size: 1rem;
+    color: inherit;
+}
+
 #news h3 {
     padding-top: .8rem;
     margin-bottom: 0;
-    font-size: 1rem;
 }
 
 #news p {
@@ -130,12 +136,6 @@ h2 {
 
 #local h2 {
     margin-bottom: .8rem;
-}
-
-#icon {
-    width: 128px;
-    height: 128px;
-    box-shadow: 0 0 4px #ccc;
 }
 
 #main {
@@ -218,4 +218,14 @@ table th, table td {
 
 #tags {
     font-size: 14px;
+}
+
+#purchase-form .form-check {
+    padding-right: 8px;
+}
+
+#purchase-form legend {
+    font-size: 1rem;
+    margin-bottom: 0;
+    margin-top: .5rem;
 }
