@@ -290,7 +290,7 @@ export class AppsService {
                     if (Array.isArray(value)) {
                         let map = new Map<string, App>();
                         for (let appId of value) {
-                            map.set(appId, apps.get(appId));
+                            map.set(appId, apps.get(appId)!);
                         }
                         app[key] = map;
                     } else {
