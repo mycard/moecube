@@ -28,24 +28,32 @@
 </head>
 
 <body>
-<mycard>
-    <nav id="navbar" class="navbar navbar-dark bg-inverse">
-        <a class="navbar-brand" href="#">MyCard</a>
-        <div class="navbar-right">
-            <div id="window-buttons">
-                <i onclick="window.close()" class="fa fa-times"></i>
-            </div>
-        </div>
-    </nav>
 
-    <div id="loading">MyCard <span id="version"></span> Loading...</div>
+<mycard>
+
+
+    <!--<div id="loading">MyCard <span id="version"></span> Loading...</div>-->
+    <div id="loading-bar">
+        <span class="navbar-brand">MyCard</span>
+        <i class="fa fa-times close" i18n="" i18n-title="" title="关闭" onclick="window.close()"></i>
+    </div>
+
+    <div class="loading">
+    <img src="./images/CubbitLogo.png">
+        <p>
+            LOADING
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+        </p>
+    </div>
     <div id="failed" hidden>发生了错误，请复制以下错误信息并联系 support@mycard.moe</div>
     <pre id="error" hidden></pre>
 </mycard>
 <script>
     document.body.classList.add(process.platform);
-    document.getElementById('version').innerHTML = require('electron').remote.app.getVersion();
+//    document.getElementById('version').innerHTML = require('electron').remote.app.getVersion();
 </script>
-<!--<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </body>
 </html>
