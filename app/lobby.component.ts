@@ -7,6 +7,9 @@ import {LoginService} from './login.service';
 import {App, Category} from './app';
 import {shell} from 'electron';
 import {SettingsService} from './settings.sevices';
+import {URLSearchParams} from '@angular/http';
+const ReconnectingWebSocket = require('reconnecting-websocket');
+
 // import 'typeahead.js';
 // import Options = Twitter.Typeahead.Options;
 
@@ -28,11 +31,13 @@ export class LobbyComponent implements OnInit {
     @ViewChild('search')
     search: ElementRef;
 
-    constructor (private appsService: AppsService, private loginService: LoginService,
-                 private settingsService: SettingsService, private ref: ChangeDetectorRef) {
+    private messages: WebSocket;
+
+    constructor(private appsService: AppsService, private loginService: LoginService,
+                private settingsService: SettingsService, private ref: ChangeDetectorRef) {
     }
 
-    async ngOnInit () {
+    async ngOnInit() {
         this.apps = await this.appsService.loadApps();
         if (this.apps.size > 0) {
             this.chooseApp(this.appsService.lastVisited || this.apps.get('ygopro')!);
@@ -53,6 +58,18 @@ export class LobbyComponent implements OnInit {
             this.apps.get('ygopro')!.conference = 'ygopro-international';
         }
         this.ref.detectChanges();
+
+        let url = new URL('wss://api.mycard.moe:3100');
+        let params: URLSearchParams = url['searchParams'];
+        params.set('user_id', this.loginService.user.email);
+        this.messages = new ReconnectingWebSocket(url);
+        this.messages.onmessage = async(event) => {
+            let data = JSON.parse(event.data);
+            console.log(data);
+            this.apps = await this.appsService.loadApps();
+            this.currentApp = this.apps.get(this.currentApp.id)!;
+        };
+
 
         // $(this.search.nativeElement).typeahead(<any>{
         //     minLength: 1,
@@ -92,7 +109,7 @@ export class LobbyComponent implements OnInit {
                         height = 230;
                     }
                     this.resizing.style.height = `${height}px`;
-                    if ( $('#candy').attr('data-minormax') !== 'default') {
+                    if ($('#candy').attr('data-minormax') !== 'default') {
                         $('#candy').attr('data-minormax', 'default');
                         $('#mobile-roster-icon').css('display', 'block');
                         $('#chat-toolbar').css('display', 'block');
@@ -104,7 +121,7 @@ export class LobbyComponent implements OnInit {
                         $('#restore').hide();
                         $('#maximize').show();
                     }
-                }else if ( height <= 150) {
+                } else if (height <= 150) {
                     $('#candy').attr('data-minormax', 'min');
                     this.resizing.style.height = '31px';
                     $('#mobile-roster-icon').css('display', 'none');
@@ -116,7 +133,7 @@ export class LobbyComponent implements OnInit {
                     $('#unminimize').show();
                     $('#restore').hide();
                     $('#maximize').show();
-                }else if ( main_height <= 180) {
+                } else if (main_height <= 180) {
                     $('#candy').attr('data-minormax', 'max');
                     this.resizing.style.height = 'calc( 100% - 180px )';
                     $('#minimize').show();
@@ -132,7 +149,7 @@ export class LobbyComponent implements OnInit {
         });
     }
 
-    mousedown (event: MouseEvent) {
+    mousedown(event: MouseEvent) {
         // console.log(()
         document.body.classList.add('resizing');
         this.resizing = <HTMLElement>(<HTMLElement>event.target).parentNode;
@@ -143,13 +160,13 @@ export class LobbyComponent implements OnInit {
         }
     }
 
-    chooseApp (app: App) {
+    chooseApp(app: App) {
         this.currentApp = app;
         this.appsService.lastVisited = app;
     }
 
-    get grouped_apps () {
-        let contains = ['game', 'music', 'book'].map((value) => Category[value]);
+    get grouped_apps() {
+        let contains = ['game', 'music', 'book', 'test'].map((value) => Category[value]);
         let result = {runtime: []};
         for (let app of this.apps.values()) {
             let tag: string;
@@ -175,7 +192,7 @@ export class LobbyComponent implements OnInit {
         return result;
     }
 
-    openExternal (url: string) {
+    openExternal(url: string) {
         shell.openExternal(url);
     }
 }

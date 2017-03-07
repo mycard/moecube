@@ -9,7 +9,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
 import {Points} from './ygopro.component';
-import {Http} from '@angular/http';
+import {Http, URLSearchParams} from '@angular/http';
+import {LoginService} from './login.service';
 
 declare const Notification: any;
 
@@ -42,9 +43,12 @@ export class AppDetailComponent implements OnInit, OnChanges {
 
     tags: {};
 
+    payment = 'alipay';
+    creating_order = false;
+
     constructor(private appsService: AppsService, private settingsService: SettingsService,
                 private  downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef,
-                private http: Http) {
+                private http: Http, private loginService: LoginService) {
 
         this.tags = this.settingsService.getLocale().startsWith('zh') ? {
                 'recommend': '推荐',
@@ -62,6 +66,9 @@ export class AppDetailComponent implements OnInit, OnChanges {
     }
 
     async ngOnChanges(changes: SimpleChanges) {
+        if (this.currentApp.isBought()) {
+            $('#purchase-modal-alipay').modal('hide');
+        }
         if (changes['currentApp']) {
             if (this.currentApp.background) {
                 this.el.nativeElement.style.background = `url("${this.currentApp.background}") rgba(255,255,255,.8)`;
@@ -261,5 +268,30 @@ export class AppDetailComponent implements OnInit, OnChanges {
 
     onPoints(points: Points) {
         this.points = points;
+    }
+
+    async purchase() {
+        this.creating_order = true;
+        let data = new URLSearchParams();
+        data.set('app_id', this.currentApp.id);
+        data.set('user_id', this.loginService.user.email);
+        data.set('currency', 'cny');
+        data.set('payment', this.payment);
+        try {
+            let {url} = await this.http.post('https://api.mycard.moe/orders', data).map(response => response.json()).toPromise();
+            open(url);
+            $('#purchase-modal').modal('hide');
+            $('#purchase-modal-alipay').modal('show');
+        } catch (error) {
+            console.log(error);
+            if (error.status === 409) {
+                alert('卖完了 /\\');
+            } else if (error.status === 403) {
+                alert('已经购买过 /\\');
+            } else {
+                alert('出错了 /\\');
+            }
+        }
+        this.creating_order = false;
     }
 }

@@ -79,9 +79,10 @@ h2 {
     object-fit: contain;
     box-shadow: 0 0 4px #ccc;
 }
+
 .banner {
     width: 120px;
-    height:45px;
+    height: 45px;
     object-fit: cover;
 }
 
@@ -208,16 +209,19 @@ table th, table td {
     flex-direction: column;
     flex-grow: 1;
 }
+
 #game_info p {
     flex-grow: 1;
 }
+
 #game_info_2 {
     width: 160px;
     flex-shrink: 0;
 }
 
-#tags {
-    font-size: 14px;
+.tag {
+    font-size: 12px;
+    padding: 2px 5px;
 }
 
 #purchase-form .form-check {

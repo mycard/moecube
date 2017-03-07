@@ -1,5 +1,5 @@
 import {Injectable, ApplicationRef, EventEmitter, NgZone} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, URLSearchParams} from '@angular/http';
 import * as crypto from 'crypto';
 import {App, AppStatus, Action} from './app';
 import {SettingsService} from './settings.sevices';
@@ -18,6 +18,7 @@ import {DownloadService, DownloadStatus} from './download.service';
 import {InstallOption} from './install-option';
 import {ComparableSet} from './shared/ComparableSet';
 import {Observable, Observer} from 'rxjs/Rx';
+import {LoginService} from './login.service';
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream;
 const sudo = require('electron-sudo');
@@ -61,7 +62,7 @@ export class AppsService {
         : 'bsdtar';
 
     constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,
-                private downloadService: DownloadService, private ngZone: NgZone) {
+                private downloadService: DownloadService, private ngZone: NgZone, private loginService: LoginService) {
     }
 
     get lastVisited(): App|undefined {
@@ -80,15 +81,26 @@ export class AppsService {
 
     async loadApps() {
         let appsURL = 'https://api.mycard.moe/apps.json';
+        let keysURL = 'https://api.mycard.moe/keys';
         try {
+            let params = new URLSearchParams();
+            params.set('user_id', this.loginService.user.email);
             let data = await this.http.get(appsURL).map((response) => response.json()).toPromise();
+            let keys_data = await this.http.get(keysURL, {search: params}).map((response) => response.json()).toPromise();
+            for (let item of keys_data) {
+                let app = data.find((app: any) => app.id === item.app_id);
+                if (app) {
+                    app.key = item.id;
+                }
+            }
             localStorage.setItem('apps_json', JSON.stringify(data));
             this.apps = this.loadAppsList(data);
         } catch (e) {
             let data = localStorage.getItem('apps_json');
             if (data) {
-                this.apps = this.loadAppsList(data);
+                this.apps = this.loadAppsList(JSON.parse(data));
             } else {
+                alert('读取游戏列表失败，可能是网络不通')
                 this.apps = new Map();
             }
         }
