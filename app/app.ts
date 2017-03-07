@@ -78,7 +78,8 @@ export class App {
     cover: string;
     background: string;
 
-    price: {[currency: string]: string}
+    price: {[currency: string]: string};
+    key?: string;
 
     static downloadUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
@@ -108,8 +109,9 @@ export class App {
         return `https://thief.mycard.moe/update/${app.id}/${app.version}`;
     }
 
-    isBought() {
-        return !this.price;
+    isBought(): Boolean {
+        // 免费或有 Key
+        return !this.price || !!this.key;
     }
 
     isLanguage() {
@@ -185,6 +187,7 @@ export class App {
         this.background = app.background;
 
         this.price = app.price;
+        this.key = app.key;
     }
 
     findDependencies(): App[] {

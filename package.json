@@ -43,6 +43,7 @@
     "jquery": "latest",
     "marked": "latest",
     "raw-socket": "latest",
+    "reconnecting-websocket": "^3.0.3",
     "reflect-metadata": "latest",
     "rxjs": "latest",
     "systemjs": "mycard/systemjs#mycard",

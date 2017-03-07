@@ -6,7 +6,9 @@
 
         <!--应用未购买-->
         <div *ngIf="!currentApp.isBought()">
+
             <button i18n type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#purchase-modal">{{currentApp.price.cny | currency:'CNY':true}} 购买</button>
+            <button i18n type="button" (click)="updateInstallOption(currentApp)" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#install-modal">安装试玩版</button>
 
             <!--<button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#install-modal">我已经购买过</button>-->
         </div>
@@ -108,7 +110,7 @@
     <div class="panel" id="game_info">
         <p [innerHTML]="currentApp.description"></p>
         <div id="tags" *ngIf="currentApp.tags">
-            <div *ngFor="let tag of currentApp.tags" class="btn btn-xs btn-danger" style="padding:3px 10px; margin:2px">{{tags[tag] || tag}}</div>
+            <div *ngFor="let tag of currentApp.tags" class="btn btn-sm btn-danger tag">{{tags[tag] || tag}}</div>
         </div>
     </div>
     <div class="panel" id="game_info_2">
@@ -289,6 +291,16 @@
                 </button>
             </div>
             <div class="modal-body">
+                <!--<div class="form-group">-->
+                    <!--<label for="exampleSelect1">国家/地区</label>-->
+                    <!--<select class="form-control" id="exampleSelect1">-->
+                        <!--<option>中国(￥）</option>-->
+                        <!--<option>美国($）</option>-->
+                        <!--<option>3</option>-->
+                        <!--<option>4</option>-->
+                        <!--<option>5</option>-->
+                    <!--</select>-->
+                <!--</div>-->
                 <div class="d-flex justify-content-between">
                     <img *ngIf="currentApp.cover" [src]="currentApp.cover" class="banner">
                     <span class="p-2">{{currentApp.name}}</span>
@@ -298,11 +310,11 @@
                     <!--<fieldset class="form-group">-->
                     <legend>支付方式</legend>
                     <div class="form-check">
-                        <input id="alipay" type="radio" class="form-check-input" name="optionsRadios" value="alipay" checked>
+                        <input [(ngModel)]="payment" id="alipay" type="radio" class="form-check-input" name="payment" value="alipay" checked>
                         <label for="alipay" class="form-check-label">支付宝</label>
                     </div>
                     <div class="form-check">
-                        <input id="wechat" type="radio" class="form-check-input" name="optionsRadios" value="alipay" checked>
+                        <input [(ngModel)]="payment" id="wechat" type="radio" class="form-check-input" name="payment" value="wechat" checked>
                         <label for="wechat" class="form-check-label">微信</label>
                     </div>
                     <!--<div class="form-check">-->
@@ -314,8 +326,31 @@
 
             </div>
             <div class="modal-footer">
-                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button i18n type="submit" [disabled]="import_path && !theForm.form.valid" class="btn btn-primary">购买</button>
+                <button i18n class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button i18n [disabled]="creating_order" class="btn btn-primary" (click)="purchase()">购买</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="purchase-modal-alipay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" *ngIf="!currentApp.isBought()">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 i18n class="modal-title">购买 {{currentApp.name}}</h5>
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                    <!--<span>&times;</span>-->
+                <!--</button>-->
+            </div>
+            <div class="modal-body">
+                订单已经创建，请在新窗口中进行支付，支付成功后页面会自动跳转
+
+                若支付成功后没有自动跳转 请联系 thdod@mycard.moe
+                若支付失败，请返回并选择其他支付方式
+            </div>
+            <div class="modal-footer">
+                <button i18n type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
             </div>
         </div>
     </div>
