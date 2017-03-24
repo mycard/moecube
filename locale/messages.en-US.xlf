@@ -61,6 +61,16 @@
         <target>Random</target>
         
       </trans-unit>
+      <trans-unit datatype="html" id="5018459a548611c5e7a8bb9f81f8871358089f69">
+        <source>正在读取游戏列表...</source>
+        <target>Loading Game List...</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="dc0c986dacfc57a3254d4164784a43c8c78cd5ef">
+        <source>现在没有等待中的游戏，可以自行创建一个房间或者去匹配</source>
+        <target>There is no opening game available now, you can create a new game yourself, or play ranked game.</target>
+        
+      </trans-unit>
       <trans-unit datatype="html" id="e35d1bf7c735e8df55a62046cd2d9f820bf5bffd">
         <source>游戏标题</source>
         <target>Title</target>
@@ -219,6 +229,11 @@
       <trans-unit datatype="html" id="4fbedd55acdf8789c0d5bb10792a2775540c990b">
         <source><x id="INTERPOLATION"/> 购买</source>
         <target><x id="INTERPOLATION"/> Buy</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="0415ea4132361a518cfb8b81e058f4238b85f071">
+        <source>安装试玩版</source>
+        <target>Install Trial Version</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="a8cae935472a05e1c8c9be436bb7b1bdea96a54a">
@@ -449,6 +464,11 @@
       <trans-unit datatype="html" id="6b296cbd1145fbf948c58a7afa5c4d200cdfd98b">
         <source>购买</source>
         <target>Buy</target>
+        
+      </trans-unit>
+      <trans-unit datatype="html" id="e81bc577e08b01e7ebe9351760c0c845b3bb2fb4">
+        <source>返回</source>
+        <target>Return</target>
         
       </trans-unit>
       <trans-unit datatype="html" id="ef65da47763167a418e811d9007c53b896b50479">

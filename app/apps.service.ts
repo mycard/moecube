@@ -1,7 +1,7 @@
-import {Injectable, ApplicationRef, EventEmitter, NgZone} from '@angular/core';
+import {ApplicationRef, EventEmitter, Injectable, NgZone} from '@angular/core';
 import {Http, URLSearchParams} from '@angular/http';
 import * as crypto from 'crypto';
-import {App, AppStatus, Action} from './app';
+import {Action, App, AppStatus} from './app';
 import {SettingsService} from './settings.sevices';
 import * as fs from 'fs';
 import {createReadStream, createWriteStream} from 'fs';
@@ -65,7 +65,7 @@ export class AppsService {
                 private downloadService: DownloadService, private ngZone: NgZone, private loginService: LoginService) {
     }
 
-    get lastVisited(): App|undefined {
+    get lastVisited(): App | undefined {
         let id = localStorage.getItem('last_visited');
         if (id) {
             return this.apps.get(id);
@@ -73,7 +73,7 @@ export class AppsService {
         return undefined;
     }
 
-    set lastVisited(app: App|undefined) {
+    set lastVisited(app: App | undefined) {
         if (app) {
             localStorage.setItem('last_visited', app.id);
         }
@@ -96,11 +96,12 @@ export class AppsService {
             localStorage.setItem('apps_json', JSON.stringify(data));
             this.apps = this.loadAppsList(data);
         } catch (e) {
+            console.error(e);
             let data = localStorage.getItem('apps_json');
             if (data) {
                 this.apps = this.loadAppsList(JSON.parse(data));
             } else {
-                alert('读取游戏列表失败，可能是网络不通')
+                alert('读取游戏列表失败，可能是网络不通');
                 this.apps = new Map();
             }
         }
@@ -385,7 +386,7 @@ export class AppsService {
             let interval = setInterval(() => {
             }, 500);
             await new Promise((resolve, reject) => {
-                this.ngZone.runOutsideAngular(async() => {
+                this.ngZone.runOutsideAngular(async () => {
                     try {
                         for (let [file, checksum] of sortedFiles) {
                             let src = path.join(appPath, file);
@@ -443,7 +444,7 @@ export class AppsService {
             let filePath = path.join(app.local!.path, file);
             // 如果文件不存在，随便生成一个checksum
             await new Promise((resolve, reject) => {
-                fs.access(filePath, fs.constants.F_OK, async(err: Error) => {
+                fs.access(filePath, fs.constants.F_OK, async (err: Error) => {
                     if (err) {
                         result.set(file, Math.random().toString());
                     } else if (checksum === '') {
@@ -478,14 +479,14 @@ export class AppsService {
             try {
                 Logger.info('Checking updating: ', app);
                 let latestFiles = await this.getChecksumFile(app);
-                let localFiles: Map<string, string>|undefined;
+                let localFiles: Map<string, string> | undefined;
                 if (verify) {
                     // 刷新进度条
                     let interval = setInterval(() => {
                     }, 500);
                     app.status.total = latestFiles.size;
                     await new Promise((resolve, reject) => {
-                        this.ngZone.runOutsideAngular(async() => {
+                        this.ngZone.runOutsideAngular(async () => {
                             try {
                                 localFiles = await this.verifyFiles(app, latestFiles, () => {
                                     app.status.progress += 1;
@@ -667,7 +668,7 @@ export class AppsService {
 
     async install(app: App, option: InstallOption) {
 
-        const tryToInstall = async(task: InstallTask): Promise<void> => {
+        const tryToInstall = async (task: InstallTask): Promise<void> => {
             if (!task.app.readyForInstall()) {
                 await new Promise((resolve, reject) => {
                     this.eventEmitter.subscribe(() => {
@@ -681,7 +682,7 @@ export class AppsService {
             }
             await this.doInstall(task);
         };
-        const addDownloadTask = async(_app: App, dir: string): Promise<{app: App, files: string[]} > => {
+        const addDownloadTask = async (_app: App, dir: string): Promise<{ app: App, files: string[] }> => {
             let locale = this.settingsService.getLocale();
             if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
                 locale = 'en-US';
@@ -981,7 +982,7 @@ export class AppsService {
                         }
                     }
                     await new Promise((resolve, reject) => {
-                        this.ngZone.runOutsideAngular(async() => {
+                        this.ngZone.runOutsideAngular(async () => {
                             try {
                                 await this.backupFiles(app.parent!.local!.path, backupPath, conflictFiles, (n) => {
                                     app.status.progress += 1;
@@ -1134,7 +1135,7 @@ export class AppsService {
     async backupFiles(dir: string, backupDir: string, files: Iterable<string>, callback?: (progress: number) => void) {
         let n = 0;
         for (let file of files) {
-            await new Promise(async(resolve, reject) => {
+            await new Promise(async (resolve, reject) => {
                 let srcPath = path.join(dir, file);
                 let backupPath = path.join(backupDir, file);
                 await this.createDirectory(path.dirname(backupPath));
@@ -1166,7 +1167,7 @@ export class AppsService {
         }
     }
 
-    async getChecksumFile(app: App): Promise<Map<string, string> > {
+    async getChecksumFile(app: App): Promise<Map<string, string>> {
 
         let locale = this.settingsService.getLocale();
         if (!['zh-CN', 'en-US', 'ja-JP'].includes(locale)) {
@@ -1245,7 +1246,7 @@ export class AppsService {
         let interval = setInterval(() => {
         }, 500);
         await new Promise((resolve, reject) => {
-            this.ngZone.runOutsideAngular(async() => {
+            this.ngZone.runOutsideAngular(async () => {
                 try {
                     for (let file of files) {
                         app.status.progress += 1;

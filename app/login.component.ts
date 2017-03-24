@@ -19,13 +19,13 @@ export class LoginComponent {
     url: string;
     readonly return_sso_url = 'https://mycard.moe/login_callback'; // 这个url不会真的被使用，可以填写不存在的
 
-    constructor (private loginService: LoginService) {
+    constructor(private loginService: LoginService) {
 
         let params = new URLSearchParams();
         params.set('return_sso_url', this.return_sso_url);
         let payload = Buffer.from(params.toString()).toString('base64');
 
-        let url = new URL('https://ygobbs.com/session/sso_provider');
+        let url = new URL('https://accounts.moecube.com');
         params = url['searchParams'];
         params.set('sso', payload);
         params.set('sig', crypto.createHmac('sha256', 'zsZv6LXHDwwtUAGa').update(payload).digest('hex'));
@@ -39,13 +39,13 @@ export class LoginComponent {
 
             // 暂时 hack 一下登出，因为聊天室现在没办法重新初始化，于是登出后刷新页面。
             params.set('redirect', 'https://mycard.moe/logout_callback');
-            this.url = url.toString()
+            this.url = url.toString();
         }
     }
 
-    return_sso (return_url: string) {
+    return_sso(return_url: string) {
         if (return_url === 'https://mycard.moe/logout_callback') {
-            return location.reload()
+            return location.reload();
         }
         if (!return_url.startsWith(this.return_sso_url)) {
             return;
@@ -55,7 +55,7 @@ export class LoginComponent {
         this.loginService.login(user);
     }
 
-    toObject (entries: Iterable<[string, any]>): any {
+    toObject(entries: Iterable<[string, any]>): any {
         let result = {};
         for (let [key, value] of entries) {
             result[key] = value;
@@ -63,7 +63,7 @@ export class LoginComponent {
         return result;
     }
 
-    openExternal (url: string) {
+    openExternal(url: string) {
         shell.openExternal(url);
     }
 }

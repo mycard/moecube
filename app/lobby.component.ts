@@ -166,7 +166,7 @@ export class LobbyComponent implements OnInit {
     }
 
     get grouped_apps() {
-        let contains = ['game', 'music', 'book', 'test'].map((value) => Category[value]);
+        let contains = ['game', 'music', 'book'].map((value) => Category[value]);
         let result = {runtime: []};
         for (let app of this.apps.values()) {
             let tag: string;
