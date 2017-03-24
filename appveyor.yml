@@ -26,17 +26,17 @@ cache:
 shallow_clone: true
 
 init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - ps: $fileContent = "-----BEGIN EC PRIVATE KEY-----`n"
   - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
   - ps: $fileContent += "`n-----END EC PRIVATE KEY-----`n"
   - ps: Set-Content c:\users\appveyor\.ssh\id_ecdsa $fileContent
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-  - set PATH=%PATH%;C:\MinGW\msys\1.0\bin # tar xz
+  - set PATH=%PATH%;C:\MinGW\msys\1.0\bin;C:\Program Files\Git\mingw64\bin # tar xz
   - mkdir -p bin
   - curl --location --retry 5 --output aria2-1.29.0-win-32bit-build1.zip https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-win-32bit-build1.zip
   - unzip -o aria2-1.29.0-win-32bit-build1.zip aria2-1.29.0-win-32bit-build1/aria2c.exe
