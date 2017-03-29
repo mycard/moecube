@@ -1,12 +1,12 @@
 {
-  "name": "mycard",
+  "name": "moecube",
   "version": "3.1.0",
-  "description": "mycard",
+  "description": "moecube",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
-  "homepage": "https://mycard.moe",
+  "homepage": "https://MoeCube.com",
   "license": "UNLICENSED",
-  "repository": "github:mycard/mycard",
+  "repository": "github:moecube/moecube",
   "scripts": {
     "start": "tsc && electron .",
     "lint": "tslint ./app/*.ts -t verbose",
@@ -15,9 +15,9 @@
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js",
     "tsc": "tsc",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
-    "i18n:upload": "npm run i18n && curl --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} --request PUT --header 'Content-type: multipart/form-data' --form content=@messages.xlf https://www.transifex.com/api/2/project/mycard/resource/messages/content/",
-    "i18n:translate": "open https://www.transifex.com/mycard/mycard/translate/#en_US/messages/108367258?translated=no",
-    "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:zh112998 https://www.transifex.com/api/2/project/mycard/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
+    "i18n:upload": "npm run i18n && curl --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} --request PUT --header 'Content-type: multipart/form-data' --form content=@messages.xlf https://www.transifex.com/api/2/project/moecube/resource/messages/content/",
+    "i18n:translate": "open https://www.transifex.com/moecube/moecube/translate/#en_US/messages/108367258?translated=no",
+    "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
   },
   "dependencies": {
     "@angular/common": "latest",
@@ -31,12 +31,12 @@
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
     "bootstrap": "next",
-    "candy": "https://github.com/mycard/candy/releases/download/v2.2.0/candy.tar.gz",
+    "candy": "https://github.com/moecube/candy/releases/download/v2.2.0/candy.tar.gz",
     "candy-shop": "zh99998/candy-plugins#patch-5",
     "core-js": "latest",
     "electron-auto-updater": "latest",
     "electron-is-dev": "latest",
-    "electron-sudo": "mycard/electron-sudo#mycard",
+    "electron-sudo": "moecube/electron-sudo#moecube",
     "font-awesome": "latest",
     "glob": "latest",
     "ini": "latest",
@@ -46,7 +46,7 @@
     "reconnecting-websocket": "^3.0.3",
     "reflect-metadata": "latest",
     "rxjs": "latest",
-    "systemjs": "mycard/systemjs#mycard",
+    "systemjs": "moecube/systemjs#moecube",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
     "typeahead.js": "latest",
@@ -76,12 +76,12 @@
     "tslint": "^3.15.1"
   },
   "build": {
-    "productName": "MyCard",
-    "appId": "com.mycard.mycard",
+    "productName": "MoeCube",
+    "appId": "com.moecube.moecube",
     "publish": [
       {
         "provider": "generic",
-        "url": "https://wudizhanche.mycard.moe/downloads"
+        "url": "https://api.moecube.com/downloads"
       },
       {
         "provider": "github"
