@@ -15,7 +15,7 @@ body {
 /*padding-right: 0 !important;*/
 /*}*/
 
-mycard {
+moecube {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@ body.resizing /deep/ * {
     -webkit-user-select: none;
 }
 
-/*mycard {*/
+/*moecube {*/
 /*background-color: white;*/
 /*}*/
 

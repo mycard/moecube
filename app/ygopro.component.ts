@@ -207,14 +207,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
         if (this.settingsService.getLocale().startsWith('zh')) {
             this.servers.push({
                 id: 'tiramisu',
-                url: 'wss://tiramisu.mycard.moe:7923',
+                url: 'wss://tiramisu.moecube.com:7923',
                 address: '112.124.105.11',
                 port: 7911,
                 custom: true,
                 replay: true
             }, {
                 id: 'tiramisu-athletic',
-                url: 'wss://tiramisu.mycard.moe:8923',
+                url: 'wss://tiramisu.moecube.com:8923',
                 address: '112.124.105.11',
                 port: 8911,
                 custom: false,
@@ -223,14 +223,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
         } else {
             this.servers.push({
                 id: 'mercury-us-1-athletic',
-                url: 'wss://mercury-us-1.mycard.moe:7923',
+                url: 'wss://mercury-us-1.moecube.com:7923',
                 address: '104.237.154.173',
                 port: 7911,
                 custom: true,
                 replay: true
             }, {
                 id: 'mercury-us-1',
-                url: 'wss://mercury-us-1.mycard.moe:7923',
+                url: 'wss://mercury-us-1.moecube.com:7923',
                 address: '104.237.154.173',
                 port: 8911,
                 custom: false,
@@ -591,7 +591,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         search.set('locale', this.settingsService.getLocale());
         match_started_at = new Date();
         this.matching_arena = matching_arena = arena;
-        this.matching = matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
+        this.matching = matching = this.http.post('https://api.moecube.com/ygopro/match', null, {
             headers: headers,
             search: search
         }).map(response => response.json())

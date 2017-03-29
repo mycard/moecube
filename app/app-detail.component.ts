@@ -168,7 +168,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
     async selectLibrary() {
         if (this.installOption.installLibrary.startsWith('create_')) {
             let volume = this.installOption.installLibrary.slice(7);
-            let library = path.join(volume, 'MyCardLibrary');
+            let library = path.join(volume, 'MoeCubeLibrary');
             try {
                 await this.appsService.createDirectory(library);
                 this.installOption.installLibrary = library;
