@@ -36,7 +36,7 @@ on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-  - set PATH=C:\cygwin\bin;%PATH% # curl, tar xz
+  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%;C:\cygwin\bin # curl, tar xz
   - mkdir -p bin
   - curl --location --retry 5 --output aria2-1.29.0-win-32bit-build1.zip https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-win-32bit-build1.zip
   - unzip -o aria2-1.29.0-win-32bit-build1.zip aria2-1.29.0-win-32bit-build1/aria2c.exe
