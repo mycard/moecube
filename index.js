@@ -63,7 +63,7 @@ if (!process.env['NODE_ENV']) {
 let updateWindow;
 global.autoUpdater = autoUpdater;
 // if (process.env['NODE_ENV'] == 'production' && process.platform == 'darwin') {
-//     autoUpdater.setFeedURL("https://wudizhanche.mycard.moe/update/darwin/" + app.getVersion());
+//     autoUpdater.setFeedURL("https://wudizhanche.moecube.com/update/darwin/" + app.getVersion());
 // }
 // else{
 //     setTimeout(()=>{
@@ -193,7 +193,7 @@ function createTray() {
             label: '退出', type: 'normal', click: app.quit
         }
     ]);
-    tray.setToolTip('MyCard');
+    tray.setToolTip('MoeCube');
     tray.setContextMenu(contextMenu);
 }
 

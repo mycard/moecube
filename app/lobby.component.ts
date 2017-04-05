@@ -59,7 +59,7 @@ export class LobbyComponent implements OnInit {
         }
         this.ref.detectChanges();
 
-        let url = new URL('wss://api.mycard.moe:3100');
+        let url = new URL('wss://api.moecube.com:3100');
         let params: URLSearchParams = url['searchParams'];
         params.set('user_id', this.loginService.user.email);
         this.messages = new ReconnectingWebSocket(url);

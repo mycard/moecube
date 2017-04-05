@@ -17,7 +17,7 @@ declare const URLSearchParams: any;
 })
 export class LoginComponent {
     url: string;
-    readonly return_sso_url = 'https://mycard.moe/login_callback'; // 这个url不会真的被使用，可以填写不存在的
+    readonly return_sso_url = 'https://moecube.com/login_callback'; // 这个url不会真的被使用，可以填写不存在的
 
     constructor(private loginService: LoginService) {
 
@@ -38,13 +38,13 @@ export class LoginComponent {
             // params.set('redirect', this.url);
 
             // 暂时 hack 一下登出，因为聊天室现在没办法重新初始化，于是登出后刷新页面。
-            params.set('redirect', 'https://mycard.moe/logout_callback');
+            params.set('redirect', 'https://moecube.com/logout_callback');
             this.url = url.toString();
         }
     }
 
     return_sso(return_url: string) {
-        if (return_url === 'https://mycard.moe/logout_callback') {
+        if (return_url === 'https://moecube.com/logout_callback') {
             return location.reload();
         }
         if (!return_url.startsWith(this.return_sso_url)) {

@@ -168,7 +168,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
     async selectLibrary() {
         if (this.installOption.installLibrary.startsWith('create_')) {
             let volume = this.installOption.installLibrary.slice(7);
-            let library = path.join(volume, 'MyCardLibrary');
+            let library = path.join(volume, 'MoeCubeLibrary');
             try {
                 await this.appsService.createDirectory(library);
                 this.installOption.installLibrary = library;
@@ -278,7 +278,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
         data.set('currency', 'cny');
         data.set('payment', this.payment);
         try {
-            let {url} = await this.http.post('https://api.mycard.moe/orders', data).map(response => response.json()).toPromise();
+            let {url} = await this.http.post('https://api.moecube.com/orders', data).map(response => response.json()).toPromise();
             open(url);
             $('#purchase-modal').modal('hide');
             $('#purchase-modal-alipay').modal('show');

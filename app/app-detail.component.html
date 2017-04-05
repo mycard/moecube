@@ -103,7 +103,7 @@
         </tr>
         </tbody>
     </table>
-    <a i18n href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>
+    <a i18n href="https://moecube.com/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>
 </div>
 
 <div *ngIf="currentApp.description" class="d-flex">
@@ -137,7 +137,7 @@
         <p>{{item.text}}</p>
         <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
     </div>
-    <!--<a href="https://mycard.moe/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>-->
+    <!--<a href="https://moecube.com/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>-->
 </div>
 
 
@@ -183,7 +183,7 @@
 
 </div>
 
-<!--<div class="panel panel-default">--><!--<h2 i18n>广告</h2>--><!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>--><!--&lt;!&ndash; mycard &ndash;&gt;--><!--<ins class="adsbygoogle"--><!--style="display:block"--><!--data-ad-client="ca-pub-1173264056684633"--><!--data-ad-slot="3903147661"--><!--data-ad-format="auto"></ins>--><!--<script>--><!--(adsbygoogle = window.adsbygoogle || []).push({});--><!--</script>--><!--</div>-->
+<!--<div class="panel panel-default">--><!--<h2 i18n>广告</h2>--><!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>--><!--&lt;!&ndash; moecube &ndash;&gt;--><!--<ins class="adsbygoogle"--><!--style="display:block"--><!--data-ad-client="ca-pub-1173264056684633"--><!--data-ad-slot="3903147661"--><!--data-ad-format="auto"></ins>--><!--<script>--><!--(adsbygoogle = window.adsbygoogle || []).push({});--><!--</script>--><!--</div>-->
 
 <!--安装modal-->
 <div class="modal fade" id="install-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" *ngIf="installOption">
@@ -201,7 +201,7 @@
                 <div class="form-group">
                     <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
                         <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
-                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MoeCube 库</option>
                     </select></div>
                 <h4 i18n>快捷方式</h4>
                 <div class="checkbox">
@@ -250,7 +250,7 @@
                 <div class="form-group">
                     <select class="form-control" name="installPath" (change)="selectLibrary()" [(ngModel)]="installOption.installLibrary" title="path">
                         <option *ngFor="let library of libraries" value="{{library}}"> {{library}}</option>
-                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MyCard 库</option>
+                        <option *ngFor="let library of availableLibraries" value="create_{{library}}">在 {{library}}\ 盘新建 MoeCube 库</option>
                     </select>
                 </div>
                 <!--<h4 i18n>快捷方式</h4>-->
@@ -346,7 +346,7 @@
             <div class="modal-body">
                 订单已经创建，请在新窗口中进行支付，支付成功后页面会自动跳转
 
-                若支付成功后没有自动跳转 请联系 thdod@mycard.moe
+                若支付成功后没有自动跳转 请联系 admin@moecube.com
                 若支付失败，请返回并选择其他支付方式
             </div>
             <div class="modal-footer">

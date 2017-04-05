@@ -17,7 +17,7 @@ export class SettingsService {
     static defaultLibraries = [
         {
             'default': true,
-            path: path.join(remote.app.getPath('appData'), 'MyCardLibrary')
+            path: path.join(remote.app.getPath('appData'), 'MoeCubeLibrary')
         },
     ];
     static SETTING_LOCALE = 'locale';
