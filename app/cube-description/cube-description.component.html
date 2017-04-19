@@ -1,20 +1,40 @@
-<div class="panel" id="left">
-  <p [innerHTML]="currentCube.description"></p>
-  <div id="tags" *ngIf="currentCube.tags">
-    <div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>
-  </div>
-</div>
-<div class="panel" id="right">
-  <dl>
-    <dt i18n>开发</dt>
-    <dd>
-      <div *ngFor="let developer of currentCube.developers">
-        <a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>
-        <span *ngIf="!developer.url">{{developer.name}}</span>
+<!--<div class="panel">-->
+  <div style="overflow: hidden; width:600px; margin-right: 5px;">
+    <div class="left-big-item-box">
+      <div *ngFor="let src of imgsrc" class="left-big-item"  >
+        <img [src]="src">
       </div>
-    </dd>
+    </div>
 
-    <dt i18n>发行日期</dt>
-    <dd>{{currentCube.released_at | date:'mediumDate'}}</dd>
-  </dl>
-</div>
+    <div style="width:100%; overflow: hidden; height:65px ">
+      <div>
+        <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="test(key)">
+          <img [src]="entry.key">
+        </div>
+      </div>
+    </div>
+  </div>
+<!--</div>-->
+
+{{divOpacity[0]}}
+{{divOpacity[1]}}
+<!--<div class="panel" id="left">-->
+  <!--<p [innerHTML]="currentCube.description"></p>-->
+  <!--<div id="tags" *ngIf="currentCube.tags">-->
+    <!--<div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--<div class="panel" id="right">-->
+  <!--<dl>-->
+    <!--<dt i18n>开发</dt>-->
+    <!--<dd>-->
+      <!--<div *ngFor="let developer of currentCube.developers">-->
+        <!--<a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>-->
+        <!--<span *ngIf="!developer.url">{{developer.name}}</span>-->
+      <!--</div>-->
+    <!--</dd>-->
+
+    <!--<dt i18n>发行日期</dt>-->
+    <!--<dd>{{currentCube.released_at | date:'mediumDate'}}</dd>-->
+  <!--</dl>-->
+<!--</div>-->
