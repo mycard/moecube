@@ -9,7 +9,7 @@
 }
 
 .panel {
-  display: flex;
+  /*display: flex;*/
   border: 1px solid #eceeef;
   border-radius: 6px;
   background: rgba(255, 255, 255, .7);

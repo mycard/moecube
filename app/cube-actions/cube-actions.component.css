@@ -1,4 +1,7 @@
 /* 安装、导入 modal */
+:host {
+  display: flex;
+}
 
 .dependency {
   margin-right: 0.8em;

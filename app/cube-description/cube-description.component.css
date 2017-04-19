@@ -1,3 +1,7 @@
+:host {
+  display: flex;
+}
+
 .panel {
   display: flex;
   border: 1px solid #eceeef;
