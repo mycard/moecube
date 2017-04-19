@@ -292,7 +292,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
             case 'delete':
               this.rooms.splice(this.rooms.findIndex(room => room.server === server && room.id === message.data), 1);
           }
-          this.ref.detectChanges();
+          // this.ref.detectChanges();
         };
         return connection;
       });
@@ -335,7 +335,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
               );
           }
           this.refresh_replay_rooms();
-          this.ref.detectChanges();
+          // this.ref.detectChanges();
         };
         return connection;
       });

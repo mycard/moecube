@@ -87,8 +87,6 @@ export class CubeActionsComponent implements OnInit, OnChanges {
       }
     }
 
-    // https://plus.google.com/+%E7%A5%9E%E6%A5%BD%E5%9D%82%E7%8E%B2%E5%A5%88/posts/1ngiNvqhM7C
-    this.ref.detectChanges();
   }
 
   get libraries(): string[] {

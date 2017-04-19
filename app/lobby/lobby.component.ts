@@ -65,7 +65,7 @@ export class LobbyComponent implements OnInit {
     if (!this.settingsService.getLocale().startsWith('zh')) {
       this.apps.get('ygopro')!.conference = 'ygopro-international';
     }
-    this.ref.detectChanges();
+    // this.ref.detectChanges();
 
     let url = new URL('wss://api.moecube.com:3100');
     let params: URLSearchParams = url['searchParams'];

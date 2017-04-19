@@ -1,5 +1,5 @@
 <h2 i18n>新闻</h2>
-<div id="news" *ngFor="let item of news">
+<div id="news" *ngFor="let item of currentCube.news">
   <h3><a class="title" [href]="item.url" target="_blank">{{item.title}}</a></h3>
   <span>{{item.updated_at | date:'shortDate'}}</span>
   <p>{{item.text}}</p>

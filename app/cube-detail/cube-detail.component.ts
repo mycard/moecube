@@ -75,8 +75,6 @@ export class CubeDetailComponent implements OnInit, OnChanges {
           this.el.nativeElement.style.background = 'white';
         }
 
-        // 我不知道这里出现了什么问题，按理说点击鼠标造成的事件，应当是能自动检测的，不知道这里为什么不行
-        this.ref.detectChanges();
         // let top = await this.http.get('https://ygobbs.com/top.json').map(response => response.json()).toPromise();
         // console.log(top.topic_list.topics);
       });
@@ -102,6 +100,10 @@ export class CubeDetailComponent implements OnInit, OnChanges {
     if (this.currentCube.isBought()) {
       $('#purchase-modal-alipay').modal('hide');
     }
+  }
+
+  useExpansions(): boolean {
+    return this.currentCube.useExpansions() && this.cubesService.findChildren(this.currentCube).length > 0;
   }
 
   updateInstallOption(app: Cube) {

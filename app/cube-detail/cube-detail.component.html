@@ -1,9 +1,9 @@
 <ng-container *ngIf="currentCube">
   <cube-actions [currentCube]="currentCube" class="panel"></cube-actions>
   <cube-arena *ngIf="currentCube.useArena()" [currentCube]="currentCube" class="panel"></cube-arena>
-  <cube-description *ngIf="currentCube.useDescription()" [currentCube]="currentCube" class="d-flex"></cube-description>
+  <cube-description *ngIf="currentCube.useDescription()" [currentCube]="currentCube"></cube-description>
   <cube-news *ngIf="currentCube.useNews()" [currentCube]="currentCube" class="panel"></cube-news>
-  <cube-expansions *ngIf="currentCube.useExpansions()" [currentCube]="currentCube" class="panel"></cube-expansions>
+  <cube-expansions *ngIf="useExpansions()" [currentCube]="currentCube" class="panel"></cube-expansions>
 
 
   <!-- 设计未定，暂不封装 -->
