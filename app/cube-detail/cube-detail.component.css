@@ -1,0 +1,44 @@
+:host {
+  flex-grow: 1;
+  position: relative;
+  padding: 1rem 1rem 0 1rem;
+  background-blend-mode: color;
+  background-size: 100% auto !important;
+  background-repeat: no-repeat !important;
+  overflow-y: auto;
+}
+
+.panel {
+  display: flex;
+  border: 1px solid #eceeef;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .7);
+  padding: .8rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, .05);
+  position: relative;
+}
+
+/*h2 {*/
+  /*font-size: 20px;*/
+  /*margin-bottom: 0;*/
+/*}*/
+
+#local h2 {
+  margin-bottom: .8rem;
+}
+
+th {
+  width: 25%;
+}
+
+
+#purchase-form .form-check {
+  padding-right: 8px;
+}
+
+#purchase-form legend {
+  font-size: 1rem;
+  margin-bottom: 0;
+  margin-top: .5rem;
+}

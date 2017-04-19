@@ -1,0 +1,47 @@
+.progress {
+  height: 1em;
+  width: 1em;
+  float: right;
+  margin: 14px;
+  position: relative;
+}
+
+.pie {
+  height: 100%;
+  width: 100%;
+  clip: rect(0, 1em, 1em, 0.5em);
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.half-circle {
+  height: 100%;
+  width: 100%;
+  border: 0.2em solid #3498db;
+  border-radius: 50%;
+  clip: rect(0, 0.5em, 1em, 0);
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.shadow {
+  height: 100%;
+  width: 100%;
+  border: 0.2em solid #bdc3c7;
+  border-radius: 50%;
+}
+
+.right-side {
+  display: none;
+}
+
+.half-circle {
+  border-color: rgb(0, 116, 217);
+}
+
+.left-side {
+  /*transform: rotate(1turn);*/
+  /*在前台用Angular填写*/
+}

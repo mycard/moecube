@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -14,9 +14,5 @@
     "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": true,
     "skipLibCheck": true
-  },
-  "exclude": [
-    "node_modules/*",
-    "**/*-aot.ts"
-  ]
+  }
 }

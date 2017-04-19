@@ -1,0 +1,4 @@
+<i (click)="currentWindow.minimize()" class="fa fa-minus" i18n-title title="最小化"></i>
+<i *ngIf="!currentWindow.isMaximized()" (click)="currentWindow.maximize()" class="fa fa-expand" i18n-title title="最大化"></i>
+<i *ngIf="currentWindow.isMaximized()" (click)="currentWindow.unmaximize()" class="fa fa-clone" i18n-title title="还原"></i>
+<i (click)="currentWindow.hide()" class="fa fa-times" i18n-title title="关闭"></i>

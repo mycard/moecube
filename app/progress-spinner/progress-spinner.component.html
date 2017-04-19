@@ -1,0 +1,11 @@
+<ng-template #indeterminate>
+  <i class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
+</ng-template>
+
+<div *ngIf="value; else indeterminate" class="progress">
+  <div class="pie" [class.second-half]="value>0.5">
+    <div class="left-side half-circle" [style.transform]="'rotate('+(value).toString()+'turn)'"></div>
+    <div class="right-side half-circle"></div>
+  </div>
+  <div class="shadow"></div>
+</div>

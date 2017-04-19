@@ -1,0 +1,2 @@
+<webview [src]="url" (will-navigate)="return_sso($event.url)" (did-get-redirect-request)="return_sso($event.newURL)"
+         (new-window)="openExternal($event.url)"></webview>

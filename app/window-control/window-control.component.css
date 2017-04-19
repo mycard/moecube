@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  margin-right: 12px;
+}
+
+i {
+  font-size: 18px;
+  padding: .8rem .3em;
+  display: block;
+  line-height: 1.5;
+  color: #a7a7a7;
+}
+
+i:hover {
+  color: #5e5e5e;
+}

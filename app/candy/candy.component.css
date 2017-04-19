@@ -1,0 +1,176 @@
+/* Turn on custom 8px wide scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* 1px wider than Lion. */
+  /* This is more usable for users trying to click it. */
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-border-radius: 100px;
+}
+
+/* hover effect for both scrollbar area, and scrollbar 'thumb' */
+::-webkit-scrollbar:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+::-webkit-scrollbar-thumb:vertical {
+  /* This is the EXACT color of Mac OS scrollbars.
+     Yes, I pulled out digital color meter */
+  background: rgba(0, 0, 0, 0.1);
+  -webkit-border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+  background: rgba(0, 0, 0, 0.2); /* Some darker color when you click it */
+  -webkit-border-radius: 100px;
+}
+
+.scroll {
+  overflow-y: hidden;
+}
+
+.scroll:hover {
+  overflow-y: auto;
+
+}
+
+.message-pane-wrapper, .message-form-wrapper {
+  margin-right: 190px;
+}
+
+.roster-pane, #chat-toolbar {
+  width: 190px
+}
+
+#candy {
+  background-color: #f7f7f9;
+}
+
+#chat-tabs li {
+  box-shadow: 0 0 1px 1px #ccc;
+}
+
+#chat-tabs a {
+  color: #999;
+  background-color: #ececec;
+}
+
+#chat-tabs .active a.label {
+  background-color: white;
+}
+
+#chat-tabs .active .transition {
+  background: white none;
+}
+
+#chat-tabs .transition {
+  background: #ececec none;
+}
+
+.message-pane-wrapper {
+  background-color: white;
+  padding: 0;
+}
+
+.message-pane li {
+  border-bottom: none;
+  box-shadow: none;
+  padding: 0 5px;
+}
+
+.message-pane li > div {
+  padding: 0 0 0 150px;
+  line-height: 28px;
+}
+
+.message-pane .label {
+  margin-left: -150px;
+  width: 130px;
+}
+
+.roster-pane {
+  background-color: initial;
+  border-top: none;
+  box-shadow: none;
+  margin: 30px 0 32px 0;
+}
+
+.roster-pane .user {
+  border-bottom: none;
+  box-shadow: none;
+  color: black;
+}
+
+.roster-pane .user:hover {
+  background-color: #ebf3f8;
+}
+
+#chat-toolbar {
+  position: absolute;
+  background-color: initial;
+  border-top: 1px solid #eee;
+  box-shadow: none;
+}
+
+.message-form-wrapper {
+  position: absolute;
+  border-top: 1px solid #eee;
+}
+
+.message-form {
+  position: absolute;
+  margin-right: 20px;
+}
+
+.message-form input.submit {
+  position: absolute;
+  margin-right: 0
+}
+
+.roster-pane .label {
+  text-shadow: none
+}
+
+#candy {
+  border-top: 1px solid #eee;
+  box-shadow: inset 0 1px 2px white;
+}
+
+.usercount span {
+  background-color: initial;
+  color: #a7a7a7;
+}
+
+#chat-modal.modal-common {
+  position: absolute;
+}
+
+/*#context-menu {*/
+/*margin-top: 0;*/
+/*padding-top: 0;*/
+/*}*/
+
+#context-menu ul {
+  overflow-y: auto;
+  max-height: 170px;
+}
+
+/*#context-menu {*/
+/**/
+/*}*/
+.message-pane {
+  -webkit-user-select: auto;
+}
+
+.roster-pane .user {
+  display: inherit;
+  opacity: inherit;
+}
+
+.hover-color {
+  color: #a7a7a7;
+  padding: 0 5px;
+}
+
+.hover-color:hover {
+  color: #000;
+}

@@ -1,0 +1,14 @@
+<div class="input-group input-group-sm">
+  <input *ngIf="cubesService.connections.get(currentCube)" [value]="cubesService.connections.get(currentCube).address || 'Loading...'" readonly type="text" class="form-control" title="address">
+  <div class="input-group-btn" style="flex-direction: row">
+    <button i18n *ngIf="!cubesService.connections.get(currentCube)" [disabled]="!cubesService.allReady(currentCube)" (click)="cubesService.network(currentCube, currentCube.network.servers[0])" type="button" class="btn btn-secondary btn-sm">联机</button>
+    <button i18n *ngIf="cubesService.connections.get(currentCube)" (click)="copy(cubesService.connections.get(currentCube).address)" [disabled]="!cubesService.connections.get(currentCube).address" type="button" class="btn btn-secondary btn-sm">复制</button>
+    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
+    <div class="dropdown-menu" [class.dropdown-menu-right]="cubesService.connections.get(currentCube)">
+      <h6 i18n class="dropdown-header">选择服务器</h6>
+      <a *ngFor="let server of currentCube.network.servers" (click)="cubesService.network(currentCube, server)" class="dropdown-item" href="#">{{server.id}}</a>
+      <div *ngIf="cubesService.connections.get(currentCube)" class="dropdown-divider"></div>
+      <a i18n *ngIf="cubesService.connections.get(currentCube)" (click)="cubesService.connections.get(currentCube).connection.close()" class="dropdown-item" href="#">取消</a>
+    </div>
+  </div>
+</div>

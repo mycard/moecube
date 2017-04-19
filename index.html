@@ -1,59 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MoeCube</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles.css">
+  <title>MoeCube</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
 
-    <!-- Polyfill(s) for older browsers -->
-    <script src="node_modules/core-js/client/shim.min.js"></script>
+  <!-- Polyfill(s) for older browsers -->
+  <script src="node_modules/core-js/client/shim.min.js"></script>
 
-    <script src="node_modules/zone.js/dist/zone.js"></script>
-    <script src="node_modules/reflect-metadata/Reflect.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
+  <script src="node_modules/zone.js/dist/zone.js"></script>
+  <script src="node_modules/systemjs/dist/system.src.js"></script>
 
-    <script src="systemjs.config.js"></script>
-
-    <script>
-        System.import('app').catch((error) => {
-            document.getElementById('loading').setAttribute('hidden', 'hidden');
-            document.getElementById('failed').removeAttribute('hidden');
-            document.getElementById('error').removeAttribute('hidden');
-            document.getElementById('error').textContent = error;
-        });
-    </script>
+  <script src="systemjs.config.js"></script>
+  <script>
+    System.import('main.js').catch((error) => {
+      document.getElementById('loading').setAttribute('hidden', 'hidden');
+      document.getElementById('failed').removeAttribute('hidden');
+      document.getElementById('error').removeAttribute('hidden');
+      document.getElementById('error').textContent = error;
+    });
+  </script>
 </head>
 
 <body>
-
 <moecube>
-
-
-    <!--<div id="loading">MoeCube <span id="version"></span> Loading...</div>-->
-    <div id="loading-bar">
-        <span class="navbar-brand">MoeCube</span>
-        <i class="fa fa-times close" i18n="" i18n-title="" title="关闭" onclick="window.close()"></i>
-    </div>
-
-    <div class="loading">
-    <img src="./images/CubbitLogo.png">
-        <p>
-            LOADING
-            <span>.</span>
-            <span>.</span>
-            <span>.</span>
-        </p>
-    </div>
-    <div id="failed" hidden>发生了错误，请复制以下错误信息并联系 admin@moecube.com</div>
-    <pre id="error" hidden></pre>
+  <div id="loading">
+    <button onclick="window.close();" class="platform platform-win32">&times;</button>
+    <img width="" src="assets/CubbitLogo.png">
+    <p>LOADING <span>.</span> <span>.</span> <span>.</span></p>
+    <span id="version"></span>
+  </div>
+  <div id="failed" hidden>发生了错误，请复制以下错误信息并联系 support@moecube.com</div>
+  <pre id="error" hidden></pre>
 </moecube>
 <script>
-    document.body.classList.add(process.platform);
-//    document.getElementById('version').innerHTML = require('electron').remote.app.getVersion();
+  document.body.classList.add(process.platform);
+  document.getElementById('version').innerHTML = require('electron').remote.app.getVersion();
 </script>
+<!--suppress JSUnresolvedLibraryURL -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </body>
 </html>

@@ -1,0 +1,46 @@
+<h2 i18n>排位成绩</h2>
+<ng-template #loading>
+  loading...
+</ng-template>
+
+<table *ngIf="points; else loading" class="table table-sm">
+  <tbody>
+  <tr>
+    <th i18n>竞技排名</th>
+    <td>{{points.arena_rank}}</td>
+    <th i18n>娱乐排名</th>
+    <td>{{points.exp_rank}}</td>
+  </tr>
+  <tr>
+    <th i18n>竞技胜率</th>
+    <td>{{points.athletic_wl_ratio}}%</td>
+    <th i18n>经验</th>
+    <td>{{points.exp}}</td>
+  </tr>
+  <tr>
+    <th i18n>胜场</th>
+    <td>{{points.athletic_win}}</td>
+    <th i18n>胜场</th>
+    <td>{{points.entertain_win}}</td>
+  </tr>
+  <tr>
+    <th i18n>负场</th>
+    <td>{{points.athletic_lose}}</td>
+    <th i18n>负场</th>
+    <td>{{points.entertain_lose}}</td>
+  </tr>
+  <tr>
+    <th i18n>平局</th>
+    <td>{{points.athletic_draw}}</td>
+    <th i18n>平局</th>
+    <td>{{points.entertain_draw}}</td>
+  </tr>
+  <tr>
+    <th i18n>总场</th>
+    <td>{{points.athletic_all}}</td>
+    <th i18n>总场</th>
+    <td>{{points.entertain_all}}</td>
+  </tr>
+  </tbody>
+</table>
+<a i18n href="https://moecube.com/ygopro/arena/" target="_blank" class="moreinfo">更多资料</a>

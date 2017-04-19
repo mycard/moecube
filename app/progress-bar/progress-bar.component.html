@@ -1,0 +1,7 @@
+<ng-template #indeterminate>
+  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+</ng-template>
+
+<!--<div  clavalueress">-->
+<div *ngIf="value; else indeterminate" class="progress-bar" role="progressbar" [style.width]="value * 100 + '%'"></div>
+<!--</div>-->

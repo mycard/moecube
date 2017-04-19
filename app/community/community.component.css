@@ -1,0 +1,7 @@
+:host {
+  display: flex;
+}
+
+:host, webview {
+  flex: 1;
+}

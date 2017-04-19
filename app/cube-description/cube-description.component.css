@@ -1,0 +1,32 @@
+.panel {
+  display: flex;
+  border: 1px solid #eceeef;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .7);
+  padding: .8rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, .05);
+  position: relative;
+}
+
+#left {
+  font-size: 14px;
+  margin-right: 8px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#left p {
+  flex-grow: 1;
+}
+
+#right {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 2px 5px;
+}

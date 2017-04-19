@@ -1,0 +1,32 @@
+p {
+  margin-bottom: 0;
+}
+
+a {
+  display: block;
+}
+
+h3 {
+  padding-top: .8rem;
+  margin-bottom: 0;
+}
+
+h3 > .title {
+  font-size: 1rem;
+  color: inherit;
+}
+
+p {
+  font-size: 14px;
+  color: #888;
+}
+
+a {
+  font-size: 14px;
+  color: #00a4d9;
+}
+
+span {
+  font-size: 12px;
+  color: #ccc;
+}

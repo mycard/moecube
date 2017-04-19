@@ -1,0 +1,68 @@
+:host {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: white;
+}
+
+#friend_list > ul > li > div > p {
+  font-size: 12px;
+  padding: 3px 5px;
+  margin: 0;
+  cursor: default;
+}
+
+#friend_list > ul > li > img {
+  border-radius: 25.5px;
+}
+
+#friend_list > ul > li {
+  padding: 3px;
+  list-style-type: none;
+  position: relative;
+}
+
+#friend_list > ul > li:hover {
+  padding: 3px;
+  list-style-type: none;
+  position: relative;
+  background: #aaa;
+}
+
+#friend_list > ul > li > i {
+  position: absolute;
+  top: 38px;
+  left: 38px;
+}
+
+#friend_list > ul {
+  padding: 0;
+}
+
+.fl {
+  float: left;
+}
+
+#friend_list i {
+  font-size: 10px;
+}
+
+.red {
+  color: red;
+}
+
+.green_light {
+  color: #8f8;
+}
+
+.red_light {
+  color: #f88;
+}
+
+.grey {
+  color: grey;
+}
+
+.blue_light {
+  color: #88f;
+}

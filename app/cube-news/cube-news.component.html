@@ -1,0 +1,8 @@
+<h2 i18n>新闻</h2>
+<div id="news" *ngFor="let item of news">
+  <h3><a class="title" [href]="item.url" target="_blank">{{item.title}}</a></h3>
+  <span>{{item.updated_at | date:'shortDate'}}</span>
+  <p>{{item.text}}</p>
+  <a i18n *ngIf="item.url" [href]="item.url" target="_blank">了解更多</a>
+</div>
+<!--<a href="https://moecube.com/ygopro/arena/" target="_blank" class="moreinfo">查看所有新闻</a>-->

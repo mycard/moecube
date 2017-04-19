@@ -1,0 +1,19 @@
+<ng-container *ngIf="currentCube">
+  <cube-actions [currentCube]="currentCube" class="panel"></cube-actions>
+  <cube-arena *ngIf="currentCube.useArena()" [currentCube]="currentCube" class="panel"></cube-arena>
+  <cube-description *ngIf="currentCube.useDescription()" [currentCube]="currentCube" class="d-flex"></cube-description>
+  <cube-news *ngIf="currentCube.useNews()" [currentCube]="currentCube" class="panel"></cube-news>
+  <cube-expansions *ngIf="currentCube.useExpansions()" [currentCube]="currentCube" class="panel"></cube-expansions>
+
+
+  <!-- 设计未定，暂不封装 -->
+  <div *ngIf="currentCube.isReady()" class="panel panel-default">
+    <h2 i18n>本地文件</h2>
+    <div>
+      <button i18n (click)="cubesService.browse(currentCube)" [disabled]="!cubesService.allReady(currentCube)" type="button" class="btn btn-secondary btn-sm">浏览本地文件</button>
+      <button i18n type="button" (click)="verifyFiles(currentCube)" [disabled]="!cubesService.allReady(currentCube)" class="btn btn-secondary btn-sm">校验完整性</button>
+      <button i18n (click)="uninstall(currentCube)" [disabled]="!cubesService.allReady(currentCube)" type="button" class="btn btn-secondary btn-sm">卸载</button>
+    </div>
+  </div>
+
+</ng-container>

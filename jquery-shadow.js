@@ -3533,10 +3533,10 @@
                         return jQuery.Deferred(function (newDefer) {
                             jQuery.each(tuples, function (i, tuple) {
 
-                                // Map tuples (progress, done, fail) to arguments (done, fail, progress)
+                                // Map tuples (value, done, fail) to arguments (done, fail, value)
                                 var fn = jQuery.isFunction(fns[tuple[4]]) && fns[tuple[4]];
 
-                                // deferred.progress(function() { bind to newDefer or newDefer.notify })
+                                // deferred.value(function() { bind to newDefer or newDefer.notify })
                                 // deferred.done(function() { bind to newDefer or newDefer.resolve })
                                 // deferred.fail(function() { bind to newDefer or newDefer.reject })
                                 deferred[tuple[1]](function () {
@@ -3606,7 +3606,7 @@
                                                     resolve(maxDepth, deferred, Thrower, special)
                                                 );
 
-                                                // Normal processors (resolve) also hook into progress
+                                                // Normal processors (resolve) also hook into value
                                             } else {
 
                                                 // ...and disregard older resolution values
@@ -3736,7 +3736,7 @@
                 var list = tuple[2],
                     stateString = tuple[5];
 
-                // promise.progress = list.add
+                // promise.value = list.add
                 // promise.done = list.add
                 // promise.fail = list.add
                 promise[tuple[1]] = list.add;
@@ -4376,7 +4376,7 @@
                     jQuery.dequeue(elem, type);
                 };
 
-            // If the fx queue is dequeued, always remove the progress sentinel
+            // If the fx queue is dequeued, always remove the value sentinel
             if (fn === "inprogress") {
                 fn = queue.shift();
                 startLength--;
@@ -4384,7 +4384,7 @@
 
             if (fn) {
 
-                // Add a progress sentinel to prevent the fx queue from being
+                // Add a value sentinel to prevent the fx queue from being
                 // automatically dequeued
                 if (type === "fx") {
                     queue.unshift("inprogress");

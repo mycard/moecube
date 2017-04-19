@@ -1,0 +1,25 @@
+<table class="table table-striped" *ngIf="mods.length">
+  <thead class="thead-inverse">
+  <tr>
+    <th>#</th>
+    <th i18n>名称</th>
+    <th i18n>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let mod of mods; let i = index">
+    <th scope="row">{{i + 1}}</th>
+    <td>{{mod.name}}</td>
+    <td>
+      <button i18n *ngIf="mod.isReady()" [disabled]="mod.isInstalled() && !cubesService.allReady(mod)" (click)="uninstall(mod)" type="button" class="btn btn-danger btn-sm">卸载</button>
+      <button i18n *ngIf="!mod.isInstalled()" (click)="installMod(mod)" [disabled]="mod.isInstalled()&&!cubesService.allReady(mod)" type="button" class="btn btn-primary btn-sm">安装</button>
+      <progress-bar [value]="mod.status.progress / mod.status.total"></progress-bar>
+
+
+      <progress *ngIf="mod.isWorking()" class="progress progress-striped" [class.progress-animated]="" value="{{mod.status.total ? mod.status.progress : 1}}" max="{{mod.status.total}}"></progress>
+      <!--<div i18n *ngIf="mod.isWaiting()">等待安装...</div>-->
+
+    </td>
+  </tr>
+  </tbody>
+</table>

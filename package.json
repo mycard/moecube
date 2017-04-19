@@ -1,32 +1,31 @@
 {
-  "name": "moecube",
-  "version": "3.1.0",
-  "description": "moecube",
-  "keywords": [],
-  "author": "zh99998 <zh99998@gmail.com>",
-  "homepage": "https://MoeCube.com",
-  "license": "UNLICENSED",
-  "repository": "github:moecube/moecube",
+  "name": "angular-quickstart",
+  "version": "1.0.0",
+  "description": "QuickStart package.json from the documentation, supplemented with testing support",
   "scripts": {
-    "start": "tsc && electron .",
-    "lint": "tslint ./app/*.ts -t verbose",
-    "pack": "tsc && build --dir",
-    "dist": "tsc && build",
-    "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js",
-    "tsc": "tsc",
+    "electron": "electron .",
+    "prestart": "tsc",
+    "start": "lite-server -c=bs-config.json",
+    "lint": "tslint ./src/**/*.ts -t verbose",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
     "i18n:upload": "npm run i18n && curl --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} --request PUT --header 'Content-type: multipart/form-data' --form content=@messages.xlf https://www.transifex.com/api/2/project/moecube/resource/messages/content/",
     "i18n:translate": "open https://www.transifex.com/moecube/moecube/translate/#en_US/messages/108367258?translated=no",
     "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
   },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
+    "@angular/animations": "latest",
     "@angular/common": "latest",
     "@angular/compiler": "latest",
+    "@angular/compiler-cli": "^4.0.2",
     "@angular/core": "latest",
     "@angular/forms": "latest",
     "@angular/http": "latest",
     "@angular/platform-browser": "latest",
     "@angular/platform-browser-dynamic": "latest",
+    "@angular/platform-server": "latest",
     "@angular/router": "latest",
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
@@ -34,19 +33,19 @@
     "candy": "https://github.com/moecube/candy/releases/download/v2.2.0/candy.tar.gz",
     "candy-shop": "zh99998/candy-plugins#patch-5",
     "core-js": "latest",
-    "electron-auto-updater": "latest",
     "electron-is-dev": "latest",
     "electron-sudo": "moecube/electron-sudo#moecube",
+    "electron-updater": "latest",
     "font-awesome": "latest",
     "glob": "latest",
     "ini": "latest",
     "jquery": "latest",
     "marked": "latest",
     "raw-socket": "latest",
-    "reconnecting-websocket": "^3.0.3",
+    "reconnecting-websocket": "latest",
     "reflect-metadata": "latest",
     "rxjs": "latest",
-    "systemjs": "moecube/systemjs#moecube",
+    "systemjs": "latest",
     "systemjs-plugin-text": "latest",
     "tether": "latest",
     "typeahead.js": "latest",
@@ -54,63 +53,21 @@
     "zone.js": "latest"
   },
   "devDependencies": {
-    "@angular/compiler-cli": "latest",
-    "@angular/platform-server": "latest",
+    "@types/bootstrap": "latest",
     "@types/electron": "latest",
     "@types/glob": "latest",
     "@types/ini": "latest",
-    "@types/node": "latest",
-    "@types/bootstrap": "latest",
     "@types/jquery": "latest",
     "@types/marked": "latest",
+    "@types/node": "latest",
     "@types/tether": "latest",
     "@types/typeahead": "latest",
     "electron": "latest",
     "electron-builder": "latest",
     "electron-rebuild": "latest",
-    "rollup": "latest",
-    "rollup-plugin-commonjs": "latest",
-    "rollup-plugin-node-resolve": "latest",
-    "rollup-plugin-uglify": "latest",
-    "typescript": "latest",
-    "tslint": "^3.15.1"
+    "lite-server": "latest",
+    "tslint": "latest",
+    "typescript": "latest"
   },
-  "build": {
-    "productName": "MoeCube",
-    "appId": "com.moecube.moecube",
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://api.moecube.com/downloads"
-      },
-      {
-        "provider": "github"
-      }
-    ],
-    "extraResources": [
-      "bin",
-      "images"
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "dmg": {
-      "format": "ULFO",
-      "contents": [
-        {
-          "x": 448,
-          "y": 344,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 192,
-          "y": 344,
-          "type": "file"
-        }
-      ]
-    }
-  }
+  "repository": {}
 }

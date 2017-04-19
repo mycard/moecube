@@ -1,0 +1,61 @@
+/* 安装、导入 modal */
+
+.dependency {
+  margin-right: 0.8em;
+}
+
+.custom-file {
+  width: 100%;
+}
+
+.custom-file-control:lang(en)::after {
+  content: initial;
+}
+
+.custom-file-control {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* 标题 */
+
+#right {
+  margin-left: 1rem;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 0;
+}
+
+.cover {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  box-shadow: 0 0 4px #ccc;
+}
+
+.banner {
+  width: 120px;
+  height: 45px;
+  object-fit: cover;
+}
+
+#time {
+  font-size: 14px;
+  margin-bottom: .6rem;
+  visibility: hidden;
+}
+
+/* Working */
+#status {
+  font-size: 15px;
+}
+
+/* Ready */
+.btn-primary {
+  background-color: #00a4d9;
+  border-color: #008dbb;
+}
+
+

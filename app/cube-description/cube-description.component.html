@@ -1,0 +1,20 @@
+<div class="panel" id="left">
+  <p [innerHTML]="currentCube.description"></p>
+  <div id="tags" *ngIf="currentCube.tags">
+    <div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>
+  </div>
+</div>
+<div class="panel" id="right">
+  <dl>
+    <dt i18n>开发</dt>
+    <dd>
+      <div *ngFor="let developer of currentCube.developers">
+        <a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>
+        <span *ngIf="!developer.url">{{developer.name}}</span>
+      </div>
+    </dd>
+
+    <dt i18n>发行日期</dt>
+    <dd>{{currentCube.released_at | date:'mediumDate'}}</dd>
+  </dl>
+</div>
