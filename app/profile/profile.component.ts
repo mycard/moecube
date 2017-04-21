@@ -7,9 +7,11 @@ declare const URLSearchParams: any;
 
 
 @Component({
-  selector: 'profile',
-  templateUrl: './profile.component.html',
+  selector: 'webview[profile]',
+  template: '',
   styleUrls: ['./profile.component.css'],
+  host: { 'src': 'https://accounts.moecube.com/profiles', '(new-window)': 'openExternal($event.url)' }
+
 })
 export class ProfileComponent {
 }

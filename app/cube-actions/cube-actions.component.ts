@@ -5,7 +5,6 @@ import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, Sim
 import { Cube, InstallOption } from '../cube';
 import { CubesService } from '../cubes.service';
 import { SettingsService } from '../settings.sevices';
-import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../login.service';
 import { DownloadService } from '../download.service';
 import { Http } from '@angular/http';
@@ -40,7 +39,7 @@ export class CubeActionsComponent implements OnInit, OnChanges {
 
   constructor(private cubesService: CubesService, private settingsService: SettingsService,
               private downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef,
-              private http: Http, private loginService: LoginService, private route: ActivatedRoute) {
+              private http: Http, private loginService: LoginService) {
   }
 
   async ngOnInit(): Promise<void> {

@@ -106,11 +106,7 @@ export class CubesService {
 
   // 这里必须返回个 Promise，于是不能去掉 async
   async getCube(id: string) {
-    let result = this.apps.get(id);
-    if (!result) {
-      throw 'not found';
-    }
-    return result;
+    return this.apps.get(id);
   }
 
   async migrate() {

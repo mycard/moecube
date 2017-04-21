@@ -3,19 +3,18 @@
   <nav id="apps" *ngIf="apps" class="bg-faded sidebar scroll">
     <div id="search" class="input-group">
       <i class="fa fa-search input-group-addon search" id="basic-addon1"></i>
-      <input #search id="search-input" type="text" class="form-control search" placeholder="搜索游戏"
-             aria-describedby="basic-addon1">
+      <input #search id="search-input" type="text" class="form-control search" placeholder="搜索游戏" aria-describedby="basic-addon1">
     </div>
 
     <ng-container *ngFor="let tag of tags">
       <ng-container *ngIf="grouped_apps[tag]">
         <span i18n>{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed {已安装的运行库} }</span>
         <ul class="nav nav-pills flex-column">
-          <li *ngFor="let app of grouped_apps[tag]" class="nav-item">
-            <a [routerLink]="app.id" routerLinkActive="active" class="nav-link">
-              <img *ngIf="app.icon" class="icon" [src]="app.icon">
-              {{app.name}}
-              <progress-spinner *ngIf="app.isWorking()" [value]="app.status.progress / app.status.total"></progress-spinner>
+          <li *ngFor="let cube of grouped_apps[tag]" class="nav-item">
+            <a (click)="currentCube = cube" [class.active]="currentCube === cube" class="nav-link">
+              <img *ngIf="cube.icon" class="icon" [src]="cube.icon">
+              {{cube.name}}
+              <progress-spinner *ngIf="cube.isWorking()" [value]="cube.status.progress / cube.status.total"></progress-spinner>
             </a>
           </li>
         </ul>
@@ -28,13 +27,14 @@
 
 <div id="right">
   <div id="main">
-    <router-outlet></router-outlet>
+    <cube-detail *ngIf="currentCube" [currentCube]="currentCube"></cube-detail>
+    <!--<router-outlet></router-outlet>-->
     <roster class="scroll"></roster>
   </div>
 
   <div id="candy-wrapper" class="resize-wrapper resize-top" style="max-height: calc( 100% - 180px )">
     <div class="resize" (mousedown)="mousedown($event)"></div>
-    <candy *ngIf="currentApp" [currentApp]="currentApp"></candy>
+    <candy *ngIf="currentCube" [currentCube]="currentCube"></candy>
   </div>
 </div>
 

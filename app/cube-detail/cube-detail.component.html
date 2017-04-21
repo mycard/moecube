@@ -1,5 +1,6 @@
 <ng-container *ngIf="currentCube">
   <cube-actions [currentCube]="currentCube" class="panel"></cube-actions>
+  <cube-achievements *ngIf="currentCube.useAchievements()" [currentCube]="currentCube" class="panel"></cube-achievements>
   <cube-arena *ngIf="currentCube.useArena()" [currentCube]="currentCube" class="panel"></cube-arena>
   <cube-description *ngIf="currentCube.useDescription()" [currentCube]="currentCube"></cube-description>
   <cube-news *ngIf="currentCube.useNews()" [currentCube]="currentCube" class="panel"></cube-news>

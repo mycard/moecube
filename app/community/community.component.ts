@@ -3,14 +3,18 @@
  */
 import { Component } from '@angular/core';
 import { shell } from 'electron';
+import { RoutingService } from '../routing.sevices';
 
 @Component({
-  selector: 'community',
-  templateUrl: './community.component.html',
+  selector: 'webview[community]',
+  template: '',
   styleUrls: ['./community.component.css'],
+  host: { '[src]': 'routingService.currentCommunityURL', '(new-window)': 'shell.openExternal($event.url)' }
 })
 export class CommunityComponent {
-  openExternal(url: string) {
-    shell.openExternal(url);
+
+  public shell = shell;
+
+  constructor(public routingService: RoutingService) {
   }
 }

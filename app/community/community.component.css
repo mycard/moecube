@@ -1,7 +1,10 @@
 :host {
-  display: flex;
+  flex: 1;
 }
 
-:host, webview {
-  flex: 1;
+:host[hidden] {
+  display: flex !important;
+  width: 0;
+  height: 0;
+  flex: 0 1;
 }
