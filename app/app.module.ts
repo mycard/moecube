@@ -13,10 +13,8 @@ import { CubesService } from './cubes.service';
 import { SettingsService } from './settings.sevices';
 import { LoginService } from './login.service';
 import { DownloadService } from './download.service';
-import { AuthGuard } from './auth.guard';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { CommunityComponent } from './community/community.component';
-import { LoadingGuard } from './loading.guard';
 import { UpdateComponent } from './update/update.component';
 import { WindowControlComponent } from './window-control/window-control.component';
 import { CubeActionsComponent } from './cube-actions/cube-actions.component';
@@ -29,6 +27,7 @@ import { ELECTRON_SCHEMA } from 'electron-schema';
 import { MaotamaComponent } from './maotama/maotama.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RoutingService } from './routing.sevices';
+import { CubeAchievementsComponent } from './cube-achievements/cube-achievements.component';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
@@ -37,7 +36,7 @@ import { RoutingService } from './routing.sevices';
     CubeDetailComponent, RosterComponent, YGOProComponent, CandyComponent,
     ProgressSpinnerComponent, CommunityComponent, UpdateComponent, WindowControlComponent,
     CubeActionsComponent, CubeArenaComponent, CubeDescriptionComponent, CubeNewsComponent, CubeExpansionsComponent,
-    ProgressBarComponent, MaotamaComponent, ProfileComponent
+    ProgressBarComponent, MaotamaComponent, ProfileComponent, CubeAchievementsComponent
   ],
   bootstrap: [MoeCubeComponent],
   providers: [

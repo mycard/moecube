@@ -35,6 +35,7 @@ export class Cube {
 
   // 宣传片
   trailer: { url: string, type: 'video' | 'image', url2?: string }[];
+  achievements: { name: string, description: string, unlocked: boolean, unlocked_at: Date }[];
 
   static downloadUrl(app: Cube, platform: string, locale: string): string {
     if (app.id === 'ygopro') {
@@ -144,6 +145,10 @@ export class Cube {
     return this.useRun() && !!this.actions.get('custom');
   }
 
+  useAchievements(): boolean {
+    return this.achievements.length > 0;
+  }
+
   progressMessage(): string | undefined {
     return this.status.progressMessage;
   }
@@ -178,6 +183,7 @@ export class Cube {
     this.key = app.key;
 
     this.trailer = app.trailer || [];
+    this.achievements = app.achievements || [];
     //   { url: 'http://cdn.edgecast.steamstatic.com/steam/apps/2036126/movie480.webm', type: 'video', url2:''},
     //   {
     //     url: 'http://cdn.edgecast.steamstatic.com/steam/apps/264710/ss_e41e71c05f3fcf08e54140bd9f1ffc9008706843.600x338.jpg',
@@ -272,7 +278,7 @@ export class CubeLocal {
     for (let [k, v] of Object.entries(this.files)) {
       t[k] = v;
     }
-    return {path: this.path, version: this.version, files: t};
+    return { path: this.path, version: this.version, files: t };
   }
 
 }
