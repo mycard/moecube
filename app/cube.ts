@@ -34,7 +34,7 @@ export class Cube {
   key?: string;
 
   // 宣传片
-  trailer: { url: string, type: 'video' | 'image' }[];
+  trailer: { url: string, type: 'video' | 'image', url2?: string }[];
 
   static downloadUrl(app: Cube, platform: string, locale: string): string {
     if (app.id === 'ygopro') {
@@ -272,7 +272,7 @@ export class CubeLocal {
     for (let [k, v] of Object.entries(this.files)) {
       t[k] = v;
     }
-    return { path: this.path, version: this.version, files: t };
+    return {path: this.path, version: this.version, files: t};
   }
 
 }

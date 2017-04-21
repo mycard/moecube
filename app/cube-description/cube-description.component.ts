@@ -3,6 +3,7 @@
  */
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Cube} from '../cube';
+import Timer = NodeJS.Timer;
 
 
 @Component({
@@ -40,63 +41,68 @@ export class CubeDescriptionComponent implements OnChanges {
   imgsrc: string[];
   divOpacity: number[];
   selectId = 0;
-  timeOutId: number;
+  timeOutId: Timer;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.currentCube) {
 
-      let trailer = this.currentCube.trailer;
-      let videosrc = this.videosrc = [];
-      this.videosrc_now="";
-      let imgsrc = this.imgs rc = [];
-      let divOpacity = this.divOpacity = [];
+      this.videosrc = [];
+      this.imgsrc = [];
+      this.divOpacity = [];
       this.selectId = 0;
 
-      for (let val of trailer) {
+      for (let val of this.currentCube.trailer) {
         if (val.type === 'video') {
-          videosrc.push([val.url, val.url2]);
+          this.videosrc.push([val.url, val.url2]);
         } else if (val.type === 'image') {
-          imgsrc.push(val.url);
+          this.imgsrc.push(val.url);
         }
-        if (divOpacity.length) {
-          divOpacity.push(0);
+        if (this.divOpacity.length) {
+          this.divOpacity.push(0);
         } else {
-          divOpacity.push(1);
+          this.divOpacity.push(1);
         }
       }
+      this.videosrc_now = this.videosrc[0] ? this.videosrc[0][0] : '';
     }
   }
 
-  nextvedio(key): void {
+  // 多视频用
+  // nextvedio(key): void {
+  //   console.log('nextvedio');
+  //   let videos = document.getElementsByName('video');
+  //   if (key + 1 < videos.length) {
+  //     videos[key + 1].play();
+  //     this.appear(key + 1);
+  //   } else {
+  //     this.nextpic(key);
+  //   }
+  // }
+
+  // 单视频用
+  nextvedio(key: number): void {
     console.log('nextvedio');
-    let videos = document.getElementsByName('video');
-    if (key + 1 < videos.length) {
-      videos[key + 1].play();
-      this.appear(key + 1);
+    let videosrc = this.videosrc;
+    if (key + 1 < videosrc.length) {
+      this.videosrc_now = videosrc[key + 1][0];
+      console.log(videosrc);
     } else {
       this.nextpic(key);
     }
   }
 
-  nextpic(key): void {
+  nextpic(key: number): void {
     console.log('nextpic' + key);
     let that = this;
     key = this.divOpacity.length > key + 1 ? key : this.videosrc.length - 1;
     this.appear(key + 1);
     this.timeOutId = setTimeout(function () {
       that.nextpic(key + 1)
-    }, 1000);
-  }
-
-  test(v: number): void {
-    console.log(this.currentCube);
-    console.log(this.divOpacity);
-    console.log(v);
-    console.log(this.divOpacity[1])
+    }, 5000);
   }
 
   appear(key: number): void {
-    console.log('appear' + key)
+    console.log('appear' + key);
     let divOpacity = this.divOpacity;
     this.selectId = key;
     divOpacity.map(function (val, key2) {
@@ -106,36 +112,38 @@ export class CubeDescriptionComponent implements OnChanges {
   }
 
   select(key: number): void {
-    console.log(this.currentCube);
     clearTimeout(this.timeOutId);
-    this.stop();
 
-    let videos = document.getElementsByName('video');
-    if (key < videos.length) {
-      videos[key].play();
+    let videosrc = this.videosrc;
+    // this.stop();
+    let videos = <NodeListOf<HTMLVideoElement>>document.getElementsByName('video');
+    if (key < videosrc.length) {
+      this.videosrc_now = videosrc[key][0];
+      console.log(videosrc);
+      console.log(this.videosrc_now);
+      // videos[key].play();
+      videos[0].play();
       this.appear(key);
     } else {
       this.nextpic(key - 1);
     }
-
-    // this.appear(key);
-
   }
 
-  play(key, ele) {
-    console.log('play');
-    // console.log(key);
-    // console.log(ele);
-    // if(!key){
-    //   ele.play();
-    // }
-  }
+  //
+  // play(key, ele) {
+  //   console.log('play');
+  //   // console.log(key);
+  //   // console.log(ele);
+  //   // if(!key){
+  //   //   ele.play();
+  //   // }
+  // }
 
-  stop() {
-    let videos = document.getElementsByName('video');
-    for (let video of videos) {
-      console.log(video);
-      video.pause();
-    }
-  }
+  // stop() {
+  //   let videos = document.getElementsByName('video');
+  //   for (let video of videos) {
+  //     console.log(video);
+  //     video.pause();
+  //   }
+  // }
 }
