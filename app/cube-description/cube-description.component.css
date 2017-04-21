@@ -80,9 +80,23 @@ div {
   z-index: 10;
   width: 116px;
   height: 77px;
-  background: url('file:///C:/Users/break/Desktop/select.png');
+  background: url('http://store.steampowered.com/public/images/v5/game_highlight_activethumb.png');
 }
 
+.icon_play{
+  border-radius: 5px;
+  background: rgba(255,255,255,0.7);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -21px 0 0 -21px;
+  font-size: 38px;
+  line-height: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  box-sizing: initial;
+}
 /*#left {*/
 /*font-size: 14px;*/
 /*margin-right: 8px;*/

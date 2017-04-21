@@ -25,8 +25,10 @@
       <div style="margin-right: -10000px; position: relative; float:left; padding-top: 10px">
         <div class="select-rectangle" [style.left]="(2+120*selectId)+'px'"></div>
         <div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="select(key);" style="position: relative">
+
           <img class="img-fixed" [src]="src[1]"/>
-          <img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px;"/>
+          <i class="fa fa-play-circle icon_play" aria-hidden="true" ></i>
+          <!--<img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px;"/>-->
         </div>
         <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="select(key+videosrc.length)">
           <img class="img-fixed" [src]="src"/>

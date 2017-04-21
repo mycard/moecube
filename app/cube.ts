@@ -177,13 +177,13 @@ export class Cube {
     this.price = app.price;
     this.key = app.key;
 
-    this.trailer = [
-      { url: 'http://cdn.edgecast.steamstatic.com/steam/apps/2036126/movie480.webm', type: 'video' },
-      {
-        url: 'http://cdn.edgecast.steamstatic.com/steam/apps/264710/ss_e41e71c05f3fcf08e54140bd9f1ffc9008706843.600x338.jpg',
-        type: 'image'
-      }
-    ];
+    this.trailer = app.trailer || [];
+    //   { url: 'http://cdn.edgecast.steamstatic.com/steam/apps/2036126/movie480.webm', type: 'video', url2:''},
+    //   {
+    //     url: 'http://cdn.edgecast.steamstatic.com/steam/apps/264710/ss_e41e71c05f3fcf08e54140bd9f1ffc9008706843.600x338.jpg',
+    //     type: 'image'
+    //   }
+    // ];
   }
 
   findDependencies(): Cube[] {
