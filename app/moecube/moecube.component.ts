@@ -13,6 +13,7 @@ import { SettingsService } from '../settings.sevices';
 export class MoeCubeComponent implements OnInit {
   locale: string;
 
+  currentPage = 'lobby';
 
   constructor(public loginService: LoginService, private settingsService: SettingsService) {
   }

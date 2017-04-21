@@ -76,7 +76,13 @@
       'tether': 'npm:tether/dist/js/tether.min.js',
       'bootstrap': 'npm:bootstrap/dist/js/bootstrap.min.js',
       'reconnecting-websocket': 'npm:reconnecting-websocket/dist/index.js',
-      'reflect-metadata': 'npm:reflect-metadata/Reflect.js'
+      'reflect-metadata': 'npm:reflect-metadata/Reflect.js',
+      'electron-schema': 'npm:electron-schema/index.js',
+      'electron-cookies': 'npm:electron-cookies/src/index.js',
+      'uuid': '@node/uuid',
+      'candy': 'npm:candy/candy.min.js',
+      'candy-libs': 'npm:candy/libs.min.js',
+      'candy-shop': 'npm:candy-shop/index.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

@@ -13,7 +13,6 @@ import { CubesService } from './cubes.service';
 import { SettingsService } from './settings.sevices';
 import { LoginService } from './login.service';
 import { DownloadService } from './download.service';
-import { AppRoutingModule } from './app-routing.module';
 import { AuthGuard } from './auth.guard';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { CommunityComponent } from './community/community.component';
@@ -26,13 +25,13 @@ import { CubeDescriptionComponent } from './cube-description/cube-description.co
 import { CubeNewsComponent } from './cube-news/cube-news.component';
 import { CubeExpansionsComponent } from './cube-expansions/cube-expansions.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
-import { ELECTRON_SCHEMA } from './electron-schema';
+import { ELECTRON_SCHEMA } from 'electron-schema';
 import { MaotamaComponent } from './maotama/maotama.component';
 import { ProfileComponent } from './profile/profile.component';
-
+import { RoutingService } from './routing.sevices';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, AppRoutingModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
   declarations: [
     MoeCubeComponent, LoginComponent, LobbyComponent,
     CubeDetailComponent, RosterComponent, YGOProComponent, CandyComponent,
@@ -42,7 +41,8 @@ import { ProfileComponent } from './profile/profile.component';
   ],
   bootstrap: [MoeCubeComponent],
   providers: [
-    CubesService, SettingsService, LoginService, DownloadService, AuthGuard, LoadingGuard
+    CubesService, SettingsService, LoginService, DownloadService, RoutingService
+    // , AuthGuard, LoadingGuard,
     // 执行 xi18n 的时候注释掉这几行
     // , {
     //   provide: LOCALE_ID,

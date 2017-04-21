@@ -8,15 +8,22 @@ import { LoginService } from '../login.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'login',
-  templateUrl: './login.component.html',
+  selector: 'webview[login]',
+  template: '',
   styleUrls: ['./login.component.css'],
+  host: {
+    '[src]': 'url',
+    '(will-navigate)': 'return_sso($event.url)',
+    '(did-get-redirect-request)': 'return_sso($event.newURL)',
+    '(new-window)': 'openExternal($event.url)'
+  }
 })
 export class LoginComponent implements OnInit {
+  shell = shell;
   url: string;
   readonly return_sso_url = 'https://moecube.com/login_callback'; // 这个url不会真的被使用，可以填写不存在的
 
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(private loginService: LoginService) {
   }
 
   ngOnInit() {
@@ -55,7 +62,7 @@ export class LoginComponent implements OnInit {
     // 这里是 TypeScript 的一个bug，https://github.com/Microsoft/TypeScript/issues/15243
     let user = this.toObject(<any>new URLSearchParams(Buffer.from(token, 'base64').toString()));
     this.loginService.login(user);
-    this.router.navigate(['/']);
+    // this.router.navigate(['/']);
   }
 
   toObject(entries: Iterable<[string, any]>): any {
@@ -64,9 +71,5 @@ export class LoginComponent implements OnInit {
       result[key] = value;
     }
     return result;
-  }
-
-  openExternal(url: string) {
-    shell.openExternal(url);
   }
 }

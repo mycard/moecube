@@ -2,13 +2,11 @@
  * Created by zh99998 on 16/9/2.
  */
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { shell } from 'electron';
 import { URLSearchParams } from '@angular/http';
 import { Category, Cube } from '../cube';
 import { CubesService } from '../cubes.service';
 import { LoginService } from '../login.service';
 import { SettingsService } from '../settings.sevices';
-import { ActivatedRoute, Router } from '@angular/router';
 import * as ReconnectingWebSocket from 'reconnecting-websocket';
 
 // import 'typeahead.js';
@@ -25,7 +23,7 @@ export class LobbyComponent implements OnInit {
 
   readonly tags = ['installed', 'recommend', 'test', 'mysterious', 'touhou', 'touhou_pc98', 'runtime_installed'];
 
-  currentApp: Cube;
+  currentCube: Cube;
   private apps: Map<string, Cube>;
 
   resizing: HTMLElement | undefined;
@@ -36,29 +34,42 @@ export class LobbyComponent implements OnInit {
 
   private messages: WebSocket;
 
-  constructor(private appsService: CubesService, private loginService: LoginService,
-              private settingsService: SettingsService, private ref: ChangeDetectorRef,
-              private route: ActivatedRoute, private router: Router) {
+  constructor(private cubesService: CubesService, private loginService: LoginService,
+              private settingsService: SettingsService, private ref: ChangeDetectorRef) {
   }
 
   async ngOnInit() {
     try {
-      this.apps = await this.appsService.loadCubes();
+      this.apps = await this.cubesService.loadCubes();
     } catch (error) {
       console.error(error);
-      // if (confirm('获取程序列表失败,是否重试?')) {
-      //   location.reload();
-      // } else {
-      //   window.close();
-      // }
+      if (confirm('获取程序列表失败,是否重试?')) {
+        location.reload();
+      } else {
+        window.close();
+      }
       return;
     }
 
-    await this.router.navigate(['lobby', this.appsService.lastVisited ? this.appsService.lastVisited.id : 'ygopro']);
+    this.currentCube = this.cubesService.lastVisited || this.apps.get('ygopro')!;
 
-    await this.appsService.migrate();
+    // this.route.params
+    //   .switchMap((params: Params) => this.cubesService.getCube(params['id']))
+    //   .subscribe((cube: Cube) => {
+    //     if (cube) {
+    //       this.currentCube = cube;
+    //       this.cubesService.lastVisited = cube;
+    //     } else {
+    //       this.router.navigate(['lobby', this.cubesService.lastVisited ? this.cubesService.lastVisited.id : 'ygopro']);
+    //     }
+    //
+    //     // let top = await this.http.get('https://ygobbs.com/top.json').map(response => response.json()).toPromise();
+    //     // console.log(top.topic_list.topics);
+    //   });
+
+    await this.cubesService.migrate();
     for (let app of this.apps.values()) {
-      await this.appsService.update(app);
+      await this.cubesService.update(app);
     }
 
     // 特化个 YGOPRO 国际服聊天室。其他的暂时没需求。
@@ -75,8 +86,8 @@ export class LobbyComponent implements OnInit {
     this.messages.onmessage = async (event) => {
       let data = JSON.parse(event.data);
       console.log(data);
-      this.apps = await this.appsService.loadCubes();
-      this.currentApp = this.apps.get(this.currentApp.id)!;
+      this.apps = await this.cubesService.loadCubes();
+      this.currentCube = this.apps.get(this.currentCube.id)!;
     };
 
 
@@ -170,8 +181,7 @@ export class LobbyComponent implements OnInit {
   }
 
   select(app: Cube) {
-
-    this.appsService.lastVisited = app;
+    this.cubesService.lastVisited = app;
   }
 
 
@@ -200,9 +210,5 @@ export class LobbyComponent implements OnInit {
       result[tag].push(app);
     }
     return result;
-  }
-
-  openExternal(url: string) {
-    shell.openExternal(url);
   }
 }

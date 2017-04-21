@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { clipboard, remote } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -9,7 +9,6 @@ import { CubesService } from '../cubes.service';
 import { SettingsService } from '../settings.sevices';
 import { DownloadService } from '../download.service';
 import { LoginService } from '../login.service';
-import { ActivatedRoute, Params } from '@angular/router';
 
 declare const Notification: any;
 
@@ -26,6 +25,7 @@ declare const Notification: any;
   styleUrls: ['./cube-detail.component.css'],
 })
 export class CubeDetailComponent implements OnInit, OnChanges {
+  @Input()
   currentCube: Cube;
   platform = process.platform;
 
@@ -46,7 +46,7 @@ export class CubeDetailComponent implements OnInit, OnChanges {
 
   constructor(private cubesService: CubesService, private settingsService: SettingsService,
               private downloadService: DownloadService, private ref: ChangeDetectorRef, private el: ElementRef,
-              private http: Http, private loginService: LoginService, private route: ActivatedRoute) {
+              private http: Http, private loginService: LoginService) {
 
     this.tags = this.settingsService.getLocale().startsWith('zh') ? {
       'recommend': '推荐',
@@ -64,20 +64,20 @@ export class CubeDetailComponent implements OnInit, OnChanges {
   }
 
   async ngOnInit(): Promise<void> {
-    this.route.params
-      .switchMap((params: Params) => this.cubesService.getCube(params['id']))
-      .subscribe(async (cube: Cube) => {
-        this.currentCube = cube;
-        this.cubesService.lastVisited = cube;
-        if (this.currentCube.background) {
-          this.el.nativeElement.style.background = `url("${this.currentCube.background}") rgba(255,255,255,.8)`;
-        } else {
-          this.el.nativeElement.style.background = 'white';
-        }
-
-        // let top = await this.http.get('https://ygobbs.com/top.json').map(response => response.json()).toPromise();
-        // console.log(top.topic_list.topics);
-      });
+    // this.route.params
+    //   .switchMap((params: Params) => this.cubesService.getCube(params['id']))
+    //   .subscribe(async (cube: Cube) => {
+    //     this.currentCube = cube;
+    //     this.cubesService.lastVisited = cube;
+    //     if (this.currentCube.background) {
+    //       this.el.nativeElement.style.background = `url("${this.currentCube.background}") rgba(255,255,255,.8)`;
+    //     } else {
+    //       this.el.nativeElement.style.background = 'white';
+    //     }
+    //
+    //     // let top = await this.http.get('https://ygobbs.com/top.json').map(response => response.json()).toPromise();
+    //     // console.log(top.topic_list.topics);
+    //   });
 
     let volume = 'A';
     for (let i = 0; i < 26; i++) {
@@ -97,6 +97,14 @@ export class CubeDetailComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentCube) {
+      if (this.currentCube.background) {
+        this.el.nativeElement.style.background = `url("${this.currentCube.background}") rgba(255,255,255,.8)`;
+      } else {
+        this.el.nativeElement.style.background = 'white';
+      }
+    }
+
     if (this.currentCube.isBought()) {
       $('#purchase-modal-alipay').modal('hide');
     }

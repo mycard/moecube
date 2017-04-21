@@ -10,6 +10,9 @@ import 'node_modules/candy-shop/notifications/candy.js';
 import 'node_modules/candy-shop/refocus/candy.js';
 import { LoginService } from '../login.service';
 import { SettingsService } from '../settings.sevices';
+import * as uuid from 'uuid';
+// import * as jqueryShadow from '../../jquery-shadow.js';
+// import 'electron-cookies';
 /**
  * Created by zh99998 on 16/9/2.
  */
@@ -213,7 +216,7 @@ declare const $iq: any;
 })
 export class CandyComponent implements OnInit, OnChanges {
   @Input()
-  currentApp: Cube;
+  currentCube: Cube;
   jid: string;
   password: string;
   nickname: string;
@@ -226,7 +229,7 @@ export class CandyComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-    this.jid = this.loginService.user.username + '@moecube.com';
+    this.jid = this.loginService.user.username + '@mycard.moe';
     this.password = this.loginService.user.external_id.toString();
     this.nickname = this.loginService.user.username;
 
@@ -260,11 +263,13 @@ export class CandyComponent implements OnInit, OnChanges {
             </form>
             `;
 
+    Candy.Util.setCookie('candy-nostatusmessages', '1', 365);
+
     Candy.init('wss://chat.moecube.com:5280/websocket', {
       core: {
         debug: false,
-        autojoin: this.currentApp.conference && [this.currentApp.conference + '@conference.moecube.com'],
-        resource: 'moecube-' + Math.random().toString().split('.')[1]
+        autojoin: this.currentCube.conference && [this.currentCube.conference + '@conference.mycard.moe'],
+        resource: uuid.v1()
       },
       view: {
         assets: 'node_modules/candy/res/',
@@ -303,7 +308,7 @@ export class CandyComponent implements OnInit, OnChanges {
     if (!Candy.Core.getConnection()) {
       return;
     }
-    let conference = changes['currentApp'].currentValue.conference;
+    let conference = changes['currentCube'].currentValue.conference;
     if (!conference) {
       return;
     }
