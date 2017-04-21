@@ -47,8 +47,8 @@ export class CubeDescriptionComponent implements OnChanges {
 
       let trailer = this.currentCube.trailer;
       let videosrc = this.videosrc = [];
-      this.videosrc_now=""
-      let imgsrc = this.imgsrc = [];
+      this.videosrc_now="";
+      let imgsrc = this.imgs rc = [];
       let divOpacity = this.divOpacity = [];
       this.selectId = 0;
 
