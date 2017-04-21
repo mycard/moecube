@@ -1,23 +1,70 @@
 <!--<div class="panel">-->
 <div class="row">
-  <div class="left-box col-md8">
+  <div class="left-box col-md-8">
     <div class="left-big-item-box">
-      <div *ngFor="let src of imgsrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key]" >
-        <img [src]="src"/>
+      <div style="width:100%; padding-bottom:56.25%;"></div>
+      <!--<div class="left-big-item" [style.opacity]="divOpacity[key]" [style.display]="divOpacity[key]? 'block':'none'" *ngIf="videosrc.length">-->
+        <!--<video controls="" name="video" (ended)="nextvedio(key)" [autoplay]="!key">-->
+          <!--<source [src]="src[0]" type="video/webm">-->
+        <!--</video>-->
+      <!--</div>-->
+      <!--多视频-->
+      <div *ngFor="let src of videosrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key]" [style.display]="divOpacity[key]? 'block':'none'">
+        <video controls="" name="video" (ended)="nextvedio(key)" [autoplay]="!key">
+          <source [src]="src[0]" type="video/webm">
+        </video>
+        <!--<img [src]="src[0]"/>-->
+      </div>
+      <div *ngFor="let src of imgsrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key+videosrc.length]" [style.display]="divOpacity[key+videosrc.length]? 'block':'none'">
+        <img class="img-fixed" [src]="src"/>
       </div>
     </div>
 
-    <div style="width:100%; overflow: hidden; height:65px ">
-      <div>
-        <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="show(key)">
-          <img [src]="src"/>
+
+    <div style="overflow: auto; height:97px ">
+      <div style="margin-right: -10000px; position: relative; float:left; padding-top: 10px">
+        <div class="select-rectangle" [style.left]="(2+120*selectId)+'px'"></div>
+        <div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="select(key);" style="position: relative">
+          <img class="img-fixed" [src]="src[1]"/>
+          <img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px;"/>
+        </div>
+        <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="select(key+videosrc.length)">
+          <img class="img-fixed" [src]="src"/>
         </div>
       </div>
     </div>
-  </div>
-<!--</div>-->
 
-  <div style=" float: right" class="col-md3">
+  </div>
+
+  <!--<div class="left-box col-md-8">-->
+  <!--<div class="left-big-item-box">-->
+  <!--<div style="width:100%; padding-bottom:56.25%;"></div>-->
+  <!--<div *ngFor="let src of videosrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key]" [style.display]="divOpacity[key]? 'block':'none'" >-->
+  <!--<video controls="" name="media" id='vdo2' autoplay="false">-->
+  <!--<source [src]="src[0]" type="video/webm">-->
+  <!--</video>-->
+  <!--&lt;!&ndash;<img [src]="src[0]"/>&ndash;&gt;-->
+  <!--</div>-->
+  <!--&lt;!&ndash;<div *ngFor="let src of imgsrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key+videosrc.length]" [style.display]="divOpacity[key+videosrc.length]? 'block':'none'" >&ndash;&gt;-->
+  <!--&lt;!&ndash;<img class="img-fixed" [src]="src"/>&ndash;&gt;-->
+  <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  <!--</div>-->
+
+  <!--<div style="width:100%; overflow: hidden; height:65px ">-->
+  <!--<div>-->
+  <!--<div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="show(key)" style="position: relative">-->
+  <!--<img class="img-fixed" [src]="src[1]"/>-->
+  <!--<img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px; width:1"/>-->
+  <!--</div>-->
+  <!--&lt;!&ndash;<div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="show(key+videosrc.length)">&ndash;&gt;-->
+  <!--&lt;!&ndash;<img class="img-fixed" [src]="src"/>&ndash;&gt;-->
+  <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  <!--</div>-->
+  <!--</div>-->
+  <!--</div>-->
+
+
+  <div class="col-md-4">
     <img [src]="imgsrc[0]"/>
     <p [innerHTML]="currentCube.description"></p>
     <dl>
@@ -32,31 +79,11 @@
       <dd>{{currentCube.released_at | date:'mediumDate'}}</dd>
     </dl>
     <div id="tags" *ngIf="currentCube.tags">
-    <div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>
+      <div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>
     </div>
   </div>
 </div>
 
+<!--<div class="panel" id="left">--><!--<p [innerHTML]="currentCube.description"></p>--><!--<div id="tags" *ngIf="currentCube.tags">--><!--<div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>--><!--</div>--><!--</div>--><!--<div class="panel" id="right">--><!--<dl>--><!--<dt i18n>开发</dt>--><!--<dd>--><!--<div *ngFor="let developer of currentCube.developers">--><!--<a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>--><!--<span *ngIf="!developer.url">{{developer.name}}</span>--><!--</div>--><!--</dd>-->
 
-
-
-<!--<div class="panel" id="left">-->
-  <!--<p [innerHTML]="currentCube.description"></p>-->
-  <!--<div id="tags" *ngIf="currentCube.tags">-->
-    <!--<div i18n *ngFor="let tag of currentCube.tags" class="btn btn-sm btn-danger tag">{tag, select, installed {已安装} test {测试} recommend {推荐} mysterious {迷之物体} touhou {东方 Project} touhou_pc98 {东方旧作} runtime_installed{已安装的运行库} }</div>-->
-  <!--</div>-->
-<!--</div>-->
-<!--<div class="panel" id="right">-->
-  <!--<dl>-->
-    <!--<dt i18n>开发</dt>-->
-    <!--<dd>-->
-      <!--<div *ngFor="let developer of currentCube.developers">-->
-        <!--<a *ngIf="developer.url" target="_blank" [href]="developer.url">{{developer.name}}</a>-->
-        <!--<span *ngIf="!developer.url">{{developer.name}}</span>-->
-      <!--</div>-->
-    <!--</dd>-->
-
-    <!--<dt i18n>发行日期</dt>-->
-    <!--<dd>{{currentCube.released_at | date:'mediumDate'}}</dd>-->
-  <!--</dl>-->
-<!--</div>-->
+<!--<dt i18n>发行日期</dt>--><!--<dd>{{currentCube.released_at | date:'mediumDate'}}</dd>--><!--</dl>--><!--</div>-->
