@@ -5,6 +5,7 @@
   "scripts": {
     "electron": "electron .",
     "prestart": "tsc",
+    "preelectron": "tsc",
     "start": "lite-server -c=bs-config.json",
     "lint": "tslint ./src/**/*.ts -t verbose",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
