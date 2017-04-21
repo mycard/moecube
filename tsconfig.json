@@ -13,7 +13,6 @@
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": true,
-    "skipLibCheck": true,
-    "allowJs": true
+    "skipLibCheck": true
   }
 }
