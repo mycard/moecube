@@ -14,38 +14,21 @@ import Timer = NodeJS.Timer;
 
 export class CubeDescriptionComponent implements OnChanges {
 
-
   @Input()
   currentCube: Cube;
 
-  // videosrc: any[] = [
-  //   ['file:///C:/Users/break/Desktop/movie480.webm', 'file:///C:/Users/break/Desktop/movie.png'],
-  //   ['file:///C:/Users/break/Desktop/movie480_2.webm', 'file:///C:/Users/break/Desktop/movie_2.jpg']
-  // ];
-  // imgsrc: string[] = [
-  //   'http://cdn.akamai.steamstatic.com/steam/apps/545980/ss_bfc8d95b53734e03998342b1def248f560c440e3.600x338.jpg?t=1492488208',
-  //   'http://cdn.akamai.steamstatic.com/steam/apps/15370/0000004764.1920x1080.jpg?t=1447351397',
-  //   'http://cdn.akamai.steamstatic.com/steam/apps/15370/0000004767.600x338.jpg?t=1447351397'
-  // ];
-  //
-  // divOpacity: number[] = (function (imgsrc, videosrc) {
-  //   length = imgsrc.length + videosrc.length;
-  //   let arr = [1];
-  //   while (--length > 0) {
-  //     arr.push(0)
-  //   }
-  //   return arr;
-  // })(this.imgsrc, this.videosrc)
   videosrc: any[];
   videosrc_now: string;
   imgsrc: string[];
   divOpacity: number[];
   selectId = 0;
   timeOutId: Timer;
+  carouselLock = false;
+  carouselTime = 5000;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.currentCube) {
-
+      clearTimeout(this.timeOutId);
       this.videosrc = [];
       this.imgsrc = [];
       this.divOpacity = [];
@@ -67,24 +50,12 @@ export class CubeDescriptionComponent implements OnChanges {
     }
   }
 
-  // 多视频用
-  // nextvedio(key): void {
-  //   console.log('nextvedio');
-  //   let videos = document.getElementsByName('video');
-  //   if (key + 1 < videos.length) {
-  //     videos[key + 1].play();
-  //     this.appear(key + 1);
-  //   } else {
-  //     this.nextpic(key);
-  //   }
-  // }
-
-  // 单视频用
   nextvedio(key: number): void {
     console.log('nextvedio');
     let videosrc = this.videosrc;
     if (key + 1 < videosrc.length) {
       this.videosrc_now = videosrc[key + 1][0];
+      this.appear(key + 1);
       console.log(videosrc);
     } else {
       this.nextpic(key);
@@ -92,13 +63,19 @@ export class CubeDescriptionComponent implements OnChanges {
   }
 
   nextpic(key: number): void {
-    console.log('nextpic' + key);
     let that = this;
-    key = this.divOpacity.length > key + 1 ? key : this.videosrc.length - 1;
-    this.appear(key + 1);
-    this.timeOutId = setTimeout(function () {
-      that.nextpic(key + 1)
-    }, 5000);
+    console.log('nextpic' + key);
+    if (this.carouselLock) {
+      this.timeOutId = setTimeout(function () {
+        that.nextpic(key)
+      }, this.carouselTime);
+    } else {
+      key = this.divOpacity.length > key + 1 ? key : this.videosrc.length - 1;
+      this.appear(key + 1);
+      this.timeOutId = setTimeout(function () {
+        that.nextpic(key + 1)
+      }, this.carouselTime);
+    }
   }
 
   appear(key: number): void {
@@ -113,15 +90,13 @@ export class CubeDescriptionComponent implements OnChanges {
 
   select(key: number): void {
     clearTimeout(this.timeOutId);
-
     let videosrc = this.videosrc;
-    // this.stop();
     let videos = <NodeListOf<HTMLVideoElement>>document.getElementsByName('video');
+    videos[0].pause();
     if (key < videosrc.length) {
       this.videosrc_now = videosrc[key][0];
       console.log(videosrc);
       console.log(this.videosrc_now);
-      // videos[key].play();
       videos[0].play();
       this.appear(key);
     } else {
@@ -129,21 +104,11 @@ export class CubeDescriptionComponent implements OnChanges {
     }
   }
 
-  //
-  // play(key, ele) {
-  //   console.log('play');
-  //   // console.log(key);
-  //   // console.log(ele);
-  //   // if(!key){
-  //   //   ele.play();
-  //   // }
-  // }
+  carouselUnlock(): void {
+    this.carouselLock = false;
+  }
 
-  // stop() {
-  //   let videos = document.getElementsByName('video');
-  //   for (let video of videos) {
-  //     console.log(video);
-  //     video.pause();
-  //   }
-  // }
+  carouselLock_f(): void {
+    this.carouselLock = true;
+  }
 }

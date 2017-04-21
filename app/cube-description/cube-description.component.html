@@ -1,72 +1,30 @@
 <!--<div class="panel">-->
 <div class="row">
   <div class="left-box col-md-8">
-    <div class="left-big-item-box">
+    <div class="left-big-item-box" (mouseout)="carouselUnlock()" (mouseover)="carouselLock_f()">
       <div style="width:100%; padding-bottom:56.25%;"></div>
-      <!--单视频-->
       <div class="left-big-item" [style.opacity]="selectId<videosrc.length ? 1:0" [style.display]="selectId<videosrc.length? 'block':'none'" *ngIf="videosrc.length">
-        <video controls="" name="video" (ended)="nextvedio(key)" autoplay="true" [src]="videosrc_now" type="video/webm">
-        </video>
+        <video controls="" name="video" (ended)="nextvedio(selectId)" autoplay="true" [src]="videosrc_now" type="video/webm"></video>
       </div>
-      <!--多视频-->
-      <!--<div *ngFor="let src of videosrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key]" [style.display]="divOpacity[key]? 'block':'none'">-->
-        <!--<video controls="" name="video" (ended)="nextvedio(key)" [autoplay]="!key">-->
-          <!--<source [src]="src[0]" type="video/webm">-->
-        <!--</video>-->
-        <!--&lt;!&ndash;<img [src]="src[0]"/>&ndash;&gt;-->
-      <!--</div>-->
       <div *ngFor="let src of imgsrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key+videosrc.length]" [style.display]="divOpacity[key+videosrc.length]? 'block':'none'">
         <img class="img-fixed" [src]="src"/>
       </div>
     </div>
 
-
     <div style="overflow: auto; height:97px ">
       <div style="margin-right: -10000px; position: relative; float:left; padding-top: 10px">
-        <div class="select-rectangle" [style.left]="(2+120*selectId)+'px'"  ></div>
+        <div class="select-rectangle" [style.left]="(2+120*selectId)+'px'" (mouseout)="carouselUnlock()" (mouseover)="carouselLock_f()"></div>
         <div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="select(key);" style="position: relative">
-
-          <img class="img-fixed" [src]="src[1]"/>
-          <i class="fa fa-play-circle icon_play" aria-hidden="true" ></i>
-          <!--<img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px;"/>-->
+          <img class="img-fixed" [src]="src[1]"/> <i class="fa fa-play-circle icon_play" aria-hidden="true"></i>
         </div>
         <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="select(key+videosrc.length)">
           <img class="img-fixed" [src]="src"/>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!--<div class="left-box col-md-8">-->
-  <!--<div class="left-big-item-box">-->
-  <!--<div style="width:100%; padding-bottom:56.25%;"></div>-->
-  <!--<div *ngFor="let src of videosrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key]" [style.display]="divOpacity[key]? 'block':'none'" >-->
-  <!--<video controls="" name="media" id='vdo2' autoplay="false">-->
-  <!--<source [src]="src[0]" type="video/webm">-->
-  <!--</video>-->
-  <!--&lt;!&ndash;<img [src]="src[0]"/>&ndash;&gt;-->
-  <!--</div>-->
-  <!--&lt;!&ndash;<div *ngFor="let src of imgsrc ; index as key" class="left-big-item" [style.opacity]="divOpacity[key+videosrc.length]" [style.display]="divOpacity[key+videosrc.length]? 'block':'none'" >&ndash;&gt;-->
-  <!--&lt;!&ndash;<img class="img-fixed" [src]="src"/>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-  <!--</div>-->
-
-  <!--<div style="width:100%; overflow: hidden; height:65px ">-->
-  <!--<div>-->
-  <!--<div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="show(key)" style="position: relative">-->
-  <!--<img class="img-fixed" [src]="src[1]"/>-->
-  <!--<img src="file:///C:/Users/break/Desktop/icon-movie.png" style="position:absolute; top:50%; left:50%; margin: -16px 0 0 -16px; width:1"/>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;<div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="show(key+videosrc.length)">&ndash;&gt;-->
-  <!--&lt;!&ndash;<img class="img-fixed" [src]="src"/>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-  <!--</div>-->
-  <!--</div>-->
-  <!--</div>-->
-
-
-  <div class="col-md-4">
+  <div class="right-box col-md-4">
     <img [src]="imgsrc[0]"/>
     <p [innerHTML]="currentCube.description"></p>
     <dl>
