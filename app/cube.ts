@@ -35,7 +35,10 @@ export class Cube {
 
   // 宣传片
   trailer: { url: string, type: 'video' | 'image', url2?: string }[];
-  achievements: { name: string, description: string, unlocked: boolean, unlocked_at: Date }[];
+  achievements: {
+    name: string, description: string, image: string,
+    unlocked: boolean, unlocked_at: Date, progress_value: number, progress_max: number
+  }[];
 
   static downloadUrl(app: Cube, platform: string, locale: string): string {
     if (app.id === 'ygopro') {
