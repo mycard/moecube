@@ -1,8 +1,8 @@
-<i *ngIf="update_status === 'error'" (click)="retry()" class="fa fa-exclamation-circle"
+<i *ngIf="update_status === 'error'" (click)="autoUpdater.checkForUpdates()" class="fa fa-exclamation-circle"
    i18n-title title="更新出错，点击重试"></i>
 <i *ngIf="update_status === 'checking-for-update'" class="fa fa-spinner fa-pulse fa-spin"
    i18n-title title="正在检查更新"></i>
 <i *ngIf="update_status === 'update-available'" class="fa fa-refresh fa-spin"
    i18n-title title="正在下载更新"></i>
-<i *ngIf="update_status === 'update-downloaded'" (click)="install()" class="fa fa-angle-double-up"
+<i *ngIf="update_status === 'update-downloaded'" (click)="autoUpdater.quitAndInstall()" class="fa fa-angle-double-up"
    i18n-title title="下载更新完成，点击安装"></i>
