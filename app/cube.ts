@@ -1,5 +1,15 @@
 import * as path from 'path';
 
+export interface Achievement {
+  name: string,
+  description: string,
+  image: string,
+  unlocked: boolean,
+  unlocked_at: Date,
+  progress_value: number,
+  progress_max: number
+}
+
 export class Cube {
   id: string;
   name: string;          // i18n
@@ -35,10 +45,7 @@ export class Cube {
 
   // 宣传片
   trailer: { url: string, type: 'video' | 'image', url2?: string }[];
-  achievements: {
-    name: string, description: string, image: string,
-    unlocked: boolean, unlocked_at: Date, progress_value: number, progress_max: number
-  }[];
+  achievements: Achievement[];
 
   static downloadUrl(app: Cube, platform: string, locale: string): string {
     if (app.id === 'ygopro') {
@@ -186,13 +193,109 @@ export class Cube {
     this.key = app.key;
 
     this.trailer = app.trailer || [];
-    this.achievements = app.achievements || [123];
-    //   { url: 'http://cdn.edgecast.steamstatic.com/steam/apps/2036126/movie480.webm', type: 'video', url2:''},
-    //   {
-    //     url: 'http://cdn.edgecast.steamstatic.com/steam/apps/264710/ss_e41e71c05f3fcf08e54140bd9f1ffc9008706843.600x338.jpg',
-    //     type: 'image'
-    //   }
-    // ];
+    this.achievements = app.achievements || [
+        {
+          name: '全成就',
+          description: '当你完成所有成就',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/ima' +
+          'ges/apps/374040/2ab3f80739854e88279b127a41a3372abf0df887.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 13,
+          progress_max: 22
+        },
+        {
+          name: '环游世界',
+          description: '使用150个国家的ip登陆游戏,购买 vpn => www.150vpn.com',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/' +
+          'apps/374040/24e386234dc5ee0351f57d719af611333f2126ed.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 0,
+          progress_max: 150
+        },
+        {
+          name: '真羡慕有两个号的人',
+          description: '进行一次联机对战',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/pu' +
+          'blic/images/apps/374040/3dccf7ab22b881dfa46c3aec4d042302edfed68e.jpg',
+          unlocked: true,
+          unlocked_at: new Date(),
+          progress_value: 0,
+          progress_max: 0
+        }, {
+          name: '全成就',
+          description: '当你完成所有成就',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/ima' +
+          'ges/apps/374040/2ab3f80739854e88279b127a41a3372abf0df887.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 13,
+          progress_max: 22
+        },
+        {
+          name: '环游世界',
+          description: '使用150个国家的ip登陆游戏,购买 vpn => www.150vpn.com',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/' +
+          'apps/374040/24e386234dc5ee0351f57d719af611333f2126ed.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 0,
+          progress_max: 150
+        },
+        {
+          name: '真羡慕有两个号的人',
+          description: '进行一次联机对战',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/pu' +
+          'blic/images/apps/374040/3dccf7ab22b881dfa46c3aec4d042302edfed68e.jpg',
+          unlocked: true,
+          unlocked_at: new Date(),
+          progress_value: 0,
+          progress_max: 0
+        }, {
+          name: '全成就',
+          description: '当你完成所有成就',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/ima' +
+          'ges/apps/374040/2ab3f80739854e88279b127a41a3372abf0df887.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 13,
+          progress_max: 22
+        },
+        {
+          name: '环游世界',
+          description: '使用150个国家的ip登陆游戏,购买 vpn => www.150vpn.com',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/public/images/' +
+          'apps/374040/24e386234dc5ee0351f57d719af611333f2126ed.jpg',
+          unlocked: false,
+          unlocked_at: null,
+          progress_value: 0,
+          progress_max: 150
+        },
+        {
+          name: '真羡慕有两个号的人',
+          description: '进行一次联机对战',
+          image: 'http://cdn.edgecast.steamstatic.com/steamcommunity/pu' +
+          'blic/images/apps/374040/3dccf7ab22b881dfa46c3aec4d042302edfed68e.jpg',
+          unlocked: true,
+          unlocked_at: new Date(),
+          progress_value: 0,
+          progress_max: 0
+        }
+        // ,
+        // {
+        //   name: string, description: string, image: string,
+        //   unlocked: boolean, unlocked_at: Date, progress_value: 0, progress_max: 0
+        // },
+        // {
+        //   name: string, description: string, image: string,
+        //   unlocked: boolean, unlocked_at: Date, progress_value: 0, progress_max: 0
+        // },
+        // {
+        //   name: string, description: string, image: string,
+        //   unlocked: boolean, unlocked_at: Date, progress_value: 0, progress_max: 0
+        // }
+      ];
   }
 
   findDependencies(): Cube[] {
@@ -281,7 +384,7 @@ export class CubeLocal {
     for (let [k, v] of Object.entries(this.files)) {
       t[k] = v;
     }
-    return { path: this.path, version: this.version, files: t };
+    return {path: this.path, version: this.version, files: t};
   }
 
 }
