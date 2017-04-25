@@ -1,10 +1,13 @@
 'use strict';
 
-const { ipcMain, app, shell, BrowserWindow, Menu, Tray } = require('electron');
+const { app, shell, BrowserWindow, Menu, Tray } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const child_process = require('child_process');
 const path = require('path');
+const net = require('net');
+const readline = require('readline');
+const { EOL } = require('os');
 
 // 提权
 function handleElevate() {
@@ -16,13 +19,13 @@ function handleElevate() {
 
   if (process.argv[1] === '-e') {
     if (process.platform === 'darwin') {
-      require('electron').app.dock.hide();
+      app.dock.hide();
     }
     let elevate = JSON.parse(new Buffer(process.argv[2], 'base64').toString());
-    require('net').connect(elevate['ipc'], function () {
-      process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
+    net.connect(elevate['ipc'], function () {
+      process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + EOL, callback);
       this.on('end', () => process.emit('disconnect'));
-      require('readline').createInterface({ input: this }).on('line', (line) => process.emit('message', JSON.parse(line)));
+      readline.createInterface({ input: this }).on('line', (line) => process.emit('message', JSON.parse(line)));
       process.argv = elevate['arguments'][1];
       require('./' + elevate['arguments'][0]);
     });
@@ -57,45 +60,16 @@ if (!process.env['NODE_ENV']) {
 
 // 自动更新
 let updateWindow;
+// 置 global 后可以在页面进程里取
 global.autoUpdater = autoUpdater;
-autoUpdater.on('error', (event) => {
-  global.update_status = 'error';
-  console.log('autoUpdater', 'error', event);
-});
-autoUpdater.on('checking-for-update', () => {
-  global.update_status = 'checking-for-update';
-  console.log('autoUpdater', 'checking-for-update');
-});
-autoUpdater.on('update-available', () => {
-  global.update_status = 'update-available';
-  console.log('autoUpdater', 'update-available');
-});
-autoUpdater.on('update-not-available', () => {
-  global.update_status = 'update-not-available';
-  console.log('autoUpdater', 'update-not-available');
-});
-autoUpdater.on('update-downloaded', (event) => {
-  global.update_status = 'update-downloaded';
-  console.log('autoUpdater', 'update-downloaded', event);
-  updateWindow = new BrowserWindow({
-    width: 640,
-    height: 360,
-  });
-  updateWindow.loadURL(process.env['NODE_ENV'] === 'development' ? 'http://localhost:3000' : `file://${__dirname}/update/index.html`);
-  updateWindow.webContents.on('new-window', function (e, url) {
-    e.preventDefault();
-    shell.openExternal(url);
-  });
-  updateWindow.on('closed', function () {
-    updateWindow = null;
-  });
-  ipcMain.on('update', (event, arg) => {
-    autoUpdater.quitAndInstall();
-  });
+autoUpdater.on('update-downloaded', () => {
+  updateWindow = new BrowserWindow({ width: 640, height: 360 });
+  updateWindow.loadURL(`file://${__dirname}/update/index.html`);
+  updateWindow.on('closed', () => updateWindow = null);
 });
 
 // Aria2c
-function createAria2c() {
+const aria2 = (() => {
   let aria2c_path;
   switch (process.platform) {
     case 'win32':
@@ -116,8 +90,7 @@ function createAria2c() {
       throw 'unsupported platform';
   }
   return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', '--continue', '--split=10', '--min-split-size=1M', '--max-connection-per-server=10', '--remove-control-file', '--allow-overwrite'], { stdio: 'ignore' });
-}
-const aria2c = createAria2c();
+})();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -157,35 +130,25 @@ function createWindow() {
   });
 }
 
+function toggleMainWindow() {
+  if (mainWindow.isVisible()) {
+    mainWindow.hide();
+  } else {
+    mainWindow.show();
+  }
+}
+
 // 托盘
 let tray;
 function createTray() {
   tray = new Tray(path.join(process.env['NODE_ENV'] === 'production' ? process.resourcesPath : app.getAppPath(), 'assets', 'icon.ico'));
-  tray.on('click', (event) => {
-    console.log(event);
-    if (event.metaKey) {
-      mainWindow.webContents.openDevTools();
-    } else {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-    }
-  });
-  const contextMenu = Menu.buildFromTemplate([
-    // {label: '游戏', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
-    // {label: '社区', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
-    // {label: '切换账号', type: 'normal', click: (menuItem, browserWindow, event)=>{}},
-    {
-      label: '显示主界面', type: 'normal', click: () => {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-    }
-    },
-    {
-      label: '退出', type: 'normal', click: app.quit
-    }
-  ]);
+  tray.on('click', () => event.metaKey ? mainWindow.webContents.openDevTools() : toggleMainWindow());
   tray.setToolTip('MoeCube');
-  tray.setContextMenu(contextMenu);
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: '显示主界面', type: 'normal', click: toggleMainWindow },
+    { label: '退出', type: 'normal', click: app.quit }
+  ]));
 }
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -209,7 +172,8 @@ app.on('window-all-closed', function () {
   }
 });
 
-app.on('activate', function () {
+app.on('activate', function (event) {
+  console.log(event);
   // On OS X it's common to re-create a window in the currentCube when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
@@ -222,6 +186,6 @@ app.on('activate', function () {
 app.on('quit', () => {
   // windows 在非 detach 模式下会自动退出子进程
   if (process.platform !== 'win32') {
-    aria2c.kill();
+    aria2.kill();
   }
 });
