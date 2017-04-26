@@ -18,8 +18,7 @@
   <div class="panel-footer">
     <div class="achievement-border" *ngFor="let ac of acLocks" [title]="getTitle(ac)">
       <div class="achievement ac-progress" [style.background-image]="'url('+ac.image+')'">
-        <div class="gray" [style.background-image]="'url('+ac.image+')'"
-             [style.width]="ac.progress_max ? 100-ac.progress_value/ac.progress_max*100+'%':'100%' "></div>
+        <div class="gray" [style.background-image]="'url('+ac.image+')'" [style.width]="ac.progress_max ? 100-ac.progress_value/ac.progress_max*100+'%':'100%' "></div>
       </div>
     </div>
     <div class="clear"></div>

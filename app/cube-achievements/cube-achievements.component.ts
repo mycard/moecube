@@ -1,8 +1,8 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Achievement, Cube} from '../cube';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Achievement, Cube } from '../cube';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class CubeAchievementsComponent implements OnChanges {
 
       this.acLocks = [];
       this.acUnlocks = [];
-      console.log(this.currentCube)
+      console.log(this.currentCube);
       console.log(Cube);
       for (let ac of this.currentCube.achievements) {
         let title = ac.name + '\n' + ac.description + '\n' + (ac.progress_max ? ac.progress_value + '' +

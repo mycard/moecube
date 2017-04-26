@@ -384,7 +384,7 @@ export class CubeLocal {
     for (let [k, v] of Object.entries(this.files)) {
       t[k] = v;
     }
-    return {path: this.path, version: this.version, files: t};
+    return { path: this.path, version: this.version, files: t };
   }
 
 }

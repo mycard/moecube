@@ -29,15 +29,15 @@
 
   background-repeat: no-repeat;
   background-origin: content-box;
-  background-position:right top;
+  background-position: right top;
   background-size: 48px;
 }
 
-div{
-  box-sizing:content-box;
+div {
+  box-sizing: content-box;
 }
 
-.panel-my{
+.panel-my {
   border: 1px solid #eceeef;
   border-radius: 6px;
   background: rgba(255, 255, 255, .7);
@@ -47,6 +47,6 @@ div{
   position: relative;
 }
 
-.clear{
+.clear {
   clear: both;
 }
