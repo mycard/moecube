@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value>
+        <option name="HTML_ATTRIBUTE_WRAP" value="0" />
+        <option name="HTML_TEXT_WRAP" value="0" />
+        <option name="HTML_KEEP_LINE_BREAKS" value="false" />
+        <JSCodeStyleSettings>
+          <option name="FORCE_SEMICOLON_STYLE" value="true" />
+          <option name="USE_DOUBLE_QUOTES" value="false" />
+          <option name="FORCE_QUOTE_STYlE" value="true" />
+          <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
+          <option name="SPACES_WITHIN_IMPORTS" value="true" />
+          <option name="IMPORT_SORT_MODULE_NAME" value="true" />
+        </JSCodeStyleSettings>
+        <TypeScriptCodeStyleSettings>
+          <option name="FORCE_SEMICOLON_STYLE" value="true" />
+          <option name="USE_DOUBLE_QUOTES" value="false" />
+          <option name="FORCE_QUOTE_STYlE" value="true" />
+          <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
+          <option name="SPACES_WITHIN_IMPORTS" value="true" />
+          <option name="IMPORT_SORT_MODULE_NAME" value="true" />
+          <option name="IMPORT_PREFER_ABSOLUTE_PATH" value="TRUE" />
+          <option name="IMPORT_USE_NODE_RESOLUTION" value="TRUE" />
+        </TypeScriptCodeStyleSettings>
+        <codeStyleSettings language="TypeScript">
+          <option name="RIGHT_MARGIN" value="140" />
+        </codeStyleSettings>
+      </value>
+    </option>
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+  </component>
+</project>
