@@ -111,6 +111,26 @@ img {
   box-sizing: initial;
 }
 
+.appear{
+  animation:appear 0.5s;
+  opacity: 1; z-index: 100
+}
+
+.disappear{
+  animation:disappear 0.5s;
+  opacity: 0; z-index: 0
+}
+
+@keyframes appear {
+  from{ opacity: 0; z-index: 0}
+  to{opacity: 1; z-index: 100}
+}
+
+@keyframes disappear {
+  from{ opacity: 1; z-index: 100}
+  to{opacity: 0; z-index: 0}
+}
+
 /*#left {*/
 /*font-size: 14px;*/
 /*margin-right: 8px;*/
