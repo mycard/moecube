@@ -20,7 +20,7 @@ div {
 
 }
 
-.right-box{
+.right-box {
 
 }
 
@@ -85,9 +85,9 @@ img {
   background: url('http://2breakegg.github.io/image/select.png');
 }
 
-.icon_play{
+.icon_play {
   border-radius: 5px;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -99,6 +99,7 @@ img {
   padding: 5px;
   box-sizing: initial;
 }
+
 /*#left {*/
 /*font-size: 14px;*/
 /*margin-right: 8px;*/

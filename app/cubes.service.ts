@@ -1,21 +1,21 @@
 import { ApplicationRef, EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
-import * as crypto from 'crypto';
-import { Action, AppStatus, Cube, CubeLocal, InstallOption } from './cube';
-import { SettingsService } from './settings.sevices';
-import * as fs from 'fs';
-import { createReadStream, createWriteStream } from 'fs';
-import * as path from 'path';
 import * as child_process from 'child_process';
 import { ChildProcess } from 'child_process';
+import * as crypto from 'crypto';
 import { remote } from 'electron';
-import 'rxjs/Rx';
-import * as readline from 'readline';
+import * as fs from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
 import * as glob from 'glob';
 import * as ini from 'ini';
-import { DownloadService, DownloadStatus } from './download.service';
+import * as path from 'path';
+import * as readline from 'readline';
+import 'rxjs/Rx';
 import { Observable, Observer } from 'rxjs/Rx';
+import { Action, AppStatus, Cube, CubeLocal, InstallOption } from './cube';
+import { DownloadService, DownloadStatus } from './download.service';
 import { LoginService } from './login.service';
+import { SettingsService } from './settings.sevices';
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream
 

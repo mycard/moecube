@@ -3,8 +3,8 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { LoginService } from '../login.service';
 import { Cube } from '../cube';
+import { LoginService } from '../login.service';
 
 export interface Points {
   exp: number;

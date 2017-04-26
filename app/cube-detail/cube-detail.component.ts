@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Http, URLSearchParams } from '@angular/http';
 import { clipboard, remote } from 'electron';
-import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
-import { Http, URLSearchParams } from '@angular/http';
+import * as path from 'path';
 import { Cube, InstallOption } from '../cube';
 import { CubesService } from '../cubes.service';
-import { SettingsService } from '../settings.sevices';
 import { DownloadService } from '../download.service';
 import { LoginService } from '../login.service';
+import { SettingsService } from '../settings.sevices';
 
 declare const Notification: any;
 

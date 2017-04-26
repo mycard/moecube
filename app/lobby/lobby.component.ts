@@ -3,11 +3,11 @@
  */
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
+import * as ReconnectingWebSocket from 'reconnecting-websocket';
 import { Category, Cube } from '../cube';
 import { CubesService } from '../cubes.service';
 import { LoginService } from '../login.service';
 import { SettingsService } from '../settings.sevices';
-import * as ReconnectingWebSocket from 'reconnecting-websocket';
 
 // import 'typeahead.js';
 // import Options = Twitter.Typeahead.Options;

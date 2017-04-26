@@ -1,8 +1,8 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Cube} from '../cube';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Cube } from '../cube';
 import Timer = NodeJS.Timer;
 
 
@@ -67,13 +67,13 @@ export class CubeDescriptionComponent implements OnChanges {
     console.log('nextpic' + key);
     if (this.carouselLock) {
       this.timeOutId = setTimeout(function () {
-        that.nextpic(key)
+        that.nextpic(key);
       }, this.carouselTime);
     } else {
       key = this.divOpacity.length > key + 1 ? key : this.videosrc.length - 1;
       this.appear(key + 1);
       this.timeOutId = setTimeout(function () {
-        that.nextpic(key + 1)
+        that.nextpic(key + 1);
       }, this.carouselTime);
     }
   }
@@ -84,7 +84,7 @@ export class CubeDescriptionComponent implements OnChanges {
     this.selectId = key;
     divOpacity.map(function (val, key2) {
       divOpacity[key2] = 0;
-    })
+    });
     divOpacity[key] = 1;
   }
 

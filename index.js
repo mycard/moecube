@@ -173,7 +173,6 @@ app.on('window-all-closed', function () {
 });
 
 app.on('activate', function (event) {
-  console.log(event);
   // On OS X it's common to re-create a window in the currentCube when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {

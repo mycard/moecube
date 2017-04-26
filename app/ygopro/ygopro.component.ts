@@ -2,16 +2,16 @@
  * Created by zh99998 on 16/9/2.
  */
 import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Headers, Http, URLSearchParams } from '@angular/http';
 import * as child_process from 'child_process';
 import { remote, shell } from 'electron';
+import * as fs from 'fs';
 import * as ini from 'ini';
 import { EncodeOptions } from 'ini';
-import { Headers, Http, URLSearchParams } from '@angular/http';
+import * as $ from 'jquery';
+import * as path from 'path';
 import 'rxjs/Rx';
 import { ISubscription } from 'rxjs/Subscription';
-import * as $ from 'jquery';
 import { Cube } from '../cube';
 import { CubesService } from '../cubes.service';
 import { LoginService } from '../login.service';

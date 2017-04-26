@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import * as crypto from 'crypto';
 import { shell } from 'electron';
 import { LoginService } from '../login.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'webview[login]',

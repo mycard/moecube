@@ -2,18 +2,18 @@
  * Created by zh99998 on 16/9/2.
  */
 import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Cube, InstallOption } from '../cube';
-import { CubesService } from '../cubes.service';
-import { SettingsService } from '../settings.sevices';
-import { LoginService } from '../login.service';
-import { DownloadService } from '../download.service';
 import { Http } from '@angular/http';
-import * as fs from 'fs';
-import * as path from 'path';
+import 'bootstrap';
 import { remote } from 'electron';
+import * as fs from 'fs';
 
 import * as $ from 'jquery';
-import 'bootstrap';
+import * as path from 'path';
+import { Cube, InstallOption } from '../cube';
+import { CubesService } from '../cubes.service';
+import { DownloadService } from '../download.service';
+import { LoginService } from '../login.service';
+import { SettingsService } from '../settings.sevices';
 
 
 @Component({
