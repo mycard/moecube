@@ -1,1 +1,28 @@
-成就
+<div class="panel-my">
+  <div>
+    <span>成就</span>
+    <span style="float:right; font-size: 12px">已解锁 {{progressTotal[0] +'('+progressTotal[1]+')'}}项成就：</span>
+    <div class="clear"></div>
+  </div>
+  <div class="">
+    <div class="achievement-border" *ngFor="let ac of acUnlocks" [title]="getTitle(ac)">
+      <div class="achievement" [style.background-image]="'url('+ac.image+')'"></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <div class="progress" style="margin: 8px 2px; border: 1px solid #ccc;">
+    <div class="progress-bar progress-bar-success" [style.width]="progressTotal[1]" style="height:12px"></div>
+  </div>
+
+  <div class="panel-footer">
+    <div class="achievement-border" *ngFor="let ac of acLocks" [title]="getTitle(ac)">
+      <div class="achievement ac-progress" [style.background-image]="'url('+ac.image+')'">
+        <div class="gray" [style.background-image]="'url('+ac.image+')'"
+             [style.width]="ac.progress_max ? 100-ac.progress_value/ac.progress_max*100+'%':'100%' "></div>
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <!--[style.width]="ac.progress_max ? 'calc('+ac.progress/ac.progress_max+' * 100%)':'0%' "-->
+</div>
