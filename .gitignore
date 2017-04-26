@@ -32,3 +32,4 @@ messages.xlf
 messages.xlf.bak
 locale/*.xlf.bak
 /.vscode/
+/main.js
