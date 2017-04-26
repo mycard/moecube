@@ -2,7 +2,7 @@
 <div class="row">
   <div class="left-box col-md-8">
     <div class="left-big-item-box" (mouseout)="carouselUnlock()" (mouseover)="carouselLock_f()">
-      <div style="width:100%; padding-bottom:56.25%;"></div>
+      <div class="make-div-16-9"></div>
       <div class="left-big-item" [style.opacity]="selectId<videosrc.length ? 1:0" [style.display]="selectId<videosrc.length? 'block':'none'" *ngIf="videosrc.length">
         <video controls="" name="video" (ended)="nextvedio(selectId)" autoplay="true" [src]="videosrc_now" type="video/webm"></video>
       </div>
@@ -11,10 +11,10 @@
       </div>
     </div>
 
-    <div style="overflow: auto; height:97px ">
-      <div style="margin-right: -10000px; position: relative; float:left; padding-top: 10px">
+    <div class="left-small-item-box-overflow">
+      <div class="left-small-item-box">
         <div class="select-rectangle" [style.left]="(2+120*selectId)+'px'" (mouseout)="carouselUnlock()" (mouseover)="carouselLock_f()"></div>
-        <div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="select(key);" style="position: relative">
+        <div *ngFor="let src of videosrc ; index as key" class="left-small-item" (click)="select(key);">
           <img class="img-fixed" [src]="src[1]"/> <i class="fa fa-play-circle icon_play" aria-hidden="true"></i>
         </div>
         <div *ngFor="let src of imgsrc ; index as key" class="left-small-item" (click)="select(key+videosrc.length)">

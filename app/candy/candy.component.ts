@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import 'node_modules/candy/libs.min.js';
+import 'node_modules/candy/candy.min.js';
 import 'node_modules/candy-shop/me-does/candy.js';
 import 'node_modules/candy-shop/modify-role/candy.js';
 import 'node_modules/candy-shop/namecomplete/candy.js';
 import 'node_modules/candy-shop/notifications/candy.js';
 import 'node_modules/candy-shop/notifyme/candy.js';
 import 'node_modules/candy-shop/refocus/candy.js';
-import 'node_modules/candy/candy.min.js';
-import 'node_modules/candy/libs.min.js';
 import * as uuid from 'uuid';
 import { Cube } from '../cube';
 import { LoginService } from '../login.service';

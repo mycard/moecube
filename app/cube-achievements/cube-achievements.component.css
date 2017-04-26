@@ -1,3 +1,12 @@
+div {
+  box-sizing: content-box;
+}
+
+.progress-text{
+  float:right;
+  font-size: 12px;
+}
+
 .achievement {
   float: left;
   position: relative;
@@ -33,8 +42,14 @@
   background-size: 48px;
 }
 
-div {
-  box-sizing: content-box;
+
+.progress-margin{
+  margin: 8px 2px;
+  border: 1px solid #ccc;
+}
+
+.progress-thin{
+  height:12px;
 }
 
 .panel-my {
@@ -50,3 +65,4 @@ div {
 .clear {
   clear: both;
 }
+

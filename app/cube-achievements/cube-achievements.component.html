@@ -1,7 +1,7 @@
 <div class="panel-my">
   <div>
     <span>成就</span>
-    <span style="float:right; font-size: 12px">已解锁 {{progressTotal[0] +'('+progressTotal[1]+')'}}项成就：</span>
+    <span class="progress-text">已解锁 {{progressTotal[0] +'('+progressTotal[1]+')'}}项成就：</span>
     <div class="clear"></div>
   </div>
   <div class="">
@@ -11,8 +11,8 @@
     <div class="clear"></div>
   </div>
 
-  <div class="progress" style="margin: 8px 2px; border: 1px solid #ccc;">
-    <div class="progress-bar progress-bar-success" [style.width]="progressTotal[1]" style="height:12px"></div>
+  <div class="progress progress-margin">
+    <div class="progress-bar progress-bar-success progress-thin" [style.width]="progressTotal[1]" ></div>
   </div>
 
   <div class="panel-footer">
