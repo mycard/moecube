@@ -36,7 +36,7 @@ export class CubeDescriptionComponent implements OnChanges {
 
       for (let val of this.currentCube.trailer) {
         if (val.type === 'video') {
-          this.videosrc.push([val.url, val.url2]);
+          this.videosrc.push([val.url, val.poster]);
         } else if (val.type === 'image') {
           this.imgsrc.push(val.url);
         }

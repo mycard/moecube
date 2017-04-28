@@ -44,7 +44,7 @@ export class Cube {
   key?: string;
 
   // 宣传片
-  trailer: { url: string, type: 'video' | 'image', url2?: string }[];
+  trailer: { url: string, type: 'video' | 'image', poster?: string }[];
   achievements: Achievement[];
 
   static downloadUrl(app: Cube, platform: string, locale: string): string {
