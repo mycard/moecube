@@ -1,16 +1,16 @@
-import {Component, OnInit, Input, ChangeDetectorRef, OnChanges, SimpleChanges, ElementRef} from '@angular/core';
-import {AppsService} from './apps.service';
-import {InstallOption} from './install-option';
-import {SettingsService} from './settings.sevices';
-import {App} from './app';
-import {DownloadService} from './download.service';
-import {clipboard, remote} from 'electron';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AppsService } from './apps.service';
+import { InstallOption } from './install-option';
+import { SettingsService } from './settings.sevices';
+import { App } from './app';
+import { DownloadService } from './download.service';
+import { clipboard, remote } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
-import {Points} from './ygopro.component';
-import {Http, URLSearchParams} from '@angular/http';
-import {LoginService} from './login.service';
+import { Points } from './ygopro.component';
+import { Http } from '@angular/http';
+import { LoginService } from './login.service';
 
 declare const Notification: any;
 
@@ -253,7 +253,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
         let extname = path.extname(filename).slice(1);
 
         // let remote = require('electron').remote
-        let filePaths = await new Promise((resolve, reject) => {
+        let filePaths = await new Promise<string[]>((resolve, reject) => {
             remote.dialog.showOpenDialog({
                 filters: [{name: filename, extensions: [extname]}],
                 properties: ['openFile']

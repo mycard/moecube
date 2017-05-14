@@ -2,29 +2,29 @@
  * Created by zh99998 on 16/9/2.
  */
 import {
-    Component,
-    OnInit,
     ChangeDetectorRef,
-    Input,
+    Component,
+    ElementRef,
     EventEmitter,
-    Output,
+    Input,
     OnDestroy,
-    ViewChild,
-    ElementRef
+    OnInit,
+    Output,
+    ViewChild
 } from '@angular/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as child_process from 'child_process';
-import {remote, shell} from 'electron';
+import { remote, shell } from 'electron';
 import * as ini from 'ini';
-import {EncodeOptions} from 'ini';
-import {LoginService} from './login.service';
-import {App} from './app';
-import {Http, Headers, URLSearchParams} from '@angular/http';
+import { EncodeOptions } from 'ini';
+import { LoginService } from './login.service';
+import { App } from './app';
+import { Headers, Http } from '@angular/http';
 import 'rxjs/Rx';
-import {ISubscription} from 'rxjs/Subscription';
-import {AppsService} from './apps.service';
-import {SettingsService} from './settings.sevices';
+import { ISubscription } from 'rxjs/Subscription';
+import { AppsService } from './apps.service';
+import { SettingsService } from './settings.sevices';
 import * as $ from 'jquery';
 import Timer = NodeJS.Timer;
 import WillNavigateEvent = Electron.WebViewElement.WillNavigateEvent;

@@ -1,4 +1,4 @@
-import {AppLocal} from './app-local';
+import { AppLocal } from './app-local';
 
 export enum Category {
     game,
@@ -10,6 +10,7 @@ export enum Category {
     expansion,
     module
 }
+// export type CategoryString = 'game' | 'music' | 'book' | 'runtime' | 'emulator' | 'language' | 'expansion' | 'module'
 
 // export enum DownloadStatus{
 //     downloading,
@@ -55,7 +56,7 @@ export class App {
     description: string;   // i18n
     author: string;             // English Only
     homepage: string;
-    developers: {name: string, url: string}[];
+    developers: { name: string, url: string }[];
     released_at: Date;
     category: Category;
     parent?: App;
@@ -64,7 +65,7 @@ export class App {
     references: Map<string, App>;
     dependencies: Map<string, App>;
     locales: string[];
-    news: {title: string, url: string, image: string, updated_at: Date}[];
+    news: { title: string, url: string, image: string, updated_at: Date }[];
     network: any;
     tags: string[];
     version: string;
@@ -78,7 +79,7 @@ export class App {
     cover: string;
     background: string;
 
-    price: {[currency: string]: string};
+    price: { [currency: string]: string };
     key?: string;
 
     static downloadUrl(app: App, platform: string, locale: string): string {
@@ -168,7 +169,7 @@ export class App {
         this.released_at = app.released_at;
         this.author = app.author;
         this.homepage = app.homepage;
-        this.category = Category[app.category as string];
+        this.category = Category[<string>app.category];
         this.actions = app.actions;
         this.dependencies = app.dependencies;
         this.parent = app.parent;

@@ -1,13 +1,10 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component} from '@angular/core';
-import {LoginService} from './login.service';
+import { Component } from '@angular/core';
+import { LoginService } from './login.service';
 import * as crypto from 'crypto';
-import {shell} from 'electron';
-
-declare const URLSearchParams: any;
-
+import { shell } from 'electron';
 
 @Component({
     moduleId: module.id,
@@ -51,6 +48,9 @@ export class LoginComponent {
             return;
         }
         let token = new URL(return_url)['searchParams'].get('sso');
+        if (!token) {
+            return;
+        }
         let user = this.toObject(new URLSearchParams(Buffer.from(token, 'base64').toString()));
         this.loginService.login(user);
     }

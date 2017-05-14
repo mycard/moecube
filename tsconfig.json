@@ -8,11 +8,10 @@
     "experimentalDecorators": true,
     "lib": [
       "es2017",
-      "dom"
+      "dom.iterable"
     ],
-    "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": true,
+    "strict": true,
     "skipLibCheck": true
   },
   "exclude": [

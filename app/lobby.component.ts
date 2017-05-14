@@ -1,13 +1,12 @@
 /**
  * Created by zh99998 on 16/9/2.
  */
-import {Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild} from '@angular/core';
-import {AppsService} from './apps.service';
-import {LoginService} from './login.service';
-import {App, Category} from './app';
-import {shell} from 'electron';
-import {SettingsService} from './settings.sevices';
-import {URLSearchParams} from '@angular/http';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AppsService } from './apps.service';
+import { LoginService } from './login.service';
+import { App, Category } from './app';
+import { shell } from 'electron';
+import { SettingsService } from './settings.sevices';
 const ReconnectingWebSocket = require('reconnecting-websocket');
 
 // import 'typeahead.js';
@@ -60,7 +59,7 @@ export class LobbyComponent implements OnInit {
         this.ref.detectChanges();
 
         let url = new URL('wss://api.moecube.com:3100');
-        let params: URLSearchParams = url['searchParams'];
+        let params: URLSearchParams = url.searchParams;
         params.set('user_id', this.loginService.user.email);
         this.messages = new ReconnectingWebSocket(url);
         this.messages.onmessage = async(event) => {
