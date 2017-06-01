@@ -52,4 +52,4 @@ install:
   - npm prune
 
 build_script:
-  - npm run dist
+  - npm run release
