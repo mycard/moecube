@@ -6,7 +6,7 @@
   "author": "zh99998 <zh99998@gmail.com>",
   "homepage": "https://moecube.com",
   "license": "UNLICENSED",
-  "repository": "github:moecube/moecube",
+  "repository": "moecube/moecube",
   "scripts": {
     "start": "tsc && electron .",
     "lint": "tslint ./app/*.ts -t verbose",
