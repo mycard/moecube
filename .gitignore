@@ -17,3 +17,4 @@ Thumbs.db
 messages.xlf
 messages.xlf.bak
 locale/*.xlf.bak
+/package-lock.json
