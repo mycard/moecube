@@ -1,42 +1,40 @@
 language: node_js
 node_js: node
-
 os:
-  - linux
-  - osx
+- linux
+- osx
 dist: trusty
 sudo: required
-
 env:
-  npm_config_target: '$(npm show electron version)'
+  npm_config_target: $(npm show electron version)
   npm_config_arch: x64
   npm_config_target_arch: x64
   npm_config_disturl: https://atom.io/download/atom-shell
   npm_config_runtime: electron
   npm_config_build_from_source: true
-
+  global:
+    secure: KsebO9wNxM2RfUGg6Y0E4hRdXzQLNe1fdB1AOV5U1LddLGZYTYvsknPL6oyjOV3vY5ed7wueErt1GCDjEZJMdox0rMUEZ9HH8umwUoJi2uS6LoaU31yWNCCbPbpdtJw3rohzNvEtxd1Y01U5msKPuUd4M5mt/RKlPPPR/L5H178=
 addons:
   apt:
     packages:
-      - icnsutils
-      - graphicsmagick
-      - xz-utils
-
+    - icnsutils
+    - graphicsmagick
+    - xz-utils
 cache:
   directories:
   - node_modules
   - $HOME/.electron
   - $HOME/.cache
-
 before_install:
-  - env
-  - openssl aes-256-cbc -K $encrypted_9f35b7f09ebe_key -iv $encrypted_9f35b7f09ebe_iv -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
-  - chmod 600 $HOME/.ssh/id_ecdsa
-
+- env
+- openssl aes-256-cbc -K $encrypted_9f35b7f09ebe_key -iv $encrypted_9f35b7f09ebe_iv
+  -in ssh-key.enc -out $HOME/.ssh/id_ecdsa -d
+- chmod 600 $HOME/.ssh/id_ecdsa
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir -p bin; curl --location --retry 5 https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-osx-darwin.tar.bz2 | tar --strip-components=2 -C bin -jxf - aria2-1.29.0/bin/aria2c; fi
-  - npm install
-  - npm prune
-
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir -p bin; curl --location --retry
+  5 https://github.com/aria2/aria2/releases/download/release-1.29.0/aria2-1.29.0-osx-darwin.tar.bz2
+  | tar --strip-components=2 -C bin -jxf - aria2-1.29.0/bin/aria2c; fi
+- npm install
+- npm prune
 script:
-  - npm run dist
+- npm run dist

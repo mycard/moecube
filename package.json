@@ -12,6 +12,7 @@
     "lint": "tslint ./app/*.ts -t verbose",
     "pack": "tsc && build --dir",
     "dist": "tsc && build",
+    "release": "tsc && build",
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js",
     "tsc": "tsc",
     "i18n": "ng-xi18n && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
