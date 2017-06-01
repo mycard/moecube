@@ -77,8 +77,11 @@ System.config({
         'jquery': 'npm:jquery/dist/jquery.min.js',
         'tether': 'npm:tether/dist/js/tether.min.js',
         'bootstrap': 'npm:bootstrap/dist/js/bootstrap.min.js',
-        'reconnecting-websocket': 'npm:reconnecting-websocket/dist/index.js'
+        'reconnecting-websocket': 'npm:reconnecting-websocket/dist/index.js',
         // 'typeahead.js': '@node/typeahead.js'
+
+        'raven-js': 'npm:raven-js'
+
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -88,6 +91,9 @@ System.config({
         },
         rxjs: {
             defaultExtension: 'js'
+        },
+        'raven-js': {
+            main: 'dist/raven.js'
         }
     },
     meta: {

@@ -1,6 +1,6 @@
 {
   "name": "mycard",
-  "version": "3.0.27",
+  "version": "3.0.28",
   "description": "moecube",
   "keywords": [],
   "author": "zh99998 <zh99998@gmail.com>",
@@ -21,6 +21,7 @@
     "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
   },
   "dependencies": {
+    "@angular/animations": "^4.1.3",
     "@angular/common": "latest",
     "@angular/compiler": "latest",
     "@angular/core": "latest",
@@ -35,14 +36,15 @@
     "candy": "https://github.com/moecube/candy/releases/download/v2.2.0/candy.tar.gz",
     "candy-shop": "candy-chat/candy-plugins",
     "core-js": "latest",
-    "electron-updater": "latest",
     "electron-is-dev": "latest",
     "electron-sudo": "moecube/electron-sudo#moecube",
+    "electron-updater": "latest",
     "font-awesome": "latest",
     "glob": "latest",
     "ini": "latest",
     "jquery": "latest",
     "marked": "latest",
+    "raven-js": "latest",
     "raw-socket": "latest",
     "reconnecting-websocket": "latest",
     "reflect-metadata": "latest",
@@ -64,6 +66,7 @@
     "@types/bootstrap": "latest",
     "@types/jquery": "latest",
     "@types/marked": "latest",
+    "@types/raven-js": "latest",
     "@types/tether": "latest",
     "@types/typeahead": "latest",
     "electron": "latest",
@@ -89,8 +92,7 @@
       }
     ],
     "extraResources": [
-      "bin",
-      "images"
+      "bin"
     ],
     "dmg": {
       "contents": [

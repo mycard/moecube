@@ -86,7 +86,7 @@ export class AppsService {
             let params = new URLSearchParams();
             params.set('user_id', this.loginService.user.email);
             let data = await this.http.get(appsURL).map((response) => response.json()).toPromise();
-            let keys_data = await this.http.get(keysURL, {search: params}).map((response) => response.json()).toPromise();
+            let keys_data = await this.http.get(keysURL, { search: params }).map((response) => response.json()).toPromise();
             for (let item of keys_data) {
                 let app = data.find((app: any) => app.id === item.app_id);
                 if (app) {
@@ -99,7 +99,7 @@ export class AppsService {
             console.error(e);
             let data = localStorage.getItem('apps_json');
             if (data) {
-                this.apps = this.loadAppsList(JSON.parse(data));
+                this.apps = this.loadAppsList(JSON.parse(data!));
             } else {
                 alert('读取游戏列表失败，可能是网络不通');
                 this.apps = new Map();
@@ -360,7 +360,7 @@ export class AppsService {
             let checksumFiles = await this.getChecksumFile(app);
             for (let [pattern, fileOption] of app.files) {
                 await new Promise((resolve, reject) => {
-                    new glob.Glob(pattern, {cwd: appPath}, (err, files) => {
+                    new glob.Glob(pattern, { cwd: appPath }, (err, files) => {
                         for (let file of files) {
                             // 避免被当做文件夹
                             if (fileOption.sync) {
@@ -517,7 +517,7 @@ export class AppsService {
                 let ignoreFiles: Set<string> = new Set();
                 for (let [pattern, fileOption] of app.files) {
                     await new Promise((resolve, reject) => {
-                        new glob.Glob(pattern, {cwd: app.local!.path}, (err, files) => {
+                        new glob.Glob(pattern, { cwd: app.local!.path }, (err, files) => {
                             for (let file of files) {
                                 if (fileOption.ignore) {
                                     ignoreFiles.add(file);
@@ -703,7 +703,7 @@ export class AppsService {
             }
             let files = await this.downloadService.getFiles(downloadId);
             _app.status.status = 'waiting';
-            return {app: _app, files: files};
+            return { app: _app, files: files };
         };
         if (!app.isInstalled()) {
             let apps: App[] = [];
@@ -724,7 +724,7 @@ export class AppsService {
                 for (let result of downloadResults) {
                     let o = new InstallOption(result.app, option.installLibrary);
                     o.downloadFiles = result.files;
-                    let task = tryToInstall({app: result.app, option: o});
+                    let task = tryToInstall({ app: result.app, option: o });
                     installTasks.push(task);
                 }
                 await Promise.all(installTasks);
@@ -770,14 +770,14 @@ export class AppsService {
             if (th105.isInstalled()) {
                 const config_file = path.join((<AppLocal>app.local).path, 'configex123.ini');
                 let config = await new Promise((resolve, reject) => {
-                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
+                    fs.readFile(config_file, { encoding: 'utf-8' }, (error, data) => {
                         if (error) {
                             return reject(error);
                         }
                         resolve(ini.parse(data));
                     });
                 });
-                config['th105path'] = {path: (<AppLocal>th105.local).path};
+                config['th105path'] = { path: (<AppLocal>th105.local).path };
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
@@ -798,7 +798,7 @@ export class AppsService {
             if (action.open.id === 'np2fmgen') {
                 const config_file = path.join(action.open!.local!.path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
-                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
+                    fs.readFile(config_file, { encoding: 'utf-8' }, (error, data) => {
                         if (error) {
                             return reject(error);
                         }
@@ -845,7 +845,7 @@ export class AppsService {
         args = args.concat(action.args);
         env = Object.assign(env, action.env);
         console.log(execute, args, env, cwd);
-        let handle = child_process.spawn(execute, args, {env: env, cwd: cwd});
+        let handle = child_process.spawn(execute, args, { env: env, cwd: cwd });
 
         handle.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
@@ -872,7 +872,7 @@ export class AppsService {
     async network(app: App, server: any) {
         if (!this.maotama) {
             this.maotama = new Promise((resolve, reject) => {
-                let child = sudo.fork('maotama', [], {stdio: ['inherit', 'inherit', 'inherit', 'ipc']});
+                let child = sudo.fork('maotama', [], { stdio: ['inherit', 'inherit', 'inherit', 'ipc'] });
                 child.once('message', () => resolve(child));
                 child.once('error', reject);
                 child.once('exit', reject);
@@ -890,7 +890,7 @@ export class AppsService {
         if (connection) {
             connection.connection.close();
         }
-        connection = {connection: new WebSocket(server.url), address: null};
+        connection = { connection: new WebSocket(server.url), address: null };
         let id: Timer | null;
         this.connections.set(app, connection);
         connection.connection.onmessage = (event) => {
