@@ -1,8 +1,8 @@
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {getTranslationProviders} from './i18n-providers';
-import {MoeCube} from './moecube.module';
+import {MyCard} from './mycard.module';
 
 getTranslationProviders().then(providers => {
     const options = {providers};
-    platformBrowserDynamic().bootstrapModule(MoeCube, options);
+    platformBrowserDynamic().bootstrapModule(MyCard, options);
 });

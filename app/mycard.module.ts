@@ -2,7 +2,7 @@ import {NgModule, NO_ERRORS_SCHEMA, LOCALE_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
-import {MoeCubeComponent} from './moecube.component';
+import {MyCardComponent} from './mycard.component';
 import {LoginComponent} from './login.component';
 import {StoreComponent} from './store.component';
 import {LobbyComponent} from './lobby.component';
@@ -19,10 +19,10 @@ import {CandyComponent} from './candy.component';
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
     declarations: [
-        MoeCubeComponent, LoginComponent, StoreComponent, LobbyComponent,
+        MyCardComponent, LoginComponent, StoreComponent, LobbyComponent,
         AppDetailComponent, RosterComponent, YGOProComponent, AboutComponent, CandyComponent
     ],
-    bootstrap: [MoeCubeComponent],
+    bootstrap: [MyCardComponent],
     providers: [
         AppsService, SettingsService, LoginService, DownloadService
         , {
@@ -33,5 +33,5 @@ import {CandyComponent} from './candy.component';
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })
-export class MoeCube {
+export class MyCard {
 }

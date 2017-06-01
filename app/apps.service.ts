@@ -80,8 +80,8 @@ export class AppsService {
     }
 
     async loadApps() {
-        let appsURL = 'https://api.moecube.com/apps.json';
-        let keysURL = 'https://api.moecube.com/keys';
+        let appsURL = 'https://api.mycard.moe/apps.json';
+        let keysURL = 'https://api.mycard.moe/keys';
         try {
             let params = new URLSearchParams();
             params.set('user_id', this.loginService.user.email);
@@ -116,7 +116,7 @@ export class AppsService {
 
     async bundle() {
         try {
-            // const bundle = require(path.join(remote.app.getPath('appData'), 'moecube', 'bundle.json'));
+            // const bundle = require(path.join(remote.app.getPath('appData'), 'mycard', 'bundle.json'));
             // 示例：
             // [
             //     {
@@ -124,48 +124,48 @@ export class AppsService {
             //         "createShortcut": false,
             //         "createDesktopShortcut": false,
             //         "install": true,
-            //         "installDir": "D:\\MoeCubeLibrary\\apps\\th105",
-            //         "installLibrary": "D:\\MoeCubeLibrary"
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th105",
+            //         "installLibrary": "D:\\MyCardLibrary"
             //     },
             //     {
             //         "app": "th105-lang-zh-CN",
             //         "createShortcut": false,
             //         "createDesktopShortcut": false,
             //         "install": true,
-            //         "installDir": "D:\\MoeCubeLibrary\\apps\\th105",
-            //         "installLibrary": "D:\\MoeCubeLibrary"
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th105",
+            //         "installLibrary": "D:\\MyCardLibrary"
             //     },
             //     {
             //         "app": "th123",
             //         "createShortcut": false,
             //         "createDesktopShortcut": true,
             //         "install": true,
-            //         "installDir": "D:\\MoeCubeLibrary\\apps\\th123",
-            //         "installLibrary": "D:\\MoeCubeLibrary"
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th123",
+            //         "installLibrary": "D:\\MyCardLibrary"
             //     },
             //     {
             //         "app": "th123-lang-zh-CN",
             //         "createShortcut": false,
             //         "createDesktopShortcut": false,
             //         "install": true,
-            //         "installDir": "D:\\MoeCubeLibrary\\apps\\th123",
-            //         "installLibrary": "D:\\MoeCubeLibrary"
+            //         "installDir": "D:\\MyCardLibrary\\apps\\th123",
+            //         "installLibrary": "D:\\MyCardLibrary"
             //     },
             //     {
             //         "app": "directx",
             //         "createShortcut": false,
             //         "createDesktopShortcut": false,
             //         "install": true,
-            //         "installDir": "D:\\MoeCubeLibrary\\apps\\directx",
-            //         "installLibrary": "D:\\MoeCubeLibrary"
+            //         "installDir": "D:\\MyCardLibrary\\apps\\directx",
+            //         "installLibrary": "D:\\MyCardLibrary"
             //     },
             // ]
 
             // {
-            //     library: "D:\\MoeCubeLibrary",
+            //     library: "D:\\MyCardLibrary",
             //     apps: ["th105", "th105-lang-zh-CN", "th123", "th123-lang-zh-CN", "directx"]
             // }
-            // 文件在 D:\MoeCubeLibrary\cache\th105.tar.xz, D:\MoeCubeLibrary\cache\th105-lang-zh-CN.tar.xz ...
+            // 文件在 D:\MyCardLibrary\cache\th105.tar.xz, D:\MyCardLibrary\cache\th105-lang-zh-CN.tar.xz ...
             // TODO: 安装那些app，不需要下载。安装成功后删除 bundle.json
         } catch (error) {
 
@@ -195,7 +195,7 @@ export class AppsService {
                     }
                     if (!library) {
                         try {
-                            let _library = path.join(volume + ':', 'MoeCubeLibrary');
+                            let _library = path.join(volume + ':', 'MyCardLibrary');
                             await this.createDirectory(_library);
                             this.settingsService.addLibrary(_library, true);
                             library = _library;
@@ -219,7 +219,7 @@ export class AppsService {
         let libraries = this.settingsService.getLibraries();
         for (let library of libraries) {
             if (library.path === path.join(remote.app.getPath('appData'), 'library')) {
-                library.path = path.join(remote.app.getPath('appData'), 'MoeCubeLibrary');
+                library.path = path.join(remote.app.getPath('appData'), 'MyCardLibrary');
             }
         }
         localStorage.setItem(SettingsService.SETTING_LIBRARY, JSON.stringify(libraries));

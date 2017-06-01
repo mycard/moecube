@@ -17,7 +17,7 @@
     "skipLibCheck": true
   },
   "files": [
-    "app/moecube.module.ts",
+    "app/mycard.module.ts",
     "app/main.ts"
   ],
   "angularCompilerOptions": {

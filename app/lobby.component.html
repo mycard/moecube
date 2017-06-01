@@ -9,7 +9,7 @@
         <span i18n *ngIf="grouped_apps.installed">已安装</span>
         <ul *ngIf="grouped_apps.installed" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.installed" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" class="nav-link" [class.active]="app===currentApp" [href]="'https://moecube.com/' + app.id">
+                <a (click)="$event.preventDefault(); chooseApp(app)" class="nav-link" [class.active]="app===currentApp" [href]="'https://mycard.moe/' + app.id">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}<i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
                     <div *ngIf="!app.isReady() && app.status.total" class="progress">
@@ -26,7 +26,7 @@
         <span *ngIf="grouped_apps.test">测试</span>
         <ul *ngIf="grouped_apps.test" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.test" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>
@@ -36,7 +36,7 @@
         <span i18n *ngIf="grouped_apps.recommend">推荐</span>
         <ul *ngIf="grouped_apps.recommend" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.recommend" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>
@@ -45,7 +45,7 @@
         <span i18n *ngIf="grouped_apps.mysterious">迷之物体</span>
         <ul *ngIf="grouped_apps.mysterious" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.mysterious" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>
@@ -54,7 +54,7 @@
         <span i18n *ngIf="grouped_apps.touhou">东方 Project</span>
         <ul *ngIf="grouped_apps.touhou" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.touhou" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>
@@ -63,7 +63,7 @@
         <span i18n *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
         <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.touhou_pc98" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>
@@ -72,7 +72,7 @@
         <span i18n *ngIf="grouped_apps.runtime_installed">已安装的运行库</span>
         <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-pills flex-column">
             <li *ngFor="let app of grouped_apps.runtime_installed" class="nav-item">
-                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://moecube.com/' + app.id" class="nav-link" [class.active]="app===currentApp">
+                <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
                     <img *ngIf="app.icon" class="icon" [src]="app.icon">
                     {{app.name}}
                 </a>

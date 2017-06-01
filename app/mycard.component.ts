@@ -9,12 +9,12 @@ const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
 
 @Component({
     moduleId: module.id,
-    selector: 'moecube',
-    templateUrl: 'moecube.component.html',
-    styleUrls: ['moecube.component.css'],
+    selector: 'mycard',
+    templateUrl: 'mycard.component.html',
+    styleUrls: ['mycard.component.css'],
 
 })
-export class MoeCubeComponent implements OnInit {
+export class MyCardComponent implements OnInit {
     currentPage: string = 'lobby';
 
     update_status: string | undefined = remote.getGlobal('update_status');

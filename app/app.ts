@@ -84,30 +84,30 @@ export class App {
 
     static downloadUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
-            return `https://api.moecube.com/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`;
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
-            return `https://api.moecube.com/metalinks/${app.id}-${process.platform}/${app.version}`;
+            return `https://thief.mycard.moe/metalinks/${app.id}-${process.platform}/${app.version}`;
         }
-        return `https://api.moecube.com/metalinks/${app.id}/${app.version}`;
+        return `https://thief.mycard.moe/metalinks/${app.id}/${app.version}`;
     }
 
 
     static checksumUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
-            return `https://api.moecube.com/checksums/${app.id}-${platform}-${locale}/${app.version}`;
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
-            return `https://api.moecube.com/checksums/${app.id}-${platform}/${app.version}`;
+            return `https://thief.mycard.moe/checksums/${app.id}-${platform}/${app.version}`;
         }
-        return `https://api.moecube.com/checksums/${app.id}/${app.version}`;
+        return `https://thief.mycard.moe/checksums/${app.id}/${app.version}`;
     }
 
     static updateUrl(app: App, platform: string, locale: string): string {
         if (app.id === 'ygopro') {
-            return `https://api.moecube.com/update/${app.id}-${platform}-${locale}/${app.version}`;
+            return `https://thief.mycard.moe/update/${app.id}-${platform}-${locale}/${app.version}`;
         } else if (app.id === 'desmume') {
-            return `https://api.moecube.com/update/${app.id}-${platform}/${app.version}`;
+            return `https://thief.mycard.moe/update/${app.id}-${platform}/${app.version}`;
         }
-        return `https://api.moecube.com/update/${app.id}/${app.version}`;
+        return `https://thief.mycard.moe/update/${app.id}/${app.version}`;
     }
 
     isBought(): Boolean {
