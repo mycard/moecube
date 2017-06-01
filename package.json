@@ -34,7 +34,7 @@
     "candy": "https://github.com/moecube/candy/releases/download/v2.2.0/candy.tar.gz",
     "candy-shop": "candy-chat/candy-plugins",
     "core-js": "latest",
-    "electron-auto-updater": "latest",
+    "electron-updater": "latest",
     "electron-is-dev": "latest",
     "electron-sudo": "moecube/electron-sudo#moecube",
     "font-awesome": "latest",

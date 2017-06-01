@@ -58,7 +58,7 @@ export class AppsService {
     maotama: Promise<ChildProcess>;
 
     readonly tarPath = process.platform === 'win32' ?
-        path.join(process.env['NODE_ENV'] === 'production' ? process.resourcesPath : '', 'bin', 'bsdtar.exe')
+        path.join(process.env['NODE_ENV'] === 'production' ? process.resourcesPath! : '', 'bin', 'bsdtar.exe')
         : 'bsdtar';
 
     constructor(private http: Http, private settingsService: SettingsService, private ref: ApplicationRef,

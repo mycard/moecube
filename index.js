@@ -3,13 +3,13 @@
 // 处理提权
 function handleElevate() {
     // for debug
-    if (process.argv[1] == '.') {
+    if (process.argv[1] === '.') {
         process.argv[1] = process.argv[2];
         process.argv[2] = process.argv[3];
     }
 
-    if (process.argv[1] == '-e') {
-        if (process.platform == 'darwin') {
+    if (process.argv[1] === '-e') {
+        if (process.platform === 'darwin') {
             require('electron').app.dock.hide();
         }
         let elevate = JSON.parse(new Buffer(process.argv[2], 'base64').toString());
@@ -28,7 +28,7 @@ if (handleElevate()) {
 }
 
 const {ipcMain, app, shell, BrowserWindow, Menu, Tray} = require('electron');
-const {autoUpdater} = require("electron-auto-updater");
+const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const child_process = require('child_process');
 const path = require('path');
@@ -114,14 +114,14 @@ function createAria2c() {
     let aria2c_path;
     switch (process.platform) {
         case 'win32':
-            if (process.env['NODE_ENV'] == 'production') {
+            if (process.env['NODE_ENV'] === 'production') {
                 aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c.exe');
             } else {
                 aria2c_path = path.join('bin', 'aria2c.exe');
             }
             break;
         case 'darwin':
-            if (process.env['NODE_ENV'] == 'production') {
+            if (process.env['NODE_ENV'] === 'production') {
                 aria2c_path = path.join(process.resourcesPath, 'bin', 'aria2c');
             } else {
                 aria2c_path = path.join('bin', 'aria2c');
@@ -142,9 +142,9 @@ function createWindow() {
         height: 640,
         minWidth: 1024,
         minHeight: 640,
-        frame: process.platform == 'darwin',
+        frame: process.platform === 'darwin',
         // transparent: process.platform != 'darwin',
-        titleBarStyle: process.platform == 'darwin' ? 'hidden' : null
+        titleBarStyle: process.platform === 'darwin' ? 'hidden' : null
     });
 
     // and load the index.html of the app.
@@ -156,7 +156,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    if (process.env['NODE_ENV'] == 'development') {
+    if (process.env['NODE_ENV'] === 'development') {
         mainWindow.webContents.openDevTools();
     }
 
@@ -171,7 +171,7 @@ function createWindow() {
 
 let tray;
 function createTray() {
-    tray = new Tray(path.join(process.env['NODE_ENV'] == 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
+    tray = new Tray(path.join(process.env['NODE_ENV'] === 'production' ? process.resourcesPath : app.getAppPath(), 'images', 'icon.ico'));
     tray.on('click', (event) => {
         console.log(event);
         if (event.metaKey) {
@@ -202,10 +202,10 @@ function createTray() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
     createWindow();
-    if (process.platform == 'win32') {
+    if (process.platform === 'win32') {
         createTray()
     }
-    if (process.env['NODE_ENV'] == 'production') {
+    if (process.env['NODE_ENV'] === 'production') {
         autoUpdater.checkForUpdates()
     }
 });
@@ -232,7 +232,7 @@ app.on('activate', function () {
 
 app.on('quit', () => {
     // windows 在非 detach 模式下会自动退出子进程
-    if (process.platform != 'win32') {
+    if (process.platform !== 'win32') {
         aria2c.kill()
     }
 });
