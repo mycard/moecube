@@ -228,7 +228,7 @@ export class CandyComponent implements OnInit, OnChanges {
 
     ngOnInit() {
 
-        this.jid = this.loginService.user.username + '@mycard.moe';
+        this.jid = this.loginService.user.username + '@moecube.com';
         this.password = this.loginService.user.external_id.toString();
         this.nickname = this.loginService.user.username;
 
@@ -265,7 +265,7 @@ export class CandyComponent implements OnInit, OnChanges {
         Candy.init('wss://chat.moecube.com:5280/websocket', {
             core: {
                 debug: false,
-                autojoin: this.currentApp.conference && [this.currentApp.conference + '@conference.mycard.moe'],
+                autojoin: this.currentApp.conference && [this.currentApp.conference + '@conference.moecube.com'],
                 resource: 'moecube-' + Math.random().toString().split('.')[1]
             },
             view: {
@@ -309,7 +309,7 @@ export class CandyComponent implements OnInit, OnChanges {
         if (!conference) {
             return;
         }
-        conference += '@conference.mycard.moe';
+        conference += '@conference.moecube.com';
 
         try {
             if (Candy.View.Pane.Chat.rooms[conference]) {
