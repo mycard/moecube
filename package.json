@@ -21,7 +21,7 @@
     "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
   },
   "dependencies": {
-    "@angular/animations": "^4.1.3",
+    "@angular/animations": "latest",
     "@angular/common": "latest",
     "@angular/compiler": "latest",
     "@angular/core": "latest",
