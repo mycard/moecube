@@ -1,4 +1,4 @@
-# MoeCube [![Build Status](https://travis-ci.org/moecube/moecube.svg?branch=v3)](https://travis-ci.org/moecube/moecube) [![Build status](https://ci.appveyor.com/api/projects/status/ho6jfrowg37wj1lx?svg=true)](https://ci.appveyor.com/project/zh99998/moecube)
+# MyCard [![Build Status](https://travis-ci.org/moecube/moecube.svg?branch=v3)](https://travis-ci.org/moecube/moecube) [![Build status](https://ci.appveyor.com/api/projects/status/ho6jfrowg37wj1lx?svg=true)](https://ci.appveyor.com/project/zh99998/moecube)
 
 ## Install Dependencies
 ```bash

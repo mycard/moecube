@@ -384,11 +384,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
         this.replays = await this.get_replays();
 
-        // https://moecube.com/ygopro/api/user?username=ozxdno
+        // https://mycard.moe/ygopro/api/user?username=ozxdno
         let params = new URLSearchParams();
         params.set('username', this.loginService.user.username);
         try {
-            let points = await this.http.get('https://moecube.com/ygopro/api/user', {search: params})
+            let points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params})
                 .map((response) => response.json())
                 .toPromise();
             this.points.emit(points);

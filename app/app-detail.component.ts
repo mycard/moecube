@@ -278,7 +278,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
         data.set('currency', 'cny');
         data.set('payment', this.payment);
         try {
-            let {url} = await this.http.post('https://api.moecube.com/orders', data).map(response => response.json()).toPromise();
+            let {url} = await this.http.post('https://api.mycard.moe/orders', data).map(response => response.json()).toPromise();
             open(url);
             $('#purchase-modal').modal('hide');
             $('#purchase-modal-alipay').modal('show');
