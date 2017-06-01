@@ -91,13 +91,7 @@
       "bin",
       "images"
     ],
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
     "dmg": {
-      "format": "ULFO",
       "contents": [
         {
           "x": 448,
