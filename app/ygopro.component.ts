@@ -27,7 +27,7 @@ import { AppsService } from './apps.service';
 import { SettingsService } from './settings.sevices';
 import * as $ from 'jquery';
 import Timer = NodeJS.Timer;
-import WillNavigateEvent = Electron.WebViewElement.WillNavigateEvent;
+import WillNavigateEvent = Electron.WillNavigateEvent;
 
 interface SystemConf {
     use_d3d: string;
@@ -72,7 +72,7 @@ interface Room {
     'private'?: boolean;
     options: Options;
     arena?: string;
-    users?: {username: string, position: number}[];
+    users?: { username: string, position: number }[];
 }
 
 interface Options {
@@ -100,7 +100,7 @@ export interface Points {
 }
 
 interface YGOProData {
-    windbot: {[locale: string]: string[]};
+    windbot: { [locale: string]: string[] };
 }
 
 
@@ -155,7 +155,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         time_limit: 180
     };
 
-    room: Room = {title: this.loginService.user.username + '的房间', options: Object.assign({}, this.default_options)};
+    room: Room = { title: this.loginService.user.username + '的房间', options: Object.assign({}, this.default_options) };
 
     rooms: Room[] = [];
 
@@ -302,11 +302,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
                         case 'init':
                             this.rooms_loading = false;
                             this.rooms = this.rooms.filter(room => room.server !== server).concat(
-                                message.data.map((room: Room) => Object.assign({server: server}, room))
+                                message.data.map((room: Room) => Object.assign({ server: server }, room))
                             );
                             break;
                         case 'create':
-                            this.rooms.push(Object.assign({server: server}, message.data));
+                            this.rooms.push(Object.assign({ server: server }, message.data));
                             break;
                         case 'update':
                             Object.assign(this.rooms.find(room => room.server === server && room.id === message.data.id), message.data);
@@ -344,11 +344,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
                     switch (message.event) {
                         case 'init':
                             this.replay_rooms = this.replay_rooms.filter(room => room.server !== server).concat(
-                                message.data.map((room: Room) => Object.assign({server: server}, room))
+                                message.data.map((room: Room) => Object.assign({ server: server }, room))
                             );
                             break;
                         case 'create':
-                            this.replay_rooms.push(Object.assign({server: server}, message.data));
+                            this.replay_rooms.push(Object.assign({ server: server }, message.data));
                             break;
                         case 'delete':
                             this.replay_rooms.splice(
@@ -388,7 +388,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         let params = new URLSearchParams();
         params.set('username', this.loginService.user.username);
         try {
-            let points = await this.http.get('https://mycard.moe/ygopro/api/user', {search: params})
+            let points = await this.http.get('https://mycard.moe/ygopro/api/user', { search: params })
                 .map((response) => response.json())
                 .toPromise();
             this.points.emit(points);
@@ -455,7 +455,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     load_system_conf(): Promise<SystemConf> {
         return new Promise((resolve, reject) => {
-            fs.readFile(this.system_conf, {encoding: 'utf-8'}, (error, data) => {
+            fs.readFile(this.system_conf, { encoding: 'utf-8' }, (error, data) => {
                 if (error) {
                     return reject(error);
                 }
@@ -466,7 +466,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     save_system_conf(data: SystemConf) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{whitespace: true})), (error) => {
+            fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{ whitespace: true })), (error) => {
                 if (error) {
                     return reject(error);
                 }
@@ -522,7 +522,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 reject(error);
                 win.restore();
             });
-            child.on('exit', async(code, signal) => {
+            child.on('exit', async (code, signal) => {
                 // error 触发之后还可能会触发exit，但是Promise只承认首次状态转移，因此这里无需重复判断是否已经error过。
                 await this.refresh();
                 resolve();
@@ -596,7 +596,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
             search: search
         }).map(response => response.json())
             .subscribe((data) => {
-                this.join(data['password'], {address: data['address'], port: data['port']});
+                this.join(data['password'], { address: data['address'], port: data['port'] });
             }, (error) => {
                 alert(`匹配失败`);
                 this.matching = matching = undefined;
