@@ -16,9 +16,9 @@ function handleElevate() {
         require('net').connect(elevate['ipc'], function () {
             process.send = (message, sendHandle, options, callback) => this.write(JSON.stringify(message) + require('os').EOL, callback);
             this.on('end', () => process.emit('disconnect'));
-            require('readline').createInterface({input: this}).on('line', (line) => process.emit('message', JSON.parse(line)));
+            require('readline').createInterface({ input: this }).on('line', (line) => process.emit('message', JSON.parse(line)));
             process.argv = elevate['arguments'][1];
-            require("./" + elevate['arguments'][0]);
+            require('./' + elevate['arguments'][0]);
         });
         return true;
     }
@@ -27,7 +27,7 @@ if (handleElevate()) {
     return;
 }
 
-const {ipcMain, app, shell, BrowserWindow, Menu, Tray} = require('electron');
+const { ipcMain, app, shell, BrowserWindow, Menu, Tray } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const isDev = require('electron-is-dev');
 const child_process = require('child_process');
@@ -42,21 +42,21 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
         if (mainWindow.isMinimized()) {
-            mainWindow.restore()
+            mainWindow.restore();
         }
         if (!mainWindow.isVisible()) {
             mainWindow.show();
         }
-        mainWindow.focus()
+        mainWindow.focus();
     }
 });
 if (shouldQuit) {
-    app.quit()
+    app.quit();
 }
 
 // 调试模式
 if (!process.env['NODE_ENV']) {
-    process.env['NODE_ENV'] = isDev ? 'development' : 'production'
+    process.env['NODE_ENV'] = isDev ? 'development' : 'production';
 }
 
 // 自动更新
@@ -102,11 +102,11 @@ autoUpdater.on('update-downloaded', (event) => {
         shell.openExternal(url);
     });
     updateWindow.on('closed', function () {
-        updateWindow = null
+        updateWindow = null;
     });
     ipcMain.on('update', (event, arg) => {
-        autoUpdater.quitAndInstall()
-    })
+        autoUpdater.quitAndInstall();
+    });
 });
 
 // Aria2c
@@ -130,7 +130,7 @@ function createAria2c() {
         default:
             throw 'unsupported platform';
     }
-    return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', '--continue', '--split=10', '--min-split-size=1M', '--max-connection-per-server=10', '--remove-control-file', '--allow-overwrite'], {stdio: 'ignore'});
+    return child_process.spawn(aria2c_path, ['--enable-rpc', '--rpc-allow-origin-all', '--continue', '--split=10', '--min-split-size=1M', '--max-connection-per-server=10', '--remove-control-file', '--allow-overwrite'], { stdio: 'ignore' });
 }
 const aria2c = createAria2c();
 
@@ -165,13 +165,13 @@ function createWindow() {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        mainWindow = null
-    })
+        mainWindow = null;
+    });
 }
 
 let tray;
 function createTray() {
-    tray = new Tray(path.join('images', 'icon.ico'));
+    tray = new Tray(path.join(__dirname, 'images', 'icon.ico'));
     tray.on('click', (event) => {
         console.log(event);
         if (event.metaKey) {
@@ -203,10 +203,10 @@ function createTray() {
 app.on('ready', () => {
     createWindow();
     if (process.platform === 'win32') {
-        createTray()
+        createTray();
     }
     if (process.env['NODE_ENV'] === 'production') {
-        autoUpdater.checkForUpdates()
+        autoUpdater.checkForUpdates();
     }
 });
 
@@ -215,7 +215,7 @@ app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 });
 
@@ -223,7 +223,7 @@ app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
-        createWindow()
+        createWindow();
     }
 });
 
@@ -233,6 +233,6 @@ app.on('activate', function () {
 app.on('quit', () => {
     // windows 在非 detach 模式下会自动退出子进程
     if (process.platform !== 'win32') {
-        aria2c.kill()
+        aria2c.kill();
     }
 });
