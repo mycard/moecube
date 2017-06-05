@@ -37,4 +37,4 @@ install:
 - npm install
 - npm prune
 script:
-- npm run release
+- npm run dist
