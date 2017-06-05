@@ -385,10 +385,12 @@ export class YGOProComponent implements OnInit, OnDestroy {
         this.replays = await this.get_replays();
 
         // https://mycard.moe/ygopro/api/user?username=ozxdno
-        let params = new URLSearchParams();
-        params.set('username', this.loginService.user.username);
         try {
-            let points = await this.http.get('https://mycard.moe/ygopro/api/user', { search: params })
+            let points = await this.http.get('https://mycard.moe/ygopro/api/user', {
+                search: {
+                    username: this.loginService.user.username
+                }
+            })
                 .map((response) => response.json())
                 .toPromise();
             this.points.emit(points);
@@ -586,14 +588,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
         let headers = new Headers();
         headers.append('Authorization',
             'Basic ' + Buffer.from(this.loginService.user.username + ':' + this.loginService.user.external_id).toString('base64'));
-        let search = new URLSearchParams();
-        search.set('arena', arena);
-        search.set('locale', this.settingsService.getLocale());
         match_started_at = new Date();
         this.matching_arena = matching_arena = arena;
         this.matching = matching = this.http.post('https://api.mycard.moe/ygopro/match', null, {
             headers: headers,
-            search: search
+            search: {
+                arena,
+                locale: this.settingsService.getLocale()
+            }
         }).map(response => response.json())
             .subscribe((data) => {
                 this.join(data['password'], { address: data['address'], port: data['port'] });

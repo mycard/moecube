@@ -83,10 +83,12 @@ export class AppsService {
         let appsURL = 'https://api.mycard.moe/apps.json';
         let keysURL = 'https://api.mycard.moe/keys';
         try {
-            let params = new URLSearchParams();
-            params.set('user_id', this.loginService.user.email);
             let data = await this.http.get(appsURL).map((response) => response.json()).toPromise();
-            let keys_data = await this.http.get(keysURL, { search: params }).map((response) => response.json()).toPromise();
+            let keys_data = await this.http.get(keysURL, {
+                search: {
+                    user_id: this.loginService.user.email
+                }
+            }).map((response) => response.json()).toPromise();
             for (let item of keys_data) {
                 let app = data.find((app: any) => app.id === item.app_id);
                 if (app) {
