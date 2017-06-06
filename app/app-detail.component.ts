@@ -195,8 +195,8 @@ export class AppDetailComponent implements OnInit, OnChanges {
         return dir[0];
     }
 
-    runApp(app: App) {
-        this.appsService.runApp(app);
+    runApp(app: App, action_name: string) {
+        this.appsService.runApp(app, action_name);
     }
 
     custom(app: App) {

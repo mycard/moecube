@@ -38,6 +38,7 @@
         <div *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
             <button *ngIf="currentApp.runnable()" (click)="runApp(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-primary btn-sm">
                 <i class="fa fa-play" aria-hidden="true"></i> <span i18n>运行</span></button>
+            <button i18n *ngIf="currentApp.actions.get('network')" [disabled]="!appsService.allReady(currentApp)" (click)="runApp(currentApp,'network')" type="button" class="btn btn-primary btn-sm"><i class="fa fa-play" aria-hidden="true"></i> <span i18n>运行 (联机版)</span></button>
             <button i18n *ngIf="currentApp.runnable() && currentApp.actions.get('custom')" [disabled]="!appsService.allReady(currentApp)" (click)="custom(currentApp)" type="button" class="btn btn-secondary btn-sm">设置</button>
             <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
                 <div class="input-group input-group-sm">
