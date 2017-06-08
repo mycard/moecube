@@ -59,12 +59,12 @@
   "devDependencies": {
     "@angular/compiler-cli": "latest",
     "@angular/platform-server": "latest",
+    "@types/bootstrap": "latest",
     "@types/glob": "latest",
     "@types/ini": "latest",
-    "@types/node": "latest",
-    "@types/bootstrap": "latest",
     "@types/jquery": "latest",
     "@types/marked": "latest",
+    "@types/node": "latest",
     "@types/raven-js": "latest",
     "@types/tether": "latest",
     "@types/typeahead": "latest",
@@ -75,8 +75,8 @@
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-node-resolve": "latest",
     "rollup-plugin-uglify": "latest",
-    "typescript": "latest",
-    "tslint": "^3.15.1"
+    "tslint": "^3.15.1",
+    "typescript": "latest"
   },
   "build": {
     "productName": "MyCard",
