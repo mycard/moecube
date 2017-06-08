@@ -1,27 +1,26 @@
 import { ApplicationRef, EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
-import * as crypto from 'crypto';
-import { Action, App, AppStatus } from './app';
-import { SettingsService } from './settings.sevices';
-import * as fs from 'fs';
-import { createReadStream, createWriteStream } from 'fs';
-import * as path from 'path';
 import * as child_process from 'child_process';
 import { ChildProcess } from 'child_process';
+import * as crypto from 'crypto';
 import { remote } from 'electron';
-import 'rxjs/Rx';
-import * as readline from 'readline';
-import { AppLocal } from './app-local';
+import * as fs from 'fs';
 import * as glob from 'glob';
 import * as ini from 'ini';
+import * as path from 'path';
+import * as readline from 'readline';
+import 'rxjs/Rx';
+import { Observable, Observer } from 'rxjs/Rx';
+import { Action, App, AppStatus } from './app';
+import { AppLocal } from './app-local';
 import { DownloadService, DownloadStatus } from './download.service';
 import { InstallOption } from './install-option';
-import { ComparableSet } from './shared/ComparableSet';
-import { Observable, Observer } from 'rxjs/Rx';
 import { LoginService } from './login.service';
+import { SettingsService } from './settings.sevices';
+import { ComparableSet } from './shared/ComparableSet';
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream;
-const sudo = require('electron-sudo');
+import * as sudo from 'electron-sudo';
 const Logger = {
     info: (...message: any[]) => {
         console.log('AppService [INFO]: ', ...message);
@@ -345,9 +344,9 @@ export class AppsService {
 
     async copyFile(src: string, dst: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            let readable = createReadStream(src);
+            let readable = fs.createReadStream(src);
             readable.on('open', () => {
-                let writable = createWriteStream(dst);
+                let writable = fs.createWriteStream(dst);
                 writable.on('error', reject);
                 writable.on('close', resolve);
                 readable.pipe(writable);
