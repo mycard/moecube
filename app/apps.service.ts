@@ -1,23 +1,23 @@
-import { ApplicationRef, EventEmitter, Injectable, NgZone } from '@angular/core';
-import { Http } from '@angular/http';
+import {ApplicationRef, EventEmitter, Injectable, NgZone} from '@angular/core';
+import {Http} from '@angular/http';
 import * as child_process from 'child_process';
-import { ChildProcess } from 'child_process';
+import {ChildProcess} from 'child_process';
 import * as crypto from 'crypto';
-import { remote } from 'electron';
+import {remote} from 'electron';
 import * as fs from 'fs';
 import * as glob from 'glob';
 import * as ini from 'ini';
 import * as path from 'path';
 import * as readline from 'readline';
 import 'rxjs/Rx';
-import { Observable, Observer } from 'rxjs/Rx';
-import { Action, App, AppStatus } from './app';
-import { AppLocal } from './app-local';
-import { DownloadService, DownloadStatus } from './download.service';
-import { InstallOption } from './install-option';
-import { LoginService } from './login.service';
-import { SettingsService } from './settings.sevices';
-import { ComparableSet } from './shared/ComparableSet';
+import {Observable, Observer} from 'rxjs/Rx';
+import {Action, App, AppStatus} from './app';
+import {AppLocal} from './app-local';
+import {DownloadService, DownloadStatus} from './download.service';
+import {InstallOption} from './install-option';
+import {LoginService} from './login.service';
+import {SettingsService} from './settings.sevices';
+import {ComparableSet} from './shared/ComparableSet';
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream;
 import * as sudo from 'electron-sudo';
@@ -361,7 +361,7 @@ export class AppsService {
             let checksumFiles = await this.getChecksumFile(app);
             for (let [pattern, fileOption] of app.files) {
                 await new Promise((resolve, reject) => {
-                    new glob.Glob(pattern, { cwd: appPath }, (err, files) => {
+                    new glob.Glob(pattern, {cwd: appPath}, (err, files) => {
                         for (let file of files) {
                             // 避免被当做文件夹
                             if (fileOption.sync) {
@@ -518,7 +518,7 @@ export class AppsService {
                 let ignoreFiles: Set<string> = new Set();
                 for (let [pattern, fileOption] of app.files) {
                     await new Promise((resolve, reject) => {
-                        new glob.Glob(pattern, { cwd: app.local!.path }, (err, files) => {
+                        new glob.Glob(pattern, {cwd: app.local!.path}, (err, files) => {
                             for (let file of files) {
                                 if (fileOption.ignore) {
                                     ignoreFiles.add(file);
@@ -704,7 +704,7 @@ export class AppsService {
             }
             let files = await this.downloadService.getFiles(downloadId);
             _app.status.status = 'waiting';
-            return { app: _app, files: files };
+            return {app: _app, files: files};
         };
         if (!app.isInstalled()) {
             let apps: App[] = [];
@@ -725,7 +725,7 @@ export class AppsService {
                 for (let result of downloadResults) {
                     let o = new InstallOption(result.app, option.installLibrary);
                     o.downloadFiles = result.files;
-                    let task = tryToInstall({ app: result.app, option: o });
+                    let task = tryToInstall({app: result.app, option: o});
                     installTasks.push(task);
                 }
                 await Promise.all(installTasks);
@@ -771,14 +771,14 @@ export class AppsService {
             if (th105.isInstalled()) {
                 const config_file = path.join((<AppLocal>app.local).path, 'configex123.ini');
                 let config = await new Promise((resolve, reject) => {
-                    fs.readFile(config_file, { encoding: 'utf-8' }, (error, data) => {
+                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
                         if (error) {
                             return reject(error);
                         }
                         resolve(ini.parse(data));
                     });
                 });
-                config['th105path'] = { path: (<AppLocal>th105.local).path };
+                config['th105path'] = {path: (<AppLocal>th105.local).path};
                 await new Promise((resolve, reject) => {
                     fs.writeFile(config_file, ini.stringify(config), (error) => {
                         if (error) {
@@ -799,7 +799,7 @@ export class AppsService {
             if (action.open.id === 'np2fmgen') {
                 const config_file = path.join(action.open!.local!.path, 'np21nt.ini');
                 let config = await new Promise((resolve, reject) => {
-                    fs.readFile(config_file, { encoding: 'utf-8' }, (error, data) => {
+                    fs.readFile(config_file, {encoding: 'utf-8'}, (error, data) => {
                         if (error) {
                             return reject(error);
                         }
@@ -846,7 +846,7 @@ export class AppsService {
         args = args.concat(action.args);
         env = Object.assign(env, action.env);
         console.log(execute, args, env, cwd);
-        let handle = child_process.spawn(execute, args, { env: env, cwd: cwd });
+        let handle = child_process.spawn(execute, args, {env: env, cwd: cwd});
 
         handle.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
@@ -873,7 +873,7 @@ export class AppsService {
     async network(app: App, server: any) {
         if (!this.maotama) {
             this.maotama = new Promise((resolve, reject) => {
-                let child = sudo.fork('maotama', [], { stdio: ['inherit', 'inherit', 'inherit', 'ipc'] });
+                let child = sudo.fork('maotama', [], {stdio: ['inherit', 'inherit', 'inherit', 'ipc']});
                 child.once('message', () => resolve(child));
                 child.once('error', reject);
                 child.once('exit', reject);
@@ -891,7 +891,7 @@ export class AppsService {
         if (connection) {
             connection.connection.close();
         }
-        connection = { connection: new WebSocket(server.url), address: null };
+        connection = {connection: new WebSocket(server.url), address: null};
         let id: Timer | null;
         this.connections.set(app, connection);
         connection.connection.onmessage = (event) => {
@@ -1272,5 +1272,26 @@ export class AppsService {
         });
         clearInterval(interval);
         app.reset();
+    }
+
+    showResult(data: any) {
+        const data_str = JSON.stringify(data);
+        const BrowserWindow = require('electron').remote.BrowserWindow;
+        let y = screen.availHeight - 190;
+        let x = screen.availWidth - 330;
+        let win = new BrowserWindow({
+            width: 330,
+            height: 190,
+            x: x,
+            y: y,
+            frame: process.platform === 'darwin',
+            titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined
+        });
+        win.on('closed', function () {
+            win = null!;
+        });
+        let urlt = new URL('end.html', window.location.toString());
+        urlt.searchParams.set('data', data_str);
+        win.loadURL(urlt.toString());
     }
 }

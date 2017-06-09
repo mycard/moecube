@@ -30,6 +30,7 @@
     "@angular/platform-browser": "latest",
     "@angular/platform-browser-dynamic": "latest",
     "@angular/router": "latest",
+    "@types/uuid": "^3.0.0",
     "angular-in-memory-web-api": "latest",
     "aria2": "latest",
     "bootstrap": "next",
@@ -53,6 +54,7 @@
     "systemjs-plugin-text": "latest",
     "tether": "latest",
     "typeahead.js": "latest",
+    "uuid": "^3.0.1",
     "vue": "latest",
     "zone.js": "latest"
   },

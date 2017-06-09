@@ -144,7 +144,7 @@ function createWindow() {
         minHeight: 640,
         frame: process.platform === 'darwin',
         // transparent: process.platform != 'darwin',
-        titleBarStyle: process.platform === 'darwin' ? 'hidden' : null
+        titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined
     });
 
     // and load the index.html of the app.
