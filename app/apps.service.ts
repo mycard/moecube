@@ -1274,24 +1274,32 @@ export class AppsService {
         app.reset();
     }
 
-    showResult(data: any) {
+    showResult(url: string, data: any, width = 320, height = 180) {
         const data_str = JSON.stringify(data);
-        const BrowserWindow = require('electron').remote.BrowserWindow;
-        let y = screen.availHeight - 190;
-        let x = screen.availWidth - 330;
-        let win = new BrowserWindow({
-            width: 330,
-            height: 190,
+        const BrowserWindow = remote.BrowserWindow;
+        width += 10;
+        height += 10;
+        let y = screen.availHeight - height;
+        let x = screen.availWidth - width;
+        let littleWindow = new BrowserWindow({
+            width: width,
+            height: height,
             x: x,
             y: y,
             frame: process.platform === 'darwin',
-            titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined
+            titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,
+            parent: remote.getCurrentWindow()
         });
-        win.on('closed', function () {
-            win = null!;
+        littleWindow.on('closed', function () {
+            littleWindow = null!;
         });
-        let urlt = new URL('end.html', window.location.toString());
+        let urlt = new URL(url, window.location.toString());
         urlt.searchParams.set('data', data_str);
-        win.loadURL(urlt.toString());
+        littleWindow.loadURL(urlt.toString());
+
+        remote.ipcMain.on('massage', () => {
+            alert('from littleWindow');
+        });
+
     }
 }

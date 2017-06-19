@@ -6,7 +6,6 @@
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-create-windbot">单人模式</button>
     <button i18n [disabled]="!appsService.allReady(app)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#game-replay-modal">观战录像</button>
 </div>
-
 <!-- 匹配中 -->
 <div *ngIf="matching" id="match-time" class="input-group input-group-sm">
     <span class="input-group-addon">

@@ -6,25 +6,25 @@ import * as $ from 'jquery';
 let data_url = (new URL(document.location.toString())).searchParams;
 let data_str = data_url.get('data');
 console.log(data_str);
-//  data={
-//        'win':true,
-//        'users_info':[{
-//            'isPlay':true,
-//            'icon':'http://himg.bdimg.com/sys/portrait/item/55c177633531343132333435f20c.jpg',
-//            'name':'刘大耳',
-//            'score':'5555',
-//            'exp':'123',
-//            'gold':'321'
-//        },{
-//            'isPlay':false,
-//            'icon':'http://himg.bdimg.com/sys/portrait/item/55c177633531343132333435f20c.jpg',
-//            'name':'关绿帽',
-//            'score':'008',
-//            'exp':'789',
-//            'gold':'999'
-//        }
-//        ]
-//    }
+ // data={
+ //       'win':true,
+ //       'users_info':[{
+ //           'isPlay':true,
+ //           'icon':'http://himg.bdimg.com/sys/portrait/item/55c177633531343132333435f20c.jpg',
+ //           'name':'刘大耳',
+ //           'score':'5555',
+ //           'exp':'123',
+ //           'gold':'321'
+ //       },{
+ //           'isPlay':false,
+ //           'icon':'http://himg.bdimg.com/sys/portrait/item/55c177633531343132333435f20c.jpg',
+ //           'name':'关绿帽',
+ //           'score':'008',
+ //           'exp':'789',
+ //           'gold':'999'
+ //       }
+ //       ]
+ //   }
 let data = JSON.parse(data_str!);
 console.log(data);
 let win = data.win;

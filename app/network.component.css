@@ -1,0 +1,15 @@
+#network {
+    display: inline-block;
+    vertical-align: middle;
+    width: 230px;
+}
+
+#network .input-group-btn > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#network .input-group-btn > .dropdown-toggle {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}

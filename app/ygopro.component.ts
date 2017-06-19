@@ -513,9 +513,13 @@ export class YGOProComponent implements OnInit, OnDestroy {
     }
 
     async start_game(args: string[]) {
+        let data: any;
+        let start_time: string ;
+        let exp_rank_ex: number;
+        let arena_rank_ex: number;
         let win = remote.getCurrentWindow();
         win.minimize();
-        return new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             let child = child_process.spawn(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {
                 cwd: this.app.local!.path,
                 stdio: 'inherit'
@@ -530,7 +534,75 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 resolve();
                 win.restore();
             });
+            try {
+                this.http.get('https://mycard.moe/ygopro/api/history', {
+                    search: {
+                        page: 1,
+                        username: this.loginService.user.username,
+                        type: 0,
+                        page_num: 1
+                    }
+                })
+                    .map((response) => response.json())
+                    .toPromise()
+                    .then((d) => {
+                        start_time = d.data[0].start_time;
+                    });
+            }catch (error) {
+                console.log(error);
+            }
+            try {
+                this.http.get('https://api.mycard.moe/ygopro/arena/user', {search: {username: this.loginService.user.username } })
+                    .map((response) => response.json())
+                    .toPromise()
+                    .then((d2) => {
+                        exp_rank_ex = d2.exp_rank;
+                        arena_rank_ex = d2.arena_rank;
+                    });
+            }catch (error) {
+                console.log(error);
+            }
         });
+        try {
+            await this.http.get('https://mycard.moe/ygopro/api/history', {
+                search: {
+                    page: 1,
+                    username: this.loginService.user.username,
+                    // username: "星光pokeboy",
+                    type: 0,
+                    page_num: 1
+                }
+            })
+                .map((response) => response.json())
+                .toPromise()
+                .then((d) => {
+                    data = d.data[0];
+                    data.myname = this.loginService.user.username;
+                });
+
+            await this.http.get('https://api.mycard.moe/ygopro/arena/user', {
+                search: {
+                    username: this.loginService.user.username,
+                }
+            })
+                .map((response) => response.json())
+                .toPromise()
+                .then((data2) => {
+                    data.athletic_win = data2.athletic_win;
+                    data.athletic_lose = data2.athletic_lose;
+                    data.entertain_win = data2.entertain_win;
+                    data.entertain_lose = data2.entertain_lose;
+                    data.exp_rank = data2.exp_rank;
+                    data.arena_rank = data2.arena_rank;
+                    data.exp_rank_ex = exp_rank_ex;
+                    data.arena_rank_ex = arena_rank_ex;
+                    if (start_time !== data.start_time) {
+                        this.appsService.showResult('end_YGOPro_single.html', data, 202, 222);
+                    }
+                });
+        }catch (error) {
+            console.log(error);
+        }
     };
 
     create_room(room: Room) {

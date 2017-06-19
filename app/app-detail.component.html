@@ -15,14 +15,14 @@
 
 
         <!--应用已购买，未安装-->
-        <div *ngIf="currentApp.isBought() && !currentApp.isInstalled()">
+        <div *ngIf="currentApp.isBought() && !currentApp.isInstalled()" class="i-b">
             <button i18n (click)="updateInstallOption(currentApp)" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#install-modal">安装</button>
             <button i18n *ngIf="currentApp.runnable()" (click)="updateInstallOption(currentApp)" type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#import-modal">导入</button>
         </div>
 
         <!--应用变更中-->
-        <div *ngIf="currentApp.isInstalled() && !currentApp.isReady()">
-            <div id="status">
+        <div *ngIf="currentApp.isInstalled() && !currentApp.isReady()" class="i-b">
+            <div id="status" class="i-b">
                 <span i18n *ngIf="currentApp.isDownloading()">正在下载</span>
                 <span i18n *ngIf="currentApp.isInstalling()">正在安装...</span>
                 <span i18n *ngIf="currentApp.isUninstalling()">正在卸载...</span>
@@ -35,29 +35,35 @@
         </div>
 
         <!--应用ready-->
-        <div *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')">
+        <div *ngIf="currentApp.isReady() && (currentApp.id != 'ygopro')" class="i-b">
             <button *ngIf="currentApp.runnable()" (click)="runApp(currentApp)" [disabled]="!appsService.allReady(currentApp)" type="button" class="btn btn-primary btn-sm">
                 <i class="fa fa-play" aria-hidden="true"></i> <span i18n>运行</span></button>
             <button *ngIf="currentApp.actions.get('network')" [disabled]="!appsService.allReady(currentApp)" (click)="runApp(currentApp,'network')" type="button" class="btn btn-primary btn-sm">
                 <i class="fa fa-play" aria-hidden="true"></i> <span>运行 (联机版)</span></button>
             <button i18n *ngIf="currentApp.runnable() && currentApp.actions.get('custom')" [disabled]="!appsService.allReady(currentApp)" (click)="custom(currentApp)" type="button" class="btn btn-secondary btn-sm">设置</button>
-            <div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">
-                <div class="input-group input-group-sm">
-                    <input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">
-                    <div class="input-group-btn" style="flex-direction: row">
-                        <button i18n *ngIf="!appsService.connections.get(currentApp)" [disabled]="!appsService.allReady(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary btn-sm">联机</button>
-                        <button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary btn-sm">复制</button>
-                        <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>
-                        <div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">
-                            <h6 i18n class="dropdown-header">选择服务器</h6>
-                            <a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>
-                            <div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>
-                            <a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
+
+            <!--<div id="network" *ngIf="currentApp.network && currentApp.network.protocol == 'maotama'">-->
+                <!--<div class="input-group input-group-sm">-->
+                    <!--<input *ngIf="appsService.connections.get(currentApp)" [value]="appsService.connections.get(currentApp).address || 'Loading...'" readonly type="text" class="form-control" title="address">-->
+                    <!--<div class="input-group-btn" style="flex-direction: row">-->
+                        <!--<button i18n *ngIf="!appsService.connections.get(currentApp)" [disabled]="!appsService.allReady(currentApp)" (click)="appsService.network(currentApp, currentApp.network.servers[0])" type="button" class="btn btn-secondary btn-sm">联机</button>-->
+                        <!--<button i18n *ngIf="appsService.connections.get(currentApp)" (click)="copy(appsService.connections.get(currentApp).address)" [disabled]="!appsService.connections.get(currentApp).address" type="button" class="btn btn-secondary btn-sm">复制</button>-->
+                        <!--<button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"></button>-->
+                        <!--<div class="dropdown-menu" [class.dropdown-menu-right]="appsService.connections.get(currentApp)">-->
+                            <!--<h6 i18n class="dropdown-header">选择服务器</h6>-->
+                            <!--<a *ngFor="let server of currentApp.network.servers" (click)="appsService.network(currentApp, server)" class="dropdown-item" href="#">{{server.id}}</a>-->
+                            <!--<div *ngIf="appsService.connections.get(currentApp)" class="dropdown-divider"></div>-->
+                            <!--<a i18n *ngIf="appsService.connections.get(currentApp)" (click)="appsService.connections.get(currentApp).connection.close()" class="dropdown-item" href="#">取消</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
         </div>
+        <!--<button (click)="log(appsService)">test</button>-->
+        <network *ngIf="(currentApp.id != 'ygopro') && currentApp && currentApp.network && currentApp.network.protocol == 'maotama'" [currentApp]="currentApp"></network>
         <ygopro *ngIf="currentApp.isReady() && (currentApp.id == 'ygopro')" [app]="currentApp" [currentApp]="currentApp" (points)="onPoints($event)"></ygopro>
     </div>
 

@@ -16,13 +16,14 @@ import { DownloadService } from './download.service';
 import { AboutComponent } from './about.component';
 import { CandyComponent } from './candy.component';
 import { RavenErrorHandler } from './error-handler';
+import { NetworkComponent } from './network.component';
 
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule],
     declarations: [
         MyCardComponent, LoginComponent, StoreComponent, LobbyComponent,
-        AppDetailComponent, RosterComponent, YGOProComponent, AboutComponent, CandyComponent
+        AppDetailComponent, RosterComponent, YGOProComponent, AboutComponent, CandyComponent, NetworkComponent
     ],
     bootstrap: [MyCardComponent],
     providers: [
@@ -31,10 +32,10 @@ import { RavenErrorHandler } from './error-handler';
             provide: LOCALE_ID,
             deps: [SettingsService],
             useFactory: (settingsService: SettingsService) => settingsService.getLocale()
-        },
-        {
-            provide: ErrorHandler, useClass: RavenErrorHandler
         }
+        // , {
+        //     provide: ErrorHandler, useClass: RavenErrorHandler
+        // }
     ],
     schemas: [NO_ERRORS_SCHEMA]
 })

@@ -47,6 +47,10 @@ progress {
     border-top-left-radius: 0;
 }
 
+.i-b{
+    display: inline-block;
+}
+
 .custom-file {
     width: 100%;
 }

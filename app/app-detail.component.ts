@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AppsService } from './apps.service';
-import { InstallOption } from './install-option';
-import { SettingsService } from './settings.sevices';
-import { App } from './app';
-import { DownloadService } from './download.service';
-import { clipboard, remote } from 'electron';
+import {ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AppsService} from './apps.service';
+import {InstallOption} from './install-option';
+import {SettingsService} from './settings.sevices';
+import {App} from './app';
+import {DownloadService} from './download.service';
+import {clipboard, remote} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as $ from 'jquery';
-import { Points } from './ygopro.component';
-import { Http } from '@angular/http';
-import { LoginService } from './login.service';
+import {Points} from './ygopro.component';
+import {Http} from '@angular/http';
+import {LoginService} from './login.service';
 
 declare const Notification: any;
 
@@ -34,7 +34,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
     installOption: InstallOption;
     availableLibraries: string[] = [];
     references: App[];
-    referencesInstall: {[id: string]: boolean};
+    referencesInstall: { [id: string]: boolean };
 
     import_path: string;
     background: string;
@@ -51,18 +51,18 @@ export class AppDetailComponent implements OnInit, OnChanges {
                 private http: Http, private loginService: LoginService) {
 
         this.tags = this.settingsService.getLocale().startsWith('zh') ? {
-                'recommend': '推荐',
-                'mysterious': '迷之物体',
-                'touhou': '东方 Project',
-                'touhou_pc98': '东方旧作',
-                'language': '语言包'
-            } : {
-                'recommend': 'Recommended',
-                'mysterious': 'Something',
-                'touhou': 'Touhou Project',
-                'touhou_pc98': 'Touhou old series',
-                'language': 'Language Pack'
-            };
+            'recommend': '推荐',
+            'mysterious': '迷之物体',
+            'touhou': '东方 Project',
+            'touhou_pc98': '东方旧作',
+            'language': '语言包'
+        } : {
+            'recommend': 'Recommended',
+            'mysterious': 'Something',
+            'touhou': 'Touhou Project',
+            'touhou_pc98': 'Touhou old series',
+            'language': 'Language Pack'
+        };
     }
 
     async ngOnChanges(changes: SimpleChanges) {
@@ -147,7 +147,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
         }
     }
 
-    async install(targetApp: App, options: InstallOption, referencesInstall: {[id: string]: boolean}) {
+    async install(targetApp: App, options: InstallOption, referencesInstall: { [id: string]: boolean }) {
         $('#install-modal').modal('hide');
 
         try {
@@ -203,7 +203,7 @@ export class AppDetailComponent implements OnInit, OnChanges {
         this.appsService.runApp(app, 'custom');
     }
 
-    async importGame(targetApp: App, option: InstallOption, referencesInstall: {[id: string]: boolean}) {
+    async importGame(targetApp: App, option: InstallOption, referencesInstall: { [id: string]: boolean }) {
         $('#import-modal').modal('hide');
         let dir = path.dirname(this.import_path);
         // TODO: 执行依赖和references安装
