@@ -2,7 +2,7 @@ import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} f
 import {remote, shell} from 'electron';
 import {LoginService} from './login.service';
 import {SettingsService} from './settings.sevices';
-import * as $ from 'jquery';
+import $ = require('jquery');
 import 'bootstrap';
 
 const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');

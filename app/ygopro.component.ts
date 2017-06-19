@@ -237,6 +237,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 replay: true
             });
         }
+
     }
 
     refresh_replay_rooms() {
@@ -368,6 +369,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 connection.close();
             }
             this.replay_connections = [];
+        });
+
+        remote.ipcMain.on('YGOPro', (e:  any , type: string) => {
+            console.log('rrrrr')
+            this.request_match(type);
         });
     }
 
@@ -518,6 +524,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         let exp_rank_ex: number;
         let arena_rank_ex: number;
         let win = remote.getCurrentWindow();
+
         win.minimize();
         await new Promise((resolve, reject) => {
             let child = child_process.spawn(path.join(this.app.local!.path, this.app.actions.get('main')!.execute), args, {
@@ -709,6 +716,8 @@ export class YGOProComponent implements OnInit, OnDestroy {
             clearInterval(this.match_interval);
             this.match_interval = undefined;
         }
+
+        remote.ipcMain.removeAllListeners('YGOPro');
     }
 
     refresh_match() {

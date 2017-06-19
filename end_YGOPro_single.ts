@@ -5,8 +5,6 @@ import * as $ from 'jquery';
 
 let data_url = (new URL(document.location.toString())).searchParams;
 let data_str = data_url.get('data');
-console.log(data_str);
-
 // {
 //     "usernamea": "Joe1991",
 //     "usernameb": "zh99998",
@@ -137,6 +135,8 @@ $('#rewards').append(tr_rewards);
 function again() {
     let {ipcRenderer} = require('electron');
     ipcRenderer.send('YGOPro', data.type);
+    window.opener=null;
+    window.close();
 }
 let t = setTimeout(function () {
     window.opener = null;
