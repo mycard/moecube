@@ -71,7 +71,7 @@
     "@types/tether": "latest",
     "@types/typeahead": "latest",
     "electron": "latest",
-    "electron-builder": "18.7.0",
+    "electron-builder": "latest",
     "electron-rebuild": "latest",
     "rollup": "latest",
     "rollup-plugin-commonjs": "latest",
