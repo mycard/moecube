@@ -1,26 +1,26 @@
-import {ApplicationRef, EventEmitter, Injectable, NgZone} from '@angular/core';
-import {Http} from '@angular/http';
+import { ApplicationRef, EventEmitter, Injectable, NgZone } from '@angular/core';
+import { Http } from '@angular/http';
 import * as child_process from 'child_process';
-import {ChildProcess} from 'child_process';
+import { ChildProcess } from 'child_process';
 import * as crypto from 'crypto';
-import {remote} from 'electron';
+import { remote } from 'electron';
+import * as sudo from 'electron-sudo';
 import * as fs from 'fs';
 import * as glob from 'glob';
 import * as ini from 'ini';
 import * as path from 'path';
 import * as readline from 'readline';
 import 'rxjs/Rx';
-import {Observable, Observer} from 'rxjs/Rx';
-import {Action, App, AppStatus} from './app';
-import {AppLocal} from './app-local';
-import {DownloadService, DownloadStatus} from './download.service';
-import {InstallOption} from './install-option';
-import {LoginService} from './login.service';
-import {SettingsService} from './settings.sevices';
-import {ComparableSet} from './shared/ComparableSet';
+import { Observable, Observer } from 'rxjs/Rx';
+import { Action, App, AppStatus } from './app';
+import { AppLocal } from './app-local';
+import { DownloadService, DownloadStatus } from './download.service';
+import { InstallOption } from './install-option';
+import { LoginService } from './login.service';
+import { SettingsService } from './settings.sevices';
+import { ComparableSet } from './shared/ComparableSet';
 import Timer = NodeJS.Timer;
 import ReadableStream = NodeJS.ReadableStream;
-import * as sudo from 'electron-sudo';
 const Logger = {
     info: (...message: any[]) => {
         console.log('AppService [INFO]: ', ...message);
@@ -1196,7 +1196,7 @@ export class AppsService {
         return new Promise((resolve, reject) => {
             fs.lstat(file, (err, stats) => {
                 if (err) {
-                    return resolve(path);
+                    return resolve(file);
                 }
                 if (stats.isDirectory()) {
                     fs.rmdir(file, (error) => {

@@ -12,20 +12,20 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Headers, Http } from '@angular/http';
 import * as child_process from 'child_process';
 import { remote, shell } from 'electron';
+import * as fs from 'fs';
 import * as ini from 'ini';
 import { EncodeOptions } from 'ini';
-import { LoginService } from './login.service';
-import { App } from './app';
-import { Headers, Http } from '@angular/http';
+import * as $ from 'jquery';
+import * as path from 'path';
 import 'rxjs/Rx';
 import { ISubscription } from 'rxjs/Subscription';
+import { App } from './app';
 import { AppsService } from './apps.service';
+import { LoginService } from './login.service';
 import { SettingsService } from './settings.sevices';
-import * as $ from 'jquery';
 import Timer = NodeJS.Timer;
 import WillNavigateEvent = Electron.WillNavigateEvent;
 
@@ -186,11 +186,11 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 this.textfont = ['/System/Library/Fonts/PingFang.ttc'];
                 break;
             case 'win32':
-                this.numfont = [path.join(process.env['SystemRoot'], 'Fonts', 'arialbd.ttf')];
+                this.numfont = [path.join(process.env['SystemRoot']!, 'Fonts', 'arialbd.ttf')];
                 this.textfont = [
-                    path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttc'),
-                    path.join(process.env['SystemRoot'], 'Fonts', 'msyh.ttf'),
-                    path.join(process.env['SystemRoot'], 'Fonts', 'simsun.ttc')
+                    path.join(process.env['SystemRoot']!, 'Fonts', 'msyh.ttc'),
+                    path.join(process.env['SystemRoot']!, 'Fonts', 'msyh.ttf'),
+                    path.join(process.env['SystemRoot']!, 'Fonts', 'simsun.ttc')
                 ];
                 break;
         }
@@ -372,7 +372,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         });
 
         remote.ipcMain.on('YGOPro', (e:  any , type: string) => {
-            console.log('rrrrr')
+            console.log('rrrrr');
             this.request_match(type);
         });
     }
