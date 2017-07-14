@@ -1,9 +1,11 @@
-import {Component, Renderer, ChangeDetectorRef, OnInit, ElementRef, ViewChild} from '@angular/core';
-import {remote, shell} from 'electron';
-import {LoginService} from './login.service';
-import {SettingsService} from './settings.sevices';
-import $ = require('jquery');
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer, ViewChild } from '@angular/core';
 import 'bootstrap';
+import { remote, shell } from 'electron';
+import * as $ from 'jquery';
+import * as Tether from 'tether';
+import { LoginService } from './login.service';
+import { SettingsService } from './settings.sevices';
+window['Tether'] = Tether;
 
 const autoUpdater: Electron.AutoUpdater = remote.getGlobal('autoUpdater');
 
@@ -104,7 +106,7 @@ export class MyCardComponent implements OnInit {
 
         let element = this.update_elements.get(this.update_status);
         if (element) {
-            $(element.nativeElement).tooltip({placement: 'bottom', container: 'body'});
+            $(element.nativeElement).tooltip({ placement: 'bottom', container: 'body' });
         }
     }
 
@@ -119,6 +121,7 @@ export class MyCardComponent implements OnInit {
             remote.app.quit();
         }
     }
+
     //
     // moesound_loaded() {
     //     this.moesound.nativeElement.insertCSS(`

@@ -206,3 +206,10 @@ form {
 #watch-filter .form-check-input {
     margin-left: inherit;
 }
+
+#join-private {
+    position: absolute;
+    left: .75rem;
+    bottom: .75rem;
+    width: 500px;
+}

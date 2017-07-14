@@ -14,8 +14,8 @@ import {
 } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import * as child_process from 'child_process';
-import { remote, shell } from 'electron';
-import * as fs from 'fs';
+import { clipboard, remote, shell } from 'electron';
+import * as fs from 'fs-extra';
 import * as ini from 'ini';
 import { EncodeOptions } from 'ini';
 import * as $ from 'jquery';
@@ -177,6 +177,9 @@ export class YGOProComponent implements OnInit, OnDestroy {
     match_time: string;
     match_cancelable: boolean;
     match_interval: Timer | undefined;
+
+    join_password: string;
+    host_password = (this.loginService.user.external_id ^ 0x54321).toString();
 
     constructor(private http: Http, private appsService: AppsService, private loginService: LoginService,
                 public settingsService: SettingsService, private ref: ChangeDetectorRef) {
@@ -371,7 +374,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
             this.replay_connections = [];
         });
 
-        remote.ipcMain.on('YGOPro', (e:  any , type: string) => {
+        remote.ipcMain.on('YGOPro', (e: any, type: string) => {
             console.log('rrrrr');
             this.request_match(type);
         });
@@ -405,34 +408,27 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     };
 
-    get_decks(): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            fs.readdir(path.join(this.app.local!.path, 'deck'), (error, files) => {
-                if (error) {
-                    resolve([]);
-                } else {
-                    resolve(files.filter(file => path.extname(file) === '.ydk').map(file => path.basename(file, '.ydk')));
-                }
-            });
-        });
+    async get_decks(): Promise<string[]> {
+        try {
+            let files: string[] = await fs.readdir(path.join(this.app.local!.path, 'deck'));
+            return files.filter(file => path.extname(file) === '.ydk').map(file => path.basename(file, '.ydk'));
+        } catch (error) {
+            return [];
+        }
     }
 
-    get_replays(): Promise<string[]> {
-        return new Promise((resolve, reject) => {
-            fs.readdir(path.join(this.app.local!.path, 'replay'), (error, files) => {
-                if (error) {
-                    resolve([]);
-                } else {
-                    resolve(files.filter(file => path.extname(file) === '.yrp').map(file => path.basename(file, '.yrp')));
-                }
-            });
-        });
+    async get_replays(): Promise<string[]> {
+        try {
+            let files: string[] = await fs.readdir(path.join(this.app.local!.path, 'replay'));
+            return files.filter(file => path.extname(file) === '.yrp').map(file => path.basename(file, '.yrp'));
+        } catch (error) {
+            return [];
+        }
     }
 
     async get_font(files: string[]): Promise<string | undefined> {
         for (let file of files) {
-            let found = await new Promise((resolve) => fs.access(file, fs.constants.R_OK, error => resolve(!error)));
-            if (found) {
+            if (await fs.pathExists(file)) {
                 return file;
             }
         }
@@ -440,7 +436,10 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     async delete_deck(deck: string) {
         if (confirm('确认删除?')) {
-            await new Promise(resolve => fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'), resolve));
+            try {
+                await fs.unlink(path.join(this.app.local!.path, 'deck', deck + '.ydk'));
+            } catch (error) {
+            }
             return this.refresh();
         }
     }
@@ -461,26 +460,13 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
     };
 
-    load_system_conf(): Promise<SystemConf> {
-        return new Promise((resolve, reject) => {
-            fs.readFile(this.system_conf, { encoding: 'utf-8' }, (error, data) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(ini.parse(data));
-            });
-        });
+    async load_system_conf(): Promise<SystemConf> {
+        let data = await fs.readFile(this.system_conf, { encoding: 'utf-8' });
+        return ini.parse(data);
     };
 
     save_system_conf(data: SystemConf) {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{ whitespace: true })), (error) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(data);
-            });
-        });
+        return fs.writeFile(this.system_conf, ini.unsafe(ini.stringify(data, <EncodeOptions>{ whitespace: true })));
     };
 
     async join(name: string, server: Server) {
@@ -520,7 +506,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     async start_game(args: string[]) {
         let data: any;
-        let start_time: string ;
+        let start_time: string;
         let exp_rank_ex: number;
         let arena_rank_ex: number;
         let win = remote.getCurrentWindow();
@@ -555,18 +541,18 @@ export class YGOProComponent implements OnInit, OnDestroy {
                     .then((d) => {
                         start_time = d.data[0].start_time;
                     });
-            }catch (error) {
+            } catch (error) {
                 console.log(error);
             }
             try {
-                this.http.get('https://api.mycard.moe/ygopro/arena/user', {search: {username: this.loginService.user.username } })
+                this.http.get('https://api.mycard.moe/ygopro/arena/user', { search: { username: this.loginService.user.username } })
                     .map((response) => response.json())
                     .toPromise()
                     .then((d2) => {
                         exp_rank_ex = d2.exp_rank;
                         arena_rank_ex = d2.arena_rank;
                     });
-            }catch (error) {
+            } catch (error) {
                 console.log(error);
             }
         });
@@ -607,7 +593,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                         this.appsService.showResult('end_YGOPro_single.html', data, 202, 222);
                     }
                 });
-        }catch (error) {
+        } catch (error) {
             console.log(error);
         }
     };
@@ -636,11 +622,22 @@ export class YGOProComponent implements OnInit, OnDestroy {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i);
         }
 
-        let password = options_buffer.toString('base64') + (room.title!).replace(/\s/, String.fromCharCode(0xFEFF));
+        let password = options_buffer.toString('base64') + room.private ? this.host_password :
+            room.title!.replace(/\s/, String.fromCharCode(0xFEFF));
         // let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64')
         //     .slice(0, 10).replace('+', '-').replace('/', '_');
 
+        if (room.private) {
+            new Notification('YGOPro 私密房间已建立', {
+                body: `房间密码是 ${this.host_password}, 您的对手可在自定义游戏界面输入密码与您对战。`
+            });
+        }
         this.join(password, this.servers[0]);
+    }
+
+    copy(text: string, event: Event) {
+        clipboard.writeText(text);
+        $('#copy-wrapper').tooltip({ trigger: 'manual' }).tooltip('show');
     }
 
     join_room(room: Room) {
@@ -658,9 +655,28 @@ export class YGOProComponent implements OnInit, OnDestroy {
         }
 
 
-        let password = options_buffer.toString('base64') + room.id;
+        let name = options_buffer.toString('base64') + room.id;
 
-        this.join(password, room.server!);
+        this.join(name, room.server!);
+    }
+
+    join_private(password: string) {
+        let options_buffer = new Buffer(6);
+        options_buffer.writeUInt8(5 << 4, 1);
+        let checksum = 0;
+        for (let i = 1; i < options_buffer.length; i++) {
+            checksum -= options_buffer.readUInt8(i);
+        }
+        options_buffer.writeUInt8(checksum & 0xFF, 0);
+
+        let secret = this.loginService.user.external_id % 65535 + 1;
+        for (let i = 0; i < options_buffer.length; i += 2) {
+            options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i);
+        }
+
+        let name = options_buffer.toString('base64') + password.replace(/\s/, String.fromCharCode(0xFEFF));
+
+        this.join(name, this.servers[0]);
     }
 
     request_match(arena = 'entertain') {
