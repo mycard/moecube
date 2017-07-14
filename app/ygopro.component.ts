@@ -622,8 +622,8 @@ export class YGOProComponent implements OnInit, OnDestroy {
             options_buffer.writeUInt16LE(options_buffer.readUInt16LE(i) ^ secret, i);
         }
 
-        let password = options_buffer.toString('base64') + room.private ? this.host_password :
-            room.title!.replace(/\s/, String.fromCharCode(0xFEFF));
+        let password = options_buffer.toString('base64') + (room.private ? this.host_password :
+                room.title!.replace(/\s/, String.fromCharCode(0xFEFF)));
         // let room_id = crypto.createHash('md5').update(password + this.loginService.user.username).digest('base64')
         //     .slice(0, 10).replace('+', '-').replace('/', '_');
 
