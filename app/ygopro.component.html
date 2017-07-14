@@ -277,8 +277,9 @@
                                     <span i18n *ngIf="!(room.arena || room.id.startsWith('AI#')) && room.options.mode === 2">TAG</span>
                                 </td>
                                 <td class="title">
+                                    <span *ngIf="room.private">{{room.users[0] && room.users[0].username}} 的私密房间</span>
                                     <span i18n *ngIf="room.arena || room.id.startsWith('AI#')">{{room.users[0] && room.users[0].username}} 跟 {{room.users[1] && room.users[1].username}} 的决斗</span>
-                                    <span *ngIf="!(room.arena || room.id.startsWith('AI#'))">{{room.title}}</span>
+                                    <span *ngIf="!(room.arena || room.id.startsWith('AI#') || room.private)">{{room.title}}</span>
                                 </td>
                                 <td class="users">
                                     <img *ngFor="let user of room.users" class="avatar rounded" [src]="'https://ygobbs.com/user_avatar/ygobbs.com/' + user.username + '/25/1.png'" data-toggle="tooltip" data-placement="bottom" [title]="user.username">

@@ -348,11 +348,17 @@ export class YGOProComponent implements OnInit, OnDestroy {
                     switch (message.event) {
                         case 'init':
                             this.replay_rooms = this.replay_rooms.filter(room => room.server !== server).concat(
-                                message.data.map((room: Room) => Object.assign({ server: server }, room))
+                                message.data.map((room: Room) => Object.assign({
+                                    server: server,
+                                    'private': /^\d+$/.test(room.title!)
+                                }, room))
                             );
                             break;
                         case 'create':
-                            this.replay_rooms.push(Object.assign({ server: server }, message.data));
+                            this.replay_rooms.push(Object.assign({
+                                server: server,
+                                'private': /^\d+$/.test(message.data.title!)
+                            }, message.data));
                             break;
                         case 'delete':
                             this.replay_rooms.splice(
