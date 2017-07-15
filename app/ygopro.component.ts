@@ -27,7 +27,7 @@ import { AppsService } from './apps.service';
 import { LoginService } from './login.service';
 import { SettingsService } from './settings.sevices';
 import Timer = NodeJS.Timer;
-import WillNavigateEvent = Electron.WillNavigateEvent;
+// import WillNavigateEvent = Electron.WillNavigateEvent;
 
 interface SystemConf {
     use_d3d: string;
@@ -774,7 +774,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
         `);
     }
 
-    bilibili_navigate(event: WillNavigateEvent) {
+    bilibili_navigate(event: any) {
         // event.preventDefault();
         // https://github.com/electron/electron/issues/1378
         this.bilibili.nativeElement.src = 'http://m.bilibili.com/search.html?keyword=YGOPro';
