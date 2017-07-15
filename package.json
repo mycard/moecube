@@ -73,7 +73,7 @@
     "@types/tether": "latest",
     "@types/typeahead": "latest",
     "electron": "1.4.15",
-    "@types/electron": "1.4.15",
+    "@types/electron": "1.4.23",
     "electron-builder": "latest",
     "electron-rebuild": "latest",
     "rollup": "latest",
