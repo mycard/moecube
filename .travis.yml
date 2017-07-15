@@ -6,7 +6,7 @@ os:
 dist: trusty
 sudo: required
 env:
-  npm_config_target: 1.6.10
+  npm_config_target: $(npm show electron@beta version)
   npm_config_arch: x64
   npm_config_target_arch: x64
   npm_config_disturl: https://atom.io/download/atom-shell
