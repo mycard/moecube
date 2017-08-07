@@ -1,0 +1,95 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/*:host {*/
+/*background-color: white;*/
+/*}*/
+.page {
+  /*display: block;*/
+  flex-grow: 1;
+  /*margin-bottom: 60px;*/
+}
+
+#avatar {
+  display: block;
+  float: left;
+  border-radius: 10%;
+  height: 1.5rem;
+  margin-top: 0.475rem;
+}
+
+.item {
+  display: block;
+  float: left;
+  padding-top: .425rem;
+  padding-bottom: .425rem;
+  margin: 0 0.8rem;
+  text-decoration: none;
+  color: #a7a7a7;
+}
+.item-icon {
+  color: #a7a7a7;
+  font-size: 18px;
+  margin: .6rem .3rem;
+}
+.item:hover, .item-icon:hover, .nav-link:hover {
+  color: #5e5e5e;
+}
+
+#update-status > i {
+  line-height: 1.5;
+  color: #5e5e5e;
+  padding-top: .425rem;
+  padding-bottom: .425rem;
+}
+
+a {
+  cursor: default;
+}
+
+/* https://github.com/electron/electron/issues/7661#event-827104990 */
+lobby[hidden], webview[hidden] {
+  width: 0;
+  height: 0;
+  flex: 0 1;
+  display: inherit !important;
+  overflow: hidden;
+}
+
+#navbar {
+  background-color: #f7f7f9!important;
+  padding: 0;
+}
+
+#navbar-brand {
+  color: #00a4d9;
+  font-size: 24px;
+  width: 190px;
+  margin: 0;
+  text-align: center;
+}
+
+#navbar .nav-link {
+  font-size: 18px;
+  color: #a7a7a7;
+  padding: .8rem 1.2em;
+}
+.nav-item.active {
+  background-color: white;
+}
+#navbar .nav-item.active .nav-link {
+  color: #00a4d9;
+}
+
+#border {
+  margin: .2rem 0.4rem;
+  color: #a7a7a7;
+  font-size: 1.2rem;
+}
+
+#navbar {
+  z-index: 100;
+}

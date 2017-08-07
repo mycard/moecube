@@ -1,0 +1,4 @@
+<webview [src]="loginService.logging_out ? loginService.logoutUrl() : loginService.loginUrl()"
+         (will-navigate)="loginService.return_sso($event.url)"
+         (did-get-redirect-request)="loginService.return_sso($event.newURL)"
+         (new-window)="shell.openExternal($event.url)"></webview>

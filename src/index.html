@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MyCard</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <mycard-root>
+    <div id="loading-bar">
+      <span class="navbar-brand">MyCard</span>
+      <i class="fa fa-times close" i18n="" i18n-title="" title="关闭" onclick="window.close()"></i>
+    </div>
+
+    <div class="loading">
+      <img src="assets/CubbitLogo.png">
+      <p>
+        LOADING
+        <span>.</span>
+        <span>.</span>
+        <span>.</span>
+      </p>
+    </div>
+  </mycard-root>
+  <script>
+    document.body.classList.add(process.platform);
+  </script>
+</body>
+</html>

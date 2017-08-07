@@ -1,0 +1,98 @@
+<!-- Begin page content -->
+<div #nav id="nav-wrapper" class="resize-wrapper resize-right">
+  <nav id="apps" *ngIf="apps" class="bg-faded sidebar scroll">
+    <div id="search" class="input-group">
+      <i class="fa fa-search input-group-addon search" id="basic-addon1"></i>
+      <input #search id="search-input" type="text" class="form-control search" placeholder="搜索游戏" aria-describedby="basic-addon1">
+    </div>
+
+    <span i18n *ngIf="grouped_apps.installed">已安装</span>
+    <ul *ngIf="grouped_apps.installed" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.installed" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" class="nav-link" [class.active]="app===currentApp" [href]="'https://mycard.moe/' + app.id">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}<i *ngIf="!app.isReady() && !app.status.total" class="spin fa fa-circle-o-notch fa-spin fa-fw"></i>
+          <div *ngIf="!app.isReady() && app.status.total" class="progress">
+            <div class="pie" [class.second-half]="app.status.progress/app.status.total>0.5">
+              <div class="left-side half-circle" [style.transform]="'rotate('+(app.status.progress/app.status.total).toString()+'turn)'"></div>
+              <div class="right-side half-circle"></div>
+            </div>
+            <div class="shadow"></div>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <span *ngIf="grouped_apps.test">测试</span>
+    <ul *ngIf="grouped_apps.test" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.test" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+
+    <span i18n *ngIf="grouped_apps.recommend">推荐</span>
+    <ul *ngIf="grouped_apps.recommend" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.recommend" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+    <span i18n *ngIf="grouped_apps.mysterious">迷之物体</span>
+    <ul *ngIf="grouped_apps.mysterious" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.mysterious" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+    <span i18n *ngIf="grouped_apps.touhou">东方 Project</span>
+    <ul *ngIf="grouped_apps.touhou" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.touhou" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+    <span i18n *ngIf="grouped_apps.touhou_pc98">东方旧作</span>
+    <ul *ngIf="grouped_apps.touhou_pc98" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.touhou_pc98" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+    <span i18n *ngIf="grouped_apps.runtime_installed">已安装的运行库</span>
+    <ul *ngIf="grouped_apps.runtime_installed" class="nav nav-pills flex-column">
+      <li *ngFor="let app of grouped_apps.runtime_installed" class="nav-item">
+        <a (click)="$event.preventDefault(); chooseApp(app)" [href]="'https://mycard.moe/' + app.id" class="nav-link" [class.active]="app===currentApp">
+          <img *ngIf="app.icon" class="icon" [src]="app.icon">
+          {{app.name}}
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="resize" (mousedown)="mousedown($event)"></div>
+</div>
+
+
+<div id="right">
+  <div id="main">
+    <mycard-app-detail class="scroll" *ngIf="currentApp" [currentApp]="currentApp"></mycard-app-detail>
+    <!--<roster class="scroll"></roster>-->
+  </div>
+
+  <div id="candy-wrapper" class="resize-wrapper resize-top" style="max-height: calc( 100% - 180px )">
+    <div class="resize" (mousedown)="mousedown($event)"></div>
+    <mycard-candy *ngIf="currentApp" [currentApp]="currentApp"></mycard-candy>
+  </div>
+</div>
+
+<div id="right-shadow"></div>

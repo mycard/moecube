@@ -1,0 +1,169 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
+
+html, body {
+  height: 100%;
+  /*overflow: hidden;*/
+}
+
+body {
+  font-family: -apple-system, Arial, 'Source Sans Pro', "Microsoft YaHei", 'Microsoft JhengHei', "WenQuanYi Micro Hei", sans-serif;
+  -webkit-user-select: none;
+}
+
+/*body.win32 {*/
+/*background: transparent;*/
+/*border-radius: 5px;*/
+/*border: 1px solid #eee;*/
+/*padding-right: 0 !important;*/
+/*}*/
+
+mycard-root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.darwin #window-buttons, .darwin #border {
+  display: none;
+}
+
+.darwin #navbar {
+  padding-top: 1rem !important;
+}
+
+#window-buttons > i {
+  color: #a7a7a7;
+  font-size: 18px;
+  margin: .6rem .3rem;
+}
+
+#window-buttons > i:hover {
+  color: #5e5e5e;
+}
+
+#navbar {
+  -webkit-app-region: drag;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-radius: initial;
+}
+
+#navbar .nav-link, #navbar .profile, #navbar i, #navbar img {
+  -webkit-app-region: no-drag;
+}
+
+#navbar-right > div {
+  float: left;
+  margin: 0 0.3rem;
+}
+
+/* Turn on custom 8px wide scrollbar */
+.win32 ::-webkit-scrollbar {
+  width: 8px; /* 1px wider than Lion. */
+  /* This is more usable for users trying to click it. */
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-border-radius: 100px;
+}
+
+/* hover effect for both scrollbar area, and scrollbar 'thumb' */
+.win32 ::-webkit-scrollbar:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+.win32 ::-webkit-scrollbar-thumb:vertical {
+  /* This is the EXACT color of Mac OS scrollbars.
+     Yes, I pulled out digital color meter */
+  background: rgba(0, 0, 0, 0.1);
+  -webkit-border-radius: 100px;
+}
+
+.win32 ::-webkit-scrollbar-thumb:vertical:active {
+  background: rgba(0, 0, 0, 0.2); /* Some darker color when you click it */
+  -webkit-border-radius: 100px;
+}
+
+.scroll {
+  overflow-y: hidden;
+}
+
+.scroll:hover {
+  overflow-y: auto;
+
+}
+
+body.resizing /deep/ * {
+  -webkit-user-select: none;
+}
+
+/*mycard {*/
+/*background-color: white;*/
+/*}*/
+
+/*button, input, optgroup, select, textarea {*/
+/*font-family: inherit;*/
+/*}*/
+#loading-bar{
+  -webkit-app-region: drag;
+  background: #f7f7f9;
+  padding-bottom: 4px;
+}
+
+#loading-bar>.navbar-brand{
+  color:#00a4d9;
+  font-size:24px;
+  width:190px;
+  margin: 4px 0 0 0;
+  text-align:center;
+}
+#loading-bar>.close {
+  color:#a7a7a7;
+  font-size: 18px;
+  float:right;
+  margin:17px 18px 0 0;
+}
+#loading-bar>.close:hover{
+  color:#000;
+}
+
+.loading {
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+}
+.loading p{
+  position:relative;
+  top:-15px;
+  left:10px;
+  font-weight: 600;
+  font-size: 30px;
+  color:#4b99ea;
+  text-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+}
+.loading p>span{
+  opacity:0;
+}
+.loading p>span:nth-child(1) {animation:show 2s infinite 0.0s linear;}
+.loading p>span:nth-child(2) {animation:show 2s infinite 0.2s linear;}
+.loading p>span:nth-child(3) {animation:show 2s infinite 0.4s linear;}
+
+@keyframes show{
+  from{}
+  20% {opacity:0;}
+  21% {opacity:1;}
+  70% {opacity:1;}
+  71% {opacity:0;}
+  to {}
+}
+.loading>img{
+  width:300px;
+}
+@keyframes zhuan{
+  from{transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
