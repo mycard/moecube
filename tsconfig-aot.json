@@ -13,7 +13,7 @@
     ],
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "skipLibCheck": true
   },
   "files": [
