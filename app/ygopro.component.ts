@@ -468,7 +468,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
 
     async load_system_conf(): Promise<SystemConf> {
         let data = await fs.readFile(this.system_conf, { encoding: 'utf-8' });
-        return ini.parse(data);
+        return <any>ini.parse(data);
     };
 
     save_system_conf(data: SystemConf) {
