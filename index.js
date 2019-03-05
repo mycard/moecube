@@ -38,7 +38,13 @@ const path = require('path');
 let mainWindow;
 
 // 单实例
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} 
+
+app.on('second-instance', (event, commandLine, workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
         if (mainWindow.isMinimized()) {
@@ -49,10 +55,7 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
         }
         mainWindow.focus();
     }
-});
-if (shouldQuit) {
-    app.quit();
-}
+})
 
 // 调试模式
 if (!process.env['NODE_ENV']) {
