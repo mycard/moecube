@@ -18,7 +18,8 @@
     "i18n": "ng-xi18n --i18nFormat 'xlf2' && sed -i.bak 's/source-language=\"en\"/source-language=\"zh-CN\"/' messages.xlf",
     "i18n:upload": "npm run i18n && curl --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} --request PUT --header 'Content-type: multipart/form-data' --form content=@messages.xlf https://www.transifex.com/api/2/project/moecube/resource/messages/content/",
     "i18n:translate": "open https://www.transifex.com/moecube/moecube/translate/#en_US/messages/108367258?translated=no",
-    "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf"
+    "i18n:download": "curl --output locale/messages.en-US.xlf --retry 5 --location --user ${TRANSIFEX_USERNAME}:${TRANSIFEX_PASSWORD} https://www.transifex.com/api/2/project/moecube/resource/messages/translation/en_US/?file && sed -i.bak 's/\\&amp;/\\&/g; s/\\&lt;/</g; s/\\&gt;/>/g; s/\\&quot;/\"/g;' locale/messages.en-US.xlf",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@angular/animations": "4.2.6",
@@ -40,7 +41,7 @@
     "core-js": "2.4.1",
     "electron-is-dev": "latest",
     "electron-sudo": "moecube/electron-sudo#moecube",
-    "electron-updater": "2.4.6",
+    "electron-updater": "latest",
     "font-awesome": "4.7.0",
     "fs-extra": "3.0.1",
     "glob": "7.1.2",
@@ -73,7 +74,6 @@
     "@types/typeahead": "latest",
     "electron": "latest",
     "electron-builder": "latest",
-    "electron-rebuild": "latest",
     "rollup": "latest",
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-node-resolve": "latest",
