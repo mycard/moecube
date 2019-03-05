@@ -48,7 +48,7 @@
     "jquery": "2.2.4",
     "marked": "0.3.6",
     "raven-js": "3.16.1",
-    "raw-socket": "1.5.1",
+    "raw-socket": "latest",
     "reconnecting-websocket": "3.0.7",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.4.2",
