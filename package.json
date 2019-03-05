@@ -41,7 +41,7 @@
     "core-js": "2.4.1",
     "electron-is-dev": "latest",
     "electron-sudo": "moecube/electron-sudo#moecube",
-    "electron-updater": "latest",
+    "electron-updater": "^4.0.0",
     "font-awesome": "4.7.0",
     "fs-extra": "3.0.1",
     "glob": "7.1.2",
