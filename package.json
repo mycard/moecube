@@ -40,7 +40,7 @@
     "candy-shop": "candy-chat/candy-plugins",
     "core-js": "2.4.1",
     "electron-is-dev": "latest",
-    "electron-sudo": "moecube/electron-sudo#moecube",
+    "electron-sudo": "moecube/electron-sudo#998b7f19b123a6f2f469f79a2027ebb7b0223f9d",
     "electron-updater": "^4.0.0",
     "font-awesome": "4.7.0",
     "fs-extra": "3.0.1",
