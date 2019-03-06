@@ -31,7 +31,6 @@ init:
   - ps: $fileContent += $env:priv_key.Replace(' ', "`n")
   - ps: $fileContent += "`n-----END EC PRIVATE KEY-----`n"
   - ps: Set-Content c:\users\appveyor\.ssh\id_ecdsa $fileContent
-  - date 09-01-2018
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -53,4 +52,5 @@ install:
   - npm prune
 
 build_script:
+  - date 09-01-2018
   - npm run dist
