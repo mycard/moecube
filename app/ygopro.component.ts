@@ -211,14 +211,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
             this.servers.push({
                 id: 'tiramisu',
                 url: 'wss://tiramisu.mycard.moe:7923',
-                address: '112.124.105.11',
+                address: 'tiramisu.mycard.moe',
                 port: 7911,
                 custom: true,
                 replay: true
             }, {
                 id: 'tiramisu-athletic',
                 url: 'wss://tiramisu.mycard.moe:8923',
-                address: '112.124.105.11',
+                address: 'tiramisu.mycard.moe',
                 port: 8911,
                 custom: false,
                 replay: true
@@ -227,14 +227,14 @@ export class YGOProComponent implements OnInit, OnDestroy {
             this.servers.push({
                 id: 'mercury-us-1-athletic',
                 url: 'wss://mercury-us-1.mycard.moe:7923',
-                address: '104.237.154.173',
+                address: 'mercury-us-1.mycard.moe',
                 port: 7911,
                 custom: true,
                 replay: true
             }, {
                 id: 'mercury-us-1',
                 url: 'wss://mercury-us-1.mycard.moe:7923',
-                address: '104.237.154.173',
+                address: 'mercury-us-1.mycard.moe',
                 port: 8911,
                 custom: false,
                 replay: true
