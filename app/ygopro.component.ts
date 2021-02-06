@@ -185,7 +185,7 @@ export class YGOProComponent implements OnInit, OnDestroy {
                 public settingsService: SettingsService, private ref: ChangeDetectorRef) {
         switch (process.platform) {
             case 'darwin':
-                this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf'];
+                this.numfont = ['/System/Library/Fonts/SFNSTextCondensed-Bold.otf','/System/Library/Fonts/Supplemental/Arial.ttf'];
                 this.textfont = ['/System/Library/Fonts/PingFang.ttc'];
                 break;
             case 'win32':
